@@ -22,6 +22,8 @@ class BerkeleyDbAT53 < Formula
       --prefix=#{prefix}
       --mandir=#{man}
       --enable-cxx
+      CFLAGS=-mmacosx-version-min=10.10
+      LDFLAGS=-mmacosx-version-min=10.10
     ]
 
     # BerkeleyDB requires you to build everything from the build_unix subdirectory
