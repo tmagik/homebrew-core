@@ -1,14 +1,13 @@
 class IscDhcp < Formula
   desc "Production-grade DHCP solution"
   homepage "https://www.isc.org/software/dhcp"
-  url "https://ftp.isc.org/isc/dhcp/4.3.5/dhcp-4.3.5.tar.gz"
-  sha256 "eb95936bf15d2393c55dd505bc527d1d4408289cec5a9fa8abb99f7577e7f954"
+  url "https://ftp.isc.org/isc/dhcp/4.4.1/dhcp-4.4.1.tar.gz"
+  sha256 "2a22508922ab367b4af4664a0472dc220cc9603482cf3c16d9aff14f3a76b608"
 
   bottle do
-    rebuild 1
-    sha256 "489df9326cdc8aded9bad6e1a1015d36dfc5c02721a16e14478497da28d29198" => :sierra
-    sha256 "7b877c026db736dd1c624c88c75dec7cb1acc6a2f6eeddf3fb1f246713231384" => :el_capitan
-    sha256 "56bbd9937ce4ee4b76e405c34565048fa55e2b0b7965004508b2d482a0e7881d" => :yosemite
+    sha256 "eea8d134e6003550ee99f8e7d81d2869fa0eb73f1986e06073561c630ed2966c" => :high_sierra
+    sha256 "461dd0ba33e5d16684db8a65f757cd3e0a1c6e9a5d5ba657a20819ab6acc3ff4" => :sierra
+    sha256 "ae9ef8eb1f904486ec7267b381d9703608fb7d7420b5e9c05bbae1c9e725085f" => :el_capitan
   end
 
   def install
@@ -72,7 +71,7 @@ class IscDhcp < Formula
     (prefix+"homebrew.mxcl.dhcpd6.plist").chmod 0644
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     This install of dhcpd expects config files to be in #{etc}.
     All state files (leases and pids) are stored in #{var}/dhcpd.
 
@@ -93,49 +92,49 @@ class IscDhcp < Formula
   plist_options :startup => true
 
   def plist
-    <<-EOS.undent
-    <?xml version='1.0' encoding='UTF-8'?>
-    <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
-                    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version='1.0'>
-    <dict>
-    <key>Label</key><string>#{plist_name}</string>
-    <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_sbin}/dhcpd</string>
-        <string>-f</string>
-      </array>
-    <key>Disabled</key><false/>
-    <key>KeepAlive</key><true/>
-    <key>RunAtLoad</key><true/>
-    <key>LowPriorityIO</key><true/>
-    </dict>
-    </plist>
+    <<~EOS
+      <?xml version='1.0' encoding='UTF-8'?>
+      <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
+                      "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version='1.0'>
+      <dict>
+      <key>Label</key><string>#{plist_name}</string>
+      <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_sbin}/dhcpd</string>
+          <string>-f</string>
+        </array>
+      <key>Disabled</key><false/>
+      <key>KeepAlive</key><true/>
+      <key>RunAtLoad</key><true/>
+      <key>LowPriorityIO</key><true/>
+      </dict>
+      </plist>
     EOS
   end
 
   def plist_dhcpd6
-    <<-EOS.undent
-    <?xml version='1.0' encoding='UTF-8'?>
-    <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
-                    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version='1.0'>
-    <dict>
-    <key>Label</key><string>#{plist_name}</string>
-    <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_sbin}/dhcpd</string>
-        <string>-f</string>
-        <string>-6</string>
-        <string>-cf</string>
-        <string>#{etc}/dhcpd6.conf</string>
-      </array>
-    <key>Disabled</key><false/>
-    <key>KeepAlive</key><true/>
-    <key>RunAtLoad</key><true/>
-    <key>LowPriorityIO</key><true/>
-    </dict>
-    </plist>
+    <<~EOS
+      <?xml version='1.0' encoding='UTF-8'?>
+      <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
+                      "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version='1.0'>
+      <dict>
+      <key>Label</key><string>#{plist_name}</string>
+      <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_sbin}/dhcpd</string>
+          <string>-f</string>
+          <string>-6</string>
+          <string>-cf</string>
+          <string>#{etc}/dhcpd6.conf</string>
+        </array>
+      <key>Disabled</key><false/>
+      <key>KeepAlive</key><true/>
+      <key>RunAtLoad</key><true/>
+      <key>LowPriorityIO</key><true/>
+      </dict>
+      </plist>
     EOS
   end
 end

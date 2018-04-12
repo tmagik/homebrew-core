@@ -1,9 +1,8 @@
 class Solr < Formula
   desc "Enterprise search platform from the Apache Lucene project"
   homepage "https://lucene.apache.org/solr/"
-  url "https://www.apache.org/dyn/closer.cgi?path=lucene/solr/6.5.0/solr-6.5.0.tgz"
-  mirror "https://archive.apache.org/dist/lucene/solr/6.5.0/solr-6.5.0.tgz"
-  sha256 "893835a1d724bda80bc0b9d87893a321f442460937d61d26746cefb52286543c"
+  url "https://www.apache.org/dyn/closer.cgi?path=lucene/solr/7.3.0/solr-7.3.0.tgz"
+  sha256 "4b9b9f5dfd4ea4b0fdf69bda9528de47903aaa9bd9c5cb405ce0ae09a8d12fe9"
 
   bottle :unneeded
 
@@ -12,13 +11,10 @@ class Solr < Formula
   skip_clean "example/logs"
 
   def install
+    bin.install %w[bin/solr bin/post bin/oom_solr.sh]
+    pkgshare.install "bin/solr.in.sh"
+    prefix.install %w[example server]
     libexec.install Dir["*"]
-    bin.install "#{libexec}/bin/solr"
-    bin.install "#{libexec}/bin/post"
-    bin.install "#{libexec}/bin/oom_solr.sh"
-    share.install "#{libexec}/bin/solr.in.sh"
-    prefix.install "#{libexec}/example"
-    prefix.install "#{libexec}/server"
 
     # Fix the classpath for the post tool
     inreplace "#{bin}/post", '"$SOLR_TIP/dist"', "#{libexec}/dist"
@@ -33,7 +29,8 @@ class Solr < Formula
 
   plist_options :manual => "solr start"
 
-  def plist; <<-EOS.undent
+  def plist
+    <<~EOS
       <?xml version="1.0" encoding="UTF-8"?>
       <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
       <plist version="1.0">

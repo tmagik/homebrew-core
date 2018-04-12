@@ -6,6 +6,7 @@ class Eject < Formula
 
   bottle do
     cellar :any
+    sha256 "3333db5dbcaba9ec034423be274f92465fd4058ee3322c9278e783090cc172d2" => :high_sierra
     sha256 "ae124f2e438fe9bf83900b2f5f452d478ff2ca8b9a36dcd07454497044e4ae49" => :sierra
     sha256 "37fd3d134428952fda16239392f4960428852c1f83eb942bd0b45da2e76dcc3b" => :el_capitan
   end
@@ -20,7 +21,7 @@ class Eject < Formula
   end
 
   test do
-    (testpath/"view.xib").write <<-EOS.undent
+    (testpath/"view.xib").write <<~EOS
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
           <dependencies>
@@ -39,7 +40,7 @@ class Eject < Formula
       </document>
     EOS
 
-    swift = <<-EOS.undent
+    swift = <<~EOS
       // Create Views
       let view = UIView()
       view.autoresizingMask = [.flexibleHeight, .flexibleWidth]

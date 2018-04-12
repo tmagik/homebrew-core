@@ -1,14 +1,15 @@
 class Liblas < Formula
   desc "C/C++ library for reading and writing the LAS LiDAR format"
   homepage "https://liblas.org/"
-  url "http://download.osgeo.org/liblas/libLAS-1.8.1.tar.bz2"
+  url "https://download.osgeo.org/liblas/libLAS-1.8.1.tar.bz2"
   sha256 "9adb4a98c63b461ed2bc82e214ae522cbd809cff578f28511122efe6c7ea4e76"
+  revision 1
   head "https://github.com/libLAS/libLAS.git"
 
   bottle do
-    sha256 "b2de49ca32280d43ac3f6d1834efd6e386297afaa070b36ef6ec0d37589e173e" => :sierra
-    sha256 "d7d79cbf775119841245db9794c052a3e39cdf55fecfafcc191cd1cdcd74c61c" => :el_capitan
-    sha256 "0a1c49fe8fdd82e29f2cb04c2cd7a336ad95c88f732656aac1a2bd026c4ae284" => :yosemite
+    sha256 "6223e1ac50e9f1f80c6ea6e219f13cd4bf82cb47757825233781cf9f99f2fb6c" => :high_sierra
+    sha256 "5d699a266e2d5f32c7d75427f4810465f0e87fa7467ec6e4d5c8a4ad485f0603" => :sierra
+    sha256 "a222f7c1e8b07a512a09d733c14d9fc24632a8a1188b579c34517242cf4e3c88" => :el_capitan
   end
 
   option "with-test", "Verify during install with `make test`"
@@ -18,6 +19,13 @@ class Liblas < Formula
   depends_on "gdal"
   depends_on "boost"
   depends_on "laszip" => :optional
+
+  # Fix build for Xcode 9 with upstream commit
+  # Remove in next version
+  patch do
+    url "https://github.com/libLAS/libLAS/commit/49606470.patch?full_index=1"
+    sha256 "5590aef61a58768160051997ae9753c2ae6fc5b7da8549707dfd9a682ce439c8"
+  end
 
   def install
     mkdir "macbuild" do

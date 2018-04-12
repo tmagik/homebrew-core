@@ -1,17 +1,19 @@
 class Fox < Formula
-  desc "Toolkit for developing Graphical User Interfaces easily."
+  desc "Toolkit for developing Graphical User Interfaces easily"
   homepage "http://www.fox-toolkit.org/"
-  url "http://ftp.fox-toolkit.org/pub/fox-1.6.54.tar.gz"
-  sha256 "960f16a8a69d41468f841039e83c2f58f3cb32622fc283a69f20381abb355219"
+  url "http://fox-toolkit.org/ftp/fox-1.6.56.tar.gz"
+  sha256 "c517e5fcac0e6b78ca003cc167db4f79d89e230e5085334253e1d3f544586cb2"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "735e60cd429680c3b8f916bbb83f7c136feda4ce37c4f61c80766c695d477f73" => :sierra
-    sha256 "c5b0074d80dbc0e39e6f1adfefc3890276e40a26abc196b0961dda30b18e8f7e" => :el_capitan
-    sha256 "b48658df4242bc972a47238d0885463399b220c46067ea34033f024197469728" => :yosemite
+    sha256 "1de9a326c1e14cf8c4f29768478deb14071ace6120e4dca6557e6872fd88e7dd" => :high_sierra
+    sha256 "14435c5f78a3d046ca5a0890edafc71cd74335c0857e8701fe26ae481977aeb2" => :sierra
+    sha256 "a12e69c87858187ed33f11713e06c98a482308b3cb78884441ba279f4f51523e" => :el_capitan
   end
 
   depends_on :x11
+  depends_on "fontconfig"
   depends_on "freetype"
   depends_on "libpng"
   depends_on "jpeg"

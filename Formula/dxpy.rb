@@ -9,13 +9,14 @@ class Dxpy < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "73f52983798c560445f0a18ef35c9e830ad4faa8b5d4808511ca09928f80ffc1" => :high_sierra
     sha256 "526ed51259393fb569a912b8865e1627af6ebae9bccd460d33cb403027c66e52" => :sierra
     sha256 "08e04fb3cdca5a1d50229e76713fd6a7f384996ed1e30c97a5260118dbf75a91" => :el_capitan
     sha256 "b5a5feb625e40d2bffca2a5be08bd4977a55129d7c9925129b50c51b782f5399" => :yosemite
     sha256 "91a3634cb4366db887baf1e250bce3c978f9283a2a37593e676440a3a4791adf" => :mavericks
   end
 
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
 
   resource "beautifulsoup4" do
     url "https://files.pythonhosted.org/packages/26/79/ef9a8bcbec5abc4c618a80737b44b56f1cb393b40238574078c5002b97ce/beautifulsoup4-4.4.1.tar.gz"
@@ -83,19 +84,19 @@ class Dxpy < Formula
     # "incompatible readline module detected (libedit), tab completion disabled"
     # Reported 7 Aug 2016: https://github.com/dnanexus/dx-toolkit/issues/169
     site_packages = libexec/"lib/python2.7/site-packages"
-    (site_packages/"homebrew-gnureadline-hack.pth").write <<-EOS.undent
+    (site_packages/"homebrew-gnureadline-hack.pth").write <<~EOS
       import sys; import gnureadline; sys.modules["readline"] = gnureadline
     EOS
   end
 
   test do
-    dxenv = <<-EOS.undent
-    API server protocol	https
-    API server host		api.dnanexus.com
-    API server port		443
-    Current workspace	None
-    Current folder		None
-    Current user		None
+    dxenv = <<~EOS
+      API server protocol	https
+      API server host		api.dnanexus.com
+      API server port		443
+      Current workspace	None
+      Current folder		None
+      Current user		None
     EOS
     assert_match dxenv, shell_output("#{bin}/dx env")
   end

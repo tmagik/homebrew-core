@@ -1,52 +1,32 @@
-require "language/go"
-
 class Packer < Formula
   desc "Tool for creating identical machine images for multiple platforms"
   homepage "https://packer.io"
   url "https://github.com/hashicorp/packer.git",
-      :tag => "v1.0.2",
-      :revision => "6a8ae4b258d1bb0beece05c9fc3bbc1c186a0480"
+      :tag => "v1.2.2",
+      :revision => "ab8811dca8f375344f36dfc32710b9790b2ec03e"
   head "https://github.com/hashicorp/packer.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "e4e84d568430431cfdea8fdfe3dd32ed51981adeae28d0c1cfe7cdd2fecf602b" => :sierra
-    sha256 "a8e69592f02ae3382c89aac16a08b0a26b289b1e8feb6abfad0b595fabf34be8" => :el_capitan
-    sha256 "2077bf72a756742e58a801337c10c41fc9d2d746393ce0acc523c51db8ad9fa6" => :yosemite
+    sha256 "540565d8512b9ed8e9072c40fd4e87706ab2f4f097789239e5dc50193965159d" => :high_sierra
+    sha256 "a5f518c11e4ef7fdbb706b1c60270eb3686ce75c64406d126c528bb2a9e7c401" => :sierra
+    sha256 "5dabb27cecf254ee9e663f768b26e26941e3dee9187d3b0130420a84b41dd74e" => :el_capitan
   end
 
   depends_on "go" => :build
   depends_on "govendor" => :build
-
-  go_resource "github.com/mitchellh/gox" do
-    url "https://github.com/mitchellh/gox.git",
-        :revision => "c9740af9c6574448fd48eb30a71f964014c7a837"
-  end
-
-  go_resource "github.com/mitchellh/iochan" do
-    url "https://github.com/mitchellh/iochan.git",
-        :revision => "87b45ffd0e9581375c491fef3d32130bb15c5bd7"
-  end
+  depends_on "gox" => :build
 
   def install
     ENV["XC_OS"] = "darwin"
     ENV["XC_ARCH"] = MacOS.prefer_64_bit? ? "amd64" : "386"
     ENV["GOPATH"] = buildpath
-    # For the gox buildtool used by packer, which
-    # doesn't need to be installed permanently.
-    ENV.append_path "PATH", buildpath
 
     packerpath = buildpath/"src/github.com/hashicorp/packer"
     packerpath.install Dir["{*,.git}"]
-    Language::Go.stage_deps resources, buildpath/"src"
-
-    cd "src/github.com/mitchellh/gox" do
-      system "go", "build"
-      buildpath.install "gox"
-    end
 
     cd packerpath do
-      # We handle this step above. Don't repeat it.
+      # Avoid running `go get`
       inreplace "Makefile" do |s|
         s.gsub! "go get github.com/mitchellh/gox", ""
         s.gsub! "go get golang.org/x/tools/cmd/stringer", ""
@@ -67,7 +47,7 @@ class Packer < Formula
 
   test do
     minimal = testpath/"minimal.json"
-    minimal.write <<-EOS.undent
+    minimal.write <<~EOS
       {
         "builders": [{
           "type": "amazon-ebs",

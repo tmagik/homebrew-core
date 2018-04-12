@@ -1,15 +1,15 @@
 class ConsulBackinator < Formula
   desc "Consul backup and restoration application"
   homepage "https://github.com/myENA/consul-backinator"
-  url "https://github.com/myENA/consul-backinator/archive/v1.6.1.tar.gz"
-  sha256 "c5635f445657ab47d3d1e76fd649aa89bba7d991061f64c8b34b074bd0e71775"
+  url "https://github.com/myENA/consul-backinator/archive/v1.6.4.tar.gz"
+  sha256 "8d47b754a445bbdc33da859d6778b05b9fa4c1f85e7c407fc7c95a3d9e9254b6"
   head "https://github.com/myENA/consul-backinator.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "457755196f443139e556a8b27c1da973d1113fc7ae0d0ecf29644a7f52ba5faf" => :sierra
-    sha256 "4122a459c57f6e9fd3b4aadd9e9db7b78131fa22443e94e6b7114babca292f25" => :el_capitan
-    sha256 "98d2dd63f34f55cb472422c7a67cd5e851d8a24d72bc24df027f32b8294c903a" => :yosemite
+    sha256 "6b97666f8133df6ffe7622cc7deea1f392e72321b4b22d0e548b78d4a452bd51" => :high_sierra
+    sha256 "806ba24558ff65826fa3677f06eccb6c891156ccd2463ed1ca33b2e75be2b8df" => :sierra
+    sha256 "e8fda18dfa4256fccff3ac57fdb844594ee7ae15ae2e81acd1a4a8b15fe3deea" => :el_capitan
   end
 
   depends_on "go" => :build
@@ -23,7 +23,7 @@ class ConsulBackinator < Formula
     dir.install buildpath.children
 
     cd dir do
-      system "glide", "install", "-v"
+      system "glide", "install"
       system "go", "build", "-v", "-ldflags",
              "-X main.appVersion=#{version}", "-o",
              bin/"consul-backinator"
@@ -32,7 +32,7 @@ class ConsulBackinator < Formula
   end
 
   test do
-    output = shell_output("#{bin}/consul-backinator --version 2>&1", 1)
+    output = shell_output("#{bin}/consul-backinator --version 2>&1")
     assert_equal version.to_s, output.strip
   end
 end

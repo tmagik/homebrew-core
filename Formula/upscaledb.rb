@@ -4,14 +4,13 @@ class Upscaledb < Formula
   url "http://files.upscaledb.com/dl/upscaledb-2.2.0.tar.gz"
   mirror "https://dl.bintray.com/homebrew/mirror/upscaledb-2.2.0.tar.gz"
   sha256 "7d0d1ace47847a0f95a9138637fcaaf78b897ef682053e405e2c0865ecfd253e"
-  revision 5
+  revision 7
 
   bottle do
     cellar :any
-    rebuild 1
-    sha256 "dbfe4d0ed17a0167a0309ddd7c0a14bc8760218a57ae6190b30be0f9cfd8807b" => :sierra
-    sha256 "3e7e913b728f342d0d221712c12f18c109a7b84d39aa33fad252d0a0e25b9999" => :el_capitan
-    sha256 "b1fd4af6e98517055afccf6be4013d57b18c6ed38324c7de50b19908bf93158c" => :yosemite
+    sha256 "26d334d0ad7a36582834575895ee1dd04aeb9db13db52442cb60a2188807c268" => :high_sierra
+    sha256 "4d438ae443c577725d03b7dfceb1d6d078bc2037d4fa28799e662ed997326fbe" => :sierra
+    sha256 "0db006a03d8fc4e4952484d56fb4d59afffe4b7b225669effcb407f5cb12a6c4" => :el_capitan
   end
 
   head do

@@ -1,13 +1,14 @@
 class GstPluginsBad < Formula
   desc "GStreamer plugins less supported, not fully tested"
   homepage "https://gstreamer.freedesktop.org/"
-  url "https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.10.4.tar.xz"
-  sha256 "23ddae506b3a223b94869a0d3eea3e9a12e847f94d2d0e0b97102ce13ecd6966"
+  url "https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.14.0.tar.xz"
+  sha256 "ed5e2badb6f2858f60017b93334d91fe58a0e3f85ed2f37f2e931416fafb4f9f"
+  revision 1
 
   bottle do
-    sha256 "b4b1a648677cae5e21bf3ebac04601ec9f3ea8c6fcd3b39b85ae17e8d2876558" => :sierra
-    sha256 "7482dfde8a60574ece43e2fe5a347e43f495c8519c0852a27e62f76c423caf75" => :el_capitan
-    sha256 "92221b1c4e807c995539ebf5fd8162afbfbe92f78ded0ae74015fe30ca2fc0c8" => :yosemite
+    sha256 "308d9c4c72913fc8765a01448ca32570df1bc502440ff44fbffc340964348b54" => :high_sierra
+    sha256 "84f80a511ddcb9943756c51b7ae6590d1edd56dca35db1db80ec3a525c0de29e" => :sierra
+    sha256 "1d376f912b04d799e2fc4a23c272540520737134995ac5025fd1312946b7a8a6" => :el_capitan
   end
 
   head do
@@ -27,24 +28,26 @@ class GstPluginsBad < Formula
   depends_on "dirac" => :optional
   depends_on "faac" => :optional
   depends_on "faad2" => :optional
+  depends_on "fdk-aac" => :optional
   depends_on "gnutls" => :optional
   depends_on "gtk+3" => :optional
   depends_on "libdvdread" => :optional
   depends_on "libexif" => :optional
   depends_on "libmms" => :optional
-  depends_on "homebrew/science/opencv" => :optional
+  depends_on "libnice" => :optional
+  depends_on "libvo-aacenc" => :optional
+  depends_on "opencv@2" => :optional
   depends_on "opus" => :optional
   depends_on "rtmpdump" => :optional
   depends_on "schroedinger" => :optional
   depends_on "sound-touch" => :optional
-  depends_on "srtp" => :optional
-  depends_on "libvo-aacenc" => :optional
+  depends_on "srt" => :optional
 
   def install
     args = %W[
       --prefix=#{prefix}
       --disable-yadif
-      --disable-sdl
+      --disable-examples
       --disable-debug
       --disable-dependency-tracking
     ]

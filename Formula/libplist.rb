@@ -1,11 +1,12 @@
 class Libplist < Formula
   desc "Library for Apple Binary- and XML-Property Lists"
-  homepage "http://www.libimobiledevice.org/"
-  url "http://www.libimobiledevice.org/downloads/libplist-2.0.0.tar.bz2"
+  homepage "https://www.libimobiledevice.org/"
+  url "https://www.libimobiledevice.org/downloads/libplist-2.0.0.tar.bz2"
   sha256 "3a7e9694c2d9a85174ba1fa92417cfabaea7f6d19631e544948dc7e17e82f602"
 
   bottle do
     cellar :any
+    sha256 "af4e7e2fe8cc73190aecccdfb918db0aed2c4e2397b8d6d86a7e5dbec1fcf767" => :high_sierra
     sha256 "da5d4dedb8a981298f8c67bf116b92dd178ed834208f6fb7a0a55987ff8cfc95" => :sierra
     sha256 "34e757ae78d7a84a8fdee4fe158409f9ebd690c477400eb836fc2ed88c1353e9" => :el_capitan
     sha256 "8279838cdf74669ce421a35ccd416f5fb6c2a33dc24515ef160086b15a88b883" => :yosemite
@@ -42,7 +43,7 @@ class Libplist < Formula
   end
 
   test do
-    (testpath/"test.plist").write <<-EOS.undent
+    (testpath/"test.plist").write <<~EOS
       <?xml version="1.0" encoding="UTF-8"?>
       <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
       <plist version="1.0">

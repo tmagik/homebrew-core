@@ -1,26 +1,23 @@
 class Scipy < Formula
   desc "Software for mathematics, science, and engineering"
   homepage "https://www.scipy.org"
-  url "https://github.com/scipy/scipy/releases/download/v0.19.1/scipy-0.19.1.tar.xz"
-  sha256 "0dca04c4860afdcb066cab4fd520fcffa8c85e9a7b5aa37a445308e899d728b3"
+  url "https://files.pythonhosted.org/packages/bd/f4/3882758754dc083fea6ea66a6e8ceef55e7df173d06a12a074612958800f/scipy-1.0.1.tar.gz"
+  sha256 "8739c67842ed9a1c34c62d6cca6301d0ade40d50ef14ba292bd331f0d6c940ba"
   head "https://github.com/scipy/scipy.git"
 
   bottle do
-    sha256 "b8da9f8049c3e76298d463c32a1413d5ba9942a37c65bede73abebc82046a658" => :sierra
-    sha256 "3e7598cd0d8ad2dd2962ab864490d0360ac3cd7eacbf65a1a6fae1beffdd6c99" => :el_capitan
-    sha256 "3357afc853dc5e8dab8389a86a5538eb5c4af00c75cba41b2dc01ed0cfe4442d" => :yosemite
+    sha256 "05d58e182817e4a0a9a60991e152a71230f3315d07de252ff11bcd2113d239b6" => :high_sierra
+    sha256 "fc4b501664bae60fdb2d360c1dd6a85e64fbf7391f3b753b1e4a6f6c76b157af" => :sierra
+    sha256 "f407e1f9a6b6c2adad30214fe9603a28edc5cf871bd6491683970ca9c14b3c61" => :el_capitan
   end
 
   option "without-python", "Build without python2 support"
 
   depends_on "swig" => :build
-  depends_on :python => :recommended if MacOS.version <= :snow_leopard
-  depends_on :python3 => :optional
-  depends_on :fortran
-
-  numpy_options = []
-  numpy_options << "with-python3" if build.with? "python3"
-  depends_on "numpy" => numpy_options
+  depends_on "gcc" # for gfortran
+  depends_on "numpy"
+  depends_on "python@2" => :recommended
+  depends_on "python" => :recommended
 
   cxxstdlib_check :skip
 
@@ -29,7 +26,7 @@ class Scipy < Formula
   fails_with :gcc
 
   def install
-    config = <<-EOS.undent
+    config = <<~EOS
       [DEFAULT]
       library_dirs = #{HOMEBREW_PREFIX}/lib
       include_dirs = #{HOMEBREW_PREFIX}/include
@@ -55,10 +52,10 @@ class Scipy < Formula
   end
 
   def caveats
-    if (build.with? "python") && !Formula["python"].installed?
+    if (build.with? "python@2") && !Formula["python@2"].installed?
       homebrew_site_packages = Language::Python.homebrew_site_packages
       user_site_packages = Language::Python.user_site_packages "python"
-      <<-EOS.undent
+      <<~EOS
         If you use system python (that comes - depending on the OS X version -
         with older versions of numpy, scipy and matplotlib), you may need to
         ensure that the brewed packages come earlier in Python's sys.path with:
@@ -69,6 +66,8 @@ class Scipy < Formula
   end
 
   test do
-    system "python", "-c", "import scipy"
+    Language::Python.each_python(build) do |python, _version|
+      system python, "-c", "import scipy"
+    end
   end
 end

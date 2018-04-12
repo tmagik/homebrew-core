@@ -3,18 +3,19 @@ class Todoman < Formula
 
   desc "Simple CalDAV-based todo manager"
   homepage "https://todoman.readthedocs.io/"
-  url "https://files.pythonhosted.org/packages/96/df/4d17a43d3ebc32bbc36a0b5de95d273b7f1499674bbb2d42c3b06bcd1858/todoman-3.2.0.tar.gz"
-  sha256 "35c89c8880a0a201786cf3102770f6933eba871dd7e6b1b097698bcdd8584d26"
+  url "https://files.pythonhosted.org/packages/b4/19/9d6fda7af4b17bd75c97efecfbc478f9e39af8c5228d644fc495c646c433/todoman-3.3.0.tar.gz"
+  sha256 "dbbe12195d292b48cde8dd9324a14e695cdcb79f3800ddf5f29c8c71bc133952"
+  revision 2
   head "https://github.com/pimutils/todoman.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "6c37bf4642d161790024d4d73c44cba5b9d86e42822b33753095eb548f598cf6" => :sierra
-    sha256 "d87e30baf8525a524a348e02df96fdc466fb03bf0a2b34475482610016789196" => :el_capitan
-    sha256 "3b0eccf5ce07c8c8e4782a9a6ca70c96b8a6c68f4c9e9bcd9ba0f59ea99943d4" => :yosemite
+    sha256 "a8af8f5c775c47cda27de4b1200c5ef4480c8f8ff3876696945b6920c5efee8e" => :high_sierra
+    sha256 "5596d5202ad900806fb4489163c1f6359afa3d453b3d8c3d5c24901667b14d5e" => :sierra
+    sha256 "1cf06efeedfb07947868b76ae8060c3c35d41df36be515993e309fc84dc37a65" => :el_capitan
   end
 
-  depends_on :python3
+  depends_on "python"
 
   resource "atomicwrites" do
     url "https://files.pythonhosted.org/packages/a1/e1/2d9bc76838e6e6667fde5814aa25d7feb93d6fa471bf6816daac2596e8b2/atomicwrites-1.1.5.tar.gz"
@@ -27,8 +28,8 @@ class Todoman < Formula
   end
 
   resource "click-log" do
-    url "https://files.pythonhosted.org/packages/b7/71/d029ea00ede6c1fd307c8d87cd7aac90c1a7ed8dec2ede5dc115e254fade/click-log-0.1.8.tar.gz"
-    sha256 "57271008c12e2dc16d413373bedd7fd3ff17c57434e168650dc27dfb9c743392"
+    url "https://files.pythonhosted.org/packages/31/b7/95ad377ec87570d2e80f90e8ffe574a3d907a97c2b6613a17b6f81e0dda5/click-log-0.2.1.tar.gz"
+    sha256 "493af4fde9999fa3a15696a1c3c7ace394296542a035caaf5854b32140413de4"
   end
 
   resource "configobj" do
@@ -47,23 +48,23 @@ class Todoman < Formula
   end
 
   resource "icalendar" do
-    url "https://files.pythonhosted.org/packages/7f/0b/f13fa6ec05f44c13014ab7d7dd2ffae349c94d71151a311a8c5e7198b0a8/icalendar-3.11.3.tar.gz"
-    sha256 "6317d716563c41ca44b4694458f0a94734e35bb8c708994eb4503c8638d5d220"
+    url "https://files.pythonhosted.org/packages/96/f5/33e39d653e672d5110af87f4814570e21bdfea82d21cbc91ee34585aa04e/icalendar-4.0.0.tar.gz"
+    sha256 "367a48b779b9d19d3a59f681bd159897507d7013827f91265bfada2bfa48d749"
   end
 
   resource "parsedatetime" do
-    url "https://files.pythonhosted.org/packages/32/a8/29473ee95f1ceb5c3428d35387200be404cf6dfc60c110e75d775e27979a/parsedatetime-2.3.tar.gz"
-    sha256 "94ca3c9efcf2652a7a8ee6b11983e7344988a3c658fd617f8021689446ab79ee"
+    url "https://files.pythonhosted.org/packages/e3/b3/02385db13f1f25f04ad7895f35e9fe3960a4b9d53112775a6f7d63f264b6/parsedatetime-2.4.tar.gz"
+    sha256 "3d817c58fb9570d1eec1dd46fa9448cd644eeed4fb612684b02dfda3a79cb84b"
   end
 
   resource "python-dateutil" do
-    url "https://files.pythonhosted.org/packages/51/fc/39a3fbde6864942e8bb24c93663734b74e281b984d1b8c4f95d64b0c21f6/python-dateutil-2.6.0.tar.gz"
-    sha256 "62a2f8df3d66f878373fd0072eacf4ee52194ba302e00082828e0d263b0418d2"
+    url "https://files.pythonhosted.org/packages/54/bb/f1db86504f7a49e1d9b9301531181b00a1c7325dc85a29160ee3eaa73a54/python-dateutil-2.6.1.tar.gz"
+    sha256 "891c38b2a02f5bb1be3e4793866c8df49c7d19baabf9c1bad62547e0b4866aca"
   end
 
   resource "pytz" do
-    url "https://files.pythonhosted.org/packages/a4/09/c47e57fc9c7062b4e83b075d418800d322caa87ec0ac21e6308bd3a2d519/pytz-2017.2.zip"
-    sha256 "f5c056e8f62d45ba8215e5cb8f50dfccb198b4b9fbea8500674f3443e4689589"
+    url "https://files.pythonhosted.org/packages/60/88/d3152c234da4b2a1f7a989f89609ea488225eaea015bc16fbde2b3fdfefa/pytz-2017.3.zip"
+    sha256 "fae4cffc040921b8a2d60c6cf0b5d662c1190fe54d718271db4eb17d44a185b7"
   end
 
   resource "pyxdg" do
@@ -72,18 +73,18 @@ class Todoman < Formula
   end
 
   resource "six" do
-    url "https://files.pythonhosted.org/packages/b3/b2/238e2590826bfdd113244a40d9d3eb26918bd798fc187e2360a8367068db/six-1.10.0.tar.gz"
-    sha256 "105f8d68616f8248e24bf0e9372ef04d3cc10104f1980f54d57b2ce73a5ad56a"
+    url "https://files.pythonhosted.org/packages/16/d8/bc6316cf98419719bd59c91742194c111b6f2e85abac88e496adefaf7afe/six-1.11.0.tar.gz"
+    sha256 "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9"
   end
 
   resource "tabulate" do
-    url "https://files.pythonhosted.org/packages/1c/a1/3367581782ce79b727954f7aa5d29e6a439dc2490a9ac0e7ea0a7115435d/tabulate-0.7.7.tar.gz"
-    sha256 "83a0b8e17c09f012090a50e1e97ae897300a72b35e0c86c0b53d3bd2ae86d8c6"
+    url "https://files.pythonhosted.org/packages/12/c2/11d6845db5edf1295bc08b2f488cf5937806586afe42936c3f34c097ebdc/tabulate-0.8.2.tar.gz"
+    sha256 "e4ca13f26d0a6be2a2915428dc21e732f1e44dad7f76d7030b2ef1ec251cf7f2"
   end
 
   resource "urwid" do
-    url "https://files.pythonhosted.org/packages/85/5d/9317d75b7488c335b86bd9559ca03a2a023ed3413d0e8bfe18bea76f24be/urwid-1.3.1.tar.gz"
-    sha256 "cfcec03e36de25a1073e2e35c2c7b0cc6969b85745715c3a025a31d9786896a1"
+    url "https://files.pythonhosted.org/packages/c9/07/8e1bfc4f6166828e449814681ef57003c36ba7989e7c941e951ca9447f08/urwid-2.0.0.tar.gz"
+    sha256 "2ec42d29cd173a7126817174468614a17bcd9bafc0bdd47918f4e473301b4761"
   end
 
   def install
@@ -92,7 +93,7 @@ class Todoman < Formula
 
   test do
     ENV["LC_ALL"] = "en_US.UTF-8"
-    (testpath/".config/todoman/todoman.conf").write <<-EOS.undent
+    (testpath/".config/todoman/todoman.conf").write <<~EOS
       [main]
       path = #{testpath}/.calendar/*
       date_format = %Y-%m-%d

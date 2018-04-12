@@ -2,13 +2,13 @@ class Zorba < Formula
   desc "NoSQL query processor"
   homepage "http://www.zorba.io/"
   url "https://github.com/28msec/zorba/archive/3.1.tar.gz"
-  sha256 "a27e8160aca5d3aa5a6525b930da7edde44f8824dd4fba39aaef3b9af2717b74"
-  revision 2
+  sha256 "05eed935c0ff3626934a5a70724a42410fd93bc96aba1fa4821736210c7f1dd8"
+  revision 7
 
   bottle do
-    sha256 "557048a6f8d3d3b4388fdcae8b4098e0a3d9c03283a5e4ff990a93b1c901db97" => :sierra
-    sha256 "cccd89e2658fba63c13721285b3d4b95ac898dd5679d5dde6232d9af26631e83" => :el_capitan
-    sha256 "4f98c3c2539cabb1a9334502be226b538328d888f0983fc998f8b40ec4e57aef" => :yosemite
+    sha256 "730c55eebd4e0e93e33b518fdbaf2f04f022e1fdf5d2ce5b696c0a5f92b0a430" => :high_sierra
+    sha256 "23c3c79cd3d46d6edf6f2c0c6977f1fd824eaeee547e344b5708fac5de38a483" => :sierra
+    sha256 "a572713290985b54d082556b05165f90f38848fda0cd0e1544e7934e2c3892e5" => :el_capitan
   end
 
   option "with-big-integer", "Use 64 bit precision instead of arbitrary precision for performance"
@@ -25,6 +25,9 @@ class Zorba < Formula
   needs :cxx11
 
   def install
+    # icu4c 61.1 compatability
+    ENV.append "CXXFLAGS", "-DU_USING_ICU_NAMESPACE=1"
+
     ENV.cxx11
 
     args = std_cmake_args

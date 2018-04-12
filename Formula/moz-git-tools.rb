@@ -7,6 +7,7 @@ class MozGitTools < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "0901261be02f9a82cd6ab1b287160e047c4160d81a443f4edc0a7326fdf08a6d" => :high_sierra
     sha256 "7a771b0e71a44dafd3fc4eb2210f909d412f9ea541a7ff50a96ce272204cc501" => :sierra
     sha256 "c5ddb2e842a6fb26ba5feacdee6bac287d94732abd888bd11bc5c80be4f100a4" => :el_capitan
     sha256 "91f89ec1014d6c7b395571210c0f21b1e701f4bfb90540a94fa3daafd4472d3b" => :yosemite
@@ -22,14 +23,14 @@ class MozGitTools < Formula
   end
 
   def caveats
-    <<-EOS.undent
-    git-root was not installed because it conflicts with the version provided by git-extras.
+    <<~EOS
+      git-root was not installed because it conflicts with the version provided by git-extras.
     EOS
   end
 
   test do
     # create a Git repo and check its branchname
-    (testpath/".gitconfig").write <<-EOS.undent
+    (testpath/".gitconfig").write <<~EOS
       [user]
         name = Real Person
         email = notacat@hotmail.cat

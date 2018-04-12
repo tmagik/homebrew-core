@@ -1,34 +1,22 @@
 class Ldc < Formula
   desc "Portable D programming language compiler"
   homepage "https://wiki.dlang.org/LDC"
+  revision 2
 
   stable do
-    url "https://github.com/ldc-developers/ldc/releases/download/v1.2.0/ldc-1.2.0-src.tar.gz"
-    sha256 "910e8a670f0fadcaf64403c924091d6debf7ad29e203808f5f2b6899217e6f2b"
+    url "https://github.com/ldc-developers/ldc/releases/download/v1.8.0/ldc-1.8.0-src.tar.gz"
+    sha256 "e421a1f4bbf97d173bd277125794862ca5b6a09409586b806cec23b922955c7f"
 
     resource "ldc-lts" do
-      url "https://github.com/ldc-developers/ldc/releases/download/v0.17.4/ldc-0.17.4-src.tar.gz"
-      sha256 "48428afde380415640f3db4e38529345f3c8485b1913717995547f907534c1c3"
+      url "https://github.com/ldc-developers/ldc/releases/download/v0.17.5/ldc-0.17.5-src.tar.gz"
+      sha256 "7aa540a135f9fa1ee9722cad73100a8f3600a07f9a11d199d8be68887cc90008"
     end
-
-    depends_on "libconfig"
   end
 
   bottle do
-    sha256 "6e12e9f8be1ebb5d3e18c08729d52467b894b4ef2907e8c8e682580ec87c2e7d" => :sierra
-    sha256 "d9d2f9a9b8bfea447bc0abe64199f31992b0fdccf2b897d26aee1ec9d9c46114" => :el_capitan
-    sha256 "f29f90210d4e53f147fe67c30cee4527d5dfb326765c134dcdd0d7d41292ed70" => :yosemite
-  end
-
-  devel do
-    url "https://github.com/ldc-developers/ldc/releases/download/v1.3.0-beta2/ldc-1.3.0-beta2-src.tar.gz"
-    version "1.3.0-beta2"
-    sha256 "a6a13f356192d40649af7290820cf85127369f40d554c2fdd853dc098dce885f"
-
-    resource "ldc-lts" do
-      url "https://github.com/ldc-developers/ldc/releases/download/v0.17.4/ldc-0.17.4-src.tar.gz"
-      sha256 "48428afde380415640f3db4e38529345f3c8485b1913717995547f907534c1c3"
-    end
+    sha256 "99490b9435a79c78061962991d83d5be2ffd6cdc16512f479024e0035c4e96da" => :high_sierra
+    sha256 "c45b6622177a989f9b14f9722ce0cf8406a9b3af4c2a55aa87ca7dfad26eb899" => :sierra
+    sha256 "abd3dbef86edde7285bfbb7d66956341e5f2fca7445c876e1d8a525a8754650e" => :el_capitan
   end
 
   head do
@@ -42,7 +30,8 @@ class Ldc < Formula
   needs :cxx11
 
   depends_on "cmake" => :build
-  depends_on "llvm"
+  depends_on "libconfig" => :build
+  depends_on "llvm@5"
 
   def install
     ENV.cxx11
@@ -51,7 +40,7 @@ class Ldc < Formula
     cd "ldc-lts" do
       mkdir "build" do
         args = std_cmake_args + %W[
-          -DLLVM_ROOT_DIR=#{Formula["llvm"].opt_prefix}
+          -DLLVM_ROOT_DIR=#{Formula["llvm@5"].opt_prefix}
         ]
         system "cmake", "..", *args
         system "make"
@@ -59,10 +48,14 @@ class Ldc < Formula
     end
     mkdir "build" do
       args = std_cmake_args + %W[
-        -DLLVM_ROOT_DIR=#{Formula["llvm"].opt_prefix}
+        -DLLVM_ROOT_DIR=#{Formula["llvm@5"].opt_prefix}
         -DINCLUDE_INSTALL_DIR=#{include}/dlang/ldc
         -DD_COMPILER=#{buildpath}/ldc-lts/build/bin/ldmd2
+        -DLDC_WITH_LLD=OFF
+        -DRT_ARCHIVE_WITH_LDC=OFF
       ]
+      # LDC_WITH_LLD see https://github.com/ldc-developers/ldc/releases/tag/v1.4.0 Known issues
+      # RT_ARCHIVE_WITH_LDC see https://github.com/ldc-developers/ldc/issues/2350
 
       system "cmake", "..", *args
       system "make"
@@ -71,15 +64,17 @@ class Ldc < Formula
   end
 
   test do
-    (testpath/"test.d").write <<-EOS.undent
+    (testpath/"test.d").write <<~EOS
       import std.stdio;
       void main() {
         writeln("Hello, world!");
       }
     EOS
-
+    system bin/"ldc2", "test.d"
+    assert_match "Hello, world!", shell_output("./test")
+    system bin/"ldc2", "-flto=thin", "test.d"
+    assert_match "Hello, world!", shell_output("./test")
     system bin/"ldc2", "-flto=full", "test.d"
-
     assert_match "Hello, world!", shell_output("./test")
     system bin/"ldmd2", "test.d"
     assert_match "Hello, world!", shell_output("./test")

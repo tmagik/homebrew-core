@@ -1,23 +1,42 @@
 class Reminiscence < Formula
   desc "Flashback engine reimplementation"
   homepage "http://cyxdown.free.fr/reminiscence/"
-  url "http://cyxdown.free.fr/reminiscence/REminiscence-0.3.2.tar.bz2"
-  sha256 "063a1d9bb61a91ffe7de69516e48164a1d4d5d240747968bed4fd292d5df546f"
+  url "http://cyxdown.free.fr/reminiscence/REminiscence-0.3.6.tar.bz2"
+  sha256 "7d3baf258e3b05e86a91b6cc33765367710821a9f18c88f11ae1384bb9884528"
 
   bottle do
     cellar :any
-    sha256 "062ba9c02ce35d463119df045dda6484dbfb09f853dcebef6cc5bed42991f1d2" => :sierra
-    sha256 "83ceaab9230a493bd1c86d1db0c9b4fa77070c0cc495339006852781d69aac9d" => :el_capitan
-    sha256 "ca207b017eebbf2b7e9aca765f2c73aadef3a1f66b602e67189f1b8534e91c11" => :yosemite
+    sha256 "afd2cd157db08a099a133474d2e39cfa0a84cf0f964f723d08e1c694150ce9d2" => :high_sierra
+    sha256 "1d7ec41316c4356bf9563e2b1edad2ebb360d4d2aee3b10b4f3cc3549572fffd" => :sierra
+    sha256 "5def6d20b975e17c0d988714efd1023b618594df8d7ab8f2fd9092df6ac35221" => :el_capitan
   end
 
+  depends_on "autoconf" => :build
+  depends_on "automake" => :build
+  depends_on "libtool" => :build
+  depends_on "pkg-config" => :build
   depends_on "libmodplug"
+  depends_on "libogg"
   depends_on "sdl2"
 
+  resource "tremor" do
+    url "https://git.xiph.org/tremor.git",
+        :revision => "b56ffce0c0773ec5ca04c466bc00b1bbcaf65aef"
+  end
+
   def install
-    # REminiscence supports both SDL1 and 2
-    # Use SDL2 to have better input support
-    inreplace "Makefile", "sdl-config", "sdl2-config"
+    resource("tremor").stage do
+      system "autoreconf", "-fiv"
+      system "./configure", "--disable-dependency-tracking",
+                            "--disable-silent-rules",
+                            "--prefix=#{libexec}",
+                            "--disable-static"
+      system "make", "install"
+    end
+
+    ENV.prepend "CPPFLAGS", "-I#{libexec}/include"
+    ENV.prepend "LDFLAGS", "-L#{libexec}/lib"
+
     system "make"
     bin.install "rs" => "reminiscence"
   end

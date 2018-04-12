@@ -1,11 +1,12 @@
 class BerkeleyDbAT4 < Formula
   desc "High performance key/value database"
   homepage "https://www.oracle.com/technology/products/berkeley-db/index.html"
-  url "http://download.oracle.com/berkeley-db/db-4.8.30.tar.gz"
+  url "https://download.oracle.com/berkeley-db/db-4.8.30.tar.gz"
   sha256 "e0491a07cdb21fb9aa82773bbbedaeb7639cbd0e7f96147ab46141e0045db72a"
 
   bottle do
     cellar :any
+    sha256 "4dc428a3759e372e9be2be0b0b61c80815d4479dfe7f0364a6968042cc7011af" => :high_sierra
     sha256 "d1352d9ea6085984a1ecd512babf3158416fe5b56b98aee3cd209c98ffb1f520" => :sierra
     sha256 "ae348346b2c4bd39db740b0992cdad4f30d681a005cce8e20fbfa5d0059e4548" => :el_capitan
     sha256 "b220bd9ce6ad809639dbbdd31abdce4a136ccf3f11b5ca6d3cc8c1c9d0fe8dfe" => :yosemite
@@ -39,7 +40,7 @@ class BerkeleyDbAT4 < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <assert.h>
       #include <string.h>
       #include <db_cxx.h>
@@ -67,7 +68,7 @@ class BerkeleyDbAT4 < Formula
     ]
     system ENV.cxx, "test.cpp", "-o", "test", *flags
     system "./test"
-    assert (testpath/"test.db").exist?
+    assert_predicate testpath/"test.db", :exist?
   end
 end
 

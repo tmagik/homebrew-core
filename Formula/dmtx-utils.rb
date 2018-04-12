@@ -3,12 +3,13 @@ class DmtxUtils < Formula
   homepage "https://github.com/dmtx/dmtx-utils"
   url "https://github.com/dmtx/dmtx-utils/archive/v0.7.5.tar.gz"
   sha256 "6fa365cd321609db40800f6b34a2387c0ac56ef4643f6101ac83cb762f5ce9ef"
+  revision 3
 
   bottle do
     cellar :any
-    sha256 "4075b892f492b9afe50ce2840158cd4b19d06bcf129749f2cd6e8e6c777634fb" => :sierra
-    sha256 "f5cb2e45f79fe1456470c7085254b8af6e71eafe62c0b1601b21adaa62db8c8b" => :el_capitan
-    sha256 "e6d4fda32908729a72b45c7103417d07b749cc4e7f798efa0b0ad70e9947536b" => :yosemite
+    sha256 "f751ecca7b7d06df57358c20c0f8b19f2ccdf8dea295c14b9792273b401f1c27" => :high_sierra
+    sha256 "a874c6964782f19e0958b8b8fd0044a8468c6f6f5a9d0fd04834a3074fd389bc" => :sierra
+    sha256 "2fc25e98e8a67f2edc6ce3cbb928fadb06ad3e7765d9aa4f00b2d2a17f1293e3" => :el_capitan
   end
 
   depends_on "autoconf" => :build
@@ -16,7 +17,7 @@ class DmtxUtils < Formula
   depends_on "pkg-config" => :build
   depends_on "imagemagick"
   depends_on "libdmtx"
-  depends_on "libtool" => :run
+  depends_on "libtool"
 
   resource "test_image12" do
     url "https://raw.githubusercontent.com/dmtx/libdmtx/ca9313f/test/rotate_test/images/test_image12.png"

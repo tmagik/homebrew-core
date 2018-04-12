@@ -1,8 +1,8 @@
 class Linkerd < Formula
   desc "Drop-in RPC proxy designed for microservices"
   homepage "https://linkerd.io/"
-  url "https://github.com/linkerd/linkerd/releases/download/1.0.2/linkerd-1.0.2.tgz"
-  sha256 "dbbc54f8bd3541dd8d72fcaa5f4f9954ea851252972c57f34c217bc5c5bb3e5e"
+  url "https://github.com/linkerd/linkerd/releases/download/1.3.7/linkerd-1.3.7.tgz"
+  sha256 "65892918f4736a088d244f76cea4d70742a6c4af108aadce2431b5d49cf27322"
 
   bottle :unneeded
 
@@ -31,7 +31,7 @@ class Linkerd < Formula
 
   plist_options :manual => "linkerd #{HOMEBREW_PREFIX}/etc/linkerd/linkerd.yaml"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

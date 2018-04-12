@@ -1,13 +1,13 @@
 class Sysbench < Formula
   desc "System performance benchmark tool"
   homepage "https://github.com/akopytov/sysbench"
-  url "https://github.com/akopytov/sysbench/archive/1.0.7.tar.gz"
-  sha256 "db91521e70b0d1a6fccc60a8d4acadacb3f9328e8ab6802ae82f93393a688d43"
+  url "https://github.com/akopytov/sysbench/archive/1.0.14.tar.gz"
+  sha256 "81669cee6e0d5fccd5543dbcefec18826db43abba580de06cecf5b54483f6079"
 
   bottle do
-    sha256 "97a8a6623055c8c4d04a4fa7d3e841b9a4d87b87e00e647ddd3d6e5a1694bb8a" => :sierra
-    sha256 "f5eb0e912dbe3425a3d6345bd01610d48e88210a8662da10fdc4bb25c71be0d4" => :el_capitan
-    sha256 "ff16e2ddfded71eaa0f683353b01cd7fe6c2850fae15d15686b95540a55be5ce" => :yosemite
+    sha256 "fcb780c85ec232d60edbbb9fbdb384c3f8e3a26314e625a5bf60461905b636a0" => :high_sierra
+    sha256 "56eda0a58313a0ac098b2cbbd1ac6c68b8c487c0dbdcc996b486ddcb2f1fabc0" => :sierra
+    sha256 "d00d69c96c281d3185ffe1db96e625a3baf8b392098c681f560d7b72e605ff09" => :el_capitan
   end
 
   depends_on "autoconf" => :build
@@ -15,8 +15,8 @@ class Sysbench < Formula
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on "openssl"
-  depends_on :postgresql => :optional
-  depends_on :mysql => :recommended
+  depends_on "postgresql" => :optional
+  depends_on "mysql" => :recommended
 
   def install
     system "./autogen.sh"

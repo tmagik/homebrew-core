@@ -2,7 +2,6 @@ class ArchiSteamFarm < Formula
   desc "ASF is a C# application that allows you to farm steam cards"
   homepage "https://github.com/JustArchi/ArchiSteamFarm"
   url "https://github.com/JustArchi/ArchiSteamFarm/releases/download/2.3.2.0/ASF.zip"
-  version "2.3.2.0"
   sha256 "1a9f50c3cf2eb00e5148bc21a209b0c7c275b6c36c8cae8b4d9b2469bee7ff33"
 
   bottle :unneeded
@@ -11,7 +10,7 @@ class ArchiSteamFarm < Formula
 
   def install
     libexec.install "ASF.exe"
-    (bin/"asf").write <<-EOS.undent
+    (bin/"asf").write <<~EOS
       #!/bin/bash
       mono #{libexec}/ASF.exe "$@"
     EOS
@@ -20,7 +19,7 @@ class ArchiSteamFarm < Formula
     libexec.install_symlink etc/"asf" => "config"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     Config: #{etc}/asf/
     EOS
   end

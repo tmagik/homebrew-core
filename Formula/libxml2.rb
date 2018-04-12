@@ -1,33 +1,15 @@
 class Libxml2 < Formula
   desc "GNOME XML library"
-  homepage "http://xmlsoft.org"
-  revision 3
-
-  stable do
-    url "http://xmlsoft.org/sources/libxml2-2.9.4.tar.gz"
-    mirror "ftp://xmlsoft.org/libxml2/libxml2-2.9.4.tar.gz"
-    sha256 "ffb911191e509b966deb55de705387f14156e1a56b21824357cdf0053233633c"
-
-    # All patches upstream already. Remove whenever 2.9.5 is released.
-    # Fixes CVE-2016-4658, CVE-2016-5131.
-    patch do
-      url "https://mirrors.ocf.berkeley.edu/debian/pool/main/libx/libxml2/libxml2_2.9.4+dfsg1-2.2.debian.tar.xz"
-      mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/libx/libxml2/libxml2_2.9.4+dfsg1-2.2.debian.tar.xz"
-      sha256 "c038bba02a56164cef7728509ba3c8f1856018573769ee9ffcc48c565e90bdc9"
-      apply "patches/0003-Fix-NULL-pointer-deref-in-XPointer-range-to.patch",
-            "patches/0004-Fix-comparison-with-root-node-in-xmlXPathCmpNodes.patch",
-            "patches/0005-Fix-XPointer-paths-beginning-with-range-to.patch",
-            "patches/0006-Disallow-namespace-nodes-in-XPointer-ranges.patch",
-            "patches/0007-Fix-more-NULL-pointer-derefs-in-xpointer.c.patch",
-            "patches/0008-Fix-attribute-decoding-during-XML-schema-validation.patch"
-    end
-  end
+  homepage "http://xmlsoft.org/"
+  url "http://xmlsoft.org/sources/libxml2-2.9.7.tar.gz"
+  mirror "https://ftp.osuosl.org/pub/blfs/conglomeration/libxml2/libxml2-2.9.7.tar.gz"
+  sha256 "f63c5e7d30362ed28b38bfa1ac6313f9a80230720b7fb6c80575eeab3ff5900c"
 
   bottle do
     cellar :any
-    sha256 "fb8338703ee9691cc48ca8898a16baa3b2657635ebacb6071dee49725bd052d6" => :sierra
-    sha256 "04751be7609addc8fef6fa5cfd0413fbec46cbe2a0bab3fe52ff98371356eb87" => :el_capitan
-    sha256 "1ec98ced07f46c0976bd919fe97cf72092a28c1338d43410384d37f6439634c0" => :yosemite
+    sha256 "ff9bf7d946d5413fb1f2837a187bd026f469a67b78ba6589f5b565f0133b58f2" => :high_sierra
+    sha256 "0b9bc0fe308a22b557822d0bc254f209e33bd7b4948d7d08a14d620e1f8b6a3b" => :sierra
+    sha256 "cdcc13eab3436e1c44dcae42396e519e4a5119552818b656a2c7a5d878b9a912" => :el_capitan
   end
 
   head do
@@ -36,24 +18,19 @@ class Libxml2 < Formula
     depends_on "autoconf" => :build
     depends_on "automake" => :build
     depends_on "libtool" => :build
+    depends_on "pkg-config" => :build
   end
 
-  keg_only :provided_by_osx
+  keg_only :provided_by_macos
 
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
 
   def install
-    if build.head?
-      inreplace "autogen.sh", "libtoolize", "glibtoolize"
-      system "./autogen.sh"
-    end
-
+    system "autoreconf", "-fiv" if build.head?
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
                           "--without-python",
                           "--without-lzma"
-    system "make"
-    ENV.deparallelize
     system "make", "install"
 
     cd "python" do
@@ -64,7 +41,7 @@ class Libxml2 < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <libxml/tree.h>
 
       int main()
@@ -82,6 +59,6 @@ class Libxml2 < Formula
     system "./test"
 
     ENV.prepend_path "PYTHONPATH", lib/"python2.7/site-packages"
-    system "python", "-c", "import libxml2"
+    system "python2.7", "-c", "import libxml2"
   end
 end

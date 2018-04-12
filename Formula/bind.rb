@@ -1,22 +1,26 @@
 class Bind < Formula
   desc "Implementation of the DNS protocols"
   homepage "https://www.isc.org/downloads/bind/"
-  url "https://ftp.isc.org/isc/bind9/9.11.1-P1/bind-9.11.1-P1.tar.gz"
-  mirror "https://fossies.org/linux/misc/dns/bind9/9.11.1-P1/bind-9.11.1-P1.tar.gz"
-  version "9.11.1-P1"
-  sha256 "6b1b3e88d51b8471bd6aee24a8cea70817e850a5901315dc506f9dde275ca638"
+  url "https://ftp.isc.org/isc/bind9/9.12.1/bind-9.12.1.tar.gz"
+  mirror "https://fossies.org/linux/misc/dns/bind9/9.12.1/bind-9.12.1.tar.gz"
+  sha256 "16e446425c35e48b651ddf1171d2115ebf32b07670b652e1030a174038937510"
   head "https://source.isc.org/git/bind9.git"
 
   bottle do
-    sha256 "f62360c81228e2d475c0a0a77daadbc8ae35981c9fbbeee112355f0eb522b0f1" => :sierra
-    sha256 "21bec15056e9de52bab4d97d94ddd3923a373837f225937992ce1f884d512e4d" => :el_capitan
-    sha256 "e5d956eec905aa0690a3c02fd1fc0d5defd9980f5d37c1ae16eec55a5c20bba8" => :yosemite
+    sha256 "355e4a226e321e9101b6bc39a86463c1bd74b2b7be82e43e55b73b40977eab16" => :high_sierra
+    sha256 "7f553589c292248a704c89658f561a275e20cb449c76acdf74202f90fc75dfb7" => :sierra
+    sha256 "7d6a35b70b7e209e5df444a88acdcfc6cebc9c6ad5bd7085d617916a563b13b2" => :el_capitan
   end
 
   depends_on "openssl"
   depends_on "json-c" => :optional
 
   def install
+    # Fix "configure: error: xml2-config returns badness"
+    if MacOS.version == :sierra || MacOS.version == :el_capitan
+      ENV["SDKROOT"] = MacOS.sdk_path
+    end
+
     # enable DNSSEC signature chasing in dig
     ENV["STD_CDEFINES"] = "-DDIG_SIGCHASE=1"
 
@@ -49,7 +53,7 @@ class Bind < Formula
     end
   end
 
-  def named_conf; <<-EOS.undent
+  def named_conf; <<~EOS
     //
     // Include keys file
     //
@@ -109,7 +113,7 @@ class Bind < Formula
     EOS
   end
 
-  def localhost_zone; <<-EOS.undent
+  def localhost_zone; <<~EOS
     $TTL    86400
     $ORIGIN localhost.
     @            1D IN SOA    @ root (
@@ -124,7 +128,7 @@ class Bind < Formula
     EOS
   end
 
-  def named_local; <<-EOS.undent
+  def named_local; <<~EOS
     $TTL    86400
     @       IN      SOA     localhost. root.localhost.  (
                                           1997022700 ; Serial
@@ -140,7 +144,7 @@ class Bind < Formula
 
   plist_options :startup => true
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

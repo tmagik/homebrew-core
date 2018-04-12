@@ -1,26 +1,35 @@
 class Libtiff < Formula
   desc "TIFF library and utilities"
   homepage "http://libtiff.maptools.org/"
-  url "http://download.osgeo.org/libtiff/tiff-4.0.8.tar.gz"
-  mirror "https://fossies.org/linux/misc/tiff-4.0.8.tar.gz"
-  sha256 "59d7a5a8ccd92059913f246877db95a2918e6c04fb9d43fd74e5c3390dac2910"
+  url "https://download.osgeo.org/libtiff/tiff-4.0.9.tar.gz"
+  mirror "https://fossies.org/linux/misc/tiff-4.0.9.tar.gz"
+  sha256 "6e7bdeec2c310734e734d19aae3a71ebe37a4d842e0e23dbb1b8921c0026cfcd"
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "c3db59fa42ce59f90e0e509488498f40baeb3b3e618c6406342a4d5393fa2b0b" => :sierra
-    sha256 "05d3e7bcbd90ca0ec4f4dfcf8bcafe65ff57c94eabda983d659ea2377a09756f" => :el_capitan
-    sha256 "8366e2ffaa26a0f0723c8fa0ed6d6fec9b6909a97201090b3bd6fb3a888dc672" => :yosemite
+    sha256 "b25a0893acdffc8fcbb1f9d0a2f1ef04c62f15168689fc64842cd7a36884d179" => :high_sierra
+    sha256 "4fbaa643a091abe7e6744ff8b04dcd94d35b559874dcdc9d733b10c41666c78a" => :sierra
+    sha256 "fdfeb67c92d2cb64628ba15c3ded9d840b90b5627e06e0864536fd66ea9d15f3" => :el_capitan
   end
 
-  option :cxx11
   option "with-xz", "Include support for LZMA compression"
 
   depends_on "jpeg"
   depends_on "xz" => :optional
 
-  def install
-    ENV.cxx11 if build.cxx11?
+  # All of these have been reported upstream & should
+  # be fixed in the next release, but please check.
+  patch do
+    url "https://mirrors.ocf.berkeley.edu/debian/pool/main/t/tiff/tiff_4.0.9-4.debian.tar.xz"
+    mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/t/tiff/tiff_4.0.9-4.debian.tar.xz"
+    sha256 "f078da1da538109c1e5403dc1f44d23c91f5a5d6ddc5ffc41ff60de006cb2b2e"
+    apply "patches/CVE-2017-9935.patch",
+          "patches/CVE-2017-18013.patch",
+          "patches/CVE-2018-5784.patch"
+  end
 
+  def install
     args = %W[
       --disable-dependency-tracking
       --prefix=#{prefix}
@@ -39,7 +48,7 @@ class Libtiff < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <tiffio.h>
 
       int main(int argc, char* argv[])

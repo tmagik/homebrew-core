@@ -1,14 +1,13 @@
 class Menhir < Formula
   desc "LR(1) parser generator for the OCaml programming language"
   homepage "http://cristal.inria.fr/~fpottier/menhir"
-  url "http://cristal.inria.fr/~fpottier/menhir/menhir-20170607.tar.gz"
-  sha256 "00caa66ed0d1544defda24539f2ca1d37b92120e0575aafc5fcabd8e5364ce61"
-  revision 1
+  url "http://cristal.inria.fr/~fpottier/menhir/menhir-20171222.tar.gz"
+  sha256 "3958ef6d317548c7776a25a13a48855fc1972d660c211ebec7e797b5bec0f47e"
 
   bottle do
-    sha256 "45ea2725cf33b536e5c7026a77829a7ef06c47bd8ba997365271e52e3ab106b0" => :sierra
-    sha256 "940c0df682722ffc3be6dd84c067570dfa974b077cb23df390c11717f3f66fde" => :el_capitan
-    sha256 "39577be729abb9ceccd3ca9b4d674840c2873f307228b8772c920b02af983004" => :yosemite
+    sha256 "1b4f7298c9130c28feb9d7122e1dd08a7e734ce3040a720e1be2006458505670" => :high_sierra
+    sha256 "5d6c6809d1fd545c507ee3bba42f0b3df84f302b2f5ac723a64bdd565923b206" => :sierra
+    sha256 "42d182742c539f018ed9648246529c4afb88712c01786d8de270625aded49f3c" => :el_capitan
   end
 
   depends_on "ocamlbuild" => :build
@@ -20,7 +19,7 @@ class Menhir < Formula
   end
 
   test do
-    (testpath/"test.mly").write <<-EOS.undent
+    (testpath/"test.mly").write <<~EOS
       %token PLUS TIMES EOF
       %left PLUS
       %left TIMES
@@ -38,7 +37,7 @@ class Menhir < Formula
     EOS
 
     system "#{bin}/menhir", "--dump", "--explain", "--infer", "test.mly"
-    assert File.exist? "test.ml"
-    assert File.exist? "test.mli"
+    assert_predicate testpath/"test.ml", :exist?
+    assert_predicate testpath/"test.mli", :exist?
   end
 end

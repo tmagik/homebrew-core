@@ -3,13 +3,13 @@ class Supersonic < Formula
   homepage "https://code.google.com/archive/p/supersonic/"
   url "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/supersonic/supersonic-0.9.4.tar.gz"
   sha256 "1592dfd2dc73f0b97298e0d25e51528dc9a94e9e7f4ab525569f63db0442d769"
-  revision 5
+  revision 7
 
   bottle do
     cellar :any
-    sha256 "bcd421072c798bffb2a25452c2da9bccfede7f667613dca93b176985c6bceef2" => :sierra
-    sha256 "6c4a699c942caf9ea8db918150439175b3cbb96932065814b053ed17f5a839ff" => :el_capitan
-    sha256 "695a0c33541d27112415cc74aab5cc9a6e6f4ddfbf9b9f12dee165f62461bd96" => :yosemite
+    sha256 "34c2702ea62cfd75c2c5cab31fef4e85c416ccd84ebc70c2a7953a6a4a31dfcc" => :high_sierra
+    sha256 "01ed3df20216556094e8a22209a08a1f60a5b01848f9b52ddbe65fd90e1e6e5e" => :sierra
+    sha256 "9bd0c97e669fb3a06c16c8b2118c4cb1535db4403c481c5d2f4a7fc2e200315d" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -35,7 +35,7 @@ class Supersonic < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <iostream>
       #include <supersonic/supersonic.h>
       using std::cout;
@@ -106,7 +106,7 @@ class Supersonic < Formula
           return 0;
       }
     EOS
-    system ENV.cxx, "test.cpp", "-std=c++1y", "-stdlib=libc++", "-lsupersonic", "-lglog", "-lprotobuf", "-lboost_system", "-o", "test"
+    system ENV.cxx, "test.cpp", "-std=c++1y", "-stdlib=libc++", "-L#{lib}", "-lsupersonic", "-lglog", "-lprotobuf", "-lboost_system", "-o", "test"
     system "./test"
   end
 end

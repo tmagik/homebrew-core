@@ -1,16 +1,14 @@
 class Libfaketime < Formula
   desc "Report faked system time to programs"
-  homepage "http://www.code-wizards.com/projects/libfaketime"
-  url "http://code-wizards.com/projects/libfaketime/libfaketime-0.9.5.tar.gz"
-  sha256 "5e07678d440d632bef012068ca58825402da5ad25954513e785717cc539c213d"
+  homepage "https://github.com/wolfcw/libfaketime"
+  url "https://github.com/wolfcw/libfaketime/archive/v0.9.7.tar.gz"
+  sha256 "4d65f368b2d53ee2f93a25d5e9541ce27357f2b95e5e5afff210e0805042811e"
   head "https://github.com/wolfcw/libfaketime.git"
 
   bottle do
-    rebuild 1
-    sha256 "1fc4204b9cf216dffc0c614e679c37682a7702b058ca00d3aed6226220997b53" => :el_capitan
-    sha256 "5148ca77b62f044e604d80cd18f2a7c46c2bd44ffff2b828eea05b98154f2b17" => :yosemite
-    sha256 "9beebb4e5b6fa274f6114a141d7c20f726532e851496733b60825e9c75926480" => :mavericks
-    sha256 "4b7477042b15dd475fc16de06df07e9cc3a983033d6d21ac6029dfc1ddfb1925" => :mountain_lion
+    sha256 "99f78789ba8ee314d2358531a106d245c327a2248d7b59712493543806604eae" => :high_sierra
+    sha256 "3fc5f61a8d50f7586cc18d269263fa95481bd741ac1756f2f55b5932e5a01ce5" => :sierra
+    sha256 "0b792c716c6e8ba9db928b0c4dc4ab2dc474eb12da529186ba4475f5fba73169" => :el_capitan
   end
 
   depends_on :macos => :lion

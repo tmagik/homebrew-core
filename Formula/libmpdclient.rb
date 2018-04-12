@@ -1,32 +1,25 @@
 class Libmpdclient < Formula
   desc "Library for MPD in the C, C++, and Objective-C languages"
   homepage "https://www.musicpd.org/libs/libmpdclient/"
-  url "https://www.musicpd.org/download/libmpdclient/2/libmpdclient-2.11.tar.gz"
-  sha256 "249d510c96142f14c8c45f5f8f6bd824bfd45f534cc386aa60ca492ab2f98ede"
+  url "https://www.musicpd.org/download/libmpdclient/2/libmpdclient-2.14.tar.xz"
+  sha256 "0a84e2791bfe3077cf22ee1784c805d5bb550803dffe56a39aa3690a38061372"
+  revision 1
+  head "https://github.com/MusicPlayerDaemon/libmpdclient.git"
 
   bottle do
     cellar :any
-    sha256 "ab84b63fdac72459fe7cff11655ef233ae2561aa218177229d40f4848e1c452d" => :sierra
-    sha256 "1fa73b275597ded3bbed6a39aadce1dd9af6f77711c4cfd8f3d9a50b31e3662a" => :el_capitan
-    sha256 "98202831315d735c430e8b7071f513b4eafb3715bbcf51090db87b451d59d242" => :yosemite
-  end
-
-  head do
-    url "git://git.musicpd.org/master/libmpdclient.git"
-
-    depends_on "autoconf" => :build
-    depends_on "automake" => :build
-    depends_on "libtool" => :build
+    sha256 "a4b68fd2d553aad650263ddf646fc8a402df86f1341f4febee85a69e46916a2f" => :high_sierra
+    sha256 "4e1b4802e6fa4e958d78c03d3cc14f33fece909975a9c40fa83946c5fd2a30b1" => :sierra
+    sha256 "573291d299ec6ee87a40cd79374cd7697e784230774852cf2bab9e20fcc83b54" => :el_capitan
   end
 
   depends_on "doxygen" => :build
+  depends_on "meson-internal" => :build
+  depends_on "ninja" => :build
 
   def install
-    inreplace "autogen.sh", "libtoolize", "glibtoolize"
-    system "./autogen.sh" if build.head?
-
-    system "./configure", "--disable-dependency-tracking",
-                          "--prefix=#{prefix}"
-    system "make", "install"
+    system "meson", "--prefix=#{prefix}", ".", "output"
+    system "ninja", "-C", "output"
+    system "ninja", "-C", "output", "install"
   end
 end

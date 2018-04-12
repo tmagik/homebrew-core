@@ -1,31 +1,37 @@
 class Graphene < Formula
   desc "Thin layer of graphic data types"
   homepage "https://ebassi.github.io/graphene/"
-  url "https://download.gnome.org/sources/graphene/1.6/graphene-1.6.0.tar.xz"
-  sha256 "c3a9910f8dd298c1459d1f3c699ddf2e7440f9e561bfcbef59ae784400e27b5d"
+  url "https://download.gnome.org/sources/graphene/1.8/graphene-1.8.0.tar.xz"
+  sha256 "7bbc8e2f183acb522e1d9fe256f5fb483ce42260bfeb3ae69320aeb649dd8d91"
+  revision 1
 
   bottle do
-    sha256 "26643b04ec0aa93a3fbc0560f0cc99a24a1894ed94a2d1b48a8a70612ef5f891" => :sierra
-    sha256 "ef1e66271b468a48bc6fc18de2bdbdc40c87bdbc51d319f8af0509b107af537c" => :el_capitan
-    sha256 "437949adfe70b32ae7145f853b3b133b21aa3df25f5cd5fc52c8f13ef931d094" => :yosemite
+    sha256 "cb0628386bb30e537cdf84c8bcef8f9faf64d0dac10f9b6280eeedd45c3475a8" => :high_sierra
+    sha256 "c97f5b1615a81096933962f83722c959eda05c3902fb338f1ea5a112eeb0ef88" => :sierra
+    sha256 "f8d9683bde05040e4e1c04a99f2d43a80c7da0b87174f4cc53e1b0a800b66506" => :el_capitan
   end
 
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
+  depends_on "meson-internal" => :build
+  depends_on "ninja" => :build
+  depends_on "python" => :build
   depends_on "glib"
-  depends_on "gobject-introspection"
-  depends_on "python3"
+
+  patch :DATA
 
   def install
-    system "./configure", "--disable-dependency-tracking",
-                          "--disable-silent-rules",
-                          "--prefix=#{prefix}"
-    system "make"
-    system "make", "check"
-    system "make", "install"
+    ENV.refurbish_args
+
+    mkdir "build" do
+      system "meson", "--prefix=#{prefix}", ".."
+      system "ninja"
+      system "ninja", "install"
+    end
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <graphene-gobject.h>
 
       int main(int argc, char *argv[]) {
@@ -48,3 +54,21 @@ class Graphene < Formula
     system "./test"
   end
 end
+
+__END__
+diff --git a/meson.build b/meson.build
+index 0736994..5932028 100644
+--- a/meson.build
++++ b/meson.build
+@@ -112,11 +112,6 @@ if host_system == 'linux' and cc.get_id() == 'gcc'
+   common_ldflags = [ '-Wl,-Bsymbolic-functions', '-Wl,-z,relro', '-Wl,-z,now', ]
+ endif
+
+-# Maintain compatibility with Autotools on macOS
+-if host_system == 'darwin'
+-  common_ldflags += [ '-compatibility_version 1', '-current_version 1.0', ]
+-endif
+-
+ # Required dependencies
+ mathlib = cc.find_library('m', required: false)
+ threadlib = dependency('threads')

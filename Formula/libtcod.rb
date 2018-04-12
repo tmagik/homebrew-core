@@ -1,34 +1,31 @@
 class Libtcod < Formula
-  desc "API for roguelike developpers"
+  desc "API for roguelike developers"
   homepage "http://roguecentral.org/doryen/libtcod/"
-  url "https://bitbucket.org/libtcod/libtcod/get/1.5.1.tar.bz2"
-  sha256 "290145f760371881bcc6aa3fda256a2927f9210acc3f0a7230c5dfd57d9052d0"
+  url "https://bitbucket.org/libtcod/libtcod/get/1.6.4.tar.bz2"
+  sha256 "f40855d48e89b34cd9c0091fbe8d7bdb59e58b9f574445824abbb3e9a29a06b7"
 
   bottle do
     cellar :any
-    sha256 "ccad47287c9a34afcffa48d6b8f469cb729a1133f95f44be0fe7a1506723980f" => :sierra
-    sha256 "65cf5860b8325fe352f497ad287303c4a725e623d1a64c45c879463a36603f51" => :el_capitan
-    sha256 "de169860f67c2be9d4ed7770f682700b31642030da1b50583b26b53e5e514bfe" => :yosemite
+    sha256 "c9e64cf1266592a440401c31028f97daf076d8bb9ace113a19da1b9c6a01b4bc" => :high_sierra
+    sha256 "360839e84034f149f3538be489273274a7db2f3b9020162dc94b9798e31dc402" => :sierra
+    sha256 "8728af3c1c018e2586708b66fdf8578260a83c875602ff6e796f96f44ea0382e" => :el_capitan
   end
 
-  depends_on "cmake" => :build
-  depends_on "sdl"
+  depends_on "autoconf" => :build
+  depends_on "automake" => :build
+  depends_on "libtool" => :build
+  depends_on "pkg-config" => :build
+  depends_on "sdl2"
 
   conflicts_with "libzip", :because => "both install `zip.h` header"
 
   def install
-    # Remove unnecessary X11 check - our SDL doesn't use X11
-    inreplace "CMakelists.txt" do |s|
-      s.gsub! "find_package(X11 REQUIRED)", ""
-      s.gsub! "${X11_INCLUDE_DIRS}", ""
+    cd "build/autotools" do
+      system "autoreconf", "-fiv"
+      system "./configure"
+      system "make"
+      lib.install Dir[".libs/*{.a,.dylib}"]
     end
-
-    system "cmake", ".", *std_cmake_args
-    system "make"
-
-    # cmake produces an install target, but it installs nothing
-    lib.install "src/libtcod.dylib"
-    lib.install "src/libtcod-gui.dylib"
     include.install Dir["include/*"]
     # don't yet know what this is for
     libexec.install "data"

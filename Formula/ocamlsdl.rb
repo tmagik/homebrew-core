@@ -3,13 +3,13 @@ class Ocamlsdl < Formula
   homepage "https://ocamlsdl.sourceforge.io/"
   url "https://downloads.sourceforge.net/project/ocamlsdl/OCamlSDL/ocamlsdl-0.9.1/ocamlsdl-0.9.1.tar.gz"
   sha256 "abfb295b263dc11e97fffdd88ea1a28b46df8cc2b196777093e4fe7f509e4f8f"
-  revision 6
+  revision 9
 
   bottle do
     cellar :any
-    sha256 "3cbd8b17e7ba41062954cd36d3f784fffd3146b7aeb0f8872a908dfeaf65b62f" => :sierra
-    sha256 "fff3e2f01f837db3fe9150f74938ac2c817f4601e0406f48081bcacecd782a5a" => :el_capitan
-    sha256 "f2018ad8438395157b104d7f5579e956773f905aca1511331b9f7ad9f94d24bb" => :yosemite
+    sha256 "8313d585edbdf92234128947a792ca26e2a0d2181d83ce1c2e90bc6c46d97f03" => :high_sierra
+    sha256 "8a40a90601e1f63f0a6ec5bf83cb5e78d401f8bd94bef4f5c2ca48d881bc961a" => :sierra
+    sha256 "6cd7f7cf05819e1109d24a678ee2f21a742c8f743a3d23b56a80e2b8897ead98" => :el_capitan
   end
 
   depends_on "sdl"
@@ -20,6 +20,7 @@ class Ocamlsdl < Formula
   depends_on "sdl_ttf" => :recommended
 
   def install
+    ENV["OCAMLPARAM"] = "safe-string=0,_" # OCaml 4.06.0 compat
     system "./configure", "--prefix=#{prefix}",
                           "OCAMLLIB=#{lib}/ocaml"
     system "make"
@@ -27,7 +28,7 @@ class Ocamlsdl < Formula
   end
 
   test do
-    (testpath/"test.ml").write <<-EOS.undent
+    (testpath/"test.ml").write <<~EOS
       let main () =
         Sdl.init [`VIDEO];
         Sdl.quit ()

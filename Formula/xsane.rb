@@ -3,13 +3,12 @@ class Xsane < Formula
   homepage "http://www.xsane.org"
   url "http://www.xsane.org/download/xsane-0.999.tar.gz"
   sha256 "5782d23e67dc961c81eef13a87b17eb0144cae3d1ffc5cf7e0322da751482b4b"
-  revision 1
+  revision 3
 
   bottle do
-    sha256 "d8986e38bfaee594922515ca9406213ddabb52c39d8567b997fe3008acc504e6" => :sierra
-    sha256 "7608ab59dd7e21a4c6bff5ccb29e682fd9dbcff9be876516e85fcacff10719f6" => :el_capitan
-    sha256 "df7b1492a1b526a7883fc810cffc2a974e297f0f287be44047f6795a7ae5e8f0" => :yosemite
-    sha256 "64b437736bc0f0c16d0c5bec06facb010939709c4a6923835337e4a5ee63b096" => :mavericks
+    sha256 "197b36716d2df9e81581650549571ce379ce74290fb45c703e6173c190024dad" => :high_sierra
+    sha256 "cb6cd9fabadf727b9414d4a252fa648f579bfe168eb44dd25fb2cb18a84395ed" => :sierra
+    sha256 "4346e2b40f260128b2ac562cff15be61c96bcc31b04457f44e41d28aeb7d6be2" => :el_capitan
   end
 
   depends_on "pkg-config" => :build

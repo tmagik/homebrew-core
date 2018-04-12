@@ -1,23 +1,21 @@
 class Lldpd < Formula
   desc "Implementation of IEEE 802.1ab (LLDP)"
   homepage "https://vincentbernat.github.io/lldpd/"
-  url "https://media.luffy.cx/files/lldpd/lldpd-0.9.7.tar.gz"
-  sha256 "b9360355c30a3c06fd5c0a6e658f2ad8bf77037d5a17c6fcabf20e62882e0db8"
+  url "https://media.luffy.cx/files/lldpd/lldpd-1.0.1.tar.gz"
+  sha256 "450b622aac7ae1758f1ef82f3b7b94ec47f2ff33abfb0e6ac82555b9ee55f151"
 
   bottle do
-    sha256 "b90cef5460c6dfb31a4e7f3eb3330839cddf2554ddcf2ff42379ca46d2d80937" => :sierra
-    sha256 "f11755d91f945ce18f7aba6d710bf7dda704dcf5e412ef72296ca5847f11bad7" => :el_capitan
-    sha256 "422483f79a29084972b100f108d40fc03c70c43473199c8978d6ea3ff49b5193" => :yosemite
+    sha256 "d770ef1c3507d3d2373f8706acf4f8d3c41ae07f594192db02483184e497c510" => :high_sierra
+    sha256 "fd38d0022374f5960183ec7afde1a5c9ffc85047c017a667f09b92cda25b1c7a" => :sierra
+    sha256 "1158b121a76df10a688d9907ab0843886ce7798f6d54ad8eaf9d21b17cb7b01f" => :el_capitan
   end
 
   option "with-snmp", "Build SNMP subagent support"
-  option "with-json", "Build JSON support for lldpcli"
 
   depends_on "pkg-config" => :build
   depends_on "readline"
   depends_on "libevent"
   depends_on "net-snmp" if build.with? "snmp"
-  depends_on "jansson" if build.with? "json"
 
   def install
     readline = Formula["readline"]
@@ -35,7 +33,6 @@ class Lldpd < Formula
       "LDFLAGS=-L#{readline.lib}",
     ]
     args << (build.with?("snmp") ? "--with-snmp" : "--without-snmp")
-    args << (build.with?("json") ? "--with-json" : "--without-json")
 
     system "./configure", *args
     system "make"
@@ -51,22 +48,22 @@ class Lldpd < Formula
   def plist
     additional_args = ""
     additional_args += "<string>-x</string>" if build.with? "snmp"
-    <<-EOS.undent
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_sbin}/lldpd</string>
-        #{additional_args}
-      </array>
-      <key>RunAtLoad</key><true/>
-      <key>KeepAlive</key><true/>
-    </dict>
-    </plist>
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_sbin}/lldpd</string>
+          #{additional_args}
+        </array>
+        <key>RunAtLoad</key><true/>
+        <key>KeepAlive</key><true/>
+      </dict>
+      </plist>
     EOS
   end
 end

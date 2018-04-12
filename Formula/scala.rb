@@ -1,28 +1,55 @@
 class Scala < Formula
   desc "JVM-based programming language"
   homepage "https://www.scala-lang.org/"
-  url "https://downloads.lightbend.com/scala/2.12.2/scala-2.12.2.tgz"
-  mirror "https://downloads.typesafe.com/scala/2.12.2/scala-2.12.2.tgz"
-  mirror "https://www.scala-lang.org/files/archive/scala-2.12.2.tgz"
-  sha256 "196168b246fcf10e275491c5e58a50ca9eb696da95e49155b3f86f001346a6f5"
+
+  stable do
+    url "https://downloads.lightbend.com/scala/2.12.5/scala-2.12.5.tgz"
+    mirror "https://downloads.typesafe.com/scala/2.12.5/scala-2.12.5.tgz"
+    mirror "https://www.scala-lang.org/files/archive/scala-2.12.5.tgz"
+    sha256 "b261ffe9a495b12e9dda2ed37331e579547e4d1b8b5810161b6c3b39ac806aa1"
+
+    depends_on :java => "1.8+"
+
+    resource "docs" do
+      url "https://downloads.lightbend.com/scala/2.12.5/scala-docs-2.12.5.txz"
+      mirror "https://www.scala-lang.org/files/archive/scala-docs-2.12.5.txz"
+      sha256 "f820810c01fb06d7ea1900b62491124916dfff3f64b1e74956c3ad4ebbe52fcc"
+    end
+
+    resource "src" do
+      url "https://github.com/scala/scala/archive/v2.12.5.tar.gz"
+      sha256 "eb39d9353965ce04f482b37aae35caecb3c5b18c1162409f8ff31cbac181a788"
+    end
+  end
+
+  devel do
+    url "https://downloads.lightbend.com/scala/2.13.0-M3/scala-2.13.0-M3.tgz"
+    mirror "https://www.scala-lang.org/files/archive/scala-2.13.0-M3.tgz"
+    mirror "https://downloads.typesafe.com/scala/2.13.0-M3/scala-2.13.0-M3.tgz"
+    version "2.13.0-M3"
+    sha256 "089a00b17edda24891c2920c2e7346a964fc13a1916ca0418bb6591da636396e"
+
+    depends_on :java => "1.8+"
+
+    resource "docs" do
+      url "https://downloads.lightbend.com/scala/2.13.0-M3/scala-docs-2.13.0-M3.txz"
+      mirror "https://www.scala-lang.org/files/archive/scala-docs-2.13.0-M3.txz"
+      mirror "https://downloads.typesafe.com/scala/2.13.0-M3/scala-docs-2.13.0-M3.txz"
+      version "2.13.0-M3"
+      sha256 "c600cf90b3fd799ed7249377dac29c2ddab5041b95d263c9c95c15fc3756c6e6"
+    end
+
+    resource "src" do
+      url "https://github.com/scala/scala/archive/v2.13.0-M3.tar.gz"
+      version "2.13.0-M3"
+      sha256 "93bc002ac51b02d3f41916d74c2e3c1543d3f092a95117ef50e909fc79e122e8"
+    end
+  end
 
   bottle :unneeded
 
   option "with-docs", "Also install library documentation"
   option "with-src", "Also install sources for IDE support"
-
-  depends_on :java => "1.8+"
-
-  resource "docs" do
-    url "https://downloads.lightbend.com/scala/2.12.2/scala-docs-2.12.2.txz"
-    mirror "https://www.scala-lang.org/files/archive/scala-docs-2.12.2.txz"
-    sha256 "b64ac34aac4d61c8925ec51fcedc13438aa2ad8d49afa25d46ba4a1d0bb87f6c"
-  end
-
-  resource "src" do
-    url "https://github.com/scala/scala/archive/v2.12.2.tar.gz"
-    sha256 "822ef9c8077765cf558c1bbc88e957ccae77402ca02f432053f4f3bf4f91a2b1"
-  end
 
   resource "completion" do
     url "https://raw.githubusercontent.com/scala/scala-tool-support/0a217bc/bash-completion/src/main/resources/completion.d/2.9.1/scala"
@@ -45,7 +72,7 @@ class Scala < Formula
     idea.install_symlink doc => "doc"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     To use with IntelliJ, set the Scala home to:
       #{opt_prefix}/idea
     EOS
@@ -53,7 +80,7 @@ class Scala < Formula
 
   test do
     file = testpath/"Test.scala"
-    file.write <<-EOS.undent
+    file.write <<~EOS
       object Test {
         def main(args: Array[String]) {
           println(s"${2 + 2}")
@@ -61,9 +88,7 @@ class Scala < Formula
       }
     EOS
 
-    out = shell_output("#{bin}/scala #{file}").strip
-    # Shut down the compile server so as not to break Travis
-    system bin/"fsc", "-shutdown"
+    out = shell_output("#{bin}/scala -nc #{file}").strip
 
     assert_equal "4", out
   end

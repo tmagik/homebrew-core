@@ -1,16 +1,16 @@
 class Heimdal < Formula
   desc "Free Kerberos 5 implementation"
   homepage "https://www.h5l.org"
-  url "https://github.com/heimdal/heimdal/releases/download/heimdal-7.3.0/heimdal-7.3.0.tar.gz"
-  sha256 "351df17c11f723681a4eab832e880af4a28693d1ed6996b02671d676dcb3b7b5"
+  url "https://github.com/heimdal/heimdal/releases/download/heimdal-7.5.0/heimdal-7.5.0.tar.gz"
+  sha256 "c5a2a0030fcc728022fa2332bad85569084d1c3b9a59587b7ebe141b0532acad"
 
   bottle do
-    sha256 "cd8a30410d825da9f6a42d6dc063d6d2b1aea11037db5ed150cac34e7f0a622e" => :sierra
-    sha256 "d95f4586629e17fac2066b31c45e9a2882c02af79495fc751a5a11ba336bbc70" => :el_capitan
-    sha256 "c78126a7f22cee1cf101c87eedf9e403085b0803037c9434e1898538d8a26fa1" => :yosemite
+    sha256 "5b461217a467645afd1653bbbbb0202e9d39b5748ab7e2d5e1566006497a00bb" => :high_sierra
+    sha256 "ffd6e2ac9328dda17a9614aea905f05e879e9184ec94c7bdb62b14c90267547e" => :sierra
+    sha256 "011cd9adbc85589034f69ea15a7cd85c60561792f5366e3d977732a9ef076320" => :el_capitan
   end
 
-  keg_only :provided_by_osx
+  keg_only :provided_by_macos
 
   depends_on "openssl"
 

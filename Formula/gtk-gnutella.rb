@@ -1,13 +1,14 @@
 class GtkGnutella < Formula
   desc "Share files in a peer-to-peer (P2P) network"
   homepage "https://gtk-gnutella.sourceforge.io"
-  url "https://downloads.sourceforge.net/project/gtk-gnutella/gtk-gnutella/1.1.11/gtk-gnutella-1.1.11.tar.bz2"
-  sha256 "e46ffa3905831828f867709aa346cd88576075bd1299ef396962ad860e2589d5"
+  url "https://downloads.sourceforge.net/project/gtk-gnutella/gtk-gnutella/1.1.13/gtk-gnutella-1.1.13.tar.xz"
+  sha256 "2126cd08941ba0847c06f1034c5e2a9428b67b2fd1685c0e3ab878cb0179f647"
+  revision 1
 
   bottle do
-    sha256 "57b55568dad77dcef085784e3a1da5e3d61131ecf0fa192edcc6945765dbfa26" => :sierra
-    sha256 "995fc6e0bd1aa6d1dbae1664f666a41846fba9cb5c3024cfbe257109a5848d4e" => :el_capitan
-    sha256 "6bcadba84c5244c0f0620ee7bd92c971559fd4a5b0bdfbe54b8a43495961a4b4" => :yosemite
+    sha256 "527cf02632a72b0c51e7bde344400b4574501c93c2458fbcad377ba302de5320" => :high_sierra
+    sha256 "feb741e63ae915a2090ac4d9b4c86d88830ba9f1ad9161ac39dc74febe55ce1d" => :sierra
+    sha256 "b9d26ca2b07e1195c304a6a0c62ea06325b1831beb367bf6ed20b066a2897c02" => :el_capitan
   end
 
   depends_on "pkg-config" => :build

@@ -1,15 +1,15 @@
 class Dcm2niix < Formula
   desc "DICOM to NIfTI converter"
   homepage "https://www.nitrc.org/plugins/mwiki/index.php/dcm2nii:MainPage"
-  url "https://github.com/rordenlab/dcm2niix/archive/v1.0.20170609.tar.gz"
-  sha256 "17756f28dc42965854b7389d166df6d70c126486887fd2037b99d4a082c037ab"
+  url "https://github.com/rordenlab/dcm2niix/archive/v1.0.20180328.tar.gz"
+  sha256 "3a5c2e2636021e6cafecb213c6ca4b5226bfcdadf00a241fde45b58f513ea674"
   head "https://github.com/rordenlab/dcm2niix.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "b92a6d21ae029d80ef09aa435309a492e7b7399854273dba72c21df16db2b7d0" => :sierra
-    sha256 "15af59a69443485e5d481bcf1cfe0d8ebc46c75ea7cdd0519dd692565bdd981a" => :el_capitan
-    sha256 "1ec7b18384f0759f345b6751bab7009cb3adeb4d3d643fd9f89c21f328c35664" => :yosemite
+    sha256 "322c0945d61f2203d62b15a94155c7a34bf8925a578d0050fe19f934d68fbdcb" => :high_sierra
+    sha256 "b2291464e381862c25d189e616fc53fc23c35fec509fb19a72bc5bc4c9bc9c96" => :sierra
+    sha256 "214ba6a0a5728c2387da5a0b06b8820cf6b33ad31eac81982dfbac58efb4760b" => :el_capitan
   end
 
   option "with-batch"
@@ -31,7 +31,7 @@ class Dcm2niix < Formula
   test do
     resource("sample.dcm").stage testpath
     system "#{bin}/dcm2niix", "-f", "%d_%e", "-z", "n", "-b", "y", testpath
-    assert File.exist? "localizer_1.nii"
-    assert File.exist? "localizer_1.json"
+    assert_predicate testpath/"localizer_1.nii", :exist?
+    assert_predicate testpath/"localizer_1.json", :exist?
   end
 end

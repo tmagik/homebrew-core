@@ -1,17 +1,15 @@
 class FuseZip < Formula
   desc "FUSE file system to create & manipulate ZIP archives"
-  homepage "https://code.google.com/p/fuse-zip/"
-  url "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/fuse-zip/fuse-zip-0.4.0.tar.gz"
-  sha256 "db9eb13aa250061eaa7df6b1ee5022dbea54089094af94cc3d1767b63bdc9ca7"
-  revision 2
-
-  head "https://code.google.com/p/fuse-zip/", :using => :hg
+  homepage "https://bitbucket.org/agalanin/fuse-zip"
+  url "https://bitbucket.org/agalanin/fuse-zip/downloads/fuse-zip-0.4.5.tar.gz"
+  sha256 "2c5101f5bcb8d666d1ca602717ba901567dad2e7ad7de9db6e5bb26ac57435d1"
+  head "https://bitbucket.org/agalanin/fuse-zip", :using => :hg
 
   bottle do
     cellar :any
-    sha256 "1edb9cb7db180ea63fcf851ae4650d3609ee4e34ec2ce085231b9302574624e3" => :sierra
-    sha256 "946aaf7502edaa5ed94fb260157ae80c6becbc4ec6c598ecef9dbb16da22d657" => :el_capitan
-    sha256 "6a90cc517ad8685c28223c978faf8b37745c70fc4c0e4f19b0c5c094054e62e3" => :yosemite
+    sha256 "28d48355db992f6b6ac572633483efd83743e6f2d2de5426425dc10e8e4f9bee" => :high_sierra
+    sha256 "08fed5ec5f219ce9c9076451cccf0421c6cb4714af8a4d37eae2652b8ae783f2" => :sierra
+    sha256 "98e9d774573f5bb6c2ea887b3eaa84ddcdbb3b07f7d9be6182a219e3383eee7f" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -19,7 +17,7 @@ class FuseZip < Formula
   depends_on :osxfuse
 
   def install
-    system "make", "INSTALLPREFIX=#{prefix}", "install"
+    system "make", "prefix=#{prefix}", "install"
   end
 
   test do

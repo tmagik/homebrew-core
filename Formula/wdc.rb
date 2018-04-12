@@ -1,5 +1,5 @@
 class Wdc < Formula
-  desc "WebDAV Client provides easy and convenient to work with WebDAV-servers."
+  desc "WebDAV Client provides easy and convenient to work with WebDAV-servers"
   homepage "https://designerror.github.io/webdav-client-cpp"
   url "https://github.com/designerror/webdav-client-cpp/archive/v1.0.1.tar.gz"
   sha256 "64b01de188032cb9e09f5060965bd90ed264e7c0b4ceb62bfc036d0caec9fd82"
@@ -7,6 +7,7 @@ class Wdc < Formula
   bottle do
     cellar :any_skip_relocation
     rebuild 1
+    sha256 "8bccdfeac8fe563d940504f4674ea55443cc9a34fbd87411a5a14037e720f47d" => :high_sierra
     sha256 "de61e873a1a9eb37c29778ccbc7c0f8ceae61ca7b19cf98c45ec1a4569a842df" => :sierra
     sha256 "6ede103d6893034ebd55d00f47d00056a081bfa0ca0a7dd51e06330896dbb743" => :el_capitan
     sha256 "9bf61a23f849c5f60314ef58bdf3f988ed98618601eea67a65949e89f52593eb" => :yosemite
@@ -25,7 +26,7 @@ class Wdc < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <webdav/client.hpp>
       #include <cassert>
       #include <string>

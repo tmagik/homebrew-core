@@ -1,13 +1,18 @@
 class Mariadb < Formula
   desc "Drop-in replacement for MySQL"
   homepage "https://mariadb.org/"
-  url "https://ftp.osuosl.org/pub/mariadb/mariadb-10.2.6/source/mariadb-10.2.6.tar.gz"
-  sha256 "c385c76e40d6e5f0577eba021805da5f494a30c9ef51884baefe206d5658a2e5"
+  url "https://downloads.mariadb.org/f/mariadb-10.2.14/source/mariadb-10.2.14.tar.gz"
+  sha256 "3443ec2d6e8af1eba49d097f6b2f6741c8d94b75abf19b8dd5753608f0703f7e"
 
   bottle do
-    sha256 "8f4a13008e4b1f3dd5ded3ea54ccacc1a77d0735d255027e1d9abe7089a26bdc" => :sierra
-    sha256 "b65d947f17aca66bc740673b2860cfdfefe3b924c3877fb75ccc2b85886bc735" => :el_capitan
-    sha256 "86aa0595f68d44bfe4a9d50b03e54c23b860f3b54ccd5e7fbcd6f18f58e96c3d" => :yosemite
+    sha256 "21f061bc09ec9a870d32665026d9b8d118d60931fefa1a4b56e66bd99f7b507d" => :high_sierra
+    sha256 "55abe7bc4a21f35e7d9daea7414c13375f719f7d388bf5b0a67f6383cce0a60f" => :sierra
+    sha256 "06157e5ae3203c9263fc99f6edc428922439cd8a632fc67dca8d0cb06a12e74f" => :el_capitan
+  end
+
+  devel do
+    url "https://downloads.mariadb.org/f/mariadb-10.3.5/source/mariadb-10.3.5.tar.gz"
+    sha256 "cbb81f5f7e25c822db6683bbb43b3aad328622fa86da81c1ddeee8005523b203"
   end
 
   option "with-test", "Keep test when installing"
@@ -22,7 +27,6 @@ class Mariadb < Formula
   deprecated_option "with-tests" => "with-test"
 
   depends_on "cmake" => :build
-  depends_on "pidof" unless MacOS.version >= :mountain_lion
   depends_on "openssl"
 
   conflicts_with "mysql", "mysql-cluster", "percona-server",
@@ -50,6 +54,7 @@ class Mariadb < Formula
       -DINSTALL_DOCDIR=share/doc/#{name}
       -DINSTALL_INFODIR=share/info
       -DINSTALL_MYSQLSHAREDIR=share/mysql
+      -DWITH_PCRE=bundled
       -DWITH_SSL=yes
       -DDEFAULT_CHARSET=utf8
       -DDEFAULT_COLLATION=utf8_general_ci
@@ -116,7 +121,7 @@ class Mariadb < Formula
     end
 
     # Install my.cnf that binds to 127.0.0.1 by default
-    (buildpath/"my.cnf").write <<-EOS.undent
+    (buildpath/"my.cnf").write <<~EOS
       # Default Homebrew MySQL server config
       [mysqld]
       # Only allow connections from localhost
@@ -135,7 +140,7 @@ class Mariadb < Formula
     end
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     A "/etc/my.cnf" from another install may interfere with a Homebrew-built
     server starting up correctly.
 
@@ -148,7 +153,7 @@ class Mariadb < Formula
 
   plist_options :manual => "mysql.server start"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

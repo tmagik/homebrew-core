@@ -7,6 +7,7 @@ class Dosbox < Formula
 
   bottle do
     cellar :any
+    sha256 "2bcbcf0f95569cd6c4d6dbbbf6578c3573fdabf7069708ed191cfbf1430b6bbb" => :high_sierra
     sha256 "977fbb45ec74f10f20055d0d7b5732f8af281c8289914b8895b16db25798c1f5" => :sierra
     sha256 "2eedf84b070caaf0af61ff1ef51c82a16ae56e7ca498c832e817376cd382b453" => :el_capitan
     sha256 "476cfcd94ec00d9a04ff125ac0b6513fe681ebe976e729605e5519ca230664a7" => :yosemite
@@ -24,8 +25,18 @@ class Dosbox < Formula
   depends_on "sdl_net"
   depends_on "sdl_sound"
   depends_on "libpng"
+  depends_on "ncurses" if build.with?("debugger")
 
   conflicts_with "dosbox-x", :because => "both install `dosbox` binaries"
+
+  # Fix compilation with Xcode 9
+  # https://sourceforge.net/p/dosbox/patches/274/
+  if DevelopmentTools.clang_build_version >= 900
+    patch do
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/9102536006/dosbox/xcode9.patch"
+      sha256 "a23a4cf691452e5d13e159063d9cd8b9bd508c4982116b471fd6fa72fc021eba"
+    end
+  end
 
   def install
     args = %W[
@@ -51,7 +62,7 @@ class Dosbox < Formula
     system "make", "install"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     DOSBox is not built for optimal performance due to unstability on 64-bit platform.
     EOS
   end

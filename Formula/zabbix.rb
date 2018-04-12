@@ -1,14 +1,13 @@
 class Zabbix < Formula
   desc "Availability and monitoring solution"
   homepage "https://www.zabbix.com/"
-  url "https://downloads.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/3.2.6/zabbix-3.2.6.tar.gz"
-  mirror "https://fossies.org/linux/misc/zabbix-3.2.6.tar.gz"
-  sha256 "98f025b39515b196552b8a23e2fe20a8180b5e99e613ce7378725a46ed8b62d6"
+  url "https://downloads.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/3.4.8/zabbix-3.4.8.tar.gz"
+  sha256 "cec14993d1ec2c9d8c51f6608c9408620f27174db92edc2347bafa7b841ccc07"
 
   bottle do
-    sha256 "53cf139fba01e23e9e99d376bd87eb731a4f4820893be1a959dcc6b3e5031e6b" => :sierra
-    sha256 "8ab8b527d7d05970133f06f6e3218be819c2c7879555a3a76c3009c4b1770d8a" => :el_capitan
-    sha256 "aabb18d6d862d1fc6d594f1cf5752f378ed4f8e43b3ef5c687d82d1d28de7d15" => :yosemite
+    sha256 "469f7d8a02308103faa0e1134dcd9fd6531e51c3ad8f580c15c7cb3af20be190" => :high_sierra
+    sha256 "bab5f42c0cae540c05b753296208cf669ffdac61a7b3a3a9cc8f776920e5697d" => :sierra
+    sha256 "f6993764ccaf70ceb9059cf5fdccb3691975f17c074b51b103b01b700acfa663" => :el_capitan
   end
 
   option "with-mysql", "Use Zabbix Server with MySQL library instead PostgreSQL."
@@ -17,10 +16,14 @@ class Zabbix < Formula
 
   deprecated_option "agent-only" => "without-server-proxy"
 
+  depends_on "openssl"
+  depends_on "pcre"
+
   if build.with? "server-proxy"
-    depends_on :mysql => :optional
-    depends_on :postgresql if build.without? "mysql"
+    depends_on "mysql" => :optional
+    depends_on "postgresql" if build.without? "mysql"
     depends_on "fping"
+    depends_on "libevent"
     depends_on "libssh2"
   end
 
@@ -30,12 +33,16 @@ class Zabbix < Formula
   end
 
   def install
+    sdk = MacOS::CLT.installed? ? "" : MacOS.sdk_path
+
     args = %W[
       --disable-dependency-tracking
       --prefix=#{prefix}
       --sysconfdir=#{etc}/zabbix
       --enable-agent
-      --with-iconv=#{MacOS.sdk_path}/usr
+      --with-iconv=#{sdk}/usr
+      --with-libpcre=#{Formula["pcre"].opt_prefix}
+      --with-openssl=#{Formula["openssl"].opt_prefix}
     ]
 
     if build.with? "server-proxy"

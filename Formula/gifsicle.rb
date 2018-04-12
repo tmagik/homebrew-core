@@ -1,16 +1,14 @@
 class Gifsicle < Formula
   desc "GIF image/animation creator/editor"
   homepage "https://www.lcdf.org/gifsicle/"
-  url "https://www.lcdf.org/gifsicle/gifsicle-1.88.tar.gz"
-  sha256 "4585d2e683d7f68eb8fcb15504732d71d7ede48ab5963e61915201f9e68305be"
+  url "https://www.lcdf.org/gifsicle/gifsicle-1.91.tar.gz"
+  sha256 "0a4ee602aa244cdcdd86a250a6b39c94d8343cf526b8fae862d8a0efc337a800"
 
   bottle do
     cellar :any_skip_relocation
-    rebuild 1
-    sha256 "2c99fa43de4ecd237798feaad2fab1e83b22d2f84170f3b954dd84dfd6869a9d" => :sierra
-    sha256 "2d40a7dc8d0f2a39134872a99ab8e8c3f5e5dc6381826abdd8d4f89c3fe287d0" => :el_capitan
-    sha256 "f4699986ab815c25764b4c7049fc067d6209922bcfd8b841bb19f2ae41c66f8d" => :yosemite
-    sha256 "29af107b09e41c0e40a10411565345cb636e724cd28e9d2f4e58c5dc0dd819c9" => :mavericks
+    sha256 "4be5faaf5e718e1838142cc547555c4e131ab460dc5f5f75fb7b1e539c28f69f" => :high_sierra
+    sha256 "3a83d1bded9e8ffb909671c6bd2caf0a30a2e7dfd051335f8659f7cc38c93ad9" => :sierra
+    sha256 "882e8c483f52f5c4e698381697f4e1a2e7fca2c7c1bb2daeffb6316397945931" => :el_capitan
   end
 
   head do

@@ -1,18 +1,15 @@
 class TomcatNative < Formula
   desc "Lets Tomcat use some native resources for performance"
   homepage "https://tomcat.apache.org/native-doc/"
-  url "https://www.apache.org/dyn/closer.cgi?path=tomcat/tomcat-connectors/native/1.2.10/source/tomcat-native-1.2.10-src.tar.gz"
-  mirror "https://archive.apache.org/dist/tomcat/tomcat-connectors/native/1.2.10/source/tomcat-native-1.2.10-src.tar.gz"
-  sha256 "553a796f1efb9d52a22a24636baca45ae265327f2a2d2f3169436b4012df9c35"
+  url "https://www.apache.org/dyn/closer.cgi?path=tomcat/tomcat-connectors/native/1.2.16/source/tomcat-native-1.2.16-src.tar.gz"
+  sha256 "1e9409584c19d868efd056f7dbafc767a630a5a95ee3cd516de8b7aaa4cd97b6"
 
   bottle do
     cellar :any
-    sha256 "a0b320aad5f81322a9f362811375a8f2bf71c9acbe2552af14d180a41953f01d" => :sierra
-    sha256 "f948df2f5f5ce08dcae517e0543ec79b275fa995f6631a561c2e010b09476688" => :el_capitan
-    sha256 "0de939cf4b43bba2bca9044fac764068deb8ce91c2060bf76732e7444f963ec1" => :yosemite
+    sha256 "b78686398145610c37d78f93d75cd7e0b28fa28c27a4f2b2731f292b98ed2f55" => :high_sierra
+    sha256 "1e80549899d29dcd3d9e396bcbd016ee0f01f2f7cd65f98d699748e6c381e8c6" => :sierra
+    sha256 "478df4f9c769f5f904e65938ff961dd24d9d5b9a742ad2545d3ef9e58babe394" => :el_capitan
   end
-
-  option "with-apr", "Include APR support via Homebrew"
 
   depends_on "libtool" => :build
   depends_on "tomcat" => :recommended
@@ -37,12 +34,12 @@ class TomcatNative < Formula
     end
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     In order for tomcat's APR lifecycle listener to find this library, you'll
     need to add it to java.library.path. This can be done by adding this line
     to $CATALINA_HOME/bin/setenv.sh
 
-      CATALINA_OPTS=\"$CATALINA_OPTS -Djava.library.path=#{lib}\"
+      CATALINA_OPTS=\"$CATALINA_OPTS -Djava.library.path=#{opt_lib}\"
 
     If $CATALINA_HOME/bin/setenv.sh doesn't exist, create it and make it executable.
     EOS

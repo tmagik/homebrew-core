@@ -9,28 +9,33 @@ class TerraformProvisionerAnsible < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "9c5773e4d576ae2f7e28438587b42170a33a6767c13805ed7ef372ad102bc139" => :high_sierra
     sha256 "a56474f71703f7d660a17ed6faf039e98ccf50d32ce82b2c92fcc907f012ad78" => :sierra
     sha256 "2b96de2a84016f1637fd428d40fcdcf16c960e795ce9307c2fb58672be2d21c0" => :el_capitan
     sha256 "2b9f182b17571e29b4b6767db5974e39d3b5e2e5e1bb87b83b6cf1f28f855a10" => :yosemite
   end
 
   depends_on "go" => :build
-  depends_on "terraform" => :run
+  depends_on "terraform"
 
   go_resource "github.com/hashicorp/terraform" do
-    url "https://github.com/hashicorp/terraform.git", :revision => "fa6a83ebdc323f2b415779786e102e69ddbf9a48"
+    url "https://github.com/hashicorp/terraform.git",
+        :revision => "fa6a83ebdc323f2b415779786e102e69ddbf9a48"
   end
 
   go_resource "github.com/mitchellh/mapstructure" do
-    url "https://github.com/mitchellh/mapstructure.git", :revision => "f3009df150dadf309fdee4a54ed65c124afad715"
+    url "https://github.com/mitchellh/mapstructure.git",
+        :revision => "f3009df150dadf309fdee4a54ed65c124afad715"
   end
 
   go_resource "github.com/mitchellh/go-homedir" do
-    url "https://github.com/mitchellh/go-homedir.git", :revision => "756f7b183b7ab78acdbbee5c7f392838ed459dda"
+    url "https://github.com/mitchellh/go-homedir.git",
+        :revision => "756f7b183b7ab78acdbbee5c7f392838ed459dda"
   end
 
   go_resource "github.com/mitchellh/go-linereader" do
-    url "https://github.com/mitchellh/go-linereader.git", :revision => "07bab5fdd9580500aea6ada0e09df4aa28e68abd"
+    url "https://github.com/mitchellh/go-linereader.git",
+        :revision => "07bab5fdd9580500aea6ada0e09df4aa28e68abd"
   end
 
   def install
@@ -44,11 +49,12 @@ class TerraformProvisionerAnsible < Formula
     cd terrapath do
       system "go", "build"
       bin.install "terraform-provisioner-ansible"
+      prefix.install_metafiles
     end
   end
 
   def caveats
-    <<-EOS.undent
+    <<~EOS
       Once installed a $HOME/.terraformrc file is used to enable the plugin:
 
       provisioners {

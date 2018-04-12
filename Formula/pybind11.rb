@@ -1,18 +1,19 @@
 class Pybind11 < Formula
   desc "Seamless operability between C++11 and Python"
   homepage "https://github.com/pybind/pybind11"
-  url "https://github.com/pybind/pybind11/archive/v2.1.1.tar.gz"
-  sha256 "f2c6874f1ea5b4ad4ffffe352413f7d2cd1a49f9050940805c2a082348621540"
+  url "https://github.com/pybind/pybind11/archive/v2.2.2.tar.gz"
+  sha256 "b639a2b2cbf1c467849660801c4665ffc1a4d0a9e153ae1996ed6f21c492064e"
+  revision 1
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "a018bc7db9703e33cdd2a17bd02ab1952d0019d32b978fe68bf0398ca05b970d" => :sierra
-    sha256 "ea1f23485a94c042a9c0f0858471f5a4b768184bccb10bb3f6b171659621559f" => :el_capitan
-    sha256 "ea1f23485a94c042a9c0f0858471f5a4b768184bccb10bb3f6b171659621559f" => :yosemite
+    sha256 "6dc411ca7b69e89a1abf2ee6c439b7f067fed8ee846dc3220d9e80d4d8f6727a" => :high_sierra
+    sha256 "6dc411ca7b69e89a1abf2ee6c439b7f067fed8ee846dc3220d9e80d4d8f6727a" => :sierra
+    sha256 "6dc411ca7b69e89a1abf2ee6c439b7f067fed8ee846dc3220d9e80d4d8f6727a" => :el_capitan
   end
 
   depends_on "cmake" => :build
-  depends_on :python3
+  depends_on "python"
 
   def install
     system "cmake", ".", "-DPYBIND11_TEST=OFF", *std_cmake_args
@@ -20,7 +21,7 @@ class Pybind11 < Formula
   end
 
   test do
-    (testpath/"example.cpp").write <<-EOS.undent
+    (testpath/"example.cpp").write <<~EOS
       #include <pybind11/pybind11.h>
 
       int add(int i, int j) {
@@ -34,7 +35,7 @@ class Pybind11 < Formula
       }
     EOS
 
-    (testpath/"example.py").write <<-EOS.undent
+    (testpath/"example.py").write <<~EOS
       import example
       example.add(1,2)
     EOS

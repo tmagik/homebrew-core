@@ -14,10 +14,18 @@ class Eigen < Formula
       url "https://bitbucket.org/eigen/eigen/commits/dbab66d00651bf050d1426334a39b627abe7216e/raw"
       sha256 "04b679525437f2a7672ed51ef864cf7ddffa61ce2025035d2355bc065d962823"
     end
+
+    # Remove for > 3.3.4
+    # Upstream commit from 6 Apr 2018 "Fix cmake scripts with no fortran compiler"
+    patch do
+      url "https://bitbucket.org/eigen/eigen/commits/ba14974d054ae9ae4ba88e5e58012fa6c2729c32/raw"
+      sha256 "5e4977b195f0199243ec7b78f1398596108d7969dfba02ada41f26ce2c76e244"
+    end
   end
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "4cc2b76353629941ff0098928d331e1620c5e27e5d55f337deae8b35f8af1b97" => :high_sierra
     sha256 "73b77dbad9910ff34a3b3dfe24db8c9e84b0bf0dc6e2ea8ebd9cb663083fa9e1" => :sierra
     sha256 "8bd6a07c4625266bd8631f636b317b19916611308e7f9eeec5f5b8b847327ef9" => :el_capitan
     sha256 "8bd6a07c4625266bd8631f636b317b19916611308e7f9eeec5f5b8b847327ef9" => :yosemite
@@ -36,7 +44,7 @@ class Eigen < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <iostream>
       #include <Eigen/Dense>
       using Eigen::MatrixXd;

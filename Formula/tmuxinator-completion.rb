@@ -1,8 +1,8 @@
 class TmuxinatorCompletion < Formula
   desc "Shell completion for Tmuxinator"
   homepage "https://github.com/tmuxinator/tmuxinator"
-  url "https://github.com/tmuxinator/tmuxinator/archive/v0.9.0.tar.gz"
-  sha256 "dd4924d13a2b4b26bf4823c342c6bd773a7c393e5da1e858e6dfad216e59e5fb"
+  url "https://github.com/tmuxinator/tmuxinator/archive/v0.11.0.tar.gz"
+  sha256 "dc69ed253486f5a65c22f29029f19a0fac0fef2f9b6f6cf0b7c87691ce76cd7c"
 
   head "https://github.com/tmuxinator/tmuxinator.git"
 

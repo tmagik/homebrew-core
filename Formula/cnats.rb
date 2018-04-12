@@ -1,14 +1,14 @@
 class Cnats < Formula
   desc "C client for the NATS messaging system"
   homepage "https://github.com/nats-io/cnats"
-  url "https://github.com/nats-io/cnats/archive/v1.6.0.tar.gz"
-  sha256 "ce2eb48ac9fa6e89cacb3271f06780a2161c9b7f71dc520e09d4b1b0c4091dd8"
+  url "https://github.com/nats-io/cnats/archive/v1.7.6.tar.gz"
+  sha256 "9155102243c6c7a3e9a6b37b259f7587bcfbad5f9521fbe466be58a4517df769"
 
   bottle do
     cellar :any
-    sha256 "bcae1cd8aa2f660206b91d2493e4d8d2c62d37f35e4831e15bc4276d542e0d3c" => :sierra
-    sha256 "2cb0cff286bad7230ba159f1d44f5b19a8d00078600ebe1110f4070e979fc09b" => :el_capitan
-    sha256 "f9d09b229aa310ce11c6e19582b7905fd3e2f59200c4e985050377af9675ed55" => :yosemite
+    sha256 "93634acc0e5dc64ffcd7e664bd61d58b138293f2462aca247e85a29e1f0c9154" => :high_sierra
+    sha256 "b7b780159a6dd26e6b998b5fc602b62781e1c9b9aa0aaa58872c2402e82e1805" => :sierra
+    sha256 "c0bbd1825975f69b7ed172c3ad428a36494611ea56cbdadd9b6288cc26154929" => :el_capitan
   end
 
   depends_on "cmake" => :build
@@ -23,7 +23,7 @@ class Cnats < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <nats/nats.h>
       #include <stdio.h>
       int main() {
@@ -32,7 +32,6 @@ class Cnats < Formula
       }
     EOS
     system ENV.cc, "test.c", "-L#{lib}", "-lnats", "-o", "test"
-    test_version = shell_output "./test", 0
-    assert_equal version, test_version.strip
+    assert_equal version, shell_output("./test").strip
   end
 end

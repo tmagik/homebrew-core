@@ -1,13 +1,13 @@
 class Pango < Formula
   desc "Framework for layout and rendering of i18n text"
   homepage "http://www.pango.org/"
-  url "https://download.gnome.org/sources/pango/1.40/pango-1.40.6.tar.xz"
-  sha256 "ca152b7383a1e9f7fd74ae96023dc6770dc5043414793bfe768ff06b6759e573"
+  url "https://download.gnome.org/sources/pango/1.42/pango-1.42.1.tar.xz"
+  sha256 "915a6756b298578ff27c7a6393f8c2e62e6e382f9411f2504d7af1a13c7bce32"
 
   bottle do
-    sha256 "9a3b7c067180b377e5caac5debdb477feda07db598602d34c9e037b6c4701402" => :sierra
-    sha256 "fda967c19a3c80effebe70dd1389ce443d662ef572ec84485c64060d60c2474c" => :el_capitan
-    sha256 "9be657bfbfb322e057022b10255fffbe3f18994e20a49de3a43ec55921fd1dd8" => :yosemite
+    sha256 "74825fefb505c6d581915966256fbd11039e4e6ff169a49dcd0ffa67dbb970f6" => :high_sierra
+    sha256 "e437556a5d9271325d90a82680919673889809d0b5da758830230f27ee0f98c8" => :sierra
+    sha256 "27a07f281416d178c5178cb0d63fd8a80c72b2c54aad68f0508c52850fc6289a" => :el_capitan
   end
 
   head do
@@ -19,11 +19,12 @@ class Pango < Formula
     depends_on "gtk-doc" => :build
   end
 
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "cairo"
+  depends_on "fribidi"
   depends_on "fontconfig"
   depends_on "glib"
-  depends_on "gobject-introspection"
   depends_on "harfbuzz"
 
   def install
@@ -43,7 +44,7 @@ class Pango < Formula
 
   test do
     system "#{bin}/pango-view", "--version"
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <pango/pangocairo.h>
 
       int main(int argc, char *argv[]) {

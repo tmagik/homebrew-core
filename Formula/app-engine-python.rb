@@ -1,15 +1,10 @@
 class AppEnginePython < Formula
   desc "Google App Engine"
   homepage "https://cloud.google.com/appengine/docs"
-  url "https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.50.zip"
-  sha256 "06e08edbfb64c52157582625010078deedcf08130f84a2c9a81193bbebdf6afa"
+  url "https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.67.zip"
+  sha256 "f9f45150643424cb164185d9134b86511c2bec3001499247ef9027f1605ef8a3"
 
   bottle :unneeded
-
-  conflicts_with "app-engine-go-32",
-    :because => "both install the same binaries"
-  conflicts_with "app-engine-go-64",
-    :because => "both install the same binaries"
 
   def install
     pkgshare.install Dir["*"]

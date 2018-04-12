@@ -1,18 +1,18 @@
 class Meson < Formula
   desc "Fast and user friendly build system"
   homepage "http://mesonbuild.com/"
-  url "https://github.com/mesonbuild/meson/releases/download/0.41.1/meson-0.41.1.tar.gz"
-  sha256 "3d160b0514ff3d25f0a47975c6f70fd82b76c589876d10413efc5e01df43e0c2"
+  url "https://github.com/mesonbuild/meson/releases/download/0.45.1/meson-0.45.1.tar.gz"
+  sha256 "4d0bb0dbb1bb556cb7a4092fdfea3d6e76606bd739a4bc97481c2d7bc6200afb"
   head "https://github.com/mesonbuild/meson.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "6db65957929eac440dec28556acdf79e8f56876c92e8f0127a28a030a58c8fdf" => :sierra
-    sha256 "24b975f8c72963695ceb2f2baf1c0f842b537a45836b254d5098e9bac969f692" => :el_capitan
-    sha256 "24b975f8c72963695ceb2f2baf1c0f842b537a45836b254d5098e9bac969f692" => :yosemite
+    sha256 "8733949b21cb602a00e60222757c8c07e110f2aa23b8ef162b59a94c97318bb9" => :high_sierra
+    sha256 "8733949b21cb602a00e60222757c8c07e110f2aa23b8ef162b59a94c97318bb9" => :sierra
+    sha256 "8733949b21cb602a00e60222757c8c07e110f2aa23b8ef162b59a94c97318bb9" => :el_capitan
   end
 
-  depends_on :python3
+  depends_on "python"
   depends_on "ninja"
 
   def install
@@ -25,20 +25,20 @@ class Meson < Formula
   end
 
   test do
-    (testpath/"helloworld.c").write <<-EOS.undent
+    (testpath/"helloworld.c").write <<~EOS
       main() {
         puts("hi");
         return 0;
       }
     EOS
-    (testpath/"meson.build").write <<-EOS.undent
+    (testpath/"meson.build").write <<~EOS
       project('hello', 'c')
       executable('hello', 'helloworld.c')
     EOS
 
     mkdir testpath/"build" do
       system "#{bin}/meson", ".."
-      assert File.exist?(testpath/"build/build.ninja")
+      assert_predicate testpath/"build/build.ninja", :exist?
     end
   end
 end

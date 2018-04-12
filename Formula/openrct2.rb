@@ -1,16 +1,14 @@
 class Openrct2 < Formula
   desc "Open source re-implementation of RollerCoaster Tycoon 2"
-  homepage "https://openrct2.website"
-  url "https://github.com/OpenRCT2/OpenRCT2/archive/v0.0.7.tar.gz"
-  sha256 "cf35b6e058d675ae8369c9845f9c7c9e4269a1f4a57da91dcdcdcde7e608adac"
-  revision 1
+  homepage "https://openrct2.io/"
+  url "https://github.com/OpenRCT2/OpenRCT2/archive/v0.1.2.tar.gz"
+  sha256 "358fc0ceff848734b399dc63c1d7a0c096a54a793afe4522d6f0dd00ba9328c7"
   head "https://github.com/OpenRCT2/OpenRCT2.git", :branch => "develop"
 
   bottle do
     cellar :any
-    sha256 "aa61b55edae1e172c9d1628003c568baef7d3d8d29c4a8e35d2ee7b980f9143c" => :sierra
-    sha256 "138836e72147cc12d4f4dc07c832a520d97d90cb22d34383e9f934f4a02210dd" => :el_capitan
-    sha256 "8646db1e5ae01b654c3d4215f5a8b58e64a76013f4e773cf604bc3f1dfca590f" => :yosemite
+    sha256 "a2a31260b0c6fb1d780945f9a8517fc7bc0a832e7aadb5aeda5ff5f4517071b3" => :high_sierra
+    sha256 "3f50413762987b388ba37939734339369875e746079bbbc840a2d640c65dde39" => :sierra
   end
 
   depends_on "cmake" => :build
@@ -18,6 +16,7 @@ class Openrct2 < Formula
   depends_on "jansson"
   depends_on "libpng"
   depends_on "libzip"
+  depends_on :macos => :sierra # undefined symbol ___cpu_model on El Capitan
   depends_on "openssl"
   depends_on "sdl2"
   depends_on "sdl2_ttf"
@@ -32,7 +31,7 @@ class Openrct2 < Formula
 
     # By default OS X build only looks up data in app bundle Resources
     libexec.install bin/"openrct2"
-    (bin/"openrct2").write <<-EOS.undent
+    (bin/"openrct2").write <<~EOS
       #!/bin/bash
       exec "#{libexec}/openrct2" "$@" "--openrct-data-path=#{pkgshare}"
       EOS

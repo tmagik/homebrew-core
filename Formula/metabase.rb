@@ -1,35 +1,39 @@
 class Metabase < Formula
   desc "Business intelligence report server"
-  homepage "http://www.metabase.com/"
-  url "http://downloads.metabase.com/v0.24.2/metabase.jar"
-  version "0.24.2"
-  sha256 "44849557f9f4f3e19dff657467624d07d3d21b4fc07cc6b6ea63e301e2465d5c"
+  homepage "https://www.metabase.com/"
+  url "http://downloads.metabase.com/v0.28.5/metabase.jar"
+  sha256 "179a4c137167fefca76aba0c189570e4302b279e1c79476462196c85ef0723ad"
 
   head do
     url "https://github.com/metabase/metabase.git"
 
     depends_on "node" => :build
+    depends_on "yarn" => :build
     depends_on "leiningen" => :build
   end
 
   bottle :unneeded
 
-  depends_on :java => "1.7+"
+  depends_on :java => "1.8"
 
   def install
     if build.head?
-      ENV.prepend_path "PATH", "#{Formula["node"].opt_libexec}/npm/bin"
       system "./bin/build"
       libexec.install "target/uberjar/metabase.jar"
     else
       libexec.install "metabase.jar"
     end
-    bin.write_jar_script libexec/"metabase.jar", "metabase"
+
+    (bin/"metabase").write <<~EOS
+      #!/bin/bash
+      export JAVA_HOME="$(#{Language::Java.java_home_cmd("1.8")})"
+      exec java -jar "#{libexec}/metabase.jar" "$@"
+    EOS
   end
 
   plist_options :startup => true, :manual => "metabase"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

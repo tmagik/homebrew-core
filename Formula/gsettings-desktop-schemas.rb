@@ -1,14 +1,14 @@
 class GsettingsDesktopSchemas < Formula
   desc "GSettings schemas for desktop components"
   homepage "https://download.gnome.org/sources/gsettings-desktop-schemas/"
-  url "https://download.gnome.org/sources/gsettings-desktop-schemas/3.24/gsettings-desktop-schemas-3.24.0.tar.xz"
-  sha256 "f6573a3f661d22ff8a001cc2421d8647717f1c0e697e342d03c6102f29bbbb90"
+  url "https://download.gnome.org/sources/gsettings-desktop-schemas/3.28/gsettings-desktop-schemas-3.28.0.tar.xz"
+  sha256 "4cb4cd7790b77e5542ec75275237613ad22f3a1f2f41903a298cf6cc996a9167"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "b8a7f888ffff66f3f5806659a1bd0e91517ab95a12c439d0ec9551067e41ae72" => :sierra
-    sha256 "b8a7f888ffff66f3f5806659a1bd0e91517ab95a12c439d0ec9551067e41ae72" => :el_capitan
-    sha256 "b8a7f888ffff66f3f5806659a1bd0e91517ab95a12c439d0ec9551067e41ae72" => :yosemite
+    sha256 "0bd6835780ef3b7b9b2940c8c2e33b8257bc367883d897905e3c55ace5c35033" => :high_sierra
+    sha256 "0bd6835780ef3b7b9b2940c8c2e33b8257bc367883d897905e3c55ace5c35033" => :sierra
+    sha256 "0bd6835780ef3b7b9b2940c8c2e33b8257bc367883d897905e3c55ace5c35033" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -17,7 +17,7 @@ class GsettingsDesktopSchemas < Formula
   depends_on "glib"
   depends_on "gettext"
   depends_on "libffi"
-  depends_on "python" if MacOS.version <= :mavericks
+  depends_on "python@2"
 
   def install
     system "./configure", "--disable-dependency-tracking",
@@ -34,7 +34,7 @@ class GsettingsDesktopSchemas < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <gdesktop-enums.h>
 
       int main(int argc, char *argv[]) {

@@ -1,21 +1,20 @@
 class Camlp4 < Formula
   desc "Tool to write extensible parsers in OCaml"
   homepage "https://github.com/ocaml/camlp4"
-  url "https://github.com/ocaml/camlp4/archive/4.04+1.tar.gz"
-  version "4.04+1"
-  sha256 "6044f24a44053684d1260f19387e59359f59b0605cdbf7295e1de42783e48ff1"
-  revision 1
+  url "https://github.com/ocaml/camlp4/archive/4.06+1.tar.gz"
+  version "4.06+1"
+  sha256 "b1cc51449da0537f6886e380815b716e7adc9d9a12d6098a06db2b2525bab922"
   head "https://github.com/ocaml/camlp4.git", :branch => "trunk"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "a26669d58078acd85fadd6314bfdddde22f2b34875cbc889ebf88a0413d7e727" => :sierra
-    sha256 "e45aaad4dfc13a2b90282de5d57c218586f226e3d7d72d2f250279791580c70b" => :el_capitan
-    sha256 "9029a3f7dcc18d08097427e9e320613a583f60f9e3f1ccbd4f09328b7dddd434" => :yosemite
+    sha256 "027ead4bab995b5bd51b963e5d6812f4a1d4cc6a6b4f511c587ad80c339a6bef" => :high_sierra
+    sha256 "cccbdbb136350dbf57b98a65aee2226bb7ecfd9b76258f83f981fc5bdabf2a9a" => :sierra
+    sha256 "4d197f8765442ccfa03f94e4d9fb2b1a3449f030bbf34bffa0628539998f2b1d" => :el_capitan
   end
 
   depends_on "ocaml"
-  # since Ocaml 4.03.0, ocamlbuild is no longer part of ocaml
+  # since OCaml 4.03.0, ocamlbuild is no longer part of ocaml
   depends_on "ocamlbuild"
 
   def install

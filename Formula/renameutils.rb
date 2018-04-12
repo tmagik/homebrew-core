@@ -1,12 +1,13 @@
 class Renameutils < Formula
   desc "Tools for file renaming"
-  homepage "http://www.nongnu.org/renameutils/"
+  homepage "https://www.nongnu.org/renameutils/"
   url "https://download.savannah.gnu.org/releases/renameutils/renameutils-0.12.0.tar.gz"
   sha256 "cbd2f002027ccf5a923135c3f529c6d17fabbca7d85506a394ca37694a9eb4a3"
   revision 1
 
   bottle do
     cellar :any
+    sha256 "231874956b8d016cf8c8e9c70b889d61f849b718b5ed291231d8d3b1d425b071" => :high_sierra
     sha256 "56f37984343df2fc7a632a447c8c008dbd1d775c71a1b190b9c2bd2296862b77" => :sierra
     sha256 "69c7381af949af84d3e7cd61cbec789e3d790c154fb3cb9916b1e74730a5fbce" => :el_capitan
     sha256 "3854a97491ab39937687fd00623e4786205163f87522e901bbd7cca6e054b574" => :yosemite

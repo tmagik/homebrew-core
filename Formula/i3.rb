@@ -1,14 +1,15 @@
 class I3 < Formula
   desc "Tiling window manager"
   homepage "https://i3wm.org/"
-  url "https://i3wm.org/downloads/i3-4.13.tar.bz2"
-  sha256 "94c13183e527a984132a3b050c8bf629626502a6e133e07b413641aec5f8cf8a"
+  url "https://i3wm.org/downloads/i3-4.15.tar.bz2"
+  sha256 "217d524d1fbc85ae346b25f6848d1b7bcd2c23184ec88d29114bf5a621385326"
+  revision 1
   head "https://github.com/i3/i3.git"
 
   bottle do
-    sha256 "3d5076ab193c0a768508a2fc1d3d64f163a065409c02856efb373ad2b762b6ca" => :sierra
-    sha256 "f3e957e4d41877752572eaab1527f72e10800e33b359d49d101a5543c303a55b" => :el_capitan
-    sha256 "10a9482d01d9c681d9bf9ddabb0ee437d29ba9c5b215b9352acda20821bb329b" => :yosemite
+    sha256 "830cfa4eb9b25d0f26c941a01419a093c014417f2f2ee6e78a828ea922868671" => :high_sierra
+    sha256 "88f9c1c997ea6c4b5f3886854a599900a7b01b0bdce5ce82b46c04f71ea82201" => :sierra
+    sha256 "c5999c78a3af9072039638eee8c6a2b5d3ef006c402b049da9cb3ef45dcdbac0" => :el_capitan
   end
 
   depends_on "asciidoc" => :build
@@ -28,8 +29,8 @@ class I3 < Formula
   depends_on "libxkbcommon"
 
   resource "xcb-util-xrm" do
-    url "https://github.com/Airblader/xcb-util-xrm/releases/download/v1.0/xcb-util-xrm-1.0.tar.bz2"
-    sha256 "9400ac1ecefdb469b2f6ef6bf0460643b6c252fb8406e91377b89dd12eefbbc0"
+    url "https://github.com/Airblader/xcb-util-xrm/releases/download/v1.2/xcb-util-xrm-1.2.tar.bz2"
+    sha256 "f75ec8d909cccda2f4d1460f9639338988a0946188b9d2109316c4509e82786d"
   end
 
   def install

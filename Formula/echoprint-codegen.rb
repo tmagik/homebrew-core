@@ -2,16 +2,16 @@ class EchoprintCodegen < Formula
   desc "Codegen for Echoprint"
   homepage "https://github.com/spotify/echoprint-codegen"
   url "https://github.com/echonest/echoprint-codegen/archive/v4.12.tar.gz"
-  sha256 "c40eb79af3abdb1e785b6a48a874ccfb0e9721d7d180626fe29c72a29acd3845"
+  sha256 "dc80133839195838975757c5f6cada01d8e09d0aac622a8a4aa23755a5a9ae6d"
   revision 2
   head "https://github.com/echonest/echoprint-codegen.git"
 
   bottle do
     cellar :any
-    sha256 "6ba809491d295b1aa6e5d5d01c4798644c8e111dd28a915154a08b7a527ebedd" => :sierra
-    sha256 "047111c6a160f827a000aa4184f78d579b7fb8ecbb13db6b11d3a6f79c243783" => :el_capitan
-    sha256 "2de00aaf98a53d77f0d3d4b0af5e8457a2fdb708769524c60c8fea94d0b5f7cc" => :yosemite
-    sha256 "7dfecc154ab9c57918073f46095484616e049ed365b95015432e2416bc425bea" => :mavericks
+    rebuild 1
+    sha256 "d23aa4f269c7c0f526363243a437b54bdc7331735a0e20b3846a6ebddf7d23a0" => :high_sierra
+    sha256 "1c071bc8bcbb1a74f0930c07f2d11058d86b8d2f576b262eaaa7a79af0a5dfd3" => :sierra
+    sha256 "06f93b8c6bb025d833ff7757048ea0680b240e3cdd6a51f4dd2fb4e6aad3f7dd" => :el_capitan
   end
 
   depends_on "ffmpeg"
@@ -20,8 +20,8 @@ class EchoprintCodegen < Formula
 
   # Removes unnecessary -framework vecLib; can be removed in the next release
   patch do
-    url "https://github.com/echonest/echoprint-codegen/commit/5ac72c40ae920f507f3f4da8b8875533bccf5e02.diff"
-    sha256 "0ab8e1ffafeeb44195246a78923d0d943d583279442b404c0af65ac1c5cbe74c"
+    url "https://github.com/echonest/echoprint-codegen/commit/5ac72c40ae920f507f3f4da8b8875533bccf5e02.diff?full_index=1"
+    sha256 "713bffc8a02e2f53c7a0479f7efb6df732346f20cb055a4fda67da043bcf1c12"
   end
 
   def install

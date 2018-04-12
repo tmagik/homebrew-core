@@ -9,12 +9,13 @@ class Euca2ools < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "41df1d51edc8fa162cf3f1c0ad60dbda2a3c03ca791a98ae92777c2bfe2accd9" => :high_sierra
     sha256 "7efc52eafdb0791e2fcd47913a2a09b31da507fc6178d002c584b95f975601f9" => :sierra
     sha256 "1c2cd17c3d6264962ce1e2a056362ecbb3e0007b1a3de8bfff23afe4bf7c0b25" => :el_capitan
     sha256 "38ea8a3ffad6554b519c4307f32174a58dc46e2cb9d66acdadea50265038ee5f" => :yosemite
   end
 
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
 
   resource "requestbuilder" do
     url "https://files.pythonhosted.org/packages/ac/b5/8b1c6c102760785ce22a08f32fb6fc8c745445ed8f1f9195d2517c79511c/requestbuilder-0.7.1.tar.gz"

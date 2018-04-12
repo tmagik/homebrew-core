@@ -3,19 +3,19 @@ class Flake8 < Formula
 
   desc "Lint your Python code for style and logical errors"
   homepage "http://flake8.pycqa.org/"
-  url "https://gitlab.com/pycqa/flake8/repository/archive.tar.gz?ref=3.3.0"
-  sha256 "2e60c7b6e93a5cd7d053e5a7ad91942d90931f7341e50a53a9f33943e5f60ea9"
+  url "https://gitlab.com/pycqa/flake8/repository/archive.tar.gz?ref=3.5.0"
+  sha256 "97ecdc088b9cda5acfaa6f84d9d830711669ad8d106d5c68d5897ece3c5cdfda"
 
   head "https://gitlab.com/PyCQA/flake8.git", :shallow => false
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "e98b0fea0977142ae2bacb84de845865b623cb77eb3e820018d49ea7864044f5" => :sierra
-    sha256 "5dc5fed1566eaaefe298b8a5e17148ccaf90d9a1f0b64a87a1c697e71cfab0ac" => :el_capitan
-    sha256 "58e4bd24292d4ca2247e8088b457357b0b296d8831d09e0199a26a6e79f348a2" => :yosemite
+    sha256 "929140b14958e23321f395143c3ef31166f344058fdbaac843deca1a94b48782" => :high_sierra
+    sha256 "825dd5873edf54a9acbf35daa908559b4323f27e6800401d097217d9db28128c" => :sierra
+    sha256 "cfbc382496c31b5c57e31ac2487d022a07673d9efd2d64cbc956d3e05c8d9afe" => :el_capitan
   end
 
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
 
   def install
     venv = virtualenv_create(libexec)

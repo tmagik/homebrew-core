@@ -3,12 +3,13 @@ class Pcb2gcode < Formula
   homepage "https://github.com/pcb2gcode/pcb2gcode"
   url "https://github.com/pcb2gcode/pcb2gcode/releases/download/v1.3.2/pcb2gcode-1.3.2.tar.gz"
   sha256 "c4135cd3981c4a5d6baffa81b7f8e890ae29776107b0d1938b744a8dfebdbc63"
+  revision 3
 
   bottle do
     cellar :any
-    sha256 "ccbf3239e0eb3a762870ad82b8fdd0ec56e43c2dc4028147aa479cde627f4141" => :sierra
-    sha256 "d78eb668171edf796f0d1576ce5f6b5359d4a2dcecba994c73ec7086167ac2fa" => :el_capitan
-    sha256 "fded3841b1955b89a42ca5412bd99f1bef4e17cfa0e2e4b6a56826445b509cda" => :yosemite
+    sha256 "43926c9d78d4e3adebb356af8082c8c262963ffecd7e82b786ee75159695a8f4" => :high_sierra
+    sha256 "92a477352bb02e909c126aea17c50ae9687be1d4e1c227ac58b8f41f3ee8af74" => :sierra
+    sha256 "fb8c42999d631688d76f32488db16d129bd4930941ad5a8f6fae5781e2edb302" => :el_capitan
   end
 
   head do
@@ -32,7 +33,7 @@ class Pcb2gcode < Formula
   end
 
   test do
-    (testpath/"front.gbr").write <<-EOS.undent
+    (testpath/"front.gbr").write <<~EOS
       %FSLAX46Y46*%
       %MOMM*%
       G01*
@@ -49,7 +50,7 @@ class Pcb2gcode < Formula
       X127000000Y-63500000D01*
       M02*
     EOS
-    (testpath/"edge.gbr").write <<-EOS.undent
+    (testpath/"edge.gbr").write <<~EOS
       %FSLAX46Y46*%
       %MOMM*%
       G01*
@@ -62,7 +63,7 @@ class Pcb2gcode < Formula
       X123190000Y-67310000D01*
       M02*
     EOS
-    (testpath/"drill.drl").write <<-EOS.undent
+    (testpath/"drill.drl").write <<~EOS
       M48
       FMAT,2
       METRIC,TZ
@@ -77,7 +78,7 @@ class Pcb2gcode < Formula
       T0
       M30
     EOS
-    (testpath/"millproject").write <<-EOS.undent
+    (testpath/"millproject").write <<~EOS
       dpi=500
       metric=true
       zchange=10

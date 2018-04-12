@@ -1,15 +1,13 @@
 class Gnupg < Formula
   desc "GNU Pretty Good Privacy (PGP) package"
-  homepage "https://www.gnupg.org/"
-  url "https://gnupg.org/ftp/gcrypt/gnupg/gnupg-2.1.21.tar.bz2"
-  mirror "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnupg/gnupg-2.1.21.tar.bz2"
-  sha256 "7aead8a8ba75b69866f583b6c747d91414d523bfdfbe9a8e0fe026b16ba427dd"
+  homepage "https://gnupg.org/"
+  url "https://gnupg.org/ftp/gcrypt/gnupg/gnupg-2.2.6.tar.bz2"
+  sha256 "e64d8c5fa2d05938a5080cb784a98ac21be0812f2a26f844b18f0d6a0e711984"
 
   bottle do
-    rebuild 1
-    sha256 "488c65c521bd51cf95e7903aeb769d69e021f50d54eb37f938dfa26d81581b62" => :sierra
-    sha256 "c525b344a191af01221103647109ee5e54d6e5fc8adb9f4c1c80bf0bcbf62a5c" => :el_capitan
-    sha256 "b25d0f5922556f1db6192443f2c94f55107bcf40a16fe9091f078ab663bd9b59" => :yosemite
+    sha256 "38302b573c7a247dec8aae9645c2164071b911ad572521d0bc16df1dad1843ec" => :high_sierra
+    sha256 "46f211169ee4edff53add04a711b204f04ada612186820a2f7ad0822a9d512a5" => :sierra
+    sha256 "04cc4e03c7db3eb6ca2bab83b8c7109a1203b893affafe7ca073b1497dc5b677" => :el_capitan
   end
 
   option "with-gpgsplit", "Additionally install the gpgsplit utility"
@@ -34,13 +32,6 @@ class Gnupg < Formula
   depends_on "readline" => :optional
   depends_on "encfs" => :optional
 
-  # Upstream commit 16 May 2017 "Suppress error for card availability check."
-  # See https://dev.gnupg.org/rGa8dd96826f8484c0ae93c954035b95c2a75c80f2
-  patch do
-    url "https://dev.gnupg.org/rGa8dd96826f8484c0ae93c954035b95c2a75c80f2?diff=1"
-    sha256 "3adb7fd095f8bc29fd550bf499f5f198dd20e3d5c97d5bcb79e91d95fd53a781"
-  end
-
   def install
     args = %W[
       --disable-dependency-tracking
@@ -50,6 +41,7 @@ class Gnupg < Formula
       --sysconfdir=#{etc}
       --enable-symcryptrun
       --with-pinentry-pgm=#{Formula["pinentry"].opt_bin}/pinentry
+      --enable-all-tests
     ]
 
     args << "--disable-ccid-driver" if build.without? "libusb"
@@ -61,12 +53,6 @@ class Gnupg < Formula
     system "make", "check"
     system "make", "install"
 
-    # Add symlinks from gpg2 to unversioned executables, replacing gpg 1.x.
-    bin.install_symlink "gpg2" => "gpg"
-    bin.install_symlink "gpgv2" => "gpgv"
-    man1.install_symlink "gpg2.1" => "gpg.1"
-    man1.install_symlink "gpgv2.1" => "gpgv.1"
-
     bin.install "tools/gpgsplit" if build.with? "gpgsplit"
     bin.install "tools/gpg-zip" if build.with? "gpg-zip"
   end
@@ -76,7 +62,7 @@ class Gnupg < Formula
     quiet_system "killall", "gpg-agent"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     Once you run this version of gpg you may find it difficult to return to using
     a prior 1.4.x or 2.0.x. Most notably the prior versions will not automatically
     know about new secret keys created or imported by this version. We recommend
@@ -88,7 +74,7 @@ class Gnupg < Formula
   end
 
   test do
-    (testpath/"batch.gpg").write <<-EOS.undent
+    (testpath/"batch.gpg").write <<~EOS
       Key-Type: RSA
       Key-Length: 2048
       Subkey-Type: RSA

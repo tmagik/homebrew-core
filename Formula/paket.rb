@@ -1,8 +1,8 @@
 class Paket < Formula
   desc "Dependency manager for .NET with support for NuGet and Git repositories"
   homepage "https://fsprojects.github.io/Paket/"
-  url "https://github.com/fsprojects/Paket/releases/download/5.2.1/paket.exe"
-  sha256 "c59ea7abc167c3553eb36d7a140ea4218309368263d09b869b5225233eb17a28"
+  url "https://github.com/fsprojects/Paket/releases/download/5.155.0/paket.exe"
+  sha256 "aa7531a5729a003d1d17761393149bb52beb58d403bbc04a68a20d37d86127bd"
 
   bottle :unneeded
 
@@ -10,7 +10,7 @@ class Paket < Formula
 
   def install
     libexec.install "paket.exe"
-    (bin/"paket").write <<-EOS.undent
+    (bin/"paket").write <<~EOS
       #!/bin/bash
       mono #{libexec}/paket.exe "$@"
     EOS
@@ -24,9 +24,9 @@ class Paket < Formula
     touch testpath/"testfile.txt"
 
     system bin/"paket", "install"
-    assert (testpath/"paket.lock").exist?
+    assert_predicate testpath/"paket.lock", :exist?
 
-    (testpath/"paket.template").write <<-EOS.undent
+    (testpath/"paket.template").write <<~EOS
       type file
 
       id #{test_package_id}
@@ -41,6 +41,6 @@ class Paket < Formula
     EOS
 
     system bin/"paket", "pack", "output", testpath
-    assert (testpath/"#{test_package_id}.#{test_package_version}.nupkg").exist?
+    assert_predicate testpath/"#{test_package_id}.#{test_package_version}.nupkg", :exist?
   end
 end

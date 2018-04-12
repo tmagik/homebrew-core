@@ -1,58 +1,56 @@
 class Swift < Formula
   desc "High-performance system programming language"
   homepage "https://github.com/apple/swift"
-
-  # This formula is expected to have broken/missing linkage to
-  # both UIKit.framework and AssetsLibrary.framework. This is
-  # simply due to the nature of Swift's SDK Overlays.
-  stable do
-    url "https://github.com/apple/swift/archive/swift-3.1.1-RELEASE.tar.gz"
-    sha256 "03eb54e7f89109a85c9b2a9bfdee88d2d7e1bdef73ae0385b30fe4661efaf407"
-
-    resource "clang" do
-      url "https://github.com/apple/swift-clang/archive/swift-3.1.1-RELEASE.tar.gz"
-      sha256 "ed41f1231bae030a412455491a5244ede53a4761617194b2dda573f5776361ad"
-    end
-
-    resource "cmark" do
-      url "https://github.com/apple/swift-cmark/archive/swift-3.1.1-RELEASE.tar.gz"
-      sha256 "51db8067f11976a7ca38a6ff9f173d3d9e3df290991be87835cdc003e0b62e4e"
-    end
-
-    resource "compiler-rt" do
-      url "https://github.com/apple/swift-compiler-rt/archive/swift-3.1.1-RELEASE.tar.gz"
-      sha256 "569568141b1f9ff0f433eaf815a0c19592bf43407bb4150d647aa9c7bc2a7c7b"
-    end
-
-    resource "llbuild" do
-      url "https://github.com/apple/swift-llbuild/archive/swift-3.1.1-RELEASE.tar.gz"
-      sha256 "ea59fd6603fe5d71598895832d6eef9314f1af99a72050536e473e9bb08a57df"
-    end
-
-    resource "llvm" do
-      url "https://github.com/apple/swift-llvm/archive/swift-3.1.1-RELEASE.tar.gz"
-      sha256 "fc6ac7c0c6afff344a8d4e5299b7417f414f1499cf374953e06c339d8177fc26"
-    end
-
-    resource "swiftpm" do
-      url "https://github.com/apple/swift-package-manager/archive/swift-3.1.1-RELEASE.tar.gz"
-      sha256 "5f98dd6fd41170e2f51f85131ca50cba3d50a187ce94b7a1db7a776c2815c778"
-    end
-  end
+  url "https://github.com/apple/swift/archive/swift-4.0.3-RELEASE.tar.gz"
+  sha256 "026d596dd4a24580a5e442409e8c58259197bd73ddbb77e5aade96da982ea39b"
 
   bottle do
     cellar :any
-    sha256 "3f856e641147d9a743dc7e978e0dab93652ad43b59a0c064af35ab679412c5ad" => :sierra
+    sha256 "f283aa347aa58b57dd835a91f311837fcb4b8cdbea52aaf9dcffdf33b8915e0c" => :high_sierra
+    sha256 "2d8f4b3bf2a3c1d5ffd811b42378cb43da9f49c0c16fec6e294d93338bfc57ad" => :sierra
   end
 
-  keg_only :provided_by_osx, "Apple's CLT package contains Swift"
+  keg_only :provided_by_macos, "Apple's CLT package contains Swift"
 
   depends_on "cmake" => :build
   depends_on "ninja" => :build
 
   # Depends on latest version of Xcode
   # https://github.com/apple/swift#system-requirements
-  depends_on :xcode => ["8.3", :build]
+  depends_on :xcode => ["9.0", :build]
+
+  # This formula is expected to have broken/missing linkage to
+  # both UIKit.framework and AssetsLibrary.framework. This is
+  # simply due to the nature of Swift's SDK Overlays.
+  resource "clang" do
+    url "https://github.com/apple/swift-clang/archive/swift-4.0.3-RELEASE.tar.gz"
+    sha256 "c940bd48c88f71622fb00167d92a619dd1614093893e1a09982c08da42259404"
+  end
+
+  resource "cmark" do
+    url "https://github.com/apple/swift-cmark/archive/swift-4.0.3-RELEASE.tar.gz"
+    sha256 "e95d0b54a0e897e768c9437dd67d56ec887909d0294cf6536ba240accd0d294f"
+  end
+
+  resource "compiler-rt" do
+    url "https://github.com/apple/swift-compiler-rt/archive/swift-4.0.3-RELEASE.tar.gz"
+    sha256 "1c2da685e8f424cb4460ed1daaf0c308f8deff63e7a3716c8a881cef60fbc7d8"
+  end
+
+  resource "llbuild" do
+    url "https://github.com/apple/swift-llbuild/archive/swift-4.0.3-RELEASE.tar.gz"
+    sha256 "92001e449b54a47516086a4e7d5f575bffa2847ae1f658540b2ec6f6dee6c6e7"
+  end
+
+  resource "llvm" do
+    url "https://github.com/apple/swift-llvm/archive/swift-4.0.3-RELEASE.tar.gz"
+    sha256 "a611487a82636142bc1ea8ef5b21401a5c75e57fb0dbf041ef8f2e85a472db2e"
+  end
+
+  resource "swiftpm" do
+    url "https://github.com/apple/swift-package-manager/archive/swift-4.0.3-RELEASE.tar.gz"
+    sha256 "4c26d333a01c239de8aa96b0536b7ff7218b7a322851a7d3b3b91b59fb4ce244"
+  end
 
   # According to the official llvm readme, GCC 4.7+ is required
   fails_with :gcc_4_0
@@ -95,19 +93,19 @@ class Swift < Formula
   end
 
   test do
-    (testpath/"test.swift").write <<-EOS.undent
-    let base = 2
-    let exponent_inner = 3
-    let exponent_outer = 4
-    var answer = 1
+    (testpath/"test.swift").write <<~EOS
+      let base = 2
+      let exponent_inner = 3
+      let exponent_outer = 4
+      var answer = 1
 
-    for _ in 1...exponent_outer {
-      for _ in 1...exponent_inner {
-        answer *= base
+      for _ in 1...exponent_outer {
+        for _ in 1...exponent_inner {
+          answer *= base
+        }
       }
-    }
 
-    print("(\\(base)^\\(exponent_inner))^\\(exponent_outer) == \\(answer)")
+      print("(\\(base)^\\(exponent_inner))^\\(exponent_outer) == \\(answer)")
     EOS
     output = shell_output("#{prefix}/Swift-#{version}.xctoolchain/usr/bin/swift test.swift")
     assert_match "(2^3)^4 == 4096\n", output

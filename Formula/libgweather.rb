@@ -1,34 +1,35 @@
 class Libgweather < Formula
   desc "GNOME library for weather, locations and timezones"
   homepage "https://wiki.gnome.org/Projects/LibGWeather"
-  url "https://download.gnome.org/sources/libgweather/3.24/libgweather-3.24.1.tar.xz"
-  sha256 "1227316037b63dac4153031a22abccb3d2ac679a7409e29cd303eec499eb653c"
+  url "https://download.gnome.org/sources/libgweather/3.28/libgweather-3.28.1.tar.xz"
+  sha256 "157a8388532a751b36befff424b11ed913b2c43689b62cd2060f6847eb730be3"
 
   bottle do
-    sha256 "2844a557e659e911a0295f21541601f051283d4a3e8d6271d0e05acbf62adf72" => :sierra
-    sha256 "19cb86132efb301dc7f94f3cc6951a7b7b658349ef7baf9d5d5aaf2ab1c17b14" => :el_capitan
-    sha256 "cb5c41f0deabcbf8676cbf316f81883bf9c7efe0fb45439d3134cfb483507489" => :yosemite
+    sha256 "b96a79ab676438c7e657c17e0fbaacae2e3db041fc66254aae58dadf32b11d70" => :high_sierra
+    sha256 "9655e4d9cba44c13e48fa5b661c0c5a121d266ce002e8bcdf32c3c5f30d20b71" => :sierra
+    sha256 "9e5e4cd5ae1384d401cde7b3ec8b098b914230fdc3bbd584b382cd5fda0c181e" => :el_capitan
   end
 
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
-  depends_on "intltool" => :build
+  depends_on "meson-internal" => :build
+  depends_on "ninja" => :build
+  depends_on "python" => :build
   depends_on "gtk+3"
   depends_on "geocode-glib"
   depends_on "libsoup"
-  depends_on "gobject-introspection"
   depends_on "vala" => :optional
 
   def install
-    # ensures that the vala files remain within the keg
-    inreplace "libgweather/Makefile.in",
-              "VAPIGEN_VAPIDIR = @VAPIGEN_VAPIDIR@",
-              "VAPIGEN_VAPIDIR = @datadir@/vala/vapi"
+    ENV.refurbish_args
+    ENV["DESTDIR"] = ""
+    inreplace "meson/meson_post_install.py", "if not os.environ.get('DESTDIR'):", "if 'DESTDIR' not in os.environ:"
 
-    system "./configure", "--disable-dependency-tracking",
-                          "--disable-silent-rules",
-                          "--prefix=#{prefix}",
-                          "--disable-schemas-compile"
-    system "make", "install"
+    mkdir "build" do
+      system "meson", "--prefix=#{prefix}", ".."
+      system "ninja"
+      system "ninja", "install"
+    end
   end
 
   def post_install
@@ -36,7 +37,7 @@ class Libgweather < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <libgweather/gweather.h>
 
       int main(int argc, char *argv[]) {

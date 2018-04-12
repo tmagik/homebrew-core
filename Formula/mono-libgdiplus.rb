@@ -1,14 +1,14 @@
 class MonoLibgdiplus < Formula
   desc "GDI+-compatible API on non-Windows operating systems"
-  homepage "http://www.mono-project.com/docs/gui/libgdiplus/"
-  url "https://github.com/mono/libgdiplus/archive/5.4.tar.gz"
-  sha256 "ce31da0c6952c8fd160813dfa9bf4a9a871bfe7284e9e3abff9a8ee689acfe58"
+  homepage "https://www.mono-project.com/docs/gui/libgdiplus/"
+  url "https://github.com/mono/libgdiplus/archive/5.6.tar.gz"
+  sha256 "6a75e4a476695cd6a1475fd6b989423ecf73978fd757673669771d8a6e13f756"
 
   bottle do
     cellar :any
-    sha256 "6e46cbc48b7de8501b9a926840f8a2cefb6f571eecd797a5fc6a63e6edf6a6a6" => :sierra
-    sha256 "340ccb6b7480d14d7b4c86567d8eee88c7756e3981848b6c6381f2bc68fe7443" => :el_capitan
-    sha256 "b3f99bf768ece5efd9f265969f2554083e3ceff6323e7ef8a390b7e6261abb0a" => :yosemite
+    sha256 "e025958c8b7c9e7ec1f699a9a32149f31e5ba66279d733948036f26e2f19699b" => :high_sierra
+    sha256 "8cd50ca8eac2fae538ba0ecf66809838f4929c25e49b65c31c2c7e409cb560de" => :sierra
+    sha256 "d099b8722d00774e64d1685cdb8506f03e3f026e05984cf4f0148359b5036693" => :el_capitan
   end
 
   depends_on "autoconf" => :build
@@ -46,7 +46,7 @@ class MonoLibgdiplus < Formula
   test do
     # Since no headers are installed, we just test that we can link with
     # libgdiplus
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       int main() {
         return 0;
       }

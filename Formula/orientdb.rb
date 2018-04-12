@@ -1,15 +1,12 @@
 class Orientdb < Formula
   desc "Graph database"
   homepage "https://orientdb.com/"
-  url "https://orientdb.com/download.php?file=orientdb-community-2.2.22.tar.gz"
-  sha256 "13a42109a7bbffd17fac765c691ddfd69e1c8789cc21b6eee1d25d4f82ce809f"
+  url "https://orientdb.com/download.php?file=orientdb-community-importers-2.2.29.tar.gz"
+  sha256 "ed6e65b18fed70ace3afa780a125100a19899e9b18f4d6e9bc1111e7ee88d752"
 
-  bottle do
-    cellar :any_skip_relocation
-    sha256 "d8d7b9a340025873fcbbf3dfa093468b6fcba66296b2dc07543f9a192f6a8b3f" => :sierra
-    sha256 "ac78ef356d7a8e6a6eded506c4ff13dc1a953c5d4867979c4a257cbd373e633e" => :el_capitan
-    sha256 "ac78ef356d7a8e6a6eded506c4ff13dc1a953c5d4867979c4a257cbd373e633e" => :yosemite
-  end
+  bottle :unneeded
+
+  depends_on :java => "1.6+"
 
   def install
     rm_rf Dir["{bin,benchmarks}/*.{bat,exe}"]
@@ -18,7 +15,7 @@ class Orientdb < Formula
     libexec.install Dir["*"]
 
     inreplace "#{libexec}/config/orientdb-server-config.xml", "</properties>",
-       <<-EOS.undent
+       <<~EOS
          <entry name="server.database.path" value="#{var}/db/orientdb" />
          </properties>
        EOS
@@ -51,7 +48,7 @@ class Orientdb < Formula
     system "#{bin}/orientdb", "stop"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     The OrientDB root password was set to 'orientdb'. To reset it:
       https://orientdb.com/docs/2.2/Server-Security.html#restoring-the-servers-user-root
     EOS
@@ -59,7 +56,7 @@ class Orientdb < Formula
 
   plist_options :manual => "orientdb start"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

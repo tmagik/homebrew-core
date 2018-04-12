@@ -1,15 +1,14 @@
 class Opusfile < Formula
   desc "API for decoding and seeking in .opus files"
   homepage "https://www.opus-codec.org/"
-  url "https://archive.mozilla.org/pub/opus/opusfile-0.8.tar.gz"
-  sha256 "2c231ed3cfaa1b3173f52d740e5bbd77d51b9dfecb87014b404917fba4b855a4"
+  url "https://archive.mozilla.org/pub/opus/opusfile-0.10.tar.gz"
+  sha256 "48e03526ba87ef9cf5f1c47b5ebe3aa195bd89b912a57060c36184a6cd19412f"
 
   bottle do
     cellar :any
-    sha256 "60977347332d650de34fead40a69312d3eac3b00d8d7756726bef751bc9b4ca9" => :sierra
-    sha256 "dc95a08834e93a459f47c0dc4114542b038a79d266c4722da27365879901b71a" => :el_capitan
-    sha256 "f04e162a07dff00edb780fb3eed26084b7416debb33c13061d8d84d84d47fefc" => :yosemite
-    sha256 "a44a9b6a34eae4f1a0c6c3b3c0fd1bae2e2c7893376e3b345d5498eee30a8622" => :mavericks
+    sha256 "f71e02c57dc80bbe54d87113dd229aefbbecbd349e371d43a513a40222066fc4" => :high_sierra
+    sha256 "51ab7cca1cb376114f385070b12bba44621d993786323d493bd6643304a6fb93" => :sierra
+    sha256 "63efbc0d92409dbe3fd5e222639a92df0bb54322f62b90d002267ddd2be97b8c" => :el_capitan
   end
 
   head do
@@ -19,10 +18,10 @@ class Opusfile < Formula
     depends_on "libtool" => :build
   end
 
-  depends_on "openssl"
   depends_on "pkg-config" => :build
-  depends_on "opus"
   depends_on "libogg"
+  depends_on "openssl"
+  depends_on "opus"
 
   resource "music_48kbps.opus" do
     url "https://www.opus-codec.org/examples/samples/music_48kbps.opus"
@@ -37,7 +36,7 @@ class Opusfile < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <opus/opusfile.h>
       #include <stdlib.h>
       int main(int argc, const char **argv) {

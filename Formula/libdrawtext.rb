@@ -8,6 +8,7 @@ class Libdrawtext < Formula
 
   bottle do
     cellar :any
+    sha256 "56701e24e6d2d89dfab1e6857ee450394ca155409e659d87578874e5dcb09fdc" => :high_sierra
     sha256 "b964ecf876b0e7118dbc8f6b39f0295f3f93244db5109d512258f0f036975e9b" => :sierra
     sha256 "f0ea7bf5a4ddaa71eabcf015be0c774a707eb44c0bab20dbb87633f3fbe11941" => :el_capitan
     sha256 "9aa0cb7f932e819bf07d4da05a5e134bb0dbce0aa07057a78af14ae03ef2423f" => :yosemite
@@ -26,8 +27,9 @@ class Libdrawtext < Formula
   end
 
   test do
-    cp "/System/Library/Fonts/LastResort.ttf", testpath
-    system bin/"font2glyphmap", "LastResort.ttf"
+    ext = (MacOS.version >= :high_sierra) ? "otf" : "ttf"
+    cp "/System/Library/Fonts/LastResort.#{ext}", testpath
+    system bin/"font2glyphmap", "LastResort.#{ext}"
     bytes = File.read("LastResort_s12.glyphmap").bytes.to_a[0..12]
     assert_equal [80, 54, 10, 53, 49, 50, 32, 50, 53, 54, 10, 35, 32], bytes
   end

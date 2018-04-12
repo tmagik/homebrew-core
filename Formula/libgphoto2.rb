@@ -1,13 +1,13 @@
 class Libgphoto2 < Formula
   desc "Gphoto2 digital camera library"
   homepage "http://www.gphoto.org/proj/libgphoto2/"
-  url "https://downloads.sourceforge.net/project/gphoto/libgphoto/2.5.14/libgphoto2-2.5.14.tar.bz2"
-  sha256 "d3ce70686fb87d6791b9adcbb6e5693bfbe1cfef9661c23c75eb8a699ec4e274"
+  url "https://downloads.sourceforge.net/project/gphoto/libgphoto/2.5.16/libgphoto2-2.5.16.tar.bz2"
+  sha256 "e757416d1623e01a9d0d294b2e790162e434c0964f50d3b7ff1a3424b62a2906"
 
   bottle do
-    sha256 "895b3f2dc366053a23eb650670178ba2294dfc174859176f875e4418af75e25e" => :sierra
-    sha256 "5557755308da9bc318d10e1dd8ec41e3299fe65026fa60319a54a8d8e340e9a6" => :el_capitan
-    sha256 "483f85ccf47b1628cb898a1a00380c54491abcfeccc7d3bf5c25a8deb66a54f6" => :yosemite
+    sha256 "42d67ebe5a33c3a41237fcaae5f5f89827a93e4b01da6f37becd8f59bda3d3b2" => :high_sierra
+    sha256 "f775f6c15a087e09939cf4f4514db5a3019e57cff0c16f19de8cab04a56a06d4" => :sierra
+    sha256 "4990ce77089bdb05581b0cd72fde5851a4e19df9916a46c298c50e49c6d83543" => :el_capitan
   end
 
   head do
@@ -19,7 +19,7 @@ class Libgphoto2 < Formula
   end
 
   depends_on "pkg-config" => :build
-  depends_on "libtool" => :run
+  depends_on "libtool"
   depends_on "libusb-compat"
   depends_on "gd"
   depends_on "libexif" => :optional
@@ -33,14 +33,14 @@ class Libgphoto2 < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <gphoto2/gphoto2-camera.h>
       int main(void) {
         Camera *camera;
         return gp_camera_new(&camera);
       }
     EOS
-    system ENV.cc, "test.c", "-lgphoto2", "-o", "test"
+    system ENV.cc, "test.c", "-L#{lib}", "-lgphoto2", "-o", "test"
     system "./test"
   end
 end

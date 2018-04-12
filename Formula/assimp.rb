@@ -1,22 +1,30 @@
 class Assimp < Formula
   desc "Portable library for importing many well-known 3D model formats"
   homepage "http://www.assimp.org"
-  url "https://github.com/assimp/assimp/archive/v3.3.1.tar.gz"
-  sha256 "d385c3f90876241343f09e45f4e5033a6a05861b971c63d1f6d512371ffdc7bf"
+  url "https://github.com/assimp/assimp/archive/v4.1.0.tar.gz"
+  sha256 "3520b1e9793b93a2ca3b797199e16f40d61762617e072f2d525fad70f9678a71"
   head "https://github.com/assimp/assimp.git"
 
   bottle do
     cellar :any
-    sha256 "8893501dc3e5c712089d73a0b1ede41f39da7055490e00e80e1535f74dc15577" => :sierra
-    sha256 "369a938fd09b266261be1ea9dbcbccf4f14117b3fd5d8943d4d54423c486d759" => :el_capitan
-    sha256 "5f1100de213334b15b640ab15ef063cace602607ca637a8b9b8e426238ca63a9" => :yosemite
-    sha256 "73fa896885b3fae3812ef5b0db1c8d3ac68d72cb33a13b3715454f52b09d5588" => :mavericks
+    sha256 "2a3c4f77532717d3cd6b8de75a4cdb033b26fc4d64736f17e90d836e11b90fe4" => :high_sierra
+    sha256 "632ab4d0bd3f3aaa002945ace7e90362b396154ef3c4536b884872f82f3dd30d" => :sierra
+    sha256 "5991caf1877f8193889d0929399aa24790e8eeab96736c3c1d28800966d75169" => :el_capitan
   end
 
   option "without-boost", "Compile without thread safe logging or multithreaded computation if boost isn't installed"
 
   depends_on "cmake" => :build
   depends_on "boost" => [:recommended, :build]
+
+  # Fix "unzip.c:150:11: error: unknown type name 'z_crc_t'"
+  # Upstream PR from 12 Dec 2017 "unzip: fix build with older zlib"
+  if MacOS.version <= :el_capitan
+    patch do
+      url "https://github.com/assimp/assimp/pull/1634.patch?full_index=1"
+      sha256 "79b93f785ee141dc2f56d557b2b8ee290eed0afc7dd373ad84715c6c9aa23460"
+    end
+  end
 
   def install
     args = std_cmake_args
@@ -27,7 +35,7 @@ class Assimp < Formula
 
   test do
     # Library test.
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <assimp/Importer.hpp>
       int main() {
         Assimp::Importer importer;
@@ -38,7 +46,7 @@ class Assimp < Formula
     system "./test"
 
     # Application test.
-    (testpath/"test.obj").write <<-EOS.undent
+    (testpath/"test.obj").write <<~EOS
       # WaveFront .obj file - a single square based pyramid
 
       # Start a new group:

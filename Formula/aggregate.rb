@@ -1,13 +1,13 @@
 class Aggregate < Formula
   desc "Optimizes lists of prefixes to reduce list lengths"
-  # Note - Freecode is no longer being updated.
-  homepage "http://freecode.com/projects/aggregate/"
+  homepage "https://web.archive.org/web/20160716192438/freecode.com/projects/aggregate/"
   url "https://ftp.isc.org/isc/aggregate/aggregate-1.6.tar.gz"
   sha256 "166503005cd8722c730e530cc90652ddfa198a25624914c65dffc3eb87ba5482"
 
   bottle do
     cellar :any_skip_relocation
     rebuild 1
+    sha256 "6dc7626282f519003e1d559ac42a983f4a571494ac04e5b61858fdf16d1ca924" => :high_sierra
     sha256 "ebe7aa16c7cf36684463292995c60fdde12cdac889de551d8f85b89e6b77416c" => :sierra
     sha256 "87507a739f2bd5ba57ccd23b34f2b7c41d68a897c128231dbbc32ba23b869ed5" => :el_capitan
     sha256 "813ccd28b00f94e1574079f7f6816858e32c5d8f9a964b783307d25c7e449d2b" => :yosemite
@@ -33,7 +33,7 @@ class Aggregate < Formula
 
   test do
     # Test case taken from here: http://horms.net/projects/aggregate/examples.shtml
-    test_input = <<-EOS.undent
+    test_input = <<~EOS
       10.0.0.0/19
       10.0.255.0/24
       10.1.0.0/24
@@ -44,7 +44,7 @@ class Aggregate < Formula
       10.1.3.0/25
     EOS
 
-    expected_output = <<-EOS.undent
+    expected_output = <<~EOS
       10.0.0.0/19
       10.0.255.0/24
       10.1.0.0/23

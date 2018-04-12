@@ -1,13 +1,13 @@
 class PerconaXtrabackup < Formula
   desc "Open source hot backup tool for InnoDB and XtraDB databases"
   homepage "https://www.percona.com/software/mysql-database/percona-xtrabackup"
-  url "https://www.percona.com/downloads/XtraBackup/Percona-XtraBackup-2.4.6/source/tarball/percona-xtrabackup-2.4.6.tar.gz"
-  sha256 "1e21ab097550901d8f2fa3dc37402ba6a994afa0722760f8f19cb369565e5e8b"
+  url "https://www.percona.com/downloads/XtraBackup/Percona-XtraBackup-2.4.10/source/tarball/percona-xtrabackup-2.4.10.tar.gz"
+  sha256 "30a122fc3f6678484a118ae7095880393765a00af1f34fcb6cc3f96b66f07f45"
 
   bottle do
-    sha256 "4c95d5ceb69cb0526d59cc914cfeb048afa1c9867db3c0d6948a751c46b28512" => :sierra
-    sha256 "45868a3a28739f5153cff0fed62e33a0ee9d91c8e72ea6b6b1be3aa8bcbc9572" => :el_capitan
-    sha256 "59a6cbc5e13468be470be4affc10ac5a5a6981d4fd7cec6f6af904117164d36b" => :yosemite
+    sha256 "cb72c3a73e3ae5c7bb6e792b938a3a2f6a46548cfc297e2be328815aff13b5a4" => :high_sierra
+    sha256 "404795f3f2d5e965abc02b0c0cbb4a9beaa057343c182fc5220f1fee664182e8" => :sierra
+    sha256 "3d973e16cd11550df895d2a9c42e93c883fdceb0edb20d6493fbeb3961e0121b" => :el_capitan
   end
 
   option "without-docs", "Build without man pages (which requires python-sphinx)"
@@ -15,15 +15,15 @@ class PerconaXtrabackup < Formula
 
   depends_on "cmake" => :build
   depends_on "sphinx-doc" => :build if build.with? "docs"
-  depends_on :mysql => :recommended
+  depends_on "mysql" => :recommended
   depends_on "libev"
   depends_on "libgcrypt"
   depends_on "openssl"
 
   resource "DBD::mysql" do
-    url "https://cpan.metacpan.org/authors/id/M/MI/MICHIELB/DBD-mysql-4.041.tar.gz"
-    mirror "http://search.cpan.org/CPAN/authors/id/M/MI/MICHIELB/DBD-mysql-4.041.tar.gz"
-    sha256 "4777de11c464b515db9da95c08c225900d0594b65ba3256982dc21f9f9379040"
+    url "https://cpan.metacpan.org/authors/id/C/CA/CAPTTOFU/DBD-mysql-4.046.tar.gz"
+    mirror "http://search.cpan.org/CPAN/authors/id/C/CA/CAPTTOFU/DBD-mysql-4.046.tar.gz"
+    sha256 "6165652ec959d05b97f5413fa3dff014b78a44cf6de21ae87283b28378daf1f7"
   end
 
   resource "boost" do
@@ -43,7 +43,7 @@ class PerconaXtrabackup < Formula
         -DINSTALL_MANDIR=share/man
       ]
 
-      # OSX has this value empty by default.
+      # macOS has this value empty by default.
       # See https://bugs.python.org/issue18378#msg215215
       ENV["LC_ALL"] = "en_US.UTF-8"
     else

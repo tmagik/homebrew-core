@@ -3,11 +3,12 @@ class GnuplotAT4 < Formula
   homepage "http://www.gnuplot.info"
   url "https://downloads.sourceforge.net/project/gnuplot/gnuplot/4.6.7/gnuplot-4.6.7.tar.gz"
   sha256 "26d4d17a00e9dcf77a4e64a28a3b2922645b8bbfe114c0afd2b701ac91235980"
+  revision 2
 
   bottle do
-    sha256 "ae5b2efeadf424eb90aab81f3ec9c1fa043e8fe20047939f45f40b6bdf2f82be" => :sierra
-    sha256 "3d736c253a44e5811494f1d89b9563b79d5d258517df474a11c648b8de37ba59" => :el_capitan
-    sha256 "932530bf585e2ea0b2d8408b344bfb454c756e3bfb177dbb7c4d1d6b2ce15ad5" => :yosemite
+    sha256 "27435780b2fd1a5aa6cae54d829758af3e67f09814e393af2a4b99ba7680be4f" => :high_sierra
+    sha256 "22c1e2e18e582e43a234b4e4d98c1a332093d95c20b5bfd05cd74317c9bafaad" => :sierra
+    sha256 "bf1eda673d961f221a4183993e966e6ff93818a2edb566b18e0d80f2cf0daed3" => :el_capitan
   end
 
   keg_only :versioned_formula
@@ -15,14 +16,16 @@ class GnuplotAT4 < Formula
   option "with-pdflib-lite", "Build the PDF terminal using pdflib-lite"
   option "with-wxmac", "Build the wxWidgets terminal using pango"
   option "with-cairo", "Build the Cairo based terminals"
-  option "without-lua", "Build without the lua/TikZ terminal"
+  option "without-lua@5.1", "Build without the lua/TikZ terminal"
   option "with-test", "Verify the build with make check (1 min)"
   option "without-emacs", "Do not build Emacs lisp files"
   option "with-aquaterm", "Build with AquaTerm support"
   option "with-x11", "Build with X11 support"
 
+  deprecated_option "without-lua" => "without-lua@5.1"
+
   depends_on "pkg-config" => :build
-  depends_on "lua" => :recommended
+  depends_on "lua@5.1" => :recommended
   depends_on "gd" => :recommended
   depends_on "readline"
   depends_on "libpng"
@@ -35,6 +38,8 @@ class GnuplotAT4 < Formula
   depends_on :x11 => :optional
 
   def install
+    ENV.prepend_path "PKG_CONFIG_PATH", Formula["lua@5.1"].opt_libexec/"lib/pkgconfig"
+
     if build.with? "aquaterm"
       # Add "/Library/Frameworks" to the default framework search path, so that an
       # installed AquaTerm framework can be found. Brew does not add this path
@@ -66,7 +71,7 @@ class GnuplotAT4 < Formula
       args << "--without-cairo" if build.without? "cairo"
     end
 
-    args << "--without-lua" if build.without? "lua"
+    args << "--without-lua" if build.without? "lua@5.1"
     args << (build.with?("emacs") ? "--with-lispdir=#{elisp}" : "--without-lisp-files")
     args << (build.with?("aquaterm") ? "--with-aquaterm" : "--without-aquaterm")
     args << (build.with?("x11") ? "--with-x" : "--without-x")
@@ -86,7 +91,7 @@ class GnuplotAT4 < Formula
 
   def caveats
     if build.with? "aquaterm"
-      <<-EOS.undent
+      <<~EOS
         AquaTerm support will only be built into Gnuplot if the standard AquaTerm
         package from SourceForge has already been installed onto your system.
         If you subsequently remove AquaTerm, you will need to uninstall and then
@@ -96,11 +101,11 @@ class GnuplotAT4 < Formula
   end
 
   test do
-    system "#{bin}/gnuplot", "-e", <<-EOS.undent
-        set terminal png;
-        set output "#{testpath}/image.png";
-        plot sin(x);
+    system "#{bin}/gnuplot", "-e", <<~EOS
+      set terminal png;
+      set output "#{testpath}/image.png";
+      plot sin(x);
     EOS
-    assert (testpath/"image.png").exist?
+    assert_predicate testpath/"image.png", :exist?
   end
 end

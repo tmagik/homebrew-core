@@ -1,28 +1,24 @@
 class Dtc < Formula
   desc "Device tree compiler"
   homepage "https://www.devicetree.org/"
-  url "https://mirrors.ocf.berkeley.edu/debian/pool/main/d/device-tree-compiler/device-tree-compiler_1.4.0+dfsg.orig.tar.gz"
-  mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/d/device-tree-compiler/device-tree-compiler_1.4.0+dfsg.orig.tar.gz"
-  version "1.4.0"
-  sha256 "f5f9a1aea478ee6dbcece8907fd4551058fe72fc2c2a7be972e3d0b7eec4fa43"
+  url "https://www.kernel.org/pub/software/utils/dtc/dtc-1.4.6.tar.xz"
+  sha256 "382302bfcc3c40734be80ac620983971d911ec4cde798f551873f3eb008c7b7e"
 
   bottle do
     cellar :any
-    rebuild 1
-    sha256 "416d5edbc2790bb3508a02e5f0d01fddd88e0ab43d5a4f522e3a8902cfdb394e" => :sierra
-    sha256 "0213fcb000d66a99c2c97f63d07ae36d949daba0f73a23ddbe57b8e6291b9099" => :el_capitan
-    sha256 "ed550f87fdb51917cb90124e41f2580508785d47c32e16e10c0637256e171585" => :yosemite
-    sha256 "dc180d41f215564fe6b161d9be8aa88cf50519c9f4035a2c08f88cfe59efedc9" => :mavericks
+    sha256 "8b2e6b7f837522b3459f5a9a32fca23427868172100ee01cb8373e38ceff8cf3" => :high_sierra
+    sha256 "e34cbf3f0024346a9577249ec392f8a16576c356d74d3a96569b3e871a6eb514" => :sierra
+    sha256 "e1cc9f8201d537386c6d4ac3e68aaea9328cdbcd4f912c21c98d1a2fd1e17336" => :el_capitan
   end
 
   def install
-    system "make"
-    system "make", "DESTDIR=#{prefix}", "PREFIX=", "install"
+    system "make", "NO_PYTHON=1"
+    system "make", "NO_PYTHON=1", "DESTDIR=#{prefix}", "PREFIX=", "install"
     mv lib/"libfdt.dylib.1", lib/"libfdt.1.dylib"
   end
 
   test do
-    (testpath/"test.dts").write <<-EOS.undent
+    (testpath/"test.dts").write <<~EOS
       /dts-v1/;
       / {
       };

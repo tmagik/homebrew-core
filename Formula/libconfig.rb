@@ -1,38 +1,28 @@
 class Libconfig < Formula
   desc "Configuration file processing library"
-  homepage "http://www.hyperrealm.com/libconfig/"
-  url "https://github.com/hyperrealm/libconfig/archive/v1.6.tar.gz"
-  sha256 "18739792eb463d73525d7aea9b0a48b14106fae1cfec09aedc668d8c1079adf1"
+  homepage "https://hyperrealm.github.io/libconfig/"
+  url "https://github.com/hyperrealm/libconfig/archive/v1.7.2.tar.gz"
+  sha256 "f67ac44099916ae260a6c9e290a90809e7d782d96cdd462cac656ebc5b685726"
+  head "https://github.com/hyperrealm/libconfig.git"
 
   bottle do
-    cellar :any
-    sha256 "76c392efe1620331e9840eb426d9551c15f0c1f5b3db6bd255f7a6f7d28a70ec" => :sierra
-    sha256 "b761558d36680478ea69e888a35bb64df066a561f9534e9b893b26e07a4062e4" => :el_capitan
-    sha256 "da3783f62333e9f65b235c7359de96264476e7bb7a0e472f7f81d288cbd059ec" => :yosemite
-    sha256 "dfb06c8602d8cb3a81a0d63127fc45c112bbdd494772f5ce50715f06383d596d" => :mavericks
+    sha256 "0f77666e9a1e8bd6290a70df039aa97cec52ac79485de268a589ee46e82f4ce3" => :high_sierra
+    sha256 "8370ecedcfd9a2709efcbf822f6dd1497b9d11efe5a109d5ec05b0f7f3e850d4" => :sierra
+    sha256 "a7b8640a4f169cf82eb6e9aa79e01b59ed1d2914f373abcd2602241b5a21c518" => :el_capitan
   end
 
-  head do
-    url "https://github.com/hyperrealm/libconfig.git"
-    depends_on "automake" => :build
-    depends_on "autoconf" => :build
-    depends_on "libtool" => :build
-  end
+  depends_on "automake" => :build
+  depends_on "autoconf" => :build
+  depends_on "libtool" => :build
 
   def install
-    system "autoreconf", "-i" if build.head?
+    system "autoreconf", "-fiv"
     system "./configure", "--disable-dependency-tracking", "--prefix=#{prefix}"
-
-    # Fixes "scanner.l:137:59: error: too few arguments to function call ..."
-    # Forces regeneration of the BUILT_SOURCES "scanner.c" and "scanner.h"
-    # Reported 6 Jun 2016: https://github.com/hyperrealm/libconfig/issues/66
-    touch "lib/scanner.l"
-
     system "make", "install"
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <libconfig.h>
       int main() {
         config_t cfg;

@@ -1,20 +1,21 @@
 class Gdl < Formula
   desc "GNOME Docking Library provides docking features for GTK+ 3"
   homepage "https://developer.gnome.org/gdl/"
-  url "https://download.gnome.org/sources/gdl/3.22/gdl-3.22.0.tar.xz"
-  sha256 "cc5b360e1392292186924f0f9a8efc0f4db7e6e56dc7042037466b5cc839660c"
+  url "https://download.gnome.org/sources/gdl/3.28/gdl-3.28.0.tar.xz"
+  sha256 "52cc98ecc105148467b3b2b4e0d27ae484b1b6710d53413f771ed07ef1b737b6"
+  revision 1
 
   bottle do
-    sha256 "4bdf77d9f10c16879ec6b1dc67040c526a05bb6ab262e4cb00d363509599af33" => :sierra
-    sha256 "e3869391f2fc13d9354f4f8744d140c9d5415fad9121a5effeeb2c8609518b30" => :el_capitan
-    sha256 "6f4885ff8ef490c46e49eee7415133c494c7e1a77585ce2c0a818f9aaa0982e5" => :yosemite
+    sha256 "7395131d564a60d6b225c82f109403aa92bbc5f75a59eccd1ec3f98a13052f6f" => :high_sierra
+    sha256 "9267cd085c7e131ffb16b13a3c4f6b39ae5b3093fd16f77925263ea305b3536b" => :sierra
+    sha256 "c366de7b473f8af12cbb38b4a2fabbde7438d76915a8f06663ef1e0703548e6b" => :el_capitan
   end
 
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "intltool" => :build
   depends_on "gtk+3"
   depends_on "libxml2"
-  depends_on "gobject-introspection"
 
   def install
     system "./configure", "--disable-dependency-tracking",
@@ -24,7 +25,7 @@ class Gdl < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <gdl/gdl.h>
 
       int main(int argc, char *argv[]) {

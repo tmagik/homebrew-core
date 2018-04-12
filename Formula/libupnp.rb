@@ -1,14 +1,14 @@
 class Libupnp < Formula
   desc "Portable UPnP development kit"
   homepage "https://pupnp.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/pupnp/pupnp/libUPnP%201.6.21/libupnp-1.6.21.tar.bz2"
-  sha256 "af3f3c0846a1d75baeadae4aa5a2bda427567e2a1fb4559bf73ccff0a4f9a39b"
+  url "https://downloads.sourceforge.net/project/pupnp/pupnp/libUPnP%201.6.25/libupnp-1.6.25.tar.bz2"
+  sha256 "c5a300b86775435c076d58a79cc0d5a977d76027d2a7d721590729b7f369fa43"
 
   bottle do
     cellar :any
-    sha256 "19af0c05c9f8dda92e2e056cee17b6798841707c62c906917b78d9e9ec53b0be" => :sierra
-    sha256 "b0230fef08232c7de0fa8835924f6799baa728568727836b3e054a4a611078e1" => :el_capitan
-    sha256 "ad0a51a91b7e3c0d227cfe2caec446e447497179050924695907d6411259e8fe" => :yosemite
+    sha256 "cbca37b45cb652c73d4c5ae0ae087338bb4c606f5be4306c5d998c39c382bb4b" => :high_sierra
+    sha256 "b870845572dd6d11ed90fedfb367bbd53066f6b9c90e522b97ce88ae53ccddfe" => :sierra
+    sha256 "9b660881232e6ce94a375962c1df55f179f69335c7d11907b9a9c5dd81693360" => :el_capitan
   end
 
   option "without-ipv6", "Disable IPv6 support"

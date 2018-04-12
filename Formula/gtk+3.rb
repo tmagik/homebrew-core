@@ -1,31 +1,25 @@
 class Gtkx3 < Formula
   desc "Toolkit for creating graphical user interfaces"
   homepage "https://gtk.org/"
-  url "https://download.gnome.org/sources/gtk+/3.22/gtk+-3.22.16.tar.xz"
-  sha256 "3e0c3ad01f3c8c5c9b1cc1ae00852bd55164c8e5a9c1f90ba5e07f14f175fe2c"
+  url "https://download.gnome.org/sources/gtk+/3.22/gtk+-3.22.29.tar.xz"
+  sha256 "a07d64b939fcc034a066b7723fdf9b24e92c9cfb6a8497593f3471fe56fbbbf8"
+  revision 1
 
   bottle do
-    sha256 "a9306c76f8ec710028f16b2decedc7265e1e9fbf95c25a0466d9bd9024380676" => :sierra
-    sha256 "62f7b715b1ab9d9010a40003e63b8a498bc91fbb23485a7e39bd0efb4a852318" => :el_capitan
-    sha256 "16184c07877da86c2f7e287ff14eefae19d0baa24c1513213ca521ce8a8d9811" => :yosemite
+    sha256 "df5a277b6d3290b74b4dfe18875a93fe0fdfe8f2f39ab05e628541bc2b77c669" => :high_sierra
+    sha256 "9f57c2b90165cba58f3270778ea4b7e309a2ac351f5254795f1abffb6d991a61" => :sierra
+    sha256 "8d750ce74e69a4700559ea5dd6f70def53a4b1ee6b7abc75f155e011eed55b65" => :el_capitan
   end
 
-  # see https://bugzilla.gnome.org/show_bug.cgi?id=781118
-  # see https://bugzilla.gnome.org/show_bug.cgi?id=772281
-  patch :DATA
-
-  option "with-quartz-relocation", "Build with quartz relocation support"
-
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "gdk-pixbuf"
   depends_on "atk"
-  depends_on "gobject-introspection"
   depends_on "libepoxy"
   depends_on "pango"
   depends_on "glib"
   depends_on "hicolor-icon-theme"
   depends_on "gsettings-desktop-schemas" => :recommended
-  depends_on "jasper" => :optional
 
   def install
     args = %W[
@@ -38,8 +32,6 @@ class Gtkx3 < Formula
       --enable-quartz-backend
       --disable-x11-backend
     ]
-
-    args << "--enable-quartz-relocation" if build.with?("quartz-relocation")
 
     system "./configure", *args
     # necessary to avoid gtk-update-icon-cache not being found during make install
@@ -55,7 +47,7 @@ class Gtkx3 < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <gtk/gtk.h>
 
       int main(int argc, char *argv[]) {
@@ -115,50 +107,3 @@ class Gtkx3 < Formula
     system "./test"
   end
 end
-
-__END__
-diff --git a/gdk/quartz/gdkscreen-quartz.c b/gdk/quartz/gdkscreen-quartz.c
-index 586f7af..d032643 100644
---- a/gdk/quartz/gdkscreen-quartz.c
-+++ b/gdk/quartz/gdkscreen-quartz.c
-@@ -79,7 +79,7 @@ gdk_quartz_screen_init (GdkQuartzScreen *quartz_screen)
-   NSDictionary *dd = [[[NSScreen screens] objectAtIndex:0] deviceDescription];
-   NSSize size = [[dd valueForKey:NSDeviceResolution] sizeValue];
-
--  _gdk_screen_set_resolution (screen, size.width);
-+  _gdk_screen_set_resolution (screen, 72.0);
-
-   gdk_quartz_screen_calculate_layout (quartz_screen);
-
-@@ -334,11 +334,8 @@ gdk_quartz_screen_get_height (GdkScreen *screen)
- static gint
- get_mm_from_pixels (NSScreen *screen, int pixels)
- {
--  const float mm_per_inch = 25.4;
--  NSDictionary *dd = [[[NSScreen screens] objectAtIndex:0] deviceDescription];
--  NSSize size = [[dd valueForKey:NSDeviceResolution] sizeValue];
--  float dpi = size.width;
--  return (pixels / dpi) * mm_per_inch;
-+  const float dpi = 72.0;
-+  return (pixels / dpi) * 25.4;
- }
-
- static gchar *
-diff --git a/gtk/gtkclipboard-quartz.c b/gtk/gtkclipboard-quartz.c
-index fec31f5..2b0b098 100644
---- a/gtk/gtkclipboard-quartz.c
-+++ b/gtk/gtkclipboard-quartz.c
-@@ -1253,3 +1253,12 @@ gtk_clipboard_get_selection (GtkClipboard *clipboard)
-
-   return clipboard->selection;
- }
-+
-+GtkClipboard *
-+gtk_clipboard_get_default (GdkDisplay *display)
-+{
-+  g_return_val_if_fail (display != NULL, NULL);
-+  g_return_val_if_fail (GDK_IS_DISPLAY (display), NULL);
-+
-+  return gtk_clipboard_get_for_display (display, GDK_SELECTION_CLIPBOARD);
-+}
-

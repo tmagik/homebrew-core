@@ -3,14 +3,14 @@ require "language/node"
 class Jhipster < Formula
   desc "Generate, develop and deploy Spring Boot + Angular applications"
   homepage "https://jhipster.github.io/"
-  url "https://registry.npmjs.org/generator-jhipster/-/generator-jhipster-4.5.6.tgz"
-  sha256 "4174da8fa76ca44fa210675b4176043aab1950020ff7195b3885f49cccadd457"
+  url "https://registry.npmjs.org/generator-jhipster/-/generator-jhipster-4.14.3.tgz"
+  sha256 "e38c4191caf58d8be93c14c9161cc4aea99ddf4e177d04e011c39cac037f506c"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "8b8224d782ae9c6e3a8b78dc757454ed7aaaabf535a539f270f56e8534428d07" => :sierra
-    sha256 "f0308be9f3f78e6daf591ece79282bce1650c01a83f9053cdae1621385e1769d" => :el_capitan
-    sha256 "c32ad80902c46ef843d64cccf79d434a3af72b2fa41397f98bd9852f3c6ff740" => :yosemite
+    sha256 "4f427f8454aea435bc27a321a8d6ed35cdd8471eab437eca831432a18ca6573e" => :high_sierra
+    sha256 "9ee59e57cb4af03637366ca43a7b02a8d261a9e31c85c40788c896946d3131f7" => :sierra
+    sha256 "a1255ac7e51d52a783a0770661af654abe105eddbcb8a1524110dfd8cb569120" => :el_capitan
   end
 
   depends_on "node"
@@ -23,10 +23,6 @@ class Jhipster < Formula
   end
 
   test do
-    expected = <<-EOS.undent
-      Executing jhipster:info
-      Execution complete
-    EOS
-    assert_equal expected, shell_output("#{bin}/jhipster info")
+    assert_match "execution is complete", shell_output("#{bin}/jhipster info")
   end
 end

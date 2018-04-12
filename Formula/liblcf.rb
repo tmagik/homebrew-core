@@ -1,15 +1,16 @@
 class Liblcf < Formula
   desc "Library for RPG Maker 2000/2003 games data"
   homepage "https://easyrpg.org/"
-  url "https://github.com/EasyRPG/liblcf/archive/0.5.1.tar.gz"
-  sha256 "3214fe524186c3d10a09c947f0a9aa36d262871b7134a9e7653610fcdd4b44b2"
+  url "https://github.com/EasyRPG/liblcf/archive/0.5.3.tar.gz"
+  sha256 "4d2784ab927e2f61595b8efeb61664bcc64b3f746d12c893e302645dda3acddc"
+  revision 3
   head "https://github.com/EasyRPG/liblcf.git"
 
   bottle do
     cellar :any
-    sha256 "712a817da25ce4e4101f4fa428763dcb31cd4f5005dffca18eb7535734d6f1b4" => :sierra
-    sha256 "2a1831f1352aa260fa58bd43bb67bcb77ed7fa0e6dfdbedecb943cdf2bfbc4a6" => :el_capitan
-    sha256 "36740ad303dbbacee033f3575b240019e68446489d38bc91179ec2c676adedf9" => :yosemite
+    sha256 "0b530dcdbbbd23975ef4fe86e9f33192f6b3cb2ac0a29303c9cbbaad7e7ee09c" => :high_sierra
+    sha256 "c8c0870f7cbef63001ddbe1ed262ab152032170299e0e63c1d5db930c12a0793" => :sierra
+    sha256 "24060913cbc1abeba13c619272e7a16b851f31fb4448cc08b5d5d98c389d5e42" => :el_capitan
   end
 
   depends_on "autoconf" => :build
@@ -29,7 +30,7 @@ class Liblcf < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include "lsd_reader.h"
       #include <cassert>
 

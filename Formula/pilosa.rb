@@ -1,32 +1,33 @@
 class Pilosa < Formula
   desc "Distributed bitmap index that queries across data sets"
   homepage "https://www.pilosa.com"
-  url "https://github.com/pilosa/pilosa/archive/v0.4.0.tar.gz"
-  sha256 "ec615c5d2584e5761ac20c6a6df6139f7018de65934f4c2d05e69cfd35d1d89e"
+  url "https://github.com/pilosa/pilosa/archive/v0.8.8.tar.gz"
+  sha256 "d430cb86f99595e26817fcff1441af815055485ef213a91c54af59181182dfd8"
 
   bottle do
     cellar :any_skip_relocation
-    rebuild 1
-    sha256 "5beb89fe8f5d2a8834829a2d6b798d9a6329d05ccb349b060068c7263cf0ba84" => :sierra
-    sha256 "56cc42c7ce67efb4632beeae0835d709eb3ff277c663da4b285afd0372ae9d24" => :el_capitan
-    sha256 "d9808a26091e472ebf3a2d9bbd5afceeb339b64e8e7f5bbbae78fe9cf808a427" => :yosemite
+    sha256 "b53e5982845292ea5a836866bb38356a1ef78b302f26ed687c46355bedfe1178" => :high_sierra
+    sha256 "cffc67a81a17cf30cfd37ad219593703806af37c9c000f8ee183f4fba4c80c80" => :sierra
+    sha256 "b803765ae2cfb19131293a09de26f4b18d3b7033fa7d4f52262b8f297471a2e7" => :el_capitan
   end
 
+  depends_on "dep" => :build
   depends_on "go" => :build
-  depends_on "glide" => :build
+  depends_on "go-statik" => :build
 
   def install
-    require "time"
     ENV["GOPATH"] = buildpath
-    ENV["GLIDE_HOME"] = HOMEBREW_CACHE/"glide_home/#{name}"
-    mkdir_p buildpath/"src/github.com/pilosa/"
-    ln_s buildpath, buildpath/"src/github.com/pilosa/pilosa"
-    system "make", "pilosa", "FLAGS=-o #{bin}/pilosa", "VERSION=#{version}"
+    (buildpath/"src/github.com/pilosa/pilosa").install buildpath.children
+
+    cd "src/github.com/pilosa/pilosa" do
+      system "make", "generate-statik", "pilosa", "FLAGS=-o #{bin}/pilosa", "VERSION=v#{version}"
+      prefix.install_metafiles
+    end
   end
 
   plist_options :manual => "pilosa server"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
@@ -59,6 +60,7 @@ class Pilosa < Formula
       end
       sleep 0.5
       assert_match("Welcome. Pilosa is running.", shell_output("curl localhost:10101"))
+      assert_match("<!DOCTYPE html>", shell_output("curl --user-agent NotCurl localhost:10101"))
     ensure
       Process.kill "TERM", server
       Process.wait server

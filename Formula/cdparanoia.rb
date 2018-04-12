@@ -1,11 +1,12 @@
 class Cdparanoia < Formula
   desc "Audio extraction tool for sampling CDs"
   homepage "https://www.xiph.org/paranoia/"
-  url "http://downloads.xiph.org/releases/cdparanoia/cdparanoia-III-10.2.src.tgz"
+  url "https://downloads.xiph.org/releases/cdparanoia/cdparanoia-III-10.2.src.tgz"
   sha256 "005db45ef4ee017f5c32ec124f913a0546e77014266c6a1c50df902a55fe64df"
 
   bottle do
     cellar :any
+    sha256 "8b8b1eeb36773ce01ef09232e2e7270fc759aedd1814218cbd8eb9f668a4bf73" => :high_sierra
     sha256 "709190d769f7b8c61d19867ae2faf902a2f84dec6f0d5506bd71c56a99e4a67a" => :sierra
     sha256 "135250473fe692dc976ecbf7324676fa8cef3cdb48a091287bb183c31548fed9" => :el_capitan
     sha256 "3cd7bbd1a4a0a7992287b255cf0d6409bdb5f4a3fed245b0fd2296e535e9f2de" => :yosemite
@@ -29,5 +30,9 @@ class Cdparanoia < Formula
                           "--libdir=#{libexec}"
     system "make", "all"
     system "make", "install"
+  end
+
+  test do
+    system "#{bin}/cdparanoia", "--version"
   end
 end

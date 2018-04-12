@@ -1,14 +1,13 @@
 class Pdns < Formula
   desc "Authoritative nameserver"
   homepage "https://www.powerdns.com"
-  url "https://downloads.powerdns.com/releases/pdns-4.0.3.tar.bz2"
-  sha256 "60fa21550b278b41f58701af31c9f2b121badf271fb9d7642f6d35bfbea8e282"
+  url "https://downloads.powerdns.com/releases/pdns-4.1.1.tar.bz2"
+  sha256 "08d388321c8a2c24ebe8d7e539f34a0ba2c0973313c168a1b5ecf507e4fb04ba"
 
   bottle do
-    rebuild 1
-    sha256 "1cbf7b9fee0547821a2e1272024a8f422f3a7d29352189fd31350058a48a9fa1" => :sierra
-    sha256 "21d3740b76c2db623bd0af082b19428491a8015ceb66a43b63ddc2bb0e582442" => :el_capitan
-    sha256 "b16f12210c373ed1c75b620617a59c74b5b458f7e151fe1ac5483e33586b42ed" => :yosemite
+    sha256 "470c9841912c8c2ef96c69c8426b4cfc17d10277c978c193015261d677c87651" => :high_sierra
+    sha256 "857cb0232f168326f27f696b9ba2c1c1fe6577b21dcbca4f2179cdcae379704d" => :sierra
+    sha256 "1e22069fb9c9b263a75f2361602d87923f72094225fa27ba4662b3a8bd1f2566" => :el_capitan
   end
 
   head do
@@ -21,6 +20,7 @@ class Pdns < Formula
   end
 
   option "with-postgresql", "Enable the PostgreSQL backend"
+  option "with-remote", "enable the Remote backend"
 
   deprecated_option "pgsql" => "with-postgresql"
   deprecated_option "with-pgsql" => "with-postgresql"
@@ -30,11 +30,15 @@ class Pdns < Formula
   depends_on "lua"
   depends_on "openssl"
   depends_on "sqlite"
-  depends_on :postgresql => :optional
+  depends_on "postgresql" => :optional
 
   def install
+    # Fix "configure: error: cannot find boost/program_options.hpp"
+    ENV["SDKROOT"] = MacOS.sdk_path if MacOS.version == :sierra
+
     args = %W[
       --prefix=#{prefix}
+      --sysconfdir=#{etc}/powerdns
       --with-lua
       --with-openssl=#{Formula["openssl"].opt_prefix}
       --with-sqlite3
@@ -43,6 +47,8 @@ class Pdns < Formula
     # Include the PostgreSQL backend if requested
     if build.with? "postgresql"
       args << "--with-modules=gsqlite3 gpgsql"
+    elsif build.with? "remote"
+      args << "--with-modules=gsqlite3 remote"
     else
       # SQLite3 backend only is the default
       args << "--with-modules=gsqlite3"
@@ -56,7 +62,7 @@ class Pdns < Formula
 
   plist_options :manual => "pdns_server start"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

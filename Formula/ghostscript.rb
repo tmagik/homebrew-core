@@ -1,44 +1,13 @@
 class Ghostscript < Formula
   desc "Interpreter for PostScript and PDF"
   homepage "https://www.ghostscript.com/"
-  revision 2
-
-  stable do
-    url "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs921/ghostscript-9.21.tar.xz"
-    sha256 "2be1d014888a34187ad4bbec19ab5692cc943bd1cb14886065aeb43a3393d053"
-
-    # Remove for > 9.21
-    # First part of fix for CVE-2017-8291
-    # https://www.cve.mitre.org/cgi-bin/cvename.cgi?name=2017-8291
-    # https://bugs.ghostscript.com/show_bug.cgi?id=697799
-    # Upstream commit from 27 Apr 2017 "Bug 697799: have .eqproc check its parameters"
-    patch do
-      url "https://git.ghostscript.com/?p=ghostpdl.git;a=patch;h=4f83478c88"
-      sha256 "81f087fa6f3de81a83a4830a7b243b6da5506d783cf37ef1259cd600b1322e47"
-    end
-
-    # Remove for > 9.21
-    # Second part of fix for CVE-2017-8291
-    # Upstream commit from 27 Apr 2017 "Bug 697799: have .rsdparams check its parameters"
-    patch do
-      url "https://git.ghostscript.com/?p=ghostpdl.git;a=patch;h=04b37bbce1"
-      sha256 "366bf4ded600fc7b0a8e2b0d4c877cc3ad5a0ccc192cb660d81f729575a47259"
-    end
-
-    # Remove for > 9.21
-    # Fixes regression caused by the first part of the CVE-2017-8291 fix above
-    # https://bugs.ghostscript.com/show_bug.cgi?id=697846
-    # Upstream commit from 3 May 2017 "Bug 697846: revision to commit 4f83478c88 (.eqproc)"
-    patch do
-      url "https://git.ghostscript.com/?p=ghostpdl.git;a=patch;h=57f20719e1"
-      sha256 "0b2f6008542c6f01caf20f56aa084cd906b96e0974820f2b613b1ae12618b233"
-    end
-  end
+  url "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs923/ghostscript-9.23.tar.xz"
+  sha256 "1fcedc27d4d6081105cdf35606cb3f809523423a6cf9e3c23cead3525d6ae8d9"
 
   bottle do
-    sha256 "fb4550deedfae1e307105ed563e1a79acd8323a75f8a775f9539c28b67d5d67f" => :sierra
-    sha256 "7299521942379bc4e6340b684eb3b5e087d25f455bb679c488c8db32cd80c296" => :el_capitan
-    sha256 "3a910db33cefd0145b0c81e94c24afb4432b78e5e11154784ff633f7d1c3d916" => :yosemite
+    sha256 "dc2e6603867294e34d8f7910e436c096227c8b791ae886c7acc3a5c2fb03dc91" => :high_sierra
+    sha256 "f08fd9db80054129d5b2abc8528f74afbb89bb658ad4ed39daf38908b6957173" => :sierra
+    sha256 "d0ddb0ab33db756543f7616b9a3558f43527784495df0ae7e717c2b0daa738ec" => :el_capitan
   end
 
   head do
@@ -68,6 +37,8 @@ class Ghostscript < Formula
       --disable-cups
       --disable-compile-inits
       --disable-gtk
+      --disable-fontconfig
+      --without-libidn
     ]
     args << "--without-x" if build.without? "x11"
 

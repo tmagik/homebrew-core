@@ -1,15 +1,14 @@
 class Ttfautohint < Formula
   desc "Auto-hinter for TrueType fonts"
   homepage "https://www.freetype.org/ttfautohint"
-  url "https://downloads.sourceforge.net/project/freetype/ttfautohint/1.6/ttfautohint-1.6.tar.gz"
-  sha256 "e41013f710c306538ff5b2f1b4d9a5b24bda031fb73fabcaf02a21b8edd71be5"
+  url "https://downloads.sourceforge.net/project/freetype/ttfautohint/1.8.1/ttfautohint-1.8.1.tar.gz"
+  sha256 "12df5120be194d2731e2a3c596892aa218681614c4f924e24279baf69bb7d4f9"
 
   bottle do
     cellar :any
-    rebuild 1
-    sha256 "9acbfeffd3e0b978dc9d6905398035155fff3012b17741b5d822afd06ad80318" => :sierra
-    sha256 "10fd60dde2cae31a861ce8dab53e49cab7237f93a7c1646d751d6bed9b7fa9f2" => :el_capitan
-    sha256 "2252e5b636d885d613a3cc4ee831777218124039132c5a3ba4ea1c3b96778f18" => :yosemite
+    sha256 "7f2882b40456aa63032c9cc0cc605867fe1b57b483f67ee755aa2be6a93908ea" => :high_sierra
+    sha256 "538f6817293c6f4db3068aec0b946e27af6b2a74a8bae8e738d0f7ece568ed6f" => :sierra
+    sha256 "2123fde31eaeb430de611383e8107862f135e3feeaba5b2e2e2c99fd0292e61c" => :el_capitan
   end
 
   head do

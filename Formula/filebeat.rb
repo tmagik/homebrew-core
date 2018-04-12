@@ -1,44 +1,66 @@
 class Filebeat < Formula
   desc "File harvester to ship log files to Elasticsearch or Logstash"
   homepage "https://www.elastic.co/products/beats/filebeat"
-  url "https://github.com/elastic/beats/archive/v5.4.2.tar.gz"
-  sha256 "6a02dffae1b09bc7e2ea673268124bab43c012e8a3b400f53e26c156448f2a99"
-
+  url "https://github.com/elastic/beats/archive/v6.2.3.tar.gz"
+  sha256 "4ab58a55e61bd3ad31a597e5b02602b52d306d8ee1e4d4d8ff7662e2b554130e"
   head "https://github.com/elastic/beats.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "7ff4acb631505d63e5de5d31c584300f9631db74b4a3e398526bd75371e8eaf1" => :sierra
-    sha256 "cf2c622c70bf1d226309c6730e86aef7b7aec05d0d6188c655a0a6645766f301" => :el_capitan
-    sha256 "96a3b135f8cab4197ea736f24e8ec22b5faa8b3c048a5a82fe7340155a0bf70e" => :yosemite
+    sha256 "a88f922d472232e9e0fbdc69c1b83456addb984bc58694dfcd977c5e2d422224" => :high_sierra
+    sha256 "d442d43bc195cf00200746bc53e04c45d7cf85107b8abb48289aaa7c3afcf54e" => :sierra
+    sha256 "c4df39ac1d5ce0bc16845146418581854af467b0fabee160659f634f8df3e482" => :el_capitan
   end
 
   depends_on "go" => :build
+  depends_on "python@2" => :build
+
+  resource "virtualenv" do
+    url "https://files.pythonhosted.org/packages/b1/72/2d70c5a1de409ceb3a27ff2ec007ecdd5cc52239e7c74990e32af57affe9/virtualenv-15.2.0.tar.gz"
+    sha256 "1d7e241b431e7afce47e77f8843a276f652699d1fa4f93b9d8ce0076fd7b0b54"
+  end
 
   def install
-    gopath = buildpath/"gopath"
-    (gopath/"src/github.com/elastic/beats").install Dir["{*,.git,.gitignore}"]
+    ENV["GOPATH"] = buildpath
+    (buildpath/"src/github.com/elastic/beats").install Dir["{*,.git,.gitignore}"]
 
-    ENV["GOPATH"] = gopath
+    ENV.prepend_create_path "PYTHONPATH", buildpath/"vendor/lib/python2.7/site-packages"
 
-    cd gopath/"src/github.com/elastic/beats/filebeat" do
-      system "make"
-      libexec.install "filebeat"
-
-      (etc/"filebeat").install("filebeat.yml", "filebeat.template.json", "filebeat.template-es2x.json")
+    resource("virtualenv").stage do
+      system "python", *Language::Python.setup_install_args(buildpath/"vendor")
     end
 
-    prefix.install_metafiles gopath/"src/github.com/elastic/beats"
+    ENV.prepend_path "PATH", buildpath/"vendor/bin"
 
-    (bin/"filebeat").write <<-EOS.undent
+    cd "src/github.com/elastic/beats/filebeat" do
+      system "make"
+      # prevent downloading binary wheels during python setup
+      system "make", "PIP_INSTALL_COMMANDS=--no-binary :all", "python-env"
+      system "make", "DEV_OS=darwin", "update"
+      system "make", "modules"
+
+      (etc/"filebeat").install Dir["filebeat.*", "fields.yml", "modules.d"]
+      (etc/"filebeat"/"module").install Dir["_meta/module.generated/*"]
+      (libexec/"bin").install "filebeat"
+      prefix.install "_meta/kibana"
+    end
+
+    prefix.install_metafiles buildpath/"src/github.com/elastic/beats"
+
+    (bin/"filebeat").write <<~EOS
       #!/bin/sh
-      exec #{libexec}/filebeat -path.config #{etc}/filebeat -path.home #{prefix} -path.logs #{var}/log/filebeat -path.data #{var}/filebeat $@
+      exec #{libexec}/bin/filebeat \
+        --path.config #{etc}/filebeat \
+        --path.data #{var}/lib/filebeat \
+        --path.home #{prefix} \
+        --path.logs #{var}/log/filebeat \
+        "$@"
     EOS
   end
 
   plist_options :manual => "filebeat"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
     "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -59,14 +81,13 @@ class Filebeat < Formula
     log_file = testpath/"test.log"
     touch log_file
 
-    (testpath/"filebeat.yml").write <<-EOS.undent
+    (testpath/"filebeat.yml").write <<~EOS
       filebeat:
         prospectors:
           -
             paths:
               - #{log_file}
             scan_frequency: 0.1s
-      filebeat.idle_timeout: 0.1s
       output:
         file:
           path: #{testpath}
@@ -81,7 +102,7 @@ class Filebeat < Formula
       log_file.append_lines "foo bar baz"
       sleep 5
 
-      assert File.exist? testpath/"filebeat"
+      assert_predicate testpath/"filebeat", :exist?
     ensure
       Process.kill("TERM", filebeat_pid)
     end

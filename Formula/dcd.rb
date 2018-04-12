@@ -1,33 +1,21 @@
 class Dcd < Formula
   desc "Auto-complete program for the D programming language"
-  homepage "https://github.com/Hackerpilot/DCD"
-  url "https://github.com/Hackerpilot/DCD.git",
-      :tag => "v0.8.0",
-      :revision => "f8f3024dda05e7f3d1a112adde1f99ec98649e78"
+  homepage "https://github.com/dlang-community/DCD"
+  url "https://github.com/dlang-community/DCD.git",
+      :tag => "v0.9.2",
+      :revision => "d47d07aba8f07d053e104cf29f83fce60d8174a6"
 
-  head "https://github.com/Hackerpilot/dcd.git", :shallow => false
+  head "https://github.com/dlang-community/dcd.git", :shallow => false
 
   bottle do
-    sha256 "44421b44452c5d407a1d0a9b0811eced187a0a580d159cbb1a27348f97d72517" => :sierra
-    sha256 "aa5bf3b36f947743dcdf6d3cad4e2973ad2d08746a9eb668a5477b8458090110" => :el_capitan
-    sha256 "fe742c126f957f99b1691b2044352f0b134bf0af8a1812c46b256a370f3396e7" => :yosemite
-    sha256 "03cd0ece3ba032610457891fb74d1be87417a87e960377e38fc580df7ae8f2c1" => :mavericks
-  end
-
-  devel do
-    url "https://github.com/Hackerpilot/DCD.git",
-      :tag => "v0.9.0-alpha.6",
-      :revision => "b5d313922317ff25d3a39980af248b7eff19b93b"
-    version "0.9.0-alpha6"
+    sha256 "08cbfd6da2e2461e50c10f9229a1317485452115c0797860427c6bbe429c8dbc" => :high_sierra
+    sha256 "4faa1f86772d366d9ee6858bb2cd5a777d1a21868074c0d9cab4ee4d56e55abb" => :sierra
+    sha256 "17ed040b21aeffe43b2918b1a48cdcc7bbdd25b7c769e6c186292248ff21eecd" => :el_capitan
   end
 
   depends_on "dmd" => :build
 
   def install
-    if build.stable?
-      rmtree "libdparse/experimental_allocator"
-      rmtree "containers/experimental_allocator"
-    end
     system "make"
     bin.install "bin/dcd-client", "bin/dcd-server"
   end

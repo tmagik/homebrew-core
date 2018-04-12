@@ -3,17 +3,17 @@ class Supervisor < Formula
 
   desc "Process Control System"
   homepage "http://supervisord.org/"
-  url "https://github.com/Supervisor/supervisor/archive/3.3.2.tar.gz"
-  sha256 "c54190f948b0d876ec43f0ca9eea71b1757c4c9290a2fa5005204b98567b6a5b"
+  url "https://github.com/Supervisor/supervisor/archive/3.3.4.tar.gz"
+  sha256 "d6456e784a54d90b11bacd95d18382e336aa9786f33c91830a0941df4748ed02"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "a28dac5c49e52235bf1034526a11cae4adf7039bad16b4319e08e22a2afe8db0" => :sierra
-    sha256 "08384975b991dbf8ff983fa99aa770ea33e6589d97d84a478a2564ca1d000f32" => :el_capitan
-    sha256 "a442b4794e8962e05e667388cf12e7abe0df91c1803e93075d8aed06a4964b82" => :yosemite
+    sha256 "de602ba5a4d850c369a1cb9f7275044babd776b21aed0d028e87b68e68dba2b4" => :high_sierra
+    sha256 "432c2afe07eecfb03c4b8268caa0898b68cd7af5bf6364ae71d054e805842905" => :sierra
+    sha256 "dfae5fc72acbfe08f53222ee70fa34259c29a46927272f1af8512c010acf02df" => :el_capitan
   end
 
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
 
   resource "meld3" do
     url "https://files.pythonhosted.org/packages/45/a0/317c6422b26c12fe0161e936fc35f36552069ba8e6f7ecbd99bbffe32a5f/meld3-1.0.2.tar.gz"
@@ -37,7 +37,7 @@ class Supervisor < Formula
   plist_options :manual => "supervisord -c #{HOMEBREW_PREFIX}/etc/supervisord.ini"
 
   def plist
-    <<-EOS.undent
+    <<~EOS
       <?xml version="1.0" encoding="UTF-8"?>
       <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
       <plist version="1.0">
@@ -67,7 +67,7 @@ class Supervisor < Formula
   end
 
   test do
-    (testpath/"sd.ini").write <<-EOS.undent
+    (testpath/"sd.ini").write <<~EOS
       [unix_http_server]
       file=supervisor.sock
 

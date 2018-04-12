@@ -6,11 +6,14 @@ class Bde < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "f5bb245d5fe91341ba6d0ffaf4fa62de029b71c890e695b241a86d2058108798" => :high_sierra
     sha256 "0f430f9f7d26e6d3ff03a6fa9b2d3f0e8042fb215c83e99a29741eca43f5a1a9" => :sierra
     sha256 "40fa82df85e35baec799c061a67719d7ada109d150f7eb9043761c4a2e40b0a2" => :el_capitan
     sha256 "3a95b87b049ba7aeb649a85a1948d80ba554d22603d0e336480f1b8787f75f4c" => :yosemite
     sha256 "0a4219cc1a605d20000b22d6a8c1977216b60d99278a8b92553ac30f14b6c595" => :mavericks
   end
+
+  depends_on "python@2"
 
   resource "bde-tools" do
     url "https://github.com/bloomberg/bde-tools/archive/v1.0.tar.gz"
@@ -28,7 +31,7 @@ class Bde < Formula
   test do
     # bde tests are incredibly performance intensive
     # test below does a simple sanity check for linking against bsl.
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <bsl/bsl_string.h>
       #include <bsl/bslma_default.h>
       int main() {

@@ -2,13 +2,13 @@ class RustupInit < Formula
   desc "The Rust toolchain installer"
   homepage "https://github.com/rust-lang-nursery/rustup.rs"
 
-  url "https://github.com/rust-lang-nursery/rustup.rs/archive/1.5.0.tar.gz"
-  sha256 "77771f75af0b4212d8144371390be9fe469d3f47251db009e843733c601df6c3"
+  url "https://github.com/rust-lang-nursery/rustup.rs/archive/1.11.0.tar.gz"
+  sha256 "000b873f239e8c5219ede3fd5836d6346ebea64ea928e2d754cdfc0f2071a874"
 
   bottle do
-    sha256 "4aea59d5617cf25c4399dcde2be3a357e03d04d3c4ccbfa3851e42c03dec58bd" => :sierra
-    sha256 "75b90ad4afa37676872d76ffa75f974f4049e7dfa1fb0b25052ba1efab07def4" => :el_capitan
-    sha256 "e40b42bfc22acf4a01eaa158e884b1d549ee8932b0e3d37876db89af10c62021" => :yosemite
+    sha256 "c426ae411e48c723c5c6fd6a1bd99a5187337139bd9e4d30cee2cad37d88d254" => :high_sierra
+    sha256 "ed86ccc7cb99ee87903b75d6238d388f00d7500cd9b18c806f795e35bc80b762" => :sierra
+    sha256 "bcffb2ac04a2c77bfec589a5c2d3d9f6125e41d22b56a11041dd823846ae9437" => :el_capitan
   end
 
   depends_on "rust" => :build
@@ -28,7 +28,7 @@ class RustupInit < Formula
     ENV["RUSTUP_HOME"] = testpath/".multirust"
 
     system bin/"rustup-init", "-y"
-    (testpath/"hello.rs").write <<-EOS.undent
+    (testpath/"hello.rs").write <<~EOS
       fn main() {
         println!("Hello World!");
       }

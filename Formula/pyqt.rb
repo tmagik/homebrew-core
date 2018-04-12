@@ -1,13 +1,14 @@
 class Pyqt < Formula
   desc "Python bindings for v5 of Qt"
   homepage "https://www.riverbankcomputing.com/software/pyqt/download5"
-  url "https://downloads.sourceforge.net/project/pyqt/PyQt5/PyQt-5.8.2/PyQt5_gpl-5.8.2.tar.gz"
-  sha256 "ebd70515b30bbd6098fee29e6271a6696b1183c5530ee30e6ba9aaab195536e8"
+  url "https://dl.bintray.com/homebrew/mirror/pyqt-5.10.1.tar.gz"
+  mirror "https://downloads.sourceforge.net/project/pyqt/PyQt5/PyQt-5.10.1/PyQt5_gpl-5.10.1.tar.gz"
+  sha256 "9932e971e825ece4ea08f84ad95017837fa8f3f29c6b0496985fa1093661e9ef"
 
   bottle do
-    sha256 "3c1e8cf2d69755b9d08b457286eec0bff8b6c582e5a7aec17514f825d3fc74a0" => :sierra
-    sha256 "c3acbb53d3db68352b4623f16b58c5872196b96e90ed508a05d61a271cb5e9bf" => :el_capitan
-    sha256 "594fb8ce4676053ae025a3217cbb068d4672372b494c3fa0c3d91d9116420932" => :yosemite
+    sha256 "cd346b8e55439c8492c3d62547663afe68ffe722eae98f79bc7dbc01af9b088c" => :high_sierra
+    sha256 "133864e1f65eac84555cfb21bc7108bc92c0e7d375f5094ad2d8d30080c8f388" => :sierra
+    sha256 "7befa5819255a5048171f493fbcb4fa62e19cd2f2d97b5e10388dcd4151eb069" => :el_capitan
   end
 
   option "with-debug", "Build with debug symbols"
@@ -15,21 +16,12 @@ class Pyqt < Formula
 
   deprecated_option "enable-debug" => "with-debug"
 
-  depends_on :python3 => :recommended
-  depends_on :python => :optional
   depends_on "qt"
-
-  if build.with? "python3"
-    depends_on "sip" => "with-python3"
-  else
-    depends_on "sip"
-  end
+  depends_on "sip"
+  depends_on "python" => :recommended
+  depends_on "python@2" => :recommended
 
   def install
-    if build.without?("python3") && build.without?("python")
-      odie "pyqt: --with-python3 must be specified when using --without-python"
-    end
-
     Language::Python.each_python(build) do |python, version|
       args = ["--confirm-license",
               "--bindir=#{bin}",

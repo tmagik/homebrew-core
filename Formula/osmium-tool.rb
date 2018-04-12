@@ -1,14 +1,14 @@
 class OsmiumTool < Formula
   desc "Libosmium-based command-line tool for processing OpenStreetMap data"
   homepage "http://osmcode.org/osmium-tool/"
-  url "https://github.com/osmcode/osmium-tool/archive/v1.6.1.tar.gz"
-  sha256 "75523396b3fe51ff585a59251144bd61c93609df0703b7119fe6e16fd4ddb0fa"
+  url "https://github.com/osmcode/osmium-tool/archive/v1.8.0.tar.gz"
+  sha256 "3e996ddcdedcfc3ac70dec3687d59a100dbfb04d00ed3f03df6b3e8d0bd92755"
 
   bottle do
     cellar :any
-    sha256 "842c6ca8f0756d1e445f525c6e0cc87f7b4610071e4f4eaba657fde765612fc1" => :sierra
-    sha256 "292194bdcc7b14c4757e082f9b6078da2900001da4d6ba190734fed529e97981" => :el_capitan
-    sha256 "a579e794efd4350c9ec9a53009854da32334f291918560dc2fcac809ff23dafa" => :yosemite
+    sha256 "38cad32aa92035906161ea8eb3fad6857aff23e930869ba767bb7071f2d95c26" => :high_sierra
+    sha256 "5b11e95a4d33405ec3f57aadd2e90a4694ba010a492ab15174c8c7d20aa9be88" => :sierra
+    sha256 "ad19ecff2341a5554588fdc82841180bc6648f7ffd18264cffaf5c92f9fd27cc" => :el_capitan
   end
 
   depends_on "cmake" => :build
@@ -16,12 +16,13 @@ class OsmiumTool < Formula
   depends_on "boost"
 
   def install
-    system "cmake", ".", *std_cmake_args
+    protozero = Formula["libosmium"].opt_libexec/"include"
+    system "cmake", ".", "-DPROTOZERO_INCLUDE_DIR=#{protozero}", *std_cmake_args
     system "make", "install"
   end
 
   test do
-    (testpath/"test.osm").write <<-EOS.undent
+    (testpath/"test.osm").write <<~EOS
       <?xml version="1.0" encoding="UTF-8"?>
       <osm version="0.6" generator="handwritten">
         <node id="1" lat="0.001" lon="0.001" user="Dummy User" uid="1" version="1" changeset="1" timestamp="2015-11-01T19:00:00Z"></node>

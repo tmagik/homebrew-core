@@ -8,6 +8,7 @@ class Patchutils < Formula
   bottle do
     cellar :any_skip_relocation
     rebuild 1
+    sha256 "3b9acf217323af3cfceda6499aff6bf31086a301533effebe831757a625721f5" => :high_sierra
     sha256 "948da3692c5f55995ea83303063cc0a9f01387c220f262365ef0e8cc775e8a39" => :sierra
     sha256 "08689727cdf1f89cc075ec2e6e71ac456c5429067899ccb5dac12848a6c2abcd" => :el_capitan
     sha256 "df5a0b90219fe01b6934696d27782920c3e9c45152980e72a1c542006c625ae9" => :yosemite
@@ -18,11 +19,13 @@ class Patchutils < Formula
     url "https://github.com/twaugh/patchutils.git"
     depends_on "automake" => :build
     depends_on "autoconf" => :build
+    depends_on "docbook" => :build
   end
 
   depends_on "xmlto" => :build
 
   def install
+    ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog" if build.head?
     system "./bootstrap" if build.head?
     system "./configure", "--disable-dependency-tracking", "--prefix=#{prefix}"
     system "make", "install"

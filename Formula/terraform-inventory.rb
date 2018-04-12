@@ -9,6 +9,7 @@ class TerraformInventory < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "15e8799c163c87affb5f4a48ffbb3e1f0392f837df4fba1db174088fe8159c6b" => :high_sierra
     sha256 "6c423700ad3cb2a27295cbbca5de08a5a47b3f42a7c9cc53abfe9c3d1061b6b3" => :sierra
     sha256 "d876b7acee1bfaaeaaf284bfd8518195b10005f7de504c8aaf39be3164b93dac" => :el_capitan
     sha256 "77b4cfd96088f6019ad5bd0f0faf6757d1fb8c34ea3b327490ff33fde03538c1" => :yosemite
@@ -33,33 +34,33 @@ class TerraformInventory < Formula
   end
 
   test do
-    example = <<-EOS.undent
-        {
-            "version": 1,
-            "serial": 1,
-            "modules": [
-                {
-                    "path": [
-                        "root"
-                    ],
-                    "outputs": {},
-                    "resources": {
-                        "aws_instance.example_instance": {
-                            "type": "aws_instance",
-                            "primary": {
-                                "id": "i-12345678",
-                                "attributes": {
-                                    "public_ip": "1.2.3.4"
-                                },
-                                "meta": {
-                                    "schema_version": "1"
-                                }
-                            }
-                        }
-                    }
-                }
-            ]
-        }
+    example = <<~EOS
+      {
+          "version": 1,
+          "serial": 1,
+          "modules": [
+              {
+                  "path": [
+                      "root"
+                  ],
+                  "outputs": {},
+                  "resources": {
+                      "aws_instance.example_instance": {
+                          "type": "aws_instance",
+                          "primary": {
+                              "id": "i-12345678",
+                              "attributes": {
+                                  "public_ip": "1.2.3.4"
+                              },
+                              "meta": {
+                                  "schema_version": "1"
+                              }
+                          }
+                      }
+                  }
+              }
+          ]
+      }
     EOS
     (testpath/"example.tfstate").write(example)
     assert_match(/example_instance/, shell_output("#{bin}/terraform-inventory --list example.tfstate"))

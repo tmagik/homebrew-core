@@ -6,6 +6,7 @@ class Sphinx < Formula
   head "https://github.com/sphinxsearch/sphinx.git"
 
   bottle do
+    sha256 "b890cf523db9777c7d125842fd6b0a53fe9a7a5a4cb816389ba6f5ee6483c78d" => :high_sierra
     sha256 "55ce34bdedf13946fa614bde50839d93135eae720f1021e2c87807d04515ab18" => :sierra
     sha256 "c75e018d69afb7d3cb662ebd129af67607d47f7b7f71ce8ea95be75d66dc502d" => :el_capitan
     sha256 "f89b43df8735d295a55c74f18d6af4a1a10b9f3ae81df69713c27f9240f78d14" => :yosemite
@@ -21,8 +22,8 @@ class Sphinx < Formula
   deprecated_option "id64" => "with-id64"
 
   depends_on "re2" => :optional
-  depends_on :mysql => :optional
-  depends_on :postgresql => :optional
+  depends_on "mysql" => :optional
+  depends_on "postgresql" => :optional
   depends_on "openssl" if build.with? "mysql"
 
   resource "stemmer" do
@@ -78,7 +79,7 @@ class Sphinx < Formula
     system "make", "install"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     This is not sphinx - the Python Documentation Generator.
     To install sphinx-python use pip.
 

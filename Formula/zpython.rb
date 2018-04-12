@@ -1,20 +1,3 @@
-class Zsh5Requirement < Requirement
-  default_formula "zsh"
-  fatal true
-
-  satisfy :build_env => false do
-    begin
-      `zsh --version`[/zsh (\d)/, 1] == "5"
-    rescue
-      false
-    end
-  end
-
-  def message
-    "Zsh 5.x is required to install. Consider `brew install zsh`."
-  end
-end
-
 class Zpython < Formula
   desc "Embeds a Python interpreter into zsh"
   homepage "https://bitbucket.org/ZyX_I/zsh"
@@ -43,13 +26,14 @@ class Zpython < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "0c575603cf568eaef05ef7de2a0f5f143a08728c97baebf508fc132926028146" => :high_sierra
     sha256 "6fd2ca965e862af6ebf0b24e158d34bbe66bafc522854adc96efa70e2a0fdb9b" => :sierra
     sha256 "aa8efa349bbf477746aee3cb977d1b0c430ec05d1947f2bd33667f054d8692cc" => :el_capitan
     sha256 "3f469a0820ec250a6875c97fd50626462b94a6d81ea93888d32391ababcf25bf" => :yosemite
     sha256 "9137eefb79a7a529b016e3c949e24a15d4747e4f35108f91db6ea58441f456a9" => :mavericks
   end
 
-  depends_on Zsh5Requirement
+  depends_on "zsh"
   depends_on "autoconf" => :build
 
   def install
@@ -69,7 +53,7 @@ class Zpython < Formula
     (lib/"zpython/zsh").install "Src/Modules/zpython.so"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     To use the zpython module in zsh you need to
     add the following line to your .zshrc:
 

@@ -1,14 +1,16 @@
 class Spigot < Formula
   desc "Command-line streaming exact real calculator"
   homepage "https://www.chiark.greenend.org.uk/~sgtatham/spigot/"
-  url "https://www.chiark.greenend.org.uk/~sgtatham/spigot/spigot-20170219.02cd6ee.tar.gz"
-  sha256 "c14f220de17c02b3b67f428b5d92618f1a0167bcbad890201de3a114a076aabb"
+  url "https://www.chiark.greenend.org.uk/~sgtatham/spigot/spigot-20180401.e39374e.tar.gz"
+  mirror "https://dl.bintray.com/homebrew/mirror/spigot-20180401.tar.gz"
+  version "20180401"
+  sha256 "6540d1200e2b73d931dddbd771900de7fac8a6161b535c58eb76247b9c2c3aea"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "1d2b314268104da5860c5a9bee9bdc432a1b51a0ca65054d6db245d2b631ddb0" => :sierra
-    sha256 "36174128a0c9666b2401bc8818bb662a1a91914ff8bee9c0f3e017cf5287aec9" => :el_capitan
-    sha256 "85ded0973a21995681f45284887d5146ae7982e955c2353d0e8d2297751b38c0" => :yosemite
+    sha256 "89b875027ca1f086f841bf10207c8ae1011a20a054c80462b473fd3e57cb7f12" => :high_sierra
+    sha256 "cc63e0225de03386b914ecae0be448a66f3ae7e13dd7f9b9f18623f004a351f8" => :sierra
+    sha256 "a8149746a8609b0c5169ee4adaf6268242b25f69853ff007d08a2b62f1988d7a" => :el_capitan
   end
 
   def install
@@ -21,7 +23,7 @@ class Spigot < Formula
 
   test do
     # Get Ramanujan's number of decimal places of Tau in base10
-    expected = <<-EOS.undent
+    expected = <<~EOS
       6.28318530717958647692528676655900576839433879875021164194988918461563281
       2572417997256069650684234135964296173026564613294187689219101164463450718
       8162569622349005682054038770422111192892458979098607639288576219513318668

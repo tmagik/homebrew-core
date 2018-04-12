@@ -6,6 +6,7 @@ class Swftools < Formula
   revision 1
 
   bottle do
+    sha256 "2db933a79589905a67f36a9ea96a692a684c676d70b5299b087ae892195ff007" => :high_sierra
     sha256 "479570fcb99302996b55c361db1a6bb4a3abee611533b854fa350956f6b8cf61" => :sierra
     sha256 "7343a6c406b0374b460f1d814e5542372f85df5d6ee500759648084713e33174" => :el_capitan
     sha256 "f672348156459f385c6b08ed67c7055cd1cb9ee9dee8d868777596a57ac01a7f" => :yosemite
@@ -21,7 +22,7 @@ class Swftools < Formula
   depends_on "fftw" => :optional
 
   resource "xpdf" do
-    url "ftp://ftp.foolabs.com/pub/xpdf/xpdf-3.04.tar.gz", :using => :nounzip
+    url "https://src.fedoraproject.org/repo/pkgs/xpdf/xpdf-3.04.tar.gz/3bc86c69c8ff444db52461270bef3f44/xpdf-3.04.tar.gz", :using => :nounzip
     sha256 "11390c74733abcb262aaca4db68710f13ffffd42bfe2a0861a5dfc912b2977e5"
   end
 

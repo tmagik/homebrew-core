@@ -1,28 +1,26 @@
 class Ctop < Formula
   desc "Top-like interface for container metrics"
   homepage "https://bcicen.github.io/ctop/"
-  url "https://github.com/bcicen/ctop/archive/v0.6.0.tar.gz"
-  sha256 "659c87de3d1c4b90d6b481c096d50d799deaf0f591b430606b6f2295862bcbc0"
+  url "https://github.com/bcicen/ctop/archive/v0.7.1.tar.gz"
+  sha256 "baa632235c43ed84557a13b475a1972a8327a55babb6dd08d2d72643f8442ed2"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "2ac847bd4659f31f4d3685cb9d1b95ade335c600f0fe1850662bf177fa07fe51" => :sierra
-    sha256 "6fba466a0a4ca79c719c9a638920186ec1e68a27bed351285bdd7c118b8ebeab" => :el_capitan
-    sha256 "f0c5a1a1e1cc7d60314a4f276eb976ff9669ea1a2dfa8dce9d6fea0f0ab08bf7" => :yosemite
+    sha256 "0d2f00fb47786a5a95578da90f80979683e76d431ad90c62088d082af4ecdeff" => :high_sierra
+    sha256 "3d3968570b78e240fe94f16eb4235f016ba1f5943e3030eb177b0a7a71989934" => :sierra
+    sha256 "149adb4dfa66b7492992c07f1007743f69a6069d380a43d0e14dfffba7bc8988" => :el_capitan
   end
 
+  depends_on "dep" => :build
   depends_on "go" => :build
-  depends_on "glide" => :build
 
   def install
     ENV["GOPATH"] = buildpath
-    ENV["GLIDE_HOME"] = HOMEBREW_CACHE/"glide_home/#{name}"
-    dir = buildpath/"src/github.com/bcicen/ctop"
-    dir.install Dir["*"]
-    cd dir do
-      system "glide", "install"
+    (buildpath/"src/github.com/bcicen/ctop").install buildpath.children
+    cd "src/github.com/bcicen/ctop" do
       system "make", "build"
       bin.install "ctop"
+      prefix.install_metafiles
     end
   end
 

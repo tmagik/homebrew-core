@@ -1,13 +1,13 @@
 class Nghttp2 < Formula
   desc "HTTP/2 C Library"
   homepage "https://nghttp2.org/"
-  url "https://github.com/nghttp2/nghttp2/releases/download/v1.23.1/nghttp2-1.23.1.tar.xz"
-  sha256 "fb75e8c0d6cf9c4381fff242d2dc04cdcc2691af8dc125c6ca349efecf5ccc21"
+  url "https://github.com/nghttp2/nghttp2/releases/download/v1.31.0/nghttp2-1.31.0.tar.xz"
+  sha256 "36573c2dc74f0da872b02a3ccf1f1419d6b992dd4703dc866e5a289d36397ac7"
 
   bottle do
-    sha256 "3045a75aea2e7b305431d2abef8b7df17af0db73ece4acdbd4fae136f4ace2bd" => :sierra
-    sha256 "5ad4899ab269cc301e4531a31c78631582bb1685b1d30f48a405e23fc8c1b3f0" => :el_capitan
-    sha256 "67b357c536079954bc0a642ba5913bd0b8a48283a271203cda179dfae1dfe122" => :yosemite
+    sha256 "68df2e5d01922df3b756e173bf14f17963948bc6a042d91c6a46030a1642cee8" => :high_sierra
+    sha256 "cc35f4a95b57efa63a837cab62678f8c015755ff79200787e76f147b2c72560e" => :sierra
+    sha256 "fee924a6d7490c0fc9b9d95923f2d49b9794a9f394770d643a9ee1539055b8c7" => :el_capitan
   end
 
   head do
@@ -19,9 +19,11 @@ class Nghttp2 < Formula
   end
 
   option "with-examples", "Compile and install example programs"
-  option "with-python3", "Build python3 bindings"
+  option "with-python", "Build python3 bindings"
 
-  depends_on :python3 => :optional
+  deprecated_option "with-python3" => "with-python"
+
+  depends_on "python" => :optional
   depends_on "sphinx-doc" => :build
   depends_on "libxml2" if MacOS.version <= :lion
   depends_on "pkg-config" => :build
@@ -32,12 +34,11 @@ class Nghttp2 < Formula
   depends_on "libevent"
   depends_on "jansson"
   depends_on "boost"
-  depends_on "spdylay"
   depends_on "jemalloc" => :recommended
 
   resource "Cython" do
-    url "https://files.pythonhosted.org/packages/b7/67/7e2a817f9e9c773ee3995c1e15204f5d01c8da71882016cac10342ef031b/Cython-0.25.2.tar.gz"
-    sha256 "f141d1f9c27a07b5a93f7dc5339472067e2d7140d1c5a9e20112a5665ca60306"
+    url "https://files.pythonhosted.org/packages/ee/2a/c4d2cdd19c84c32d978d18e9355d1ba9982a383de87d0fcb5928553d37f4/Cython-0.27.3.tar.gz"
+    sha256 "6a00512de1f2e3ce66ba35c5420babaef1fe2d9c43a8faab4080b0dbcc26bc64"
   end
 
   # https://github.com/tatsuhiro-t/nghttp2/issues/125
@@ -54,7 +55,6 @@ class Nghttp2 < Formula
       --enable-app
       --with-boost=#{Formula["boost"].opt_prefix}
       --enable-asio-lib
-      --with-spdylay
       --disable-python-bindings
     ]
 
@@ -76,7 +76,7 @@ class Nghttp2 < Formula
     system "make", "install"
     libexec.install "examples" if build.with? "examples"
 
-    if build.with? "python3"
+    if build.with? "python"
       pyver = Language::Python.major_minor_version "python3"
       ENV["PYTHONPATH"] = cythonpath = buildpath/"cython/lib/python#{pyver}/site-packages"
       cythonpath.mkpath

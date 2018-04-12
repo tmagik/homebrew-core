@@ -1,36 +1,21 @@
 class BoostMpi < Formula
   desc "C++ library for C++/MPI interoperability"
   homepage "https://www.boost.org/"
+  url "https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.bz2"
+  sha256 "5721818253e6a0989583192f96782c4a98eb6204965316df9f5ad75819225ca9"
+  revision 1
   head "https://github.com/boostorg/boost.git"
 
-  stable do
-    url "https://dl.bintray.com/boostorg/release/1.64.0/source/boost_1_64_0.tar.bz2"
-    sha256 "7bcc5caace97baa948931d712ea5f37038dbb1c5d89b43ad4def4ed7cb683332"
-
-    # Remove for > 1.64.0
-    # "Replace boost::serialization::detail::get_data function."
-    # Upstream PR from 26 Jan 2017 https://github.com/boostorg/mpi/pull/39
-    patch :p2 do
-      url "https://github.com/boostorg/mpi/commit/f5bdcc1.patch"
-      sha256 "c7af75a83fef90fdb9858bc988d64ca569ae8d940396b9bc60a57d63fca2587b"
-    end
-  end
-
   bottle do
-    sha256 "db1ffdc724d9d3ecc0bb199896361feef409e7728702765544044cdda3a0d1f2" => :sierra
-    sha256 "f4c6deb2f31c5ca9bcff6e2d416c8ca0cfafaa2d3b155c0d29743610e4cfef79" => :el_capitan
-    sha256 "a91cea8bddb121b6573165e0d108cd24e501bec97e61c29b0f37c414e87dc62c" => :yosemite
+    sha256 "f4787bde14ed2b84468437f54b2a60e140f3eb9f878f9ada7086fd3ce27f6dae" => :high_sierra
+    sha256 "7037c8d24185dd079dddd4292859c55d2b149f1753db81cfd04b18ccf42b9b8f" => :sierra
+    sha256 "2de5c190fb851c83c8732190ea1411108a6e35b633dea28a8fc393a3888bc2f8" => :el_capitan
   end
 
-  option :cxx11
+  depends_on "boost"
+  depends_on "open-mpi"
 
-  if build.cxx11?
-    depends_on "boost" => "c++11"
-    depends_on "open-mpi" => "c++11"
-  else
-    depends_on "boost"
-    depends_on :mpi => [:cc, :cxx]
-  end
+  needs :cxx11
 
   def install
     # "layout" should be synchronized with boost
@@ -43,16 +28,11 @@ class BoostMpi < Formula
             "threading=multi,single",
             "link=shared,static"]
 
-    # Build in C++11 mode if boost was built in C++11 mode.
     # Trunk starts using "clang++ -x c" to select C compiler which breaks C++11
     # handling using ENV.cxx11. Using "cxxflags" and "linkflags" still works.
-    if build.cxx11?
-      args << "cxxflags=-std=c++11"
-      if ENV.compiler == :clang
-        args << "cxxflags=-stdlib=libc++" << "linkflags=-stdlib=libc++"
-      end
-    elsif Tab.for_name("boost").cxx11?
-      odie "boost was built in C++11 mode so boost-mpi must be built with --c++11."
+    args << "cxxflags=-std=c++11"
+    if ENV.compiler == :clang
+      args << "cxxflags=-stdlib=libc++" << "linkflags=-stdlib=libc++"
     end
 
     open("user-config.jam", "a") do |file|
@@ -77,7 +57,7 @@ class BoostMpi < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <boost/mpi.hpp>
       #include <iostream>
       #include <boost/serialization/string.hpp>

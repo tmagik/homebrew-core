@@ -1,17 +1,17 @@
 class Vips < Formula
   desc "Image processing library"
   homepage "https://github.com/jcupitt/libvips"
-  url "https://github.com/jcupitt/libvips/releases/download/v8.5.6/vips-8.5.6.tar.gz"
-  sha256 "19a77ab200eb0ddfcd8babab130fe43c7730880d1f1fdfbdd8def519af32c4b8"
+  url "https://github.com/jcupitt/libvips/releases/download/v8.6.3/vips-8.6.3.tar.gz"
+  sha256 "f85adbb9f5f0f66b34a40fd2d2e60d52f6e992831f54af706db446f582e10992"
+  revision 3
 
   bottle do
-    sha256 "4a0c68b0f49ce94e76f107a42a2029a2ba389c26034c714f320eaa7b5f929346" => :sierra
-    sha256 "d644dc9086393b392d5ec4b35872d76361c6898b63314288f27d1bf6603a9de3" => :el_capitan
-    sha256 "085895b0d5f4d05a862f833a4a9b457365fd63b73f7ad02fd8965b17bd23bc0f" => :yosemite
+    sha256 "3071841fce806097f079ec2e21680bfa344fca884b849be6df293043d91a002e" => :high_sierra
+    sha256 "486078437ada13c6c1630d93e936757da062a619c05ac8b92aff930d132a8d9b" => :sierra
+    sha256 "51d8d142d28690d3d97b965cb323fefc0f6a82ab572a1668ea3ea84fb5507059" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
-  depends_on "fftw"
   depends_on "fontconfig"
   depends_on "gettext"
   depends_on "giflib"
@@ -26,24 +26,31 @@ class Vips < Formula
   depends_on "little-cms2"
   depends_on "orc"
   depends_on "pango"
-  depends_on "poppler"
   depends_on "pygobject3"
-  depends_on "graphicsmagick" => :optional
+  depends_on "webp"
+  depends_on "fftw" => :recommended
+  depends_on "graphicsmagick" => :recommended
+  depends_on "poppler" => :recommended
   depends_on "imagemagick" => :optional
-  depends_on "jpeg-turbo" => :optional
-  depends_on "mozjpeg" => :optional
   depends_on "openexr" => :optional
   depends_on "openslide" => :optional
-  depends_on "webp" => :optional
+
+  if build.with?("graphicsmagick") && build.with?("imagemagick")
+    odie "vips: --with-imagemagick requires --without-graphicsmagick"
+  end
 
   def install
     args = %W[
       --disable-dependency-tracking
       --prefix=#{prefix}
+      --enable-pyvips8
+      PYTHON=#{Formula["python"].opt_bin}/python3
     ]
 
     if build.with? "graphicsmagick"
       args << "--with-magick" << "--with-magickpackage=GraphicsMagick"
+    elsif build.with? "imagemagick"
+      args << "--with-magick"
     end
 
     system "./configure", *args

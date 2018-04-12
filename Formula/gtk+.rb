@@ -1,17 +1,17 @@
 class Gtkx < Formula
   desc "GUI toolkit"
   homepage "https://gtk.org/"
-  revision 1
+  revision 2
 
   stable do
-    url "https://download.gnome.org/sources/gtk+/2.24/gtk+-2.24.31.tar.xz"
-    sha256 "68c1922732c7efc08df4656a5366dcc3afdc8791513400dac276009b40954658"
+    url "https://download.gnome.org/sources/gtk+/2.24/gtk+-2.24.32.tar.xz"
+    sha256 "b6c8a93ddda5eabe3bfee1eb39636c9a03d2a56c7b62828b359bf197943c582e"
   end
 
   bottle do
-    sha256 "860a8dd62ae8990a7dc3c403421fa3ee6bdf8ae810463fd5368094676b7c827d" => :sierra
-    sha256 "6be79985859e6f5a6bec18a23bf2bb5364b9f536bcd1283913d72f0cb32baa8c" => :el_capitan
-    sha256 "f18ee768ba59c29741133b7427f28ffdb2d615eb1c783d5b2995249b8b473086" => :yosemite
+    sha256 "f1e4965a3aa5655e628e46c1ffd9421ec1abf9ba4f0757be1ce7b3a8009fec58" => :high_sierra
+    sha256 "77275da434ff045cab02f69e3847b983510bd2f45e022b0af0adb620c6a6821a" => :sierra
+    sha256 "f6117acd04e65a2ec378ad21b8b6519dc0d048f24b398456c09474af74ec2c11" => :el_capitan
   end
 
   head do
@@ -23,14 +23,12 @@ class Gtkx < Formula
     depends_on "gtk-doc" => :build
   end
 
-  option "with-quartz-relocation", "Build with quartz relocation support"
-
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "gdk-pixbuf"
   depends_on "jasper" => :optional
   depends_on "atk"
   depends_on "pango"
-  depends_on "gobject-introspection"
   depends_on "hicolor-icon-theme"
 
   # Patch to allow Eiffel Studio to run in Cocoa / non-X11 mode, as well as Freeciv's freeciv-gtk2 client
@@ -53,8 +51,6 @@ class Gtkx < Formula
             "--with-gdktarget=quartz",
             "--disable-visibility"]
 
-    args << "--enable-quartz-relocation" if build.with?("quartz-relocation")
-
     if build.head?
       inreplace "autogen.sh", "libtoolize", "glibtoolize"
       ENV["NOCONFIGURE"] = "yes"
@@ -62,10 +58,12 @@ class Gtkx < Formula
     end
     system "./configure", *args
     system "make", "install"
+
+    inreplace bin/"gtk-builder-convert", %r{^#!/usr/bin/env python$}, "#!/usr/bin/python"
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <gtk/gtk.h>
 
       int main(int argc, char *argv[]) {

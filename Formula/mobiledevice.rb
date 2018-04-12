@@ -13,6 +13,8 @@ class Mobiledevice < Formula
     sha256 "19eb775bc12305341abe780c06308cf32f5fd6060227fefa4cd0f2ef28a3dae2" => :mountain_lion
   end
 
+  depends_on MaximumMacOSRequirement => :sierra
+
   def install
     system "make", "install", "CC=#{ENV.cc}", "PREFIX=#{prefix}"
   end

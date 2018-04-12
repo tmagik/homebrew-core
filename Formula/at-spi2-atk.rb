@@ -1,22 +1,30 @@
 class AtSpi2Atk < Formula
   desc "Accessibility Toolkit GTK+ module"
   homepage "http://a11y.org"
-  url "https://download.gnome.org/sources/at-spi2-atk/2.24/at-spi2-atk-2.24.1.tar.xz"
-  sha256 "60dc90ac4f74b8ffe96a9363c25208a443b381bacecfefea6de549f20ed6957d"
+  url "https://download.gnome.org/sources/at-spi2-atk/2.26/at-spi2-atk-2.26.2.tar.xz"
+  sha256 "61891f0abae1689f6617a963105a3f1dcdab5970c4a36ded9c79a7a544b16a6e"
 
   bottle do
     cellar :any
-    sha256 "44d6a555162dea2049305e93f37f8537097bcd4db382a33c46f0cb41a01f41d3" => :sierra
-    sha256 "8fec3a70477bdcf8381f08decf4dbac2f33c991233c840f24e42cf11164a134b" => :el_capitan
-    sha256 "90c79a2b1a7e4b9e929c43d8de86fb66b17799fa8bf6334b7f64098c47bff262" => :yosemite
+    sha256 "fa992dfbe9bcb014cb0d5bc3fa2700cd6cb51d82ff18a3998cde6b9fa3ea75a6" => :high_sierra
+    sha256 "958cc79b52ac7917259dd5dd4dd47b770722447843b25ae4c8272b36efa868d8" => :sierra
+    sha256 "01c0e01277843d36e5cacb8b8c07e1096f1a3c53d92ed49aba4af8a96e0e15dc" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
+  depends_on "meson-internal" => :build
+  depends_on "ninja" => :build
+  depends_on "python" => :build
   depends_on "at-spi2-core"
   depends_on "atk"
 
   def install
-    system "./configure", "--disable-dependency-tracking", "--prefix=#{prefix}"
-    system "make", "install"
+    ENV.refurbish_args
+
+    mkdir "build" do
+      system "meson", "--prefix=#{prefix}", ".."
+      system "ninja"
+      system "ninja", "install"
+    end
   end
 end

@@ -1,17 +1,31 @@
 class Mpd < Formula
   desc "Music Player Daemon"
   homepage "https://www.musicpd.org/"
-  url "https://www.musicpd.org/download/mpd/0.20/mpd-0.20.9.tar.xz"
-  sha256 "cd77a2869e32354b004cc6b34fcb0bee56114caa2d9ed862aaa8071441e34eb7"
+  revision 1
+
+  stable do
+    url "https://www.musicpd.org/download/mpd/0.20/mpd-0.20.18.tar.xz"
+    sha256 "6a582dc2ae90b94ff3853f9ffd7d80b2c2b5fe2e2c35cb1da0b36f3f3dfad434"
+
+    # Remove for > 0.20.18
+    # Fix missing user-provided default constructor with old clang
+    # Upstream commit from 24 Feb 2018 "net/Init: work around -Werror=unused-variable"
+    if MacOS.version <= :el_capitan
+      patch do
+        url "https://github.com/MusicPlayerDaemon/MPD/commit/418f71ec0.patch?full_index=1"
+        sha256 "c059916176841f52d0f5a377b7c6dd19d012dc833a83fad55d4b2b31d41a6c8f"
+      end
+    end
+  end
 
   bottle do
-    sha256 "6aa7348e26c4fb985f5405f536067d6748cbddae11c56dca364fdcef9a5f4003" => :sierra
-    sha256 "f1b13e9f6cdbf31213193d7447891ac33f2e679947d62f83d8f18a44d77e3d31" => :el_capitan
-    sha256 "01312a38398480beef23781ec61b470a9d478b59d044aaa64d31b10c3f225e78" => :yosemite
+    sha256 "2df2abc02059332578ff7139451bf4bc27a4ca65da637780b91f0d6a2d741f73" => :high_sierra
+    sha256 "c8767688009084bf848efd226081ae0b5b80773d0512058707056ddfc29077ce" => :sierra
+    sha256 "56f964034fde44336da897f2d3ace5746c954f24c0e7f719ddfc825d186f2eaa" => :el_capitan
   end
 
   head do
-    url "git://git.musicpd.org/master/mpd.git"
+    url "https://github.com/MusicPlayerDaemon/MPD.git"
     depends_on "autoconf" => :build
     depends_on "automake" => :build
   end
@@ -112,7 +126,7 @@ class Mpd < Formula
 
   plist_options :manual => "mpd"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
@@ -130,6 +144,8 @@ class Mpd < Formula
         <true/>
         <key>KeepAlive</key>
         <true/>
+        <key>ProcessType</key>
+        <string>Interactive</string>
     </dict>
     </plist>
     EOS
@@ -143,7 +159,7 @@ class Mpd < Formula
 
     begin
       assert_match "OK MPD", shell_output("curl localhost:6600")
-      assert_match "ACK", shell_output("(sleep 1; echo playid foo) | nc localhost 6600")
+      assert_match "ACK", shell_output("(sleep 2; echo playid foo) | nc localhost 6600")
     ensure
       Process.kill "SIGINT", pid
       Process.wait pid

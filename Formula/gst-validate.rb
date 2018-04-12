@@ -1,13 +1,14 @@
 class GstValidate < Formula
   desc "Tools to validate GstElements from GStreamer"
   homepage "https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-validate/html/"
-  url "https://gstreamer.freedesktop.org/src/gst-validate/gst-validate-1.10.4.tar.xz"
-  sha256 "e59c00bf64cca9c477cdb44eb8dd0b3aac5499b17d77bf28ee054fd211e8d73c"
+  url "https://gstreamer.freedesktop.org/src/gst-validate/gst-validate-1.14.0.tar.xz"
+  sha256 "33df08bf77f2895d64b7e8a957de3b930b4da0a8edabfbefcff2eab027eeffdf"
+  revision 1
 
   bottle do
-    sha256 "af36f83634e0c990402dbc1296128f7cfdc74b46c8080fc2d46c7101d6ec6ee3" => :sierra
-    sha256 "4f8625dd089a813ec902d86d7a930259def088ec88bd2b890dd867fc3f5cf385" => :el_capitan
-    sha256 "e289b310064827a187c1af49541c7bc5f60b2deeddeea1edee267f9fa95c00d1" => :yosemite
+    sha256 "526557d6f86ddebd6b703a5a0ce02bc6a41e9604429d32a484b5325006bec290" => :high_sierra
+    sha256 "405ef04350157cd26ee182db55d11f59c10a006603335709780954662b215eb3" => :sierra
+    sha256 "784750807c6a46d57868b1174d6f9bc9b0b1cf1f8d49934a524a48aff55e9410" => :el_capitan
   end
 
   head do
@@ -18,16 +19,14 @@ class GstValidate < Formula
     depends_on "libtool" => :build
   end
 
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "gettext"
-  depends_on "gobject-introspection"
   depends_on "gstreamer"
   depends_on "gst-plugins-base"
   depends_on "json-glib"
 
   def install
-    inreplace "tools/gst-validate-launcher.in", "env python2", "env python"
-
     args = %W[
       --prefix=#{prefix}
       --disable-debug

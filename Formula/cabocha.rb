@@ -3,10 +3,11 @@ class Cabocha < Formula
   homepage "https://taku910.github.io/cabocha/"
   # Files are listed in https://drive.google.com/drive/folders/0B4y35FiV1wh7cGRCUUJHVTNJRnM
   url "https://dl.bintray.com/homebrew/mirror/cabocha-0.69.tar.bz2"
-  mirror "http://netbsd3.cs.columbia.edu/pub/pkgsrc/distfiles/cabocha-20160909/cabocha-0.69.tar.bz2"
+  mirror "https://mirrorservice.org/sites/ftp.netbsd.org/pub/pkgsrc/distfiles/cabocha-20160909/cabocha-0.69.tar.bz2"
   sha256 "9db896d7f9d83fc3ae34908b788ae514ae19531eb89052e25f061232f6165992"
 
   bottle do
+    sha256 "beafa5ccf84633bed67d405f22ac8e570d2dc2fe0e10fccf8c11076639c672ae" => :high_sierra
     sha256 "27bd41bab80ab64fb32e5bc8b568864b874f0dec16817d38c37abd3c7582c694" => :sierra
     sha256 "bf3ed6bc9333b43919264913c40a86997a7601a83abf6dcfa1dfe14745b3fc7c" => :el_capitan
     sha256 "fe97decdca655899faffd6356bb8ddbb52d4949222690835374c3aeb9a65cdb2" => :yosemite

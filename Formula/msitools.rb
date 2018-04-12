@@ -1,13 +1,14 @@
 class Msitools < Formula
   desc "Windows installer (.MSI) tool"
   homepage "https://wiki.gnome.org/msitools"
-  url "https://download.gnome.org/sources/msitools/0.96/msitools-0.96.tar.xz"
-  sha256 "1b3e194a94747362a2d8d9b7c512c540ccb69e4dbd1dbc2d999a8a44d0b6729e"
+  url "https://download.gnome.org/sources/msitools/0.97/msitools-0.97.tar.xz"
+  sha256 "3a5b286c9ae3a7b7126a4a95506d12f34ac91e1a564c99e67d9644fee88fc65e"
+  revision 1
 
   bottle do
-    sha256 "2231e9c191d93b7696057471e279d78aae5caf47adf7d6d59995885e0fe3e7e5" => :sierra
-    sha256 "4b8f1ad913f8f23d42f1e77a716bf3af7a3d134edb98f3f0209357751a2dcbf6" => :el_capitan
-    sha256 "f64cfce287c9b2c4430524f51db8c69b53432e6fefbedf1dd893b0bd35d80dcf" => :yosemite
+    sha256 "23ad30b2f5ba7ceac3273dc0148c1855ab3806aae3fb241965eb820d9f8c1bc2" => :high_sierra
+    sha256 "a7f930473258e61dfe22e29511bee9a0cc02fdf06bc5bca5bab11779f45d471c" => :sierra
+    sha256 "ce056dd47194966eeddda0bbdc02ca3c8c12feab23b97a46a1044fa323fdbaa6" => :el_capitan
   end
 
   depends_on "intltool" => :build
@@ -33,7 +34,7 @@ class Msitools < Formula
     # wixl: build two installers
     1.upto(2) do |i|
       (testpath/"test#{i}.txt").write "abc"
-      (testpath/"installer#{i}.wxs").write <<-EOS.undent
+      (testpath/"installer#{i}.wxs").write <<~EOS
         <?xml version="1.0"?>
         <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
            <Product Id="*" UpgradeCode="DADAA9FC-54F7-4977-9EA1-8BDF6DC73C7#{i}"
@@ -58,7 +59,7 @@ class Msitools < Formula
         </Wix>
       EOS
       system "#{bin}/wixl", "-o", "installer#{i}.msi", "installer#{i}.wxs"
-      assert File.exist?("installer#{i}.msi")
+      assert_predicate testpath/"installer#{i}.msi", :exist?
     end
 
     # msidiff: diff two installers
@@ -81,7 +82,7 @@ class Msitools < Formula
     # msidump: dump tables from an installer
     mkdir "idt"
     system "#{bin}/msidump", "--directory", "idt", "installer1.msi"
-    assert File.exist?("idt/File.idt")
+    assert_predicate testpath/"idt/File.idt", :exist?
 
     # msibuild: replace a table in an installer
     system "#{bin}/msibuild", "installer1.msi", "-i", "idt/File.idt"

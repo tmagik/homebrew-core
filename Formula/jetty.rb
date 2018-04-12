@@ -1,9 +1,9 @@
 class Jetty < Formula
   desc "Java servlet engine and webserver"
   homepage "https://www.eclipse.org/jetty/"
-  url "https://search.maven.org/remotecontent?filepath=org/eclipse/jetty/jetty-distribution/9.4.6.v20170531/jetty-distribution-9.4.6.v20170531.tar.gz"
-  version "9.4.6.v20170531"
-  sha256 "da3d16c62b5ceeb81523a8f551fa4d5a75e1e5c25126659d9c3fd3408359018b"
+  url "https://search.maven.org/remotecontent?filepath=org/eclipse/jetty/jetty-distribution/9.4.8.v20171121/jetty-distribution-9.4.8.v20171121.tar.gz"
+  version "9.4.8.v20171121"
+  sha256 "50d6bdedd3f57923516661019aed2f5ef89b394d09bffdb04786ccb6c1897c2f"
 
   bottle :unneeded
 
@@ -16,7 +16,7 @@ class Jetty < Formula
     bin.mkpath
     Dir.glob("#{libexec}/bin/*.sh") do |f|
       scriptname = File.basename(f, ".sh")
-      (bin+scriptname).write <<-EOS.undent
+      (bin+scriptname).write <<~EOS
         #!/bin/bash
         JETTY_HOME=#{libexec}
         #{f} "$@"

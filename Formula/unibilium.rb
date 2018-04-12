@@ -1,16 +1,14 @@
 class Unibilium < Formula
-  desc "Very basic terminfo library."
+  desc "Very basic terminfo library"
   homepage "https://github.com/mauke/unibilium"
-  url "https://github.com/mauke/unibilium/archive/v1.2.0.tar.gz"
-  sha256 "623af1099515e673abfd3cae5f2fa808a09ca55dda1c65a7b5c9424eb304ead8"
+  url "https://github.com/mauke/unibilium/archive/v2.0.0.tar.gz"
+  sha256 "78997d38d4c8177c60d3d0c1aa8c53fd0806eb21825b7b335b1768d7116bc1c1"
 
   bottle do
     cellar :any
-    sha256 "f1c59a75aecb5a8284a51b25f005c7ae8834a0aed2e868f0be18de72d068e1b8" => :sierra
-    sha256 "d6c27392e46522e5ef182a3468d39367ae12d93185d6538faddcfcfea2b4d4a6" => :el_capitan
-    sha256 "27f3df4ac52b18aeaae73ce3d84edb2002b3e886b4926be409d09cdbbec233f8" => :yosemite
-    sha256 "fafb08a5bf8841d938cfff3aff94ad9ec9c144ec61d495f2eb7e09953715706e" => :mavericks
-    sha256 "9cee747128f50066fd632b988065966a7ff1c5ab922e54c16aa05f9d9f50e8be" => :mountain_lion
+    sha256 "5c29d645cd3e0ad950a7054c73b89cb76114b369476eb8bca26587c38571861d" => :high_sierra
+    sha256 "15338d452e5e09e7b8f3bedd6d557d735d06bfbc53204487d11b6c225a04ad71" => :sierra
+    sha256 "d8caea872f5f8ed11503e46fc37f17fafbc8a4c64a5382e2bf9e6d84feda2f98" => :el_capitan
   end
 
   depends_on "libtool" => :build
@@ -21,7 +19,7 @@ class Unibilium < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <unibilium.h>
       #include <stdio.h>
 

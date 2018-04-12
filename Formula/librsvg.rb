@@ -1,16 +1,19 @@
 class Librsvg < Formula
   desc "Library to render SVG files using Cairo"
   homepage "https://live.gnome.org/LibRsvg"
-  url "https://download.gnome.org/sources/librsvg/2.40/librsvg-2.40.17.tar.xz"
-  sha256 "e6f6c5cbecc405bb945c7cd15061276035ae3173bbb3bb25e8a916779c7f69cc"
+  url "https://download.gnome.org/sources/librsvg/2.42/librsvg-2.42.2.tar.xz"
+  sha256 "0c550a0bffef768a436286116c03d9f6cd3f97f5021c13e7f093b550fac12562"
+  revision 2
 
   bottle do
-    sha256 "e05329eb1c45b6b31c6c7be6ac1447462e65b4cbbd0030e8fe1a6ccc0d33f274" => :sierra
-    sha256 "7b737acced525fe16ffc497641133e6d0f17fd610d5e9ae90adca894c4ce0427" => :el_capitan
-    sha256 "8bf5bf795950832d804397c8ddfafc61ad1e98a93ac2f6d880b24bb3c8e05e18" => :yosemite
+    sha256 "9fbc01305791dd1bcc471457267e3f92a14676c748806afb931077b4a5d7cad0" => :high_sierra
+    sha256 "358ee8bd09767179968af8cf3d2b6fe2f0c881ed1a1ca3f033a7fac59cecd409" => :sierra
+    sha256 "6d7418c2911ce65c4895ce5c39e49ff8cac58e6c424295089533189802c868bc" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
+  depends_on "rust" => :build
+  depends_on "gobject-introspection" => :build
   depends_on "cairo"
   depends_on "gdk-pixbuf"
   depends_on "glib"
@@ -49,7 +52,7 @@ class Librsvg < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <librsvg/rsvg.h>
 
       int main(int argc, char *argv[]) {

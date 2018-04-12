@@ -1,20 +1,15 @@
 class Cmake < Formula
   desc "Cross-platform make"
   homepage "https://www.cmake.org/"
-  url "https://cmake.org/files/v3.8/cmake-3.8.2.tar.gz"
-  sha256 "da3072794eb4c09f2d782fcee043847b99bb4cf8d4573978d9b2024214d6e92d"
+  url "https://cmake.org/files/v3.11/cmake-3.11.0.tar.gz"
+  sha256 "c313bee371d4d255be2b4e96fd59b11d58bc550a7c78c021444ae565709a656b"
   head "https://cmake.org/cmake.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "2bbeaf0866446737719aca74468290101b0c502065a02ad6e286f69fc0e69c77" => :sierra
-    sha256 "74ecc634b8cc6facc828cc434ec16383681736c3c2fc42dd144f78e88bd34842" => :el_capitan
-    sha256 "9b53dec241998124c67645be81c8e85db097404115e466cf409caf43add783ae" => :yosemite
-  end
-
-  devel do
-    url "https://cmake.org/files/v3.9/cmake-3.9.0-rc4.tar.gz"
-    sha256 "48a82e967b0958adc980a39bc9c231bbb43bad87484668318f7cdc90a32f7d60"
+    sha256 "07ccade28db87d483fb72e97c6b7edb84c738cada9607a0f3c9332fb88f27fb8" => :high_sierra
+    sha256 "3bfc7f91a8552b3c2e7dfb89b3c5ec355901a20b4154e336976b67e2b607fd43" => :sierra
+    sha256 "272ad7fb30d60422b73d4d9fb5eaf1b9eb2ec90e632ee29e597a5f4afb3efe01" => :el_capitan
   end
 
   option "without-docs", "Don't build man pages"
@@ -26,7 +21,11 @@ class Cmake < Formula
   # CMake is built with Qt support and Qt is built with MySQL support as MySQL uses CMake.
   # For the GUI application please instead use `brew cask install cmake`.
 
+  needs :cxx11
+
   def install
+    ENV.cxx11 if MacOS.version < :mavericks
+
     args = %W[
       --prefix=#{prefix}
       --no-system-libs
@@ -46,7 +45,7 @@ class Cmake < Formula
       args << "--sphinx-man" << "--sphinx-build=#{Formula["sphinx-doc"].opt_bin}/sphinx-build"
     end
 
-    system "./bootstrap", *args
+    system "./bootstrap", *args, "--", "-DCMAKE_BUILD_TYPE=Release"
     system "make"
     system "make", "install"
 

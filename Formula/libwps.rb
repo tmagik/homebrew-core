@@ -1,14 +1,14 @@
 class Libwps < Formula
   desc "Library to import files in MS Works format"
   homepage "https://libwps.sourceforge.io"
-  url "https://downloads.sourceforge.net/project/libwps/libwps/libwps-0.4.6/libwps-0.4.6.tar.xz"
-  sha256 "e48a7c2fd20048a0a8eaf69bad972575f8b9f06e7497c787463f127d332fccd0"
+  url "https://downloads.sourceforge.net/project/libwps/libwps/libwps-0.4.8/libwps-0.4.8.tar.xz"
+  sha256 "e478e825ef33f6a434a19ff902c5469c9da7acc866ea0d8ab610a8b2aa94177e"
 
   bottle do
     cellar :any
-    sha256 "4789fa12f99c524834e073e3a79a6c4a3f87ab5f824d68d8bb8bad39b2355e22" => :sierra
-    sha256 "a9586b8344f581eca0a81336e76eeb64b40031c15fe1cba272e3b31123446c7f" => :el_capitan
-    sha256 "74d7a3b0bbddb8ac7b3926fb0997762ab4fa69afffaabe43b5d811809b176a43" => :yosemite
+    sha256 "b08c28a05de4a8b4b4ee4cc369506edc734b887c3889f1dc229aa7b1ac9a2fa9" => :high_sierra
+    sha256 "56b08bd7d8b0dc043ca0bb20db5ba9efd4e03230001fc0c4c3217ef1a1c5ee49" => :sierra
+    sha256 "38807433700d4de6975e85b45ea2e795c012cdc96810ef2d49b1cf5e7eddcb4b" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -24,7 +24,7 @@ class Libwps < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <libwps/libwps.h>
       int main() {
         return libwps::WPS_OK;

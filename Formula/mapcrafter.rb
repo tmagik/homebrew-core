@@ -3,25 +3,22 @@ class Mapcrafter < Formula
   homepage "https://mapcrafter.org"
   url "https://github.com/mapcrafter/mapcrafter/archive/v.2.4.tar.gz"
   sha256 "f3b698d34c02c2da0c4d2b7f4e251bcba058d0d1e4479c0418eeba264d1c8dae"
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "6eec51edf0257ac922832bc7b7434f90bfe0dd324ef7b3763d1fe451fee12108" => :sierra
-    sha256 "1cdcfc07c99f250ce0989a100f97c212161b191e1732f864827acbbd830bf46a" => :el_capitan
-    sha256 "dc8f3a14ca6df136062d1b58003c6f1e531569deed0bef509fe5ea27e71a6cfe" => :yosemite
+    sha256 "1e4f143eb5fcbbcb3ef602db9f1747e260fce6eafcc13eb22cac0610508b2b51" => :high_sierra
+    sha256 "dfcfc211eaddb20b77cf4de1896c052952299c7a3d2374a6f907835cbb0f7672" => :sierra
+    sha256 "9de1741c37d42eadc42a3dd6990c667f5ddf75a54ade98d497cfb4b44aff77d9" => :el_capitan
+    sha256 "754a2b714768295a5230f65db0d3b6d606817a757c58c71e1c0332feb8e81621" => :yosemite
   end
 
   needs :cxx11
 
   depends_on "cmake" => :build
+  depends_on "boost"
   depends_on "jpeg-turbo"
   depends_on "libpng"
-
-  if MacOS.version < :mavericks
-    depends_on "boost" => "c++11"
-  else
-    depends_on "boost"
-  end
 
   def install
     ENV.cxx11

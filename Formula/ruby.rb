@@ -1,14 +1,19 @@
 class Ruby < Formula
   desc "Powerful, clean, object-oriented scripting language"
   homepage "https://www.ruby-lang.org/"
-  url "https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.1.tar.bz2"
-  sha256 "ccfb2d0a61e2a9c374d51e099b0d833b09241ee78fc17e1fe38e3b282160237c"
-  revision 1
+  url "https://cache.ruby-lang.org/pub/ruby/2.5/ruby-2.5.1.tar.xz"
+  sha256 "886ac5eed41e3b5fc699be837b0087a6a5a3d10f464087560d2d21b3e71b754d"
 
   bottle do
-    sha256 "f581f686392b4ca25a08eb674a9ef92ef7ce54b66c7fc63f5e7ed98cc5bb1b9f" => :sierra
-    sha256 "60cd646fce3b4e4e753cd63246f86e5ed6f5d8c2b9b35ad30c7bab6e58069cc5" => :el_capitan
-    sha256 "ea37405174624e325bb3fd41f27c87da6c81bfc90b909f4d7d9411399b7873e0" => :yosemite
+    sha256 "8e0435a0c5b066866799464e6603ceb2afe20f5dc92ed98e1057dd5a319f5cc2" => :high_sierra
+    sha256 "3bfecdbe9caf5cf8e13bfccdfb2cf1ad1f8d1ce6efb62152d73717ac63479eaf" => :sierra
+    sha256 "91f06a229b8f8a89cdb3870517d1f5d22a4ba915e43bc7c2b20d3224778492cd" => :el_capitan
+  end
+
+  devel do
+    url "https://cache.ruby-lang.org/pub/ruby/2.6/ruby-2.6.0-preview1.tar.xz"
+    version "2.6.0-preview1"
+    sha256 "1d99139116e4e245ce543edb137b2a8873c26e9f0bde88d8cee6789617cc8d0e"
   end
 
   head do
@@ -16,16 +21,26 @@ class Ruby < Formula
     depends_on "autoconf" => :build
   end
 
-  option "with-suffix", "Suffix commands with '24'"
-  option "with-doc", "Install documentation"
-
   depends_on "pkg-config" => :build
-  depends_on "readline" => :recommended
-  depends_on "gdbm" => :optional
-  depends_on "gmp" => :optional
-  depends_on "libffi" => :optional
   depends_on "libyaml"
   depends_on "openssl"
+  depends_on "readline"
+
+  # Should be updated only when Ruby is updated (if an update is available).
+  # The exception is Rubygem security fixes, which mandate updating this
+  # formula & the versioned equivalents and bumping the revisions.
+  resource "rubygems" do
+    url "https://rubygems.org/rubygems/rubygems-2.7.6.tgz"
+    sha256 "67f714a582a9ce471bbbcb417374ea9cf9c061271c865dbb0d093f3bc3371eeb"
+  end
+
+  def api_version
+    Utils.popen_read("#{bin}/ruby -e 'print Gem.ruby_api_version'")
+  end
+
+  def rubygems_bindir
+    HOMEBREW_PREFIX/"bin"
+  end
 
   def install
     # otherwise `gem` command breaks
@@ -33,29 +48,16 @@ class Ruby < Formula
 
     system "autoconf" if build.head?
 
+    paths = %w[libyaml openssl readline].map { |f| Formula[f].opt_prefix }
     args = %W[
       --prefix=#{prefix}
       --enable-shared
       --disable-silent-rules
       --with-sitedir=#{HOMEBREW_PREFIX}/lib/ruby/site_ruby
       --with-vendordir=#{HOMEBREW_PREFIX}/lib/ruby/vendor_ruby
+      --with-opt-dir=#{paths.join(":")}
     ]
-
-    args << "--program-suffix=#{program_suffix}" if build.with? "suffix"
-    args << "--disable-install-doc" if build.without? "doc"
     args << "--disable-dtrace" unless MacOS::CLT.installed?
-    args << "--without-gmp" if build.without? "gmp"
-
-    paths = [
-      Formula["libyaml"].opt_prefix,
-      Formula["openssl"].opt_prefix,
-    ]
-
-    %w[readline gdbm gmp libffi].each do |dep|
-      paths << Formula[dep].opt_prefix if build.with? dep
-    end
-
-    args << "--with-opt-dir=#{paths.join(":")}"
 
     system "./configure", *args
 
@@ -77,33 +79,53 @@ class Ruby < Formula
 
     # A newer version of ruby-mode.el is shipped with Emacs
     elisp.install Dir["misc/*.el"].reject { |f| f == "misc/ruby-mode.el" }
-  end
 
-  def post_install
-    ruby = "#{bin}/ruby#{program_suffix}"
-    abi_version = `#{ruby} -e 'print Gem.ruby_api_version'`
+    # This is easier than trying to keep both current & versioned Ruby
+    # formulae repeatedly updated with Rubygem patches.
+    resource("rubygems").stage do
+      ENV.prepend_path "PATH", bin
 
-    # Customize rubygems to look/install in the global gem directory
-    # instead of in the Cellar, making gems last across reinstalls
-    config_file = lib/"ruby/#{abi_version}/rubygems/defaults/operating_system.rb"
-    config_file.unlink if config_file.exist?
-    config_file.write rubygems_config(abi_version)
+      system "#{bin}/ruby", "setup.rb", "--prefix=#{buildpath}/vendor_gem"
+      rg_in = lib/"ruby/#{api_version}"
 
-    # Create the sitedir and vendordir that were skipped during install
-    %w[sitearchdir vendorarchdir].each do |dir|
-      mkdir_p `#{ruby} -rrbconfig -e 'print RbConfig::CONFIG["#{dir}"]'`
+      # Remove bundled Rubygem version.
+      rm_rf rg_in/"rubygems"
+      rm_f rg_in/"rubygems.rb"
+      rm_f rg_in/"ubygems.rb"
+      rm_f bin/"gem"
+
+      # Drop in the new version.
+      rg_in.install Dir[buildpath/"vendor_gem/lib/*"]
+      bin.install buildpath/"vendor_gem/bin/gem" => "gem"
+      (libexec/"gembin").install buildpath/"vendor_gem/bin/bundle" => "bundle"
+      (libexec/"gembin").install_symlink "bundle" => "bundler"
     end
   end
 
-  def program_suffix
-    build.with?("suffix") ? "24" : ""
+  def post_install
+    # Since Gem ships Bundle we want to provide that full/expected installation
+    # but to do so we need to handle the case where someone has previously
+    # installed bundle manually via `gem install`.
+    rm_f %W[
+      #{rubygems_bindir}/bundle
+      #{rubygems_bindir}/bundler
+    ]
+    rm_rf Dir[HOMEBREW_PREFIX/"lib/ruby/gems/#{api_version}/gems/bundler-*"]
+    rubygems_bindir.install_symlink Dir[libexec/"gembin/*"]
+
+    # Customize rubygems to look/install in the global gem directory
+    # instead of in the Cellar, making gems last across reinstalls
+    config_file = lib/"ruby/#{api_version}/rubygems/defaults/operating_system.rb"
+    config_file.unlink if config_file.exist?
+    config_file.write rubygems_config(api_version)
+
+    # Create the sitedir and vendordir that were skipped during install
+    %w[sitearchdir vendorarchdir].each do |dir|
+      mkdir_p `#{bin}/ruby -rrbconfig -e 'print RbConfig::CONFIG["#{dir}"]'`
+    end
   end
 
-  def rubygems_bindir
-    "#{HOMEBREW_PREFIX}/bin"
-  end
-
-  def rubygems_config(abi_version); <<-EOS.undent
+  def rubygems_config(api_version); <<~EOS
     module Gem
       class << self
         alias :old_default_dir :default_dir
@@ -118,7 +140,7 @@ class Ruby < Formula
           "lib",
           "ruby",
           "gems",
-          "#{abi_version}"
+          "#{api_version}"
         ]
 
         @default_dir ||= File.join(*path)
@@ -162,16 +184,23 @@ class Ruby < Formula
       end
 
       def self.ruby
-        "#{opt_bin}/ruby#{program_suffix}"
+        "#{opt_bin}/ruby"
       end
     end
     EOS
   end
 
   test do
-    hello_text = shell_output("#{bin}/ruby#{program_suffix} -e 'puts :hello'")
+    hello_text = shell_output("#{bin}/ruby -e 'puts :hello'")
     assert_equal "hello\n", hello_text
     ENV["GEM_HOME"] = testpath
-    system "#{bin}/gem#{program_suffix}", "install", "json"
+    system "#{bin}/gem", "install", "json"
+
+    (testpath/"Gemfile").write <<~EOS
+      source 'https://rubygems.org'
+      gem 'gemoji'
+    EOS
+    system rubygems_bindir/"bundle", "install", "--binstubs=#{testpath}/bin"
+    assert_predicate testpath/"bin/gemoji", :exist?, "gemoji is not installed in #{testpath}/bin"
   end
 end

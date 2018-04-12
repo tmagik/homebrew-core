@@ -5,21 +5,22 @@ class Agda < Formula
 
   desc "Dependently typed functional programming language"
   homepage "http://wiki.portal.chalmers.se/agda/"
+  revision 3
 
   stable do
-    url "https://hackage.haskell.org/package/Agda-2.5.2/Agda-2.5.2.tar.gz"
-    sha256 "d812cec3bf7f03c4b27248572475c7e060154102771a8434cc11ba89f5691439"
+    url "https://hackage.haskell.org/package/Agda-2.5.3/Agda-2.5.3.tar.gz"
+    sha256 "aa14d4a3582013100f71e64d71c5deff6caa2a286083e20fc16f6dbb0fdf0065"
 
     resource "stdlib" do
-      url "https://github.com/agda/agda-stdlib/archive/v0.13.tar.gz"
-      sha256 "e7cffc2b8b168c3584b6d1e760d2b49850835444e4777caa69eb29b3677ef8bb"
+      url "https://github.com/agda/agda-stdlib.git",
+          :revision => "c06437e4ebb5365d502fb0a79775e5c591ab8ae5" # v0.15
     end
   end
 
   bottle do
-    sha256 "4de53fe05b8d9fc11d9e5955165a957c3c6bfcbf45dc28afba1c8fff80f5cece" => :sierra
-    sha256 "33acce2fc1b974f8d2438844402676b96de01034d120036cb8a3a429ee9fa095" => :el_capitan
-    sha256 "5061c16954c5af7f38e51fe07e9e2eb9923be90c62ba6e699102936da81a329a" => :yosemite
+    sha256 "6506de625f9f04509c0e36b2b5659764c511d96a6c321f3f49d5034f09630ba4" => :high_sierra
+    sha256 "6f901334a92e1f22593bb9bf058f981b71359153bb922017364626e7d7f0ce5a" => :sierra
+    sha256 "dfb13015d80bee654406a639a907f004c422aa87c102fc6db2cddf48c460615f" => :el_capitan
   end
 
   head do
@@ -30,20 +31,21 @@ class Agda < Formula
     end
   end
 
-  deprecated_option "without-malonzo" => "without-ghc"
+  deprecated_option "without-ghc" => "without-ghc@8.2"
+  deprecated_option "without-malonzo" => "without-ghc@8.2"
 
   option "without-stdlib", "Don't install the Agda standard library"
-  option "without-ghc", "Disable the GHC backend"
+  option "without-ghc@8.2", "Disable the GHC backend"
 
-  depends_on "ghc" => :recommended
-  if build.with? "ghc"
-    depends_on "cabal-install"
+  depends_on "ghc@8.2" => :recommended
+  if build.with? "ghc@8.2"
+    depends_on "cabal-install" => [:build, :test]
   else
-    depends_on "ghc" => :build
     depends_on "cabal-install" => :build
+    depends_on "ghc@8.2" => :build
   end
 
-  depends_on :emacs => ["23.4", :recommended]
+  depends_on "emacs" => :recommended
 
   def install
     # install Agda core
@@ -78,11 +80,11 @@ class Agda < Formula
     s = ""
 
     if build.with? "stdlib"
-      s += <<-EOS.undent
-      To use the Agda standard library by default:
-        mkdir -p ~/.agda
-        echo #{HOMEBREW_PREFIX}/lib/agda/standard-library.agda-lib >>~/.agda/libraries
-        echo standard-library >>~/.agda/defaults
+      s += <<~EOS
+        To use the Agda standard library by default:
+          mkdir -p ~/.agda
+          echo #{HOMEBREW_PREFIX}/lib/agda/standard-library.agda-lib >>~/.agda/libraries
+          echo standard-library >>~/.agda/defaults
       EOS
     end
 
@@ -91,7 +93,7 @@ class Agda < Formula
 
   test do
     simpletest = testpath/"SimpleTest.agda"
-    simpletest.write <<-EOS.undent
+    simpletest.write <<~EOS
       module SimpleTest where
 
       data ℕ : Set where
@@ -116,7 +118,7 @@ class Agda < Formula
     EOS
 
     stdlibtest = testpath/"StdlibTest.agda"
-    stdlibtest.write <<-EOS.undent
+    stdlibtest.write <<~EOS
       module StdlibTest where
 
       open import Data.Nat
@@ -128,7 +130,7 @@ class Agda < Formula
     EOS
 
     iotest = testpath/"IOTest.agda"
-    iotest.write <<-EOS.undent
+    iotest.write <<~EOS
       module IOTest where
 
       open import Agda.Builtin.IO
@@ -144,7 +146,7 @@ class Agda < Formula
     EOS
 
     stdlibiotest = testpath/"StdlibIOTest.agda"
-    stdlibiotest.write <<-EOS.undent
+    stdlibiotest.write <<~EOS
       module StdlibIOTest where
 
       open import IO
@@ -165,7 +167,8 @@ class Agda < Formula
     system bin/"agda", "--js", simpletest
 
     # test the GHC backend
-    if build.with? "ghc"
+    if build.with? "ghc@8.2"
+      ENV.prepend_path "PATH", Formula["ghc@8.2"].opt_bin
       cabal_sandbox do
         cabal_install "text", "ieee754"
         dbpath = Dir["#{testpath}/.cabal-sandbox/*-packages.conf.d"].first

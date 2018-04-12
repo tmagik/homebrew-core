@@ -1,13 +1,14 @@
 class Collectd < Formula
   desc "Statistics collection and monitoring daemon"
   homepage "https://collectd.org/"
-  url "https://collectd.org/files/collectd-5.7.2.tar.bz2"
-  sha256 "9d20a0221569a8d6b80bbc52b86e5e84965f5bafdbf5dfc3790e0fed0763e592"
+  url "https://collectd.org/files/collectd-5.8.0.tar.bz2"
+  sha256 "b06ff476bbf05533cb97ae6749262cc3c76c9969f032bd8496690084ddeb15c9"
+  revision 1
 
   bottle do
-    sha256 "2e997eacb1907d2e4e565c3eaa04ea49a987f5b791caeb09ae936f0c15698b02" => :sierra
-    sha256 "a1409bee446cc876e7c0fb9732c1b83317c8b104c17a179dd11711bb4b84da2f" => :el_capitan
-    sha256 "64a759a6b2bb56345f4f8ad7db06ce4ef9e0dbe95469ebd1305f9ced0d54aecd" => :yosemite
+    sha256 "637a48e49e734788715da134195794f4c42b9dae7b0d0335bdaaf0ae3008ccef" => :high_sierra
+    sha256 "c32a6fd895ded01ae5da1263aa337ecd8a2446d9353a57daecd51acfe3b9f14c" => :sierra
+    sha256 "aef564883d2a92d6cce279c80e36d775af71c7629253166f935de8f91f856cef" => :el_capitan
   end
 
   head do
@@ -24,17 +25,19 @@ class Collectd < Formula
 
   deprecated_option "java" => "with-java"
   deprecated_option "debug" => "with-debug"
+  deprecated_option "with-python" => "with-python@2"
 
   depends_on "pkg-config" => :build
-  depends_on "libtool" => :build
+  depends_on "libgcrypt"
+  depends_on "libtool"
   depends_on "riemann-client" => :optional
   depends_on :java => :optional
-  depends_on :python => :optional
+  depends_on "python@2" => :optional
   depends_on "net-snmp"
 
   fails_with :clang do
     build 318
-    cause <<-EOS.undent
+    cause <<~EOS
       Clang interacts poorly with the collectd-bundled libltdl,
       causing configure to fail.
     EOS
@@ -49,7 +52,7 @@ class Collectd < Formula
     ]
 
     args << "--disable-java" if build.without? "java"
-    args << "--enable-python" if build.with? "python"
+    args << "--enable-python" if build.with? "python@2"
     args << "--enable-write_riemann" if build.with? "riemann-client"
     args << "--enable-debug" if build.with? "debug"
 
@@ -60,7 +63,7 @@ class Collectd < Formula
 
   plist_options :manual => "#{HOMEBREW_PREFIX}/sbin/collectd -f -C #{HOMEBREW_PREFIX}/etc/collectd.conf"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
@@ -88,9 +91,19 @@ class Collectd < Formula
   end
 
   test do
+    log = testpath/"collectd.log"
+    (testpath/"collectd.conf").write <<~EOS
+      LoadPlugin logfile
+      <Plugin logfile>
+        File "#{log}"
+      </Plugin>
+      LoadPlugin memory
+    EOS
     begin
-      pid = fork { exec sbin/"collectd", "-f" }
-      assert shell_output("nc -u -w 2 127.0.0.1 25826", 0)
+      pid = fork { exec sbin/"collectd", "-f", "-C", "collectd.conf" }
+      sleep 1
+      assert_predicate log, :exist?, "Failed to create log file"
+      assert_match "plugin \"memory\" successfully loaded.", log.read
     ensure
       Process.kill("SIGINT", pid)
       Process.wait(pid)

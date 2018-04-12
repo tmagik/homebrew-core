@@ -24,12 +24,12 @@ class GccAT49 < Formula
   url "https://ftp.gnu.org/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2"
   mirror "https://ftpmirror.gnu.org/gcc/gcc-4.9.4/gcc-4.9.4.tar.bz2"
   sha256 "6c11d292cd01b294f9f84c9a59c230d80e9e4a47e5c6355f046bb36d4f358092"
-  head "svn://gcc.gnu.org/svn/gcc/branches/gcc-4_9-branch"
+  revision 1
 
   bottle do
-    sha256 "ad74e12473b9d5e20275a47028b63f94aedde641d035b8d101a1860e2bf19b76" => :sierra
-    sha256 "3283035aaaf32998cccdec8ada8ae5d32ef49fdab14461d0473d6862800ae16e" => :el_capitan
-    sha256 "dfd72720aef0ef7a2f924b9aa79a0ab5f6b1cd55e81ff592a79b52a59282c8eb" => :yosemite
+    sha256 "0c4f2650325b060bf72beafd78dabab80973ee4ab330d4de16eb648b88225096" => :high_sierra
+    sha256 "01a231e69b3c3e10a9e6aa99b5cbb6077eb1a011660bbbf06871ee262b6f31e6" => :sierra
+    sha256 "1c407f31d58ab8e41230a83c6ffd1d77503c0c6528ccbc182f6888c23c5fb972" => :el_capitan
   end
 
   option "without-fortran", "Build without the gfortran compiler"
@@ -37,21 +37,49 @@ class GccAT49 < Formula
   option "with-all-languages", "Enable all compilers and languages, except Ada"
   option "with-nls", "Build with native language support (localization)"
   option "with-profiled-build", "Make use of profile guided optimization when bootstrapping GCC"
-  # enabling multilib on a host that can't run 64-bit results in build failures
-  option "without-multilib", "Build without multilib support" if MacOS.prefer_64_bit?
 
   deprecated_option "enable-java" => "with-java"
   deprecated_option "enable-all-languages" => "with-all-languages"
   deprecated_option "enable-nls" => "with-nls"
   deprecated_option "enable-profiled-build" => "with-profiled-build"
-  deprecated_option "disable-multilib" => "without-multilib"
 
-  depends_on "gmp@4"
-  depends_on "libmpc@0.8"
-  depends_on "mpfr@2"
-  depends_on "cloog"
-  depends_on "isl@0.12"
   depends_on "ecj" if build.with?("java") || build.with?("all-languages")
+
+  resource "gmp" do
+    url "https://ftp.gnu.org/gnu/gmp/gmp-4.3.2.tar.bz2"
+    mirror "https://ftpmirror.gnu.org/gmp/gmp-4.3.2.tar.bz2"
+    sha256 "936162c0312886c21581002b79932829aa048cfaf9937c6265aeaa14f1cd1775"
+
+    # Upstream patch to fix gmp.h header use in C++ compilation with libc++
+    # https://gmplib.org/repo/gmp/rev/6cd3658f5621
+    patch do
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/010a4dc3/gmp%404/4.3.2.patch"
+      sha256 "7865e09e154d4696e850779403e6c75be323f069356dedb7751cf1575db3a148"
+    end
+  end
+
+  resource "mpfr" do
+    url "https://gcc.gnu.org/pub/gcc/infrastructure/mpfr-2.4.2.tar.bz2"
+    mirror "https://mirrorservice.org/sites/sourceware.org/pub/gcc/infrastructure/mpfr-2.4.2.tar.bz2"
+    sha256 "c7e75a08a8d49d2082e4caee1591a05d11b9d5627514e678f02d66a124bcf2ba"
+  end
+
+  resource "mpc" do
+    url "https://gcc.gnu.org/pub/gcc/infrastructure/mpc-0.8.1.tar.gz"
+    sha256 "e664603757251fd8a352848276497a4c79b7f8b21fd8aedd5cc0598a38fee3e4"
+  end
+
+  resource "isl" do
+    url "https://gcc.gnu.org/pub/gcc/infrastructure/isl-0.12.2.tar.bz2"
+    mirror "https://mirrorservice.org/sites/distfiles.macports.org/isl/isl-0.12.2.tar.bz2"
+    sha256 "f4b3dbee9712850006e44f0db2103441ab3d13b406f77996d1df19ee89d11fb4"
+  end
+
+  resource "cloog" do
+    url "https://www.bastoul.net/cloog/pages/download/count.php3?url=./cloog-0.18.4.tar.gz"
+    mirror "https://mirrorservice.org/sites/archive.ubuntu.com/ubuntu/pool/main/c/cloog/cloog_0.18.4.orig.tar.gz"
+    sha256 "325adf3710ce2229b7eeb9e84d3b539556d093ae860027185e7af8a8b00a750e"
+  end
 
   # The bottles are built on systems with the CLT installed, and do not work
   # out of the box on Xcode-only systems due to an incorrect sysroot.
@@ -62,9 +90,29 @@ class GccAT49 < Formula
   # GCC bootstraps itself, so it is OK to have an incompatible C++ stdlib
   cxxstdlib_check :skip
 
+  # Fix build with Xcode 9
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=82091
+  if DevelopmentTools.clang_build_version >= 900
+    patch do
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/c2dae73416/gcc%404.9/xcode9.patch"
+      sha256 "92c13867afe18ccb813526c3b3c19d95a2dd00973f9939cf56ab7698bdd38108"
+    end
+  end
+
+  # Fix issues with macOS 10.13 headers and parallel build on APFS
+  if MacOS.version == :high_sierra
+    patch do
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/b7c7883d/gcc%404.9/high_sierra_2.patch"
+      sha256 "c7bcad4657292f6939b7322eb5e821c4a110c4f326fd5844890f0e9a85da8cae"
+    end
+  end
+
   def install
     # GCC will suffer build errors if forced to use a particular linker.
     ENV.delete "LD"
+
+    # Build dependencies in-tree, to avoid having versioned formulas
+    resources.each { |r| r.stage(buildpath/r.name) }
 
     if build.with? "all-languages"
       # Everything but Ada, which requires a pre-existing GCC Ada compiler
@@ -88,11 +136,6 @@ class GccAT49 < Formula
       "--enable-languages=#{languages.join(",")}",
       # Make most executables versioned to avoid conflicts.
       "--program-suffix=-#{version_suffix}",
-      "--with-gmp=#{Formula["gmp@4"].opt_prefix}",
-      "--with-mpfr=#{Formula["mpfr@2"].opt_prefix}",
-      "--with-mpc=#{Formula["libmpc@0.8"].opt_prefix}",
-      "--with-cloog=#{Formula["cloog"].opt_prefix}",
-      "--with-isl=#{Formula["isl@0.12"].opt_prefix}",
       "--with-system-zlib",
       "--enable-libstdcxx-time=yes",
       "--enable-stage1-checking",
@@ -118,10 +161,10 @@ class GccAT49 < Formula
       args << "--with-ecj-jar=#{Formula["ecj"].opt_prefix}/share/java/ecj.jar"
     end
 
-    if !MacOS.prefer_64_bit? || build.without?("multilib")
-      args << "--disable-multilib"
-    else
+    if MacOS.prefer_64_bit?
       args << "--enable-multilib"
+    else
+      args << "--disable-multilib"
     end
 
     # Ensure correct install names when linking against libgcc_s;
@@ -166,7 +209,7 @@ class GccAT49 < Formula
   end
 
   test do
-    (testpath/"hello-c.c").write <<-EOS.undent
+    (testpath/"hello-c.c").write <<~EOS
       #include <stdio.h>
       int main()
       {

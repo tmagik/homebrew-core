@@ -6,6 +6,7 @@ class Somagic < Formula
 
   bottle do
     cellar :any
+    sha256 "b6c11695d2c25a49a4a2c5795764a83615a214630bc25914e65fc691662617fc" => :high_sierra
     sha256 "377ecbdc01ebaab2acf1101aa00bbf5554e7d56b1b630baa28ef70d9deb10811" => :sierra
     sha256 "ed8a82423daaabaca0a7ab203edc68b3c0a1a1d617eb24d46486dfa974e9eb4f" => :el_capitan
     sha256 "9c87f9d7a694509b446ce726cedcb731c0185b589a1cdfa96c0346f883a75e5d" => :yosemite
@@ -22,7 +23,8 @@ class Somagic < Formula
     system "make", "PREFIX=#{prefix}", "install"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats
+    <<~EOS
       Before running somagic-capture you must extract the official firmware from the CD.
       See https://code.google.com/archive/p/easycap-somagic-linux/wikis/GettingStarted.wiki for details.
     EOS

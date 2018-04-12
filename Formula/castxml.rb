@@ -1,22 +1,22 @@
 class Castxml < Formula
   desc "C-family Abstract Syntax Tree XML Output"
   homepage "https://github.com/CastXML/CastXML"
-  url "https://mirrors.ocf.berkeley.edu/debian/pool/main/c/castxml/castxml_0.1+git20161215.orig.tar.xz"
-  mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/c/castxml/castxml_0.1+git20161215.orig.tar.xz"
-  version "0.1+git20161215"
-  sha256 "6710486f72ea32020d30e04ff9d6e629a94b79d4fb10b834f93d3f87ebd9c091"
-  revision 1
+  url "https://mirrors.ocf.berkeley.edu/debian/pool/main/c/castxml/castxml_0.1+git20170823.orig.tar.xz"
+  mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/c/castxml/castxml_0.1+git20170823.orig.tar.xz"
+  version "0.1+git20170823"
+  sha256 "aa10c17f703ef46a88f9772205d8f51285fd3567aa91931ee1a7a5abfff95b11"
+  revision 2
   head "https://github.com/CastXML/castxml.git"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "f51900fd4d0cdfc42f906bec02d6aa1f0ab1e61534286399cf6a27d3b81859f0" => :sierra
-    sha256 "28833ef17f73e31fb027ef03462b3286075debc389804f8c5ab52926be9799f9" => :el_capitan
-    sha256 "9854355c02848557c56fcc7cb0bb1e66aa88baff85a5844bc3e11a35b7b93005" => :yosemite
+    cellar :any
+    sha256 "2631a24141657b845f4c474b0ce1baea3efbf6d56c3e7b8eabe8f4d48dc46102" => :high_sierra
+    sha256 "77950bd5fd2d2f482fbe768048b99745fd95fda6ad67e5d2d13b2d8b91fb3b7c" => :sierra
+    sha256 "fd750ed01cb0b5e4724d4ba8cd4da776eaab475cb0d2c724a01131659d13f464" => :el_capitan
   end
 
   depends_on "cmake" => :build
-  depends_on "llvm"
+  depends_on "llvm@5"
 
   def install
     mkdir "build" do
@@ -26,7 +26,7 @@ class Castxml < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       int main() {
         return 0;
       }

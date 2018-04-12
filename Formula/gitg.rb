@@ -1,13 +1,14 @@
 class Gitg < Formula
   desc "GNOME GUI client to view git repositories"
   homepage "https://wiki.gnome.org/Apps/Gitg"
-  url "https://download.gnome.org/sources/gitg/3.24/gitg-3.24.0.tar.xz"
-  sha256 "3e4ec4a8ae83bc7ced8c7610927ade70e37daa5e8beeb4f357a6ea30b4cc951e"
+  url "https://download.gnome.org/sources/gitg/3.26/gitg-3.26.0.tar.xz"
+  sha256 "26730d437d6a30d6e341b9e8da99d2134dce4b96022c195609f45062f82b54d5"
+  revision 4
 
   bottle do
-    sha256 "c20220ca9f8a8d72c651afa7490f9a1fcc91665fe19f4a6e202ef5b28b8704d9" => :sierra
-    sha256 "ba2fba4a28434f41295de8878814e68526915d647fbd0a7c42035149e0c11d32" => :el_capitan
-    sha256 "584ee19894af861db5a818c7df9ab25f4b74bcd678770d5e5fbec031cb2f40f3" => :yosemite
+    sha256 "cba645da392eb236781a1d0cd27016ff9bf3b8f14af4bbc517367d430435e1a9" => :high_sierra
+    sha256 "c1a1d0b07991fbccda16bbef128d6113be858bdcd2942c3c0bde0e6b70510e5e" => :sierra
+    sha256 "8f5741a6c698eea4b46b9996a4a8f69072dc2e66e9a1a37eb6a7eeac4268b501" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -15,6 +16,7 @@ class Gitg < Formula
   depends_on "intltool" => :build
   depends_on "gtksourceview3"
   depends_on "gobject-introspection"
+  depends_on "libgit2"
   depends_on "libgit2-glib"
   depends_on "gsettings-desktop-schemas"
   depends_on "libgee"
@@ -24,7 +26,7 @@ class Gitg < Formula
   depends_on "libsoup"
   depends_on "gtkspell3"
   depends_on "hicolor-icon-theme"
-  depends_on "gnome-icon-theme"
+  depends_on "adwaita-icon-theme"
 
   def install
     system "./configure", "--disable-debug",
@@ -45,7 +47,7 @@ class Gitg < Formula
     # test executable
     assert_match version.to_s, shell_output("#{bin}/gitg --version")
     # test API
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <libgitg/libgitg.h>
 
       int main(int argc, char *argv[]) {

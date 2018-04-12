@@ -1,15 +1,14 @@
 class MmCommon < Formula
-  desc "C++ interfaces for GTK+ and GNOME"
+  desc "Build utilities for C++ interfaces of GTK+ and GNOME packages"
   homepage "https://www.gtkmm.org/"
-  url "https://download.gnome.org/sources/mm-common/0.9/mm-common-0.9.10.tar.xz"
-  sha256 "16c0e2bc196b67fbc145edaecb5dbe5818386504fe5703de27002d77140fa217"
+  url "https://download.gnome.org/sources/mm-common/0.9/mm-common-0.9.12.tar.xz"
+  sha256 "ceffdcce1e5b52742884c233ec604bf6fded12eea9da077ce7a62c02c87e7c0b"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "3132dff9a5c9270dd72d2ffdfbd8b0e53c2c7bede33bb1c87a9dde2b4ba95abc" => :sierra
-    sha256 "8f34165d9e854d0d3cf261775c53191115537c343d65771a458ed827357f05a2" => :el_capitan
-    sha256 "8b131b53a8ace806b0b6a3c75be145312377b0f25d92ea578ba07e27809fa852" => :yosemite
-    sha256 "d04a14c639c497aea15e39ab5c70fb6753d3a7983528cb8b18a7e309babedbde" => :mavericks
+    sha256 "42c9654bebbc472d90bc31d14e0832d55367d8d86d6750ab546a129a48de342b" => :high_sierra
+    sha256 "42c9654bebbc472d90bc31d14e0832d55367d8d86d6750ab546a129a48de342b" => :sierra
+    sha256 "42c9654bebbc472d90bc31d14e0832d55367d8d86d6750ab546a129a48de342b" => :el_capitan
   end
 
   def install

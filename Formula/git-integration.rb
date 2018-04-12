@@ -1,16 +1,3 @@
-class Git182Requirement < Requirement
-  fatal true
-  default_formula "git"
-
-  satisfy do
-    system "git stripspace --comment-lines </dev/null 2>/dev/null"
-  end
-
-  def message
-    "Your Git is too old.  Please upgrade to Git 1.8.2 or newer."
-  end
-end
-
 class GitIntegration < Formula
   desc "Manage git integration branches"
   homepage "https://johnkeeping.github.io/git-integration/"
@@ -20,6 +7,7 @@ class GitIntegration < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "483d5e5411d0a197e8e1e123f88fb2559745506115e3884064616b5118f1c5c3" => :high_sierra
     sha256 "c4679cfcf05245017bf840a67eeecf0fde1b52862d46d00e9f80d267c33aedbe" => :sierra
     sha256 "f91de5bf8a16b8b54db99566b81862c7d1e898dd332fd2d4d4bd457694443d62" => :el_capitan
     sha256 "149a1f6f3cc6a413795893c6d63d48e82264a383aa901bee796c4d6a217b0c9b" => :yosemite
@@ -27,7 +15,6 @@ class GitIntegration < Formula
   end
 
   depends_on "asciidoc" => [:build, :optional]
-  depends_on Git182Requirement
 
   def install
     ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog"

@@ -1,15 +1,15 @@
 class Rgbds < Formula
   desc "Rednex GameBoy Development System"
   homepage "https://github.com/rednex/rgbds"
-  url "https://github.com/rednex/rgbds/archive/v0.3.1.tar.gz"
-  sha256 "3f58bc39fe9e90168d7618093160ce3caf9bdd3cfda311e92f618eb7ccba6f2d"
+  url "https://github.com/rednex/rgbds/archive/v0.3.6.tar.gz"
+  sha256 "925460bf646a70da3bb794050cb313f9bfcf60366dd535e9ef35bb946562af63"
   head "https://github.com/rednex/rgbds.git"
 
   bottle do
     cellar :any
-    sha256 "92eaf4a84c12a39bacb64f4e01ccf431798822a432a8215f69ebbaab924823fc" => :sierra
-    sha256 "b5afb551e61a709eb6333276e0d5b16dced5ec7e08c138e5f702582caa03347b" => :el_capitan
-    sha256 "38f4d8ce78bf285e753f7bfc43cf222ecc40471f34bb7672b4ac35be9f85e0a7" => :yosemite
+    sha256 "2ce2a2244da587f9c379d23ebc1e89e2a745d0181fe3509ddbc736a80983e31e" => :high_sierra
+    sha256 "afdaa5acb9a6dcc53c998a8af7dd3f3470785161730f942aea33594a72b587f0" => :sierra
+    sha256 "4bfc06c8aed435d19d7d9374783a32f2d692a22e30158387c126915eee09da1e" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -20,7 +20,7 @@ class Rgbds < Formula
   end
 
   test do
-    (testpath/"source.asm").write <<-EOS.undent
+    (testpath/"source.asm").write <<~EOS
       SECTION "Org $100",HOME[$100]
       nop
       jp begin

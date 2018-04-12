@@ -1,14 +1,15 @@
 class GccAT6 < Formula
   desc "GNU compiler collection"
   homepage "https://gcc.gnu.org"
-  url "https://ftp.gnu.org/gnu/gcc/gcc-6.3.0/gcc-6.3.0.tar.bz2"
-  mirror "https://ftpmirror.gnu.org/gcc/gcc-6.3.0/gcc-6.3.0.tar.bz2"
-  sha256 "f06ae7f3f790fbf0f018f6d40e844451e6bc3b7bc96e128e63b09825c1f8b29f"
+  url "https://ftp.gnu.org/gnu/gcc/gcc-6.4.0/gcc-6.4.0.tar.xz"
+  mirror "https://ftpmirror.gnu.org/gcc/gcc-6.4.0/gcc-6.4.0.tar.xz"
+  sha256 "850bf21eafdfe5cd5f6827148184c08c4a0852a37ccf36ce69855334d2c914d4"
+  revision 2
 
   bottle do
-    sha256 "1e735a72ac85834927fcac843f30c5166f88dfa910c052caac826843ccec4927" => :sierra
-    sha256 "9df78ad5b4c442ec37870fa0aaecbc57cd15a2b826d50be059c3aca5df91a6a7" => :el_capitan
-    sha256 "947e8edb596ebfea654991123c8d943a1ac2cf9d05192e6a7a9d8f594d162477" => :yosemite
+    sha256 "2d073860c3899b3d61441931ebb230ccb7249e2ac63d957860c408c01ecc081b" => :high_sierra
+    sha256 "c9f0ebfe118e7c43a081e952dd0135e7b6621a9f935426fd08372486fa5ddea9" => :sierra
+    sha256 "cfb7468673433e7ef683f1746fb94ce9719c181e9c7e86f4d70453578c1822cc" => :el_capitan
   end
 
   # GCC's Go compiler is not currently supported on macOS.
@@ -18,8 +19,6 @@ class GccAT6 < Formula
   option "with-nls", "Build with native language support (localization)"
   option "with-jit", "Build the jit compiler"
   option "without-fortran", "Build without the gfortran compiler"
-  # enabling multilib on a host that can't run 64-bit results in build failures
-  option "without-multilib", "Build without multilib support" if MacOS.prefer_64_bit?
 
   depends_on "gmp"
   depends_on "libmpc"
@@ -46,6 +45,16 @@ class GccAT6 < Formula
   patch do
     url "https://raw.githubusercontent.com/Homebrew/formula-patches/e9e0ee09389a54cc4c8fe1c24ebca3cd765ed0ba/gcc/6.1.0-jit.patch"
     sha256 "863957f90a934ee8f89707980473769cff47ca0663c3906992da6afb242fb220"
+  end
+
+  # Fix parallel build on APFS filesystem
+  # Remove for 6.5.0 and later
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81797
+  if MacOS.version >= :high_sierra
+    patch do
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/df0465c02a/gcc/apfs.patch"
+      sha256 "f7772a6ba73f44a6b378e4fe3548e0284f48ae2d02c701df1be93780c1607074"
+    end
   end
 
   def install
@@ -110,10 +119,10 @@ class GccAT6 < Formula
       args << "--with-ecj-jar=#{Formula["ecj"].opt_share}/java/ecj.jar"
     end
 
-    if build.without?("multilib") || !MacOS.prefer_64_bit?
-      args << "--disable-multilib"
-    else
+    if MacOS.prefer_64_bit?
       args << "--enable-multilib"
+    else
+      args << "--disable-multilib"
     end
 
     args << "--enable-host-shared" if build.with?("jit") || build.with?("all-languages")
@@ -151,7 +160,7 @@ class GccAT6 < Formula
   end
 
   test do
-    (testpath/"hello-c.c").write <<-EOS.undent
+    (testpath/"hello-c.c").write <<~EOS
       #include <stdio.h>
       int main()
       {
@@ -162,7 +171,7 @@ class GccAT6 < Formula
     system "#{bin}/gcc-6", "-o", "hello-c", "hello-c.c"
     assert_equal "Hello, world!\n", `./hello-c`
 
-    (testpath/"hello-cc.cc").write <<-EOS.undent
+    (testpath/"hello-cc.cc").write <<~EOS
       #include <iostream>
       int main()
       {
@@ -174,7 +183,7 @@ class GccAT6 < Formula
     assert_equal "Hello, world!\n", `./hello-cc`
 
     if build.with?("fortran") || build.with?("all-languages")
-      fixture = <<-EOS.undent
+      fixture = <<~EOS
         integer,parameter::m=10000
         real::a(m), b(m)
         real::fact=0.5

@@ -2,14 +2,14 @@ class Freeswitch < Formula
   desc "Telephony platform to route various communication protocols"
   homepage "https://freeswitch.org"
   url "https://freeswitch.org/stash/scm/fs/freeswitch.git",
-      :tag => "v1.6.14",
-      :revision => "e460bf85396a57a36b47752cb5997dd60ed373ef"
+      :tag => "v1.6.20",
+      :revision => "987c9b9a2a2e389becf4f390feb9eb14c77e2371"
   head "https://freeswitch.org/stash/scm/fs/freeswitch.git"
 
   bottle do
-    sha256 "1d28f53c70794ed1e1aa76104aeda61afc603f4abcc48b604db8d9f124431b2d" => :sierra
-    sha256 "b84bf953c173272be24df2d9b5719fc9610e841957d24aed9899bc77404e1caa" => :el_capitan
-    sha256 "421054173240030160fd71484ec841b4ae9b662d6519f04ac94cf700379d0f2c" => :yosemite
+    sha256 "a44ff9765d3a79e6caf363f94c144ee62139320b274f70c56000d839dec618ad" => :high_sierra
+    sha256 "52aa9f65dbcff17203256154422092c74195c795f50cb10b4c7182e4dcc1361b" => :sierra
+    sha256 "f2d73136027050dc82f3ce4d9e6f131f07a6cf15fba1d2b02c2012eacd1cb525" => :el_capitan
   end
 
   option "without-moh", "Do not install music-on-hold"
@@ -23,8 +23,6 @@ class Freeswitch < Formula
   depends_on "pkg-config" => :build
   depends_on "apr-util" => :build
   depends_on "yasm" => :build
-
-  depends_on "curl"
   depends_on "jpeg"
   depends_on "openssl"
   depends_on "pcre"
@@ -144,6 +142,8 @@ class Freeswitch < Formula
   #------------------------ End sound file resources --------------------------
 
   def install
+    ENV["ac_cv_lib_lzma_lzma_code"] = "no" # prevent opportunistic linkage to xz
+
     # avoid a dependency on ldns to prevent OpenSSL version conflicts
     inreplace "build/modules.conf.in", "applications/mod_enum",
                                        "#applications/mod_enum"
@@ -205,7 +205,7 @@ class Freeswitch < Formula
 
   plist_options :manual => "freeswitch -nc --nonat"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

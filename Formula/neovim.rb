@@ -1,24 +1,15 @@
 class Neovim < Formula
   desc "Ambitious Vim-fork focused on extensibility and agility"
   homepage "https://neovim.io/"
-
-  stable do
-    url "https://github.com/neovim/neovim/archive/v0.2.0.tar.gz"
-    sha256 "72e263f9d23fe60403d53a52d4c95026b0be428c1b9c02b80ab55166ea3f62b5"
-
-    depends_on "luajit" => :build
-  end
+  url "https://github.com/neovim/neovim/archive/v0.2.2.tar.gz"
+  sha256 "a838ee07cc9a2ef8ade1b31a2a4f2d5e9339e244ade68e64556c1f4b40ccc5ed"
+  revision 1
+  head "https://github.com/neovim/neovim.git"
 
   bottle do
-    sha256 "b04f8a559f1f17aef15699afb83be2a85b626a81dec72e1b686bcdf916456c01" => :sierra
-    sha256 "5774c42876eeccfae2b242acdbda91f84761b9bb680e663a707b6a15667ff4a9" => :el_capitan
-    sha256 "8a8e12c9082f67366f6bfd4780f262b935d033e5ade1a6ddf9fd6eb9cb9e0eba" => :yosemite
-  end
-
-  head do
-    url "https://github.com/neovim/neovim.git"
-
-    depends_on "luajit"
+    sha256 "86b8181d2d6c96a6ecbac8414087456631cabdb27e6d36fee9f2e9c723fe99ad" => :high_sierra
+    sha256 "c2e551578f36847121dd8cdcdfd3de9abf5836906658e166ab6e5d71ba805de5" => :sierra
+    sha256 "4e193b9c000868ece51cd256fb9831423381969fbc53212f18484b5b2cba187a" => :el_capitan
   end
 
   depends_on "cmake" => :build
@@ -29,9 +20,10 @@ class Neovim < Formula
   depends_on "libtermkey"
   depends_on "libuv"
   depends_on "libvterm"
+  depends_on "luajit"
   depends_on "msgpack"
   depends_on "unibilium"
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
 
   resource "lpeg" do
     url "https://luarocks.org/manifests/gvvaughan/lpeg-1.0.1-1.src.rock", :using => :nounzip

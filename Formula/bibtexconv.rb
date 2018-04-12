@@ -1,14 +1,14 @@
 class Bibtexconv < Formula
   desc "BibTeX file converter"
   homepage "https://www.uni-due.de/~be0001/bibtexconv/"
-  url "https://www.uni-due.de/~be0001/bibtexconv/download/bibtexconv-1.1.7.tar.gz"
-  sha256 "acba9c87d9f301dd128dcb480b7a031324579708263c297f5994cb3590b710b1"
+  url "https://www.uni-due.de/~be0001/bibtexconv/download/bibtexconv-1.1.11.tar.gz"
+  sha256 "1240c3011718d9ba95c165dbf908eab871153530b70bca0ef74dc2b9664e83f1"
 
   bottle do
     cellar :any
-    sha256 "8bbc5bfd4e021dada1361ed4f8e92e7e7dec92350190ce3baed8adeb4381f116" => :sierra
-    sha256 "fdfa0ac4890ef0627c5901c3c287920217fc5fad203f67f7be2c1107b4b846e5" => :el_capitan
-    sha256 "f9a8d3a46ebd1261dbef3b12bb0447788791275a4ccc94e35ff35d9d60c00555" => :yosemite
+    sha256 "2b44b8dd4bf60b443c9318e056fdcffaed9218e75d7d907dd6ae5c4679a135e9" => :high_sierra
+    sha256 "81c4daa41ddb6837d40b66a883aceeb3470ca03148fcc6fd19386ff623776dd8" => :sierra
+    sha256 "397edcb9360918833774139e8cf9d11bcb53fc7c763e487a7bec325861b73cd6" => :el_capitan
   end
 
   head do

@@ -5,32 +5,29 @@ class Idris < Formula
 
   desc "Pure functional programming language with dependent types"
   homepage "https://www.idris-lang.org/"
-  url "https://github.com/idris-lang/Idris-dev/archive/v1.0.tar.gz"
-  sha256 "aaed0d01c0395cb7cac2562f689f8589072ad7568acaeb5e20451ffeebab963e"
+  url "https://github.com/idris-lang/Idris-dev/archive/v1.2.0.tar.gz"
+  sha256 "a5160da66cdfb376df0ed87f0abb9dbc7feaa4efe77bcc7f9cc3b97425bc57f7"
   head "https://github.com/idris-lang/Idris-dev.git"
 
   bottle do
-    sha256 "fe5231d29fbf3927e83ae1add29ae9b86fd94a13771e94a4a0dc4316b1d1f4b3" => :sierra
-    sha256 "f9ca5a80a938c2089cf2b4873220f6329e0e98b2bc5d998f7fe1c1afc447b9cf" => :el_capitan
-    sha256 "8fed2cb59d66a0990aeed6ab21c10e6e45d5517bbc8c14ed8061458f8334a0ac" => :yosemite
+    sha256 "7d878126d8a6317d8325f3f434884eb52fadb6dd712433e18437979531e1e2df" => :high_sierra
+    sha256 "2944aae8e9baf286e1c46814d88e0487f08a0bdd8279859475de0a9128f772df" => :sierra
+    sha256 "6e9af20653598297ee21e83c9b7cb44240b7a8797d22bf918548a8cde6f45fdf" => :el_capitan
   end
 
-  depends_on "ghc" => :build
   depends_on "cabal-install" => :build
+  depends_on "ghc@8.2" => :build
   depends_on "pkg-config" => :build
-
-  depends_on "gmp"
-  depends_on "libffi" => :recommended
+  depends_on "libffi"
 
   def install
-    args = []
-    args << "-f FFI" if build.with? "libffi"
-    args << "-f release" if build.stable?
+    args = ["-f", "FFI"]
+    args << "-f" << "release" if build.stable?
     install_cabal_package *args
   end
 
   test do
-    (testpath/"hello.idr").write <<-EOS.undent
+    (testpath/"hello.idr").write <<~EOS
       module Main
       main : IO ()
       main = putStrLn "Hello, Homebrew!"
@@ -40,7 +37,7 @@ class Idris < Formula
     assert_equal "Hello, Homebrew!", shell_output("./hello").chomp
 
     if build.with? "libffi"
-      (testpath/"ffi.idr").write <<-EOS.undent
+      (testpath/"ffi.idr").write <<~EOS
         module Main
         puts: String -> IO ()
         puts x = foreign FFI_C "puts" (String -> IO ()) x

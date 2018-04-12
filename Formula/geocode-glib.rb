@@ -1,21 +1,21 @@
 class GeocodeGlib < Formula
   desc "GNOME library for gecoding and reverse geocoding"
   homepage "https://developer.gnome.org/geocode-glib"
-  url "https://download.gnome.org/sources/geocode-glib/3.20/geocode-glib-3.20.1.tar.xz"
-  sha256 "669fc832cabf8cc2f0fc4194a8fa464cdb9c03ebf9aca5353d7cf935ba8637a2"
+  url "https://download.gnome.org/sources/geocode-glib/3.24/geocode-glib-3.24.0.tar.xz"
+  sha256 "19c1fef4fd89eb4bfe6decca45ac45a2eca9bb7933be560ce6c172194840c35e"
+  revision 1
 
   bottle do
-    sha256 "de5b33dd569563477d4750bc16adb3d92dc163dd7fcf61d2814192916ab9018f" => :sierra
-    sha256 "3ebd3cff23719235de5b5599c3eb4e332a87b7e768353ac0baee64e22dfc130b" => :el_capitan
-    sha256 "a19ac1603fb2d3c379501275dc209bdfe19f032b7460a6e6a260cd43f8b5810e" => :yosemite
-    sha256 "16c2add2adeab490024f7c7d7620be8be7e6545073dde7979389df50f8d75c1b" => :mavericks
+    sha256 "780bb3b6c0a4254b86b7ea19aaa38b7aefd64d3e426bb0ecffd1bec2ca0e48ff" => :high_sierra
+    sha256 "46f57b5d17d403eac2ac15a9d855cc97419c657d6956d41893f9f9ac02809354" => :sierra
+    sha256 "58a18aaf640e1b4788876082272dee570c7b8c3bf459463ec72f14d10a8bfc59" => :el_capitan
   end
 
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "gtk+3"
   depends_on "json-glib"
   depends_on "libsoup"
-  depends_on "gobject-introspection"
 
   def install
     # forces use of gtk3-update-icon-cache instead of gtk-update-icon-cache. No bugreport should
@@ -37,7 +37,7 @@ class GeocodeGlib < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <geocode-glib/geocode-glib.h>
 
       int main(int argc, char *argv[]) {

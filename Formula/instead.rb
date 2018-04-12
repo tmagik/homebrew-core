@@ -1,14 +1,15 @@
 class Instead < Formula
   desc "Interpreter of simple text adventures"
   homepage "https://instead.syscall.ru/"
-  url "https://github.com/instead-hub/instead/archive/3.0.1.tar.gz"
-  sha256 "62602c5cc54bcbce58ebf1bad3ee1e13ceee7c77abad71691fbdd138efd9426d"
+  url "https://github.com/instead-hub/instead/archive/3.1.2.tar.gz"
+  sha256 "622c04a58fd780d8efdf0706c03596ab68672b31e97865dad6a1fc1540619754"
+  revision 1
   head "https://github.com/instead-hub/instead.git"
 
   bottle do
-    sha256 "38832d4aa7daba7a51904ddc6ff4c4aa4a80e1500ac88efef5057db763447d5e" => :sierra
-    sha256 "b0381e1ca4db11c8be2c108355e543049662cdf3cb11924d4b25e8ea79bfd109" => :el_capitan
-    sha256 "214c2659f00fdab01785ee22bc335fe55fe04374026c2c85eb9a48705b60b517" => :yosemite
+    sha256 "a0a3ea00027270c2e2c187875cf0d927ea3774e9d15cecc22ad79a71f5a4055d" => :high_sierra
+    sha256 "553fe8895598076f95471f287dc1de07833015eaf1cb0458a68a520c842270b2" => :sierra
+    sha256 "6dfd28908d6b1106557b956999bc80a98918ccd5f0b97089748c087b2c4bd7be" => :el_capitan
   end
 
   depends_on "cmake" => :build

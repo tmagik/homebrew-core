@@ -1,15 +1,14 @@
 class Exempi < Formula
   desc "Library to parse XMP metadata"
   homepage "https://wiki.freedesktop.org/libopenraw/Exempi/"
-  url "https://libopenraw.freedesktop.org/download/exempi-2.3.0.tar.bz2"
-  sha256 "d89aed355e6d38b8525ffeaffe592b362fec3a8306a1d8116625908af8d89949"
+  url "https://libopenraw.freedesktop.org/download/exempi-2.4.5.tar.bz2"
+  sha256 "406185feb88e84ea1d4b4251370be2991205790d7113a7e28e192ff46a4f221e"
 
   bottle do
     cellar :any
-    sha256 "9f5de7fcc210405533becdd6a25595df115674aa5828596242562cdac0681e71" => :sierra
-    sha256 "8445c3fe80c44a8b7589415b797704340ec865e1c572a728f753c33ebeeec141" => :el_capitan
-    sha256 "02f7d164840640fef806abf0b22e53ab4e479189fe077ecf2bcc4f7fac812164" => :yosemite
-    sha256 "204ac5dd569a2f54fe13a586a1fbc011b96de1a58531dc4d9694d452148bd236" => :mavericks
+    sha256 "cb8963597a18110d41181ef79296a7f649330dbd21581f3bbc02209ad478d1bc" => :high_sierra
+    sha256 "61b309245e23f723bdea631694de9809cc9ff9551abc87386eb063cef351c172" => :sierra
+    sha256 "b1214df8ff8d55b48940e13e27cb7a0fcce0d423a8a791de876974622add734e" => :el_capitan
   end
 
   depends_on "boost"

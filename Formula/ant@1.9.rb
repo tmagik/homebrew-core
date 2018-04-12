@@ -6,6 +6,7 @@ class AntAT19 < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "e5c63d1ca61047baee2f0edebea21508782460c98a1d325727e376cfc7e1cbef" => :high_sierra
     sha256 "c61398b93dc90ac3b56df0eca3fb3d7059fa81ce3bd2e4c18bb2701b5455d839" => :sierra
     sha256 "de8ab34d71e40db90fe53ea2c311351f73598063eebd82cdcd467f6d93143626" => :el_capitan
     sha256 "de8ab34d71e40db90fe53ea2c311351f73598063eebd82cdcd467f6d93143626" => :yosemite
@@ -18,14 +19,14 @@ class AntAT19 < Formula
     libexec.install Dir["*"]
     bin.install_symlink Dir["#{libexec}/bin/*"]
     rm bin/"ant"
-    (bin/"ant").write <<-EOS.undent
+    (bin/"ant").write <<~EOS
       #!/bin/sh
       #{libexec}/bin/ant -lib #{HOMEBREW_PREFIX}/share/ant "$@"
     EOS
   end
 
   test do
-    (testpath/"build.xml").write <<-EOS.undent
+    (testpath/"build.xml").write <<~EOS
       <project name="HomebrewTest" basedir=".">
         <property name="src" location="src"/>
         <property name="build" location="build"/>
@@ -37,7 +38,7 @@ class AntAT19 < Formula
         </target>
       </project>
     EOS
-    (testpath/"src/main/java/org/homebrew/AntTest.java").write <<-EOS.undent
+    (testpath/"src/main/java/org/homebrew/AntTest.java").write <<~EOS
       package org.homebrew;
       public class AntTest {
         public static void main(String[] args) {

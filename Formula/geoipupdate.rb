@@ -1,13 +1,13 @@
 class Geoipupdate < Formula
   desc "Automatic updates of GeoIP2 and GeoIP Legacy databases"
   homepage "https://github.com/maxmind/geoipupdate"
-  url "https://github.com/maxmind/geoipupdate/releases/download/v2.4.0/geoipupdate-2.4.0.tar.gz"
-  sha256 "8b4e88ce8d84e9c75bc681704d19ec5c63c54f01e945f7669f97fb0df7e13952"
+  url "https://github.com/maxmind/geoipupdate/releases/download/v2.5.0/geoipupdate-2.5.0.tar.gz"
+  sha256 "5119fd0e338cd083e886228b26679c64bcbaade8a815be092aecf865a610ab26"
 
   bottle do
-    sha256 "c73d5d3d4ca5fd9247781271a804d92ea56069fa762ecb65378220e6c2e8bf26" => :sierra
-    sha256 "d37e9d640cb63cd56947a9e5cc0d1cafa3200daae9af2c3eccbd63fa0901d0a7" => :el_capitan
-    sha256 "b8ea3881d098a236eae73e69ad59d4a0b8da4ae6b07985a4bc5ce9e3c27f7187" => :yosemite
+    sha256 "22feb6fb330b62c077482b443ac637c2fa3f60626b4113d815fc0fd85a255ee2" => :high_sierra
+    sha256 "d28503bce47a42732d54cece163675f6c6169539327a95bb8d4bbdfd16aa9e35" => :sierra
+    sha256 "ab7981329380d9bf0fee2efe0bfed2a1745cc3ecf681356ba21a02cd6604acf2" => :el_capitan
   end
 
   head do
@@ -19,16 +19,17 @@ class Geoipupdate < Formula
 
   def install
     system "./bootstrap" if build.head?
-
     system "./configure", "--disable-dependency-tracking",
                           "--disable-silent-rules",
                           "--datadir=#{var}",
-                          "--prefix=#{prefix}"
+                          "--prefix=#{prefix}",
+                          "--sysconfdir=#{etc}"
     system "make", "install"
   end
 
   def post_install
     (var/"GeoIP").mkpath
+    system bin/"geoipupdate", "-v"
   end
 
   test do

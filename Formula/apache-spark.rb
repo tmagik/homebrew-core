@@ -1,12 +1,14 @@
 class ApacheSpark < Formula
   desc "Engine for large-scale data processing"
   homepage "https://spark.apache.org/"
-  url "https://www.apache.org/dyn/closer.lua?path=spark/spark-2.1.1/spark-2.1.1-bin-hadoop2.7.tgz"
-  version "2.1.1"
-  sha256 "372ac4f73221c07696793101007a4f19e31566d1f0d9bd0e5205b6fb5b45bfc2"
+  url "https://www.apache.org/dyn/closer.lua?path=spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz"
+  version "2.3.0"
+  sha256 "5cfbc77d140454c895f2d8125c0a751465f53cbe12720da763b1785d25c63f05"
   head "https://github.com/apache/spark.git"
 
   bottle :unneeded
+
+  depends_on :java => "1.8"
 
   def install
     # Rename beeline to distinguish it from hive's beeline
@@ -14,7 +16,8 @@ class ApacheSpark < Formula
 
     rm_f Dir["bin/*.cmd"]
     libexec.install Dir["*"]
-    bin.write_exec_script Dir["#{libexec}/bin/*"]
+    bin.install Dir[libexec/"bin/*"]
+    bin.env_script_all_files(libexec/"bin", Language::Java.java_home_env("1.8"))
   end
 
   test do

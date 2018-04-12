@@ -1,30 +1,27 @@
 class Forego < Formula
-  desc "Foreman in Go"
+  desc "Foreman in Go for Procfile-based application management"
   homepage "https://github.com/ddollar/forego"
-  url "https://github.com/ddollar/forego/archive/v0.16.1.tar.gz"
-  sha256 "d4c8305262ac18c7e51d9d8028827f83b37fb3f9373d304686d084d68033ac6d"
-
+  url "https://github.com/ddollar/forego/archive/20180216151118.tar.gz"
+  sha256 "23119550cc0e45191495823aebe28b42291db6de89932442326340042359b43d"
   head "https://github.com/ddollar/forego.git"
 
   bottle do
     cellar :any_skip_relocation
-    rebuild 2
-    sha256 "a1415e14f065d016bd8bed47389d4728df6f914e9f43b596e0751047ccffd28a" => :sierra
-    sha256 "db597e351270dd29d239af3e144c3e73ae588305267610365f218a9fbef784ee" => :el_capitan
-    sha256 "75463485e3de109732c7b046f159a08c4b282fc2ea95ce7be2281b829726a3d7" => :yosemite
-    sha256 "d60bb47949dfc148d0e6788c3389c392a479bbb6b1e17acad0ce45a1e90bbe6b" => :mavericks
+    sha256 "5a855ce2b4f4bd2349b6814c11ec85f788a9be510aff4f18df582141dbc15295" => :high_sierra
+    sha256 "5a4b9261fb91507df08c7c840134a21effb2b407aa5e84474b2900f8d436f3ca" => :sierra
+    sha256 "77720ca90705c26a92248cd822d4a3b0cef329c5b16e2da62a7815cfd61f0ce2" => :el_capitan
   end
 
   depends_on "go" => :build
-  depends_on "godep" => :build
 
   def install
     ENV["GOPATH"] = buildpath
-    mkdir_p buildpath/"src/github.com/ddollar/"
-    ln_sf buildpath, buildpath/"src/github.com/ddollar/forego"
-
-    ldflags = "-X main.Version=#{version} -X main.allowUpdate=false"
-    system "godep", "go", "build", "-ldflags", ldflags, "-o", bin/"forego"
+    (buildpath/"src/github.com/ddollar/forego").install buildpath.children
+    cd "src/github.com/ddollar/forego" do
+      system "go", "build", "-o", bin/"forego", "-ldflags",
+             "-X main.Version=#{version} -X main.allowUpdate=false"
+      prefix.install_metafiles
+    end
   end
 
   test do

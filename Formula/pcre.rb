@@ -1,15 +1,15 @@
 class Pcre < Formula
   desc "Perl compatible regular expressions library"
-  homepage "http://www.pcre.org/"
-  url "https://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.40.tar.bz2"
-  mirror "https://www.mirrorservice.org/sites/ftp.exim.org/pub/pcre/pcre-8.40.tar.bz2"
-  sha256 "00e27a29ead4267e3de8111fcaa59b132d0533cdfdbdddf4b0604279acbcf4f4"
+  homepage "https://www.pcre.org/"
+  url "https://ftp.pcre.org/pub/pcre/pcre-8.42.tar.bz2"
+  mirror "https://www.mirrorservice.org/sites/ftp.exim.org/pub/pcre/pcre-8.42.tar.bz2"
+  sha256 "2cd04b7c887808be030254e8d77de11d3fe9d4505c39d4b15d2664ffe8bf9301"
 
   bottle do
     cellar :any
-    sha256 "0c6b0b755f8bb88f277ffca1bad6554c995936e42d32453addde97da58b72b31" => :sierra
-    sha256 "f4851122510374c12e411ac2fad63ce8bd3c1590b6e152df64ad5b37b20cf200" => :el_capitan
-    sha256 "6c69cca320bc1db83345100f0f8ff181cf16024d5842ac970f8d1f1cdc24e05d" => :yosemite
+    sha256 "b904c008c04003c3f40e30c6ee6a3b411aad81aa2f2684db9bf59bccd9d58b01" => :high_sierra
+    sha256 "d8f8faec67df2d86e12757cac6f076c48d0fafac8f2a88c87c64d5807dce7142" => :sierra
+    sha256 "b07b9523cbab3c86423fecc7f5e79a1eb9dd47958d915f8915c78e6faa4f4435" => :el_capitan
   end
 
   head do

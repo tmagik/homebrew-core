@@ -1,10 +1,11 @@
 class Cherokee < Formula
   desc "Modern, user friendly web server"
   homepage "http://cherokee-project.com/"
-  url "http://pkgs.fedoraproject.org/repo/pkgs/cherokee/cherokee-1.2.103.tar.gz/527b3de97ef9727bfd5f6832043cf916/cherokee-1.2.103.tar.gz"
+  url "https://src.fedoraproject.org/repo/pkgs/cherokee/cherokee-1.2.103.tar.gz/527b3de97ef9727bfd5f6832043cf916/cherokee-1.2.103.tar.gz"
   sha256 "790777e7b4355b60698443161e45b5a20a9d0ab8c4c47924e00d19da8b74dfcd"
 
   bottle do
+    sha256 "e149e2a50f0954be520def65943abf020f44460ceeb41d428627c5d65be2d177" => :high_sierra
     sha256 "db0adb2f4e099777e5309d1b2ca2102c8ae576eb45a51c827f0e2fb7866b66ed" => :sierra
     sha256 "f6944776619d9338169b1676cc10d9960c27cb7a88b1189a4e02e1f577d4e2d6" => :el_capitan
     sha256 "af00f0cc177c2c16063aa3abe8dfe025568874db126edfacce4a33c8a3fbd5cb" => :yosemite
@@ -16,8 +17,8 @@ class Cherokee < Formula
 
   # OS X 10.9 patch
   patch do
-    url "https://github.com/cherokee/webserver/commit/d0213768fdc6cf3aee61fe0be398d7825c01198f.diff"
-    sha256 "97def30be1d72e8b53217f7af58543e35dcfec3e6dc8d0758553de1e4f4d742a"
+    url "https://github.com/cherokee/webserver/commit/d0213768fdc6cf3aee61fe0be398d7825c01198f.diff?full_index=1"
+    sha256 "dc4c678e55b906a5a1437f93789232a6eb016e80214e92b0032f50c68ae2997b"
   end
 
   def install
@@ -47,7 +48,7 @@ class Cherokee < Formula
   end
 
   def caveats
-    <<-EOS.undent
+    <<~EOS
       Cherokee is setup to run with your user permissions as part of the
       www group on port 80. This can be changed in the cherokee-admin
       but be aware the new user will need permissions to write to:
@@ -69,5 +70,9 @@ class Cherokee < Formula
           sudo cp #{prefix}/org.cherokee.webserver.plist /Library/LaunchDaemons
           sudo launchctl load -w /Library/LaunchDaemons/org.cherokee.webserver.plist
     EOS
+  end
+
+  test do
+    assert_match "Version: #{version}", shell_output("#{sbin}/cherokee -i")
   end
 end

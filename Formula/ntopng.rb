@@ -1,20 +1,22 @@
 class Ntopng < Formula
   desc "Next generation version of the original ntop"
-  homepage "http://www.ntop.org/products/ntop/"
+  homepage "https://www.ntop.org/products/traffic-analysis/ntop/"
+  revision 1
 
   stable do
-    url "https://github.com/ntop/ntopng/archive/3.0.tar.gz"
-    sha256 "3780f1e71bc7aa404f40ea9b805d195943cdb5095d712f41669eae138d388ad5"
+    url "https://github.com/ntop/ntopng/archive/3.2.tar.gz"
+    sha256 "3d7f7934d983623a586132d2602f25b630614f1d3ae73c56d6290deed1af19ee"
 
     resource "nDPI" do
-      url "https://github.com/ntop/nDPI.git", :branch => "2.0-stable"
+      url "https://github.com/ntop/nDPI/archive/2.2.tar.gz"
+      sha256 "25607db12f466ba88a1454ef8b378e0e9eb59adffad6baa4b5610859a102a5dd"
     end
   end
 
   bottle do
-    sha256 "accef6e537eca111021c9eefb3b142b80ddeec313b0c3f8924aaf785a9f839ed" => :sierra
-    sha256 "ec35e60a6fd33a1ed3631b2bc99845923388ba8f5ee5d61d06b342fe78547061" => :el_capitan
-    sha256 "6b0c53620382b61d40c1553fcfe15f0d8da5cefc8f3687627540f81ddb827edb" => :yosemite
+    sha256 "b081d1c51e866004ca67152de76ff3a6fd29ebad435eaaf8b4e7bf233b313b4e" => :high_sierra
+    sha256 "9806a98d28853c7c8679c90bb2b9d40f62b4c1c3f4132d8aa36a6dc78d206796" => :sierra
+    sha256 "dc4876dbffa7871f30b899bacad272f721bcedc51019713691790825f867d1f9" => :el_capitan
   end
 
   head do
@@ -24,8 +26,6 @@ class Ntopng < Formula
       url "https://github.com/ntop/nDPI.git", :branch => "dev"
     end
   end
-
-  option "with-mariadb", "Build with mariadb support"
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
@@ -37,18 +37,11 @@ class Ntopng < Formula
 
   depends_on "json-c"
   depends_on "rrdtool"
-  depends_on "luajit"
   depends_on "geoip"
   depends_on "redis"
-  depends_on "mysql" if build.without? "mariadb"
-  depends_on "mariadb" => :optional
+  depends_on "mysql"
 
   def install
-    # Prevent "make install" failure "cp: the -H, -L, and -P options may not be
-    # specified with the -r option"
-    # Reported 2 Jun 2017 https://github.com/ntop/ntopng/issues/1285
-    inreplace "Makefile.in", "cp -Lr", "cp -LR"
-
     resource("nDPI").stage do
       system "./autogen.sh"
       system "make"

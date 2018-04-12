@@ -1,17 +1,17 @@
 class Dspdfviewer < Formula
   desc "Dual-Screen PDF Viewer for latex-beamer"
-  homepage "http://dspdfviewer.danny-edel.de"
+  homepage "https://dspdfviewer.danny-edel.de/"
   url "https://github.com/dannyedel/dspdfviewer/archive/v1.15.1.tar.gz"
   sha256 "c5b6f8c93d732e65a27810286d49a4b1c6f777d725e26a207b14f6b792307b03"
-  revision 1
+  revision 6
 
   head "https://github.com/dannyedel/dspdfviewer.git"
 
   bottle do
     cellar :any
-    sha256 "4d1956fe7d07ad07164f30c16bbf3d9b82b3dfdd439b0f3972638f3206c7dd2b" => :sierra
-    sha256 "3549976a73ab1365db19b621d0b4e1f0079c8914fff8235b1de1da53cf1e0323" => :el_capitan
-    sha256 "29e5c046cd00cb1c1982df8e36f59424ab51c9bac34d2006fe2d458936953ed3" => :yosemite
+    sha256 "9a8143b03dc182dbae8177ab51d64dd186cf1bfdbb938c899c1139e75c4469de" => :high_sierra
+    sha256 "4fa470a68a5bc15e5e39568204cee8867808c5214f22816c982ecca9ce998813" => :sierra
+    sha256 "e6fd8da112c87696888788c748b80da3ca5d522c075eecc044c16da0d6229c44" => :el_capitan
   end
 
   depends_on "cmake" => :build

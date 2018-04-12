@@ -1,13 +1,13 @@
 class Libdap < Formula
   desc "Framework for scientific data networking"
   homepage "https://www.opendap.org/"
-  url "https://www.opendap.org/pub/source/libdap-3.19.0.tar.gz"
-  sha256 "59c384c2da01104a4ef37f010f3bcf5d46e85e30fcfc942c9181e17128f168a5"
+  url "https://www.opendap.org/pub/source/libdap-3.19.1.tar.gz"
+  sha256 "5215434bacf385ba3f7445494ce400a5ade3995533d8d38bb97fcef1478ad33e"
 
   bottle do
-    sha256 "110ec83b0705a4c30e65e460690a7026498a2ce128dd20b4e013539e3db17a91" => :sierra
-    sha256 "9c09de6a72e425c1b4ba4e0587b2e18e846ea72808b7938f974641d560ca71ee" => :el_capitan
-    sha256 "f1d677f7175cead9f608b9f32352cd47ae19c0761dd7217254a255d0968e43cc" => :yosemite
+    sha256 "acb605289bb709760f85304a454047adc51bc7c62f789b1a6e994def60320707" => :high_sierra
+    sha256 "643d28d3e211bbca74f1d3a11e3af23128e5da457551d695d6e23fd350bb673c" => :sierra
+    sha256 "999d0a4e5235b9c646047e12ebf48c023f073f66ee7cc9952d2873242a66c8b7" => :el_capitan
   end
 
   head do
@@ -51,6 +51,10 @@ class Libdap < Formula
     system "make"
     system "make", "check" if build.with? "test"
     system "make", "install"
+
+    # Ensure no Cellar versioning of libxml2 path in dap-config entries
+    xml2 = Formula["libxml2"]
+    inreplace bin/"dap-config", xml2.opt_prefix.realpath, xml2.opt_prefix
   end
 
   test do

@@ -14,7 +14,7 @@ class Plenv < Formula
     system "#{bin}/plenv", "rehash"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     To enable shims add to your profile:
       if which plenv > /dev/null; then eval "$(plenv init -)"; fi
     With zsh, add to your .zshrc:
@@ -22,5 +22,9 @@ class Plenv < Formula
     With fish, add to your config.fish
       if plenv > /dev/null; plenv init - | source ; end
     EOS
+  end
+
+  test do
+    system "#{bin}/plenv", "--version"
   end
 end

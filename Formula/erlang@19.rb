@@ -2,15 +2,15 @@ class ErlangAT19 < Formula
   desc "Programming language for highly scalable real-time systems"
   homepage "https://www.erlang.org/"
   # Download tarball from GitHub; it is served faster than the official tarball.
-  url "https://github.com/erlang/otp/archive/OTP-19.3.tar.gz"
-  sha256 "fc82c5377ad9e84a37f67f2b2b50b27fe4e689440ae9e5d0f5dcfb440a9487ac"
+  url "https://github.com/erlang/otp/archive/OTP-19.3.6.8.tar.gz"
+  sha256 "076b6ab0e2bae4cf11e3eafae95038671b10b816e697dc27e5e843ab5451a6ac"
   head "https://github.com/erlang/otp.git", :branch => "maint-19"
 
   bottle do
     cellar :any
-    sha256 "fd97e5741bbac1136596779687bf78ecb6ac5fa043f015a2d804635a0388c0d3" => :sierra
-    sha256 "77a0d9fce165ef1630b4d7c3e4e87df013b3d4c2a40fc0ba3bb69324a12dcb39" => :el_capitan
-    sha256 "4c9003f1747f9fc9ce2bc53e4a6d30dfb9cc6a7c58bb9be5fed211c1fc3622be" => :yosemite
+    sha256 "35d96aa7391e28f499680479a07f78316a240cead2cedbb5de869d209a39ea84" => :high_sierra
+    sha256 "0c058246bf1830ed0067c18a9cde08d56e9ec89b7b6bb70d3bf2a8fc47736d99" => :sierra
+    sha256 "77abcc30e62fa5ce31452e36a8bc59a4070cac0442ee02e9a40fae96b4b6b753" => :el_capitan
   end
 
   keg_only :versioned_formula
@@ -31,6 +31,22 @@ class ErlangAT19 < Formula
   depends_on "fop" => :optional # enables building PDF docs
   depends_on :java => :optional
   depends_on "wxmac" => :recommended # for GUI apps like observer
+
+  # Check if this patch can be removed when OTP 19.4 is released.
+  # Erlang will crash on macOS 10.13 any time the crypto lib is used.
+  # The Erlang team has an open PR for the patch but it needs to be applied to
+  # older releases. See https://github.com/erlang/otp/pull/1501 and
+  # https://bugs.erlang.org/browse/ERL-439 for additional information.
+  patch do
+    url "https://raw.githubusercontent.com/Homebrew/formula-patches/1f4a770/erlang%4019/boring-ssl-high-sierra.patch"
+    sha256 "5aae52e7947db400a7798e8cda6e33e30088edf816e842cb09974b92c6b5eba6"
+  end
+
+  # Pointer comparison triggers error with Xcode 9
+  patch do
+    url "https://github.com/erlang/otp/commit/a64c4d806fa54848c35632114585ad82b98712e8.diff?full_index=1"
+    sha256 "3261400f8d7f0dcff3a52821daea3391ebfa01fd859f9f2d9cc5142138e26e15"
+  end
 
   resource "man" do
     url "https://www.erlang.org/download/otp_doc_man_19.3.tar.gz"
@@ -98,7 +114,7 @@ class ErlangAT19 < Formula
     end
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     Man pages can be found in:
       #{opt_lib}/erlang/man
     Access them with `erl -man`, or add this directory to MANPATH.

@@ -1,15 +1,15 @@
 class Gnatsd < Formula
   desc "Lightweight cloud messaging system"
   homepage "https://nats.io"
-  url "https://github.com/nats-io/gnatsd/archive/v0.9.6.tar.gz"
-  sha256 "18d6d1b014bfd262da101e15ed914e194b51b47e3e1a8ca4e8743c742d65310c"
-  head "https://github.com/apcera/gnatsd.git"
+  url "https://github.com/nats-io/gnatsd/archive/v1.1.0.tar.gz"
+  sha256 "c4edd0508c40d67e6e2659c0043da115b32731e5cf4126001389d05ff6b0b1e1"
+  head "https://github.com/nats-io/gnatsd.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "82b7ff672cb112126f414cc229e8a3cd386b2da0205f55eafe7ade904b8e7450" => :sierra
-    sha256 "e6a7106da27f14647bfd4bc3142902f7b7bf844dbae9a3ae7769d81a8b36a19f" => :el_capitan
-    sha256 "8ad776850b54a92274e43938bc3068e77f076f51582eea4fa4967bf9dd5f86fe" => :yosemite
+    sha256 "ba43c0294be21d1b57fc8193e9b998e7f9301a68a61a4161aad724f786801520" => :high_sierra
+    sha256 "990c795b26ecc35fff73f139b0bebc47066cea4bd92c78d1778b321bd4221ad2" => :sierra
+    sha256 "f75e5b2031aca4c47890fb8bfcc6eb6db63eaf41f75efafa9267f771edaad333" => :el_capitan
   end
 
   depends_on "go" => :build
@@ -23,7 +23,7 @@ class Gnatsd < Formula
 
   plist_options :manual => "gnatsd"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
@@ -52,7 +52,7 @@ class Gnatsd < Formula
 
     begin
       assert_match version.to_s, shell_output("curl localhost:8085")
-      assert File.exist?(testpath/"log")
+      assert_predicate testpath/"log", :exist?
     ensure
       Process.kill "SIGINT", pid
       Process.wait pid

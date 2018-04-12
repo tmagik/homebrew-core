@@ -1,14 +1,14 @@
 class MongoCDriver < Formula
   desc "C driver for MongoDB"
   homepage "https://github.com/mongodb/mongo-c-driver"
-  url "https://github.com/mongodb/mongo-c-driver/releases/download/1.6.3/mongo-c-driver-1.6.3.tar.gz"
-  sha256 "82df03de117a3ccf563b9eccfd2e5365df8f215a36dea7446d439969033ced7b"
+  url "https://github.com/mongodb/mongo-c-driver/releases/download/1.9.4/mongo-c-driver-1.9.4.tar.gz"
+  sha256 "910c2f1b2e3df4d0ea39c2f242160028f90fcb8201f05339a730ec4ba70811fb"
 
   bottle do
     cellar :any
-    sha256 "492bd0ee7ef60db16f8e01ac561c720dae04b128eefe03f1ad8cd46b8547e940" => :sierra
-    sha256 "b51c99c77b8a4bcae12d53ec093a728bc024ff6f44d1fe012928ffa6ac403816" => :el_capitan
-    sha256 "1b17f9b75a1103f20b6d07b0de19ab0d14789e60316f62c327796e9e0981f1e9" => :yosemite
+    sha256 "a1d3dc6acd22480785ae3db92a431e27dbb20c2c5a3c49da72304f8da553d897" => :high_sierra
+    sha256 "ab4bcb1d50251c7bffaef26f9d6a2e0c88924c4656871ffdd59e633045a0114b" => :sierra
+    sha256 "c57c7d0e598d43c8b6e17df1d69ccb2dc9f7abf8bc4240658367c138f1a06185" => :el_capitan
   end
 
   depends_on "autoconf" => :build

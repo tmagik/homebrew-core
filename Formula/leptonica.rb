@@ -1,14 +1,15 @@
 class Leptonica < Formula
   desc "Image processing and image analysis library"
   homepage "http://www.leptonica.org/"
-  url "http://www.leptonica.org/source/leptonica-1.74.1.tar.gz"
-  sha256 "746a517a47a3bd2a90bc8d581ca6464c10f30e91a60209735efe45b3778bec62"
+  url "https://github.com/DanBloomberg/leptonica/releases/download/1.75.3/leptonica-1.75.3.tar.gz"
+  mirror "http://www.leptonica.org/source/leptonica-1.75.3.tar.gz"
+  sha256 "a00f8fb06829ca6c8262bec8f78a6f985e049786f7c872a37b72fd7051ea087a"
 
   bottle do
     cellar :any
-    sha256 "e15c1a9d55f926ff2665e9e9a18b6865506d6106474237b2f0e28b95b2253db6" => :sierra
-    sha256 "aae7d2d5d03176734707c5900d6e37fc7a9ef282b4429b5477d2a4415b50d59e" => :el_capitan
-    sha256 "6e7e6f9085592590d5ab8728a58674667e486dbf62d12737261a0c283bbd8ed1" => :yosemite
+    sha256 "0b8f3285895d84b449ebf336529f1331dfab5419d9c4b96d41c45fc6ab0d3014" => :high_sierra
+    sha256 "3d7128f26633bd7b62b21c2ad330d740dcbcd5be25434e4ad51a2e42757bcfca" => :sierra
+    sha256 "81dd56c481c6ec775d8645cecefe02489d6cd4cf36fe22e005ae61f9c1501e13" => :el_capitan
   end
 
   depends_on "libpng" => :recommended
@@ -18,9 +19,6 @@ class Leptonica < Formula
   depends_on "openjpeg" => :optional
   depends_on "webp" => :optional
   depends_on "pkg-config" => :build
-
-  conflicts_with "osxutils",
-    :because => "both leptonica and osxutils ship a `fileinfo` executable."
 
   def install
     args = %W[
@@ -41,14 +39,14 @@ class Leptonica < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS
-    #include <iostream>
-    #include <leptonica/allheaders.h>
+    (testpath/"test.cpp").write <<~EOS
+      #include <iostream>
+      #include <leptonica/allheaders.h>
 
-    int main(int argc, char **argv) {
-        std::fprintf(stdout, "%d.%d.%d", LIBLEPT_MAJOR_VERSION, LIBLEPT_MINOR_VERSION, LIBLEPT_PATCH_VERSION);
-        return 0;
-    }
+      int main(int argc, char **argv) {
+          std::fprintf(stdout, "%d.%d.%d", LIBLEPT_MAJOR_VERSION, LIBLEPT_MINOR_VERSION, LIBLEPT_PATCH_VERSION);
+          return 0;
+      }
     EOS
 
     flags = ["-I#{include}/leptonica"] + ENV.cflags.to_s.split

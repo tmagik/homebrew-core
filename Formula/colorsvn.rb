@@ -7,6 +7,7 @@ class Colorsvn < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "4135712b5dd13e852b9c3ec5b7e95f22f5ec89e28e9f600a9372bd260b2851cf" => :high_sierra
     sha256 "5c56662f331161022c31f665d980e077d6a01328864c6c59c137de3b0b57e4f2" => :sierra
     sha256 "bf4048c281332c5cfcae4fc74c0fa233ad84c3fe2c111e633101d593284fe601" => :el_capitan
     sha256 "88c79f8a9bc43d118449ce9d97061af4633f15f942a0a48caef5e1b327aea0e5" => :yosemite
@@ -34,7 +35,7 @@ class Colorsvn < Formula
     system "make", "install"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     You probably want to set an alias to svn in your bash profile.
     So source #{etc}/profile.d/colorsvn-env.sh or add the line
 

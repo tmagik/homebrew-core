@@ -3,14 +3,15 @@ class Rlvm < Formula
   homepage "http://www.rlvm.net/"
   url "https://github.com/eglaysher/rlvm/archive/release-0.14.tar.gz"
   sha256 "6d1717540b8db8aca1480ebafae3354b24e3122a77dd2ee81f4b964c7b10dcc0"
-  revision 1
+  revision 3
   head "https://github.com/eglaysher/rlvm.git"
 
   bottle do
     cellar :any
-    sha256 "8737798e903d8327fb16faf13a5fca6facc3192fbdd533137de3928966ecf026" => :sierra
-    sha256 "0950978fed2c0b4c67d8d708594c7dbc3f8e3783b47ef8a8118bae171fe5041d" => :el_capitan
-    sha256 "0e64936fcae06e5a84399b0500be30f618bd62e8133f6e07e1244eef11102974" => :yosemite
+    rebuild 2
+    sha256 "ffbe5c1893759c495572d8338f4b7d18bb37a8fb8a88e4d0ef11e1f552e591e8" => :high_sierra
+    sha256 "bf5a864796942f72edf91b4ca86696050e694edd718418b01c23227f23c5fe33" => :sierra
+    sha256 "d6d62997e9ca3378380e96fc7f1f633b755b88956d009195b3e91832b8466c64" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -32,8 +33,8 @@ class Rlvm < Formula
   # Fix missing system header after boost update
   # https://github.com/eglaysher/rlvm/issues/76
   patch do
-    url "https://github.com/eglaysher/rlvm/commit/668863d2222b962ee8e7d9829e972ef05c990302.diff"
-    sha256 "89019d1743af6a458f3fb7a2d71ff69ead00ebf252d501a1d97c2f3b8e5eff0d"
+    url "https://github.com/eglaysher/rlvm/commit/668863d2222b962ee8e7d9829e972ef05c990302.diff?full_index=1"
+    sha256 "4837f691a31d927cd2d6547d3c04c86de30cec0daacc38e3f6940bbdad954e98"
   end
 
   def install
@@ -44,7 +45,8 @@ class Rlvm < Formula
       s.gsub! /(msgfmt)/, "#{Formula["gettext"].bin}/\\1"
     end
     inreplace "SConscript.cocoa" do |s|
-      s.gsub! /(static_env\.ParseConfig)\("sdl-config --static-libs", MergeEverythingButSDLMain\)/, '\1("pkg-config --libs sdl SDL_image SDL_mixer SDL_ttf freetype2").Append(FRAMEWORKS=["OpenGL"])'
+      s.gsub! /(static_env\.ParseConfig)\("sdl-config --static-libs", MergeEverythingButSDLMain\)/,
+        '\1("pkg-config --libs sdl SDL_image SDL_mixer SDL_ttf freetype2").Append(FRAMEWORKS=["OpenGL"])'
       s.gsub! /(full_static_build) = True/, '\1 = False'
     end
     scons "--release"

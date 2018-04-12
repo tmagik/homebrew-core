@@ -1,11 +1,12 @@
 class Spatialindex < Formula
   desc "General framework for developing spatial indices"
-  homepage "https://libspatialindex.github.io"
-  url "http://download.osgeo.org/libspatialindex/spatialindex-src-1.8.5.tar.gz"
+  homepage "https://libspatialindex.github.io/"
+  url "https://download.osgeo.org/libspatialindex/spatialindex-src-1.8.5.tar.gz"
   sha256 "7caa46a2cb9b40960f7bc82c3de60fa14f8f3e000b02561b36cbf2cfe6a9bfef"
 
   bottle do
     cellar :any
+    sha256 "76e41dc6e6ccb457cb2db3d6806461e065784bf161864ed4276c8041724ce995" => :high_sierra
     sha256 "6c60b7939a2220b10e04cc5e47a6672935697a13accc1284bb90b401b866044c" => :sierra
     sha256 "34d1e02dd4133ed67a8a4c299044e277e1e9cfc982962c50c44c751723eb85cb" => :el_capitan
     sha256 "907f40e614218622fd9fecc0a542adcdf768446a198ef4cc972b30a7eb5e6cd3" => :yosemite
@@ -21,7 +22,7 @@ class Spatialindex < Formula
   test do
     # write out a small program which inserts a fixed box into an rtree
     # and verifies that it can query it
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <spatialindex/SpatialIndex.h>
 
       using namespace std;

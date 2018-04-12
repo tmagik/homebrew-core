@@ -1,15 +1,15 @@
 class Flatcc < Formula
   desc "FlatBuffers Compiler and Library in C for C"
   homepage "https://github.com/dvidelabs/flatcc"
-  url "https://github.com/dvidelabs/flatcc/archive/v0.4.2.tar.gz"
-  sha256 "2e42e5ed6ee152de73ce1f32f2e96d2ebd77feeef8c1979fc1d8578941d07ab4"
+  url "https://github.com/dvidelabs/flatcc/archive/v0.5.1.tar.gz"
+  sha256 "8c4560ca32e3c555716d9363bed469e2c60e0f443ec32bc08e7abfe681e25ca9"
   head "https://github.com/dvidelabs/flatcc.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "2dd6d037a815a890a2624dea2e479b63320297483edf85bf483d883d72a18565" => :sierra
-    sha256 "1b6ac01f2c2674bd3ffb14234a63499f9b3c85e0b55f79ed58f14ca9cad1a776" => :el_capitan
-    sha256 "881e25057dad7f3ee2911e91ebe5be3bc04ace685fc684587601d39d2d253200" => :yosemite
+    sha256 "17b33c3326512047102e7055fa8d7d8b8b6781dde0ed65dd2c38525283f1ce5c" => :high_sierra
+    sha256 "972fd44d9828746a29c4eef6f64cfa5fa67508601384117b979d39837e2498d7" => :sierra
+    sha256 "ea29799a542aa866c8fe1e5f9416e7bd274edf74da7f400c1d63690c1acd5930" => :el_capitan
   end
 
   depends_on "cmake" => :build
@@ -25,7 +25,7 @@ class Flatcc < Formula
   end
 
   test do
-    (testpath/"test.fbs").write <<-EOS.undent
+    (testpath/"test.fbs").write <<~EOS
       // example IDL file
 
       namespace MyGame.Sample;

@@ -1,15 +1,16 @@
 class Vim < Formula
-  desc "Vi \"workalike\" with many additional features"
-  homepage "https://vim.sourceforge.io/"
-  url "https://github.com/vim/vim/archive/v8.0.0666.tar.gz"
-  sha256 "6c043355dfe503f2abfbc600a5f6c99ef21c2fba72577527e84c21f2db13d9a4"
+  desc "Vi 'workalike' with many additional features"
+  homepage "https://www.vim.org/"
+  # vim should only be updated every 50 releases on multiples of 50
+  url "https://github.com/vim/vim/archive/v8.0.1650.tar.gz"
+  sha256 "1802f79c224e0a2a7b8cb9b516b0daabc916357263dc87c490eee6e1491b5472"
   revision 1
   head "https://github.com/vim/vim.git"
 
   bottle do
-    sha256 "f851dd0e9ca421bd1030d8aee36347f4182fa4f6a3267281acbb0239dc01beb0" => :sierra
-    sha256 "a3ba27f5b6a282ae71f86972ce9bc98795664a026ac4ee88e8727d73f8a8c4bf" => :el_capitan
-    sha256 "6b3d00b04cbfbc805d8029c1a504cd37f73eda9a12d8d917d1a671185cecddc4" => :yosemite
+    sha256 "7337734bfe5121413efb573d34ac8fe0de91c40cf2a3ab1f89098b7b8292d78c" => :high_sierra
+    sha256 "370b37a7ac204b1a759f3b9e8ba4dc1b40d270650e082f2280b0a8c39fc9a0f9" => :sierra
+    sha256 "994ae34d523f28dfc91745f61a9d407d51c676b68c751000bd1d9a04b2fa8859" => :el_capitan
   end
 
   deprecated_option "override-system-vi" => "with-override-system-vi"
@@ -18,16 +19,10 @@ class Vim < Formula
   option "with-gettext", "Build vim with National Language Support (translated messages, keymaps)"
   option "with-client-server", "Enable client/server mode"
 
-  LANGUAGES_OPTIONAL = %w[lua python3 tcl].freeze
-  LANGUAGES_DEFAULT  = %w[perl python ruby].freeze
+  LANGUAGES_OPTIONAL = %w[lua python@2 tcl].freeze
+  LANGUAGES_DEFAULT  = %w[python].freeze
 
-  if MacOS.version >= :mavericks
-    option "with-custom-python", "Build with a custom Python 2 instead of the Homebrew version."
-    option "with-custom-ruby", "Build with a custom Ruby instead of the Homebrew version."
-    option "with-custom-perl", "Build with a custom Perl instead of the Homebrew version."
-  end
-
-  option "with-python3", "Build vim with python3 instead of python[2] support"
+  option "with-python@2", "Build vim with python@2 instead of python[3] support"
   LANGUAGES_OPTIONAL.each do |language|
     option "with-#{language}", "Build vim with #{language} support"
   end
@@ -35,42 +30,41 @@ class Vim < Formula
     option "without-#{language}", "Build vim without #{language} support"
   end
 
-  depends_on :python => :recommended
-  depends_on :python3 => :optional
-  depends_on :ruby => "1.8" # Can be compiled against 1.8.x or >= 1.9.3-p385.
-  depends_on :perl => "5.3"
+  depends_on "perl"
+  depends_on "ruby"
+  depends_on "python" => :recommended if build.without? "python@2"
+  depends_on "gettext" => :optional
   depends_on "lua" => :optional
   depends_on "luajit" => :optional
+  depends_on "python@2" => :optional
   depends_on :x11 if build.with? "client-server"
-  depends_on "gettext" => :optional
 
   conflicts_with "ex-vi",
     :because => "vim and ex-vi both install bin/ex and bin/view"
 
   def install
+    ENV.prepend_path "PATH", Formula["python"].opt_libexec/"bin"
+
     # https://github.com/Homebrew/homebrew-core/pull/1046
     ENV.delete("SDKROOT")
 
     # vim doesn't require any Python package, unset PYTHONPATH.
     ENV.delete("PYTHONPATH")
 
-    if build.with?("python") && which("python").to_s == "/usr/bin/python" && !MacOS::CLT.installed?
-      # break -syslibpath jail
-      ln_s "/System/Library/Frameworks", buildpath
-      ENV.append "LDFLAGS", "-F#{buildpath}/Frameworks"
-    end
-
-    opts = []
+    opts = ["--enable-perlinterp", "--enable-rubyinterp"]
 
     (LANGUAGES_OPTIONAL + LANGUAGES_DEFAULT).each do |language|
-      opts << "--enable-#{language}interp" if build.with? language
+      feature = { "python" => "python3", "python@2" => "python" }
+      if build.with? language
+        opts << "--enable-#{feature.fetch(language, language)}interp"
+      end
     end
 
     if opts.include?("--enable-pythoninterp") && opts.include?("--enable-python3interp")
-      # only compile with either python or python3 support, but not both
+      # only compile with either python or python@2 support, but not both
       # (if vim74 is compiled with +python3/dyn, the Python[3] library lookup segfaults
       # in other words, a command like ":py3 import sys" leads to a SEGV)
-      opts -= %w[--enable-pythoninterp]
+      opts -= %w[--enable-python3interp]
     end
 
     opts << "--disable-nls" if build.without? "gettext"
@@ -88,7 +82,7 @@ class Vim < Formula
       opts << "--with-luajit" if build.with? "luajit"
 
       if build.with?("lua") && build.with?("luajit")
-        onoe <<-EOS.undent
+        onoe <<~EOS
           Vim will not link against both Luajit & Lua simultaneously.
           Proceeding with Lua.
         EOS
@@ -107,6 +101,7 @@ class Vim < Formula
                           "--enable-multibyte",
                           "--with-tlib=ncurses",
                           "--enable-cscope",
+                          "--enable-terminal",
                           "--with-compiledby=Homebrew",
                           *opts
     system "make"
@@ -121,20 +116,20 @@ class Vim < Formula
   end
 
   test do
-    if build.with? "python3"
-      (testpath/"commands.vim").write <<-EOS.undent
-        :python3 import vim; vim.current.buffer[0] = 'hello python3'
-        :wq
-      EOS
-      system bin/"vim", "-T", "dumb", "-s", "commands.vim", "test.txt"
-      assert_equal "hello python3", File.read("test.txt").chomp
-    elsif build.with? "python"
-      (testpath/"commands.vim").write <<-EOS.undent
+    if build.with? "python@2"
+      (testpath/"commands.vim").write <<~EOS
         :python import vim; vim.current.buffer[0] = 'hello world'
         :wq
       EOS
       system bin/"vim", "-T", "dumb", "-s", "commands.vim", "test.txt"
       assert_equal "hello world", File.read("test.txt").chomp
+    elsif build.with? "python"
+      (testpath/"commands.vim").write <<~EOS
+        :python3 import vim; vim.current.buffer[0] = 'hello python3'
+        :wq
+      EOS
+      system bin/"vim", "-T", "dumb", "-s", "commands.vim", "test.txt"
+      assert_equal "hello python3", File.read("test.txt").chomp
     end
     if build.with? "gettext"
       assert_match "+gettext", shell_output("#{bin}/vim --version")

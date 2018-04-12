@@ -7,6 +7,7 @@ class Autojump < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "8e302e0a90b898349749c4b83b3c758f4af76ad415f6ac5e245cc0df9c2c90e6" => :high_sierra
     sha256 "29d37b9fc31a978d0767c4925e88fa9fe3cebf4a9f9278fa82a96baf5caa0db4" => :sierra
     sha256 "29d37b9fc31a978d0767c4925e88fa9fe3cebf4a9f9278fa82a96baf5caa0db4" => :el_capitan
     sha256 "29d37b9fc31a978d0767c4925e88fa9fe3cebf4a9f9278fa82a96baf5caa0db4" => :yosemite
@@ -23,7 +24,7 @@ class Autojump < Formula
     bin.write_exec_script libexec/"bin/autojump"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     Add the following line to your ~/.bash_profile or ~/.zshrc file (and remember
     to source the file to update your current session):
       [ -f #{etc}/profile.d/autojump.sh ] && . #{etc}/profile.d/autojump.sh

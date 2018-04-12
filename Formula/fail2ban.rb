@@ -1,46 +1,89 @@
 class Fail2ban < Formula
   desc "Scan log files and ban IPs showing malicious signs"
   homepage "https://www.fail2ban.org/"
-  url "https://github.com/fail2ban/fail2ban/archive/0.8.14.tar.gz"
-  sha256 "2d579d9f403eb95064781ffb28aca2b258ca55d7a2ba056a8fa2b3e6b79721f2"
+  url "https://github.com/fail2ban/fail2ban/archive/0.10.3.1.tar.gz"
+  sha256 "7ee3fd0e94d58c94298718b25e6bcfa96932712b7aa683580e162403f68d40c8"
 
   bottle do
-    cellar :any_skip_relocation
-    rebuild 1
-    sha256 "bbb4f2f3f6b8990a9630d82630174cd62808850f9783bf15ad556759b0b02592" => :sierra
-    sha256 "1c546abfdb096457c188bd32f97f95368c9e11e0d9eb0b44172e130083b26205" => :el_capitan
-    sha256 "024aff8d53788e55039de105bef04036b97cdde3b62a67a750a5b748f2b5389a" => :yosemite
-    sha256 "f39d0f4aa122b1e40ce05ad9010901beefacd560c5d84960eed4448daa3915f2" => :mavericks
+    sha256 "dd979343b0371718a514dfdca9cfca9b5166740f94ab76af2fa81afb6402b3f3" => :high_sierra
+    sha256 "acaefca421f5398fc61bdae2eaffd29ce70cbd03ec5af2be4a1e8d13eec080d4" => :sierra
+    sha256 "bec9fda21d0e11efd2fa52930b13ecbca598d9f0dfc522c0c2a1b54a5d7c7b59" => :el_capitan
   end
 
+  depends_on "help2man" => :build
+  depends_on "sphinx-doc" => :build
+
   def install
+    ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python2.7/site-packages"
+
     rm "setup.cfg"
+    Dir["config/paths-*.conf"].each do |r|
+      next if File.basename(r) =~ /paths-common\.conf|paths-osx\.conf/
+      rm r
+    end
+
+    # Replace hardcoded paths
     inreplace "setup.py" do |s|
       s.gsub! %r{/etc}, etc
       s.gsub! %r{/var}, var
     end
 
-    # Replace hardcoded paths
-    inreplace "fail2ban-client", "/usr/share/fail2ban", libexec
-    inreplace "fail2ban-server", "/usr/share/fail2ban", libexec
-    inreplace "fail2ban-regex", "/usr/share/fail2ban", libexec
+    inreplace Dir["config/{action,filter}.d/**/*"].select { |ff| File.file?(ff) }.each do |s|
+      s.gsub! %r{/etc}, etc, false
+      s.gsub! %r{/var}, var, false
+    end
 
-    inreplace "fail2ban-client", "/etc", etc
-    inreplace "fail2ban-regex", "/etc", etc
+    inreplace ["config/fail2ban.conf", "config/paths-common.conf", "doc/run-rootless.txt"].each do |s|
+      s.gsub! %r{/etc}, etc
+      s.gsub! %r{/var}, var
+    end
 
-    inreplace "fail2ban-server", "/var", var
-    inreplace "config/fail2ban.conf", "/var/run", (var/"run")
+    inreplace Dir["fail2ban/client/*"].each do |s|
+      s.gsub! %r{/etc}, etc, false
+      s.gsub! %r{/var}, var, false
+    end
 
-    inreplace "setup.py", "/usr/share/doc/fail2ban", (libexec/"doc")
+    inreplace "fail2ban/server/asyncserver.py", "/var/run/fail2ban/fail2ban.sock",
+              var/"run/fail2ban/fail2ban.sock"
 
-    system "python", "setup.py", "install", "--prefix=#{prefix}", "--install-lib=#{libexec}"
+    inreplace Dir["fail2ban/tests/**/*"].select { |ff| File.file?(ff) }.each do |s|
+      s.gsub! %r{/etc}, etc, false
+      s.gsub! %r{/var}, var, false
+    end
+
+    inreplace Dir["man/*"].each do |s|
+      s.gsub! %r{/etc}, etc, false
+      s.gsub! %r{/var}, var, false
+    end
+
+    # Fix doc compilation
+    inreplace "setup.py", "/usr/share/doc/fail2ban", (share/"doc")
+    inreplace "setup.py", "if os.path.exists('#{var}/run')", "if True"
+    inreplace "setup.py", "platform_system in ('linux',", "platform_system in ('linux', 'darwin',"
+
+    system "python", "setup.py", "install", "--prefix=#{libexec}"
+
+    cd "doc" do
+      system "make", "dirhtml", "SPHINXBUILD=sphinx-build"
+      (share/"doc").install "build/dirhtml"
+    end
+
+    bin.install Dir[libexec/"bin/*"]
+    bin.env_script_all_files(libexec/"bin", :PYTHONPATH => ENV["PYTHONPATH"])
+    man1.install Dir["man/*.1"]
+    man5.install "man/jail.conf.5"
+  end
+
+  def post_install
+    (etc/"fail2ban").mkpath
+    (var/"run/fail2ban").mkpath
   end
 
   def caveats
-    <<-EOS.undent
-      Before using Fail2Ban for the first time you should edit jail
+    <<~EOS
+      Before using Fail2Ban for the first time you should edit the jail
       configuration and enable the jails that you want to use, for instance
-      ssh-ipfw. Also make sure that they point to the correct configuration
+      ssh-ipfw. Also, make sure that they point to the correct configuration
       path. I.e. on Mountain Lion the sshd logfile should point to
       /var/log/system.log.
 
@@ -52,12 +95,16 @@ class Fail2ban < Formula
 
         10.4: https://www.fail2ban.org/wiki/index.php/HOWTO_Mac_OS_X_Server_(10.4)
         10.5: https://www.fail2ban.org/wiki/index.php/HOWTO_Mac_OS_X_Server_(10.5)
+
+      Please do not forget to update your configuration files.
+      They are in #{etc}/fail2ban.
     EOS
   end
 
   plist_options :startup => true
 
-  def plist; <<-EOS.undent
+  def plist
+    <<~EOS
       <?xml version="1.0" encoding="UTF-8"?>
       <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
       <plist version="1.0">
@@ -75,5 +122,9 @@ class Fail2ban < Formula
       </dict>
       </plist>
     EOS
+  end
+
+  test do
+    system "#{bin}/fail2ban-client", "--test"
   end
 end

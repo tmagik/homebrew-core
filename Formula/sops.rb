@@ -3,15 +3,15 @@ class Sops < Formula
 
   desc "Editor of encrypted files"
   homepage "https://github.com/mozilla/sops"
-  url "https://github.com/mozilla/sops/archive/2.0.9.tar.gz"
-  sha256 "2d2695fe3d2bd852c293560b3376711d460b66084e6bb2c218d9b5e1c4d651da"
+  url "https://github.com/mozilla/sops/archive/3.0.2.tar.gz"
+  sha256 "c370664e8d9892ea7a5cdde371b3a5e83df7b546b1b0ec0c8d549a109365312d"
   head "https://github.com/mozilla/sops.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "37febebf9fc1fde4f24447193b813b3d10591a5ca6726ef56c1c7f484d366abc" => :sierra
-    sha256 "7d73a691780a7f2ea4988d92ee1699b15834f5fa85ab6ed9130dd9e481aa9239" => :el_capitan
-    sha256 "823208d974408d4a1c0838f6c6f35e8aa5c0c4ccdb22732e675bcb611c582004" => :yosemite
+    sha256 "be0cafec895e9c3f83c5c19288f0f0756584f16714085457a7bcc98f57bf0784" => :high_sierra
+    sha256 "3780adcbcfca03b010f5b9ada6af894142670be95aa0dcbc58e830a943c7b8dc" => :sierra
+    sha256 "b9a5ad6aacb684964c7f89ae3e7e1921f2b89e9115ea55720a36da3ef40ddb73" => :el_capitan
   end
 
   depends_on "go" => :build

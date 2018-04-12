@@ -1,13 +1,13 @@
 class Sngrep < Formula
   desc "Command-line tool for displaying SIP calls message flows"
   homepage "https://github.com/irontec/sngrep"
-  url "https://github.com/irontec/sngrep/archive/v1.4.3.tar.gz"
-  sha256 "7385ac202de6d6a1feffb2fd514600563133d9dfa7fb47be052de839abcc1d52"
+  url "https://github.com/irontec/sngrep/archive/v1.4.5.tar.gz"
+  sha256 "16f1566f4507ba560c7461cc7ff1c1653beb14b8baf7846269bbb4880564e57f"
 
   bottle do
-    sha256 "08bd1a20db915fe10ab3c945100932353b7587154a9ed0c2064d297a26959cd8" => :sierra
-    sha256 "142bfb041ad655637c0ffd97266ba22555821e5c2c0b8efea3724650e22e8d9d" => :el_capitan
-    sha256 "77409d150899b54bafebe6ced0472528e7c9b9929e9fb4c219d00bb1582958b2" => :yosemite
+    sha256 "c922408522d0a44e37d24a6e76d9ad50ec78cdae2e4bdcac157eccf2f0bc1ee1" => :high_sierra
+    sha256 "84e4895d9674dde107d145b618e064923e2e473cdfc2b6258cddf7c982a014d5" => :sierra
+    sha256 "8a23ddb8172c6e882e525262aba6f1074dd67d2fd8a051adc27db843b1c3ca35" => :el_capitan
   end
 
   depends_on "autoconf" => :build
@@ -25,6 +25,6 @@ class Sngrep < Formula
   end
 
   test do
-    pipe_output("#{bin}/sngrep -I #{test_fixtures("test.pcap")}", "Q\n", 0)
+    system bin/"sngrep", "-NI", test_fixtures("test.pcap")
   end
 end

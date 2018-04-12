@@ -1,14 +1,15 @@
 class Nim < Formula
   desc "Statically typed, imperative programming language"
   homepage "https://nim-lang.org/"
-  url "https://nim-lang.org/download/nim-0.17.0.tar.xz"
-  sha256 "36e18dd9384f6c67e6d0199b871b43e774a0af30532698184d6f5a9cc9ac7a9b"
+  url "https://nim-lang.org/download/nim-0.18.0.tar.xz"
+  sha256 "45c74adb35f08dfa9add1112ae17330e5d902ebb4a36e7046caee8b79e6f3bd0"
+  revision 1
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "d9c0a2cdbffa036300c3f7ae585cfce2935c7cd9d0578c9b81f78b3e1b24d044" => :sierra
-    sha256 "50393a7272a8764e545d44fc9e61b0f61d2ab7272999a268773781efb0e3e2fa" => :el_capitan
-    sha256 "ff32d6a8738a54cacca65db0852c678d54d80de5034b545b518107d49a16f736" => :yosemite
+    sha256 "a99e236ed857f79a06465bd3a56e1d22dce9d5c70166b4ba34473fc42215601a" => :high_sierra
+    sha256 "e7196c3102286cf5485c6f64a9b2275752f9e26b5dd44762a17d14c5df35195a" => :sierra
+    sha256 "9b5f245d3eadef66260d0851c81c3f7a976768b98ace3aece7ce6e63eeb88345" => :el_capitan
   end
 
   head do
@@ -49,12 +50,12 @@ class Nim < Formula
   end
 
   test do
-    (testpath/"hello.nim").write <<-EOS.undent
+    (testpath/"hello.nim").write <<~EOS
       echo("hello")
     EOS
     assert_equal "hello", shell_output("#{bin}/nim compile --verbosity:0 --run #{testpath}/hello.nim").chomp
 
-    (testpath/"hello.nimble").write <<-EOS.undent
+    (testpath/"hello.nimble").write <<~EOS
       version = "0.1.0"
       author = "Author Name"
       description = "A test nimble package"

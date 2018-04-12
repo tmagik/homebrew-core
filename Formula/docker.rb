@@ -1,17 +1,15 @@
 class Docker < Formula
   desc "Pack, ship and run any application as a lightweight container"
   homepage "https://www.docker.com/"
-  url "https://github.com/docker/docker.git",
-      :tag => "v17.05.0-ce",
-      :revision => "89658bed64c2a8fe05a978e5b87dbec409d57a0f"
-
-  head "https://github.com/docker/docker.git"
+  url "https://github.com/docker/docker-ce.git",
+      :tag => "v18.04.0-ce",
+      :revision => "3d479c0af67cb9ea43a9cfc1bf2ef097e06a3470"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "d60ad4d00efd0d0358a93fe19d91ce155a37a184e4a98b29e74a215d17497b26" => :sierra
-    sha256 "7faaea79928b474f1f01fcca3864fa1effe49c9f3519279555f88e97310d5852" => :el_capitan
-    sha256 "7f9827b8ff928e62e49a76a1d2a3d35a3c5b2b2319db9d83f560742415700dd4" => :yosemite
+    sha256 "cbadfb1426927ab3643a03aaa36c9d2f9557532d1242c66a49196d56b4347110" => :high_sierra
+    sha256 "3a891a58beaf58cfd426c8b28de28d40641f7c99d24f3122d423be238a6da4ac" => :sierra
+    sha256 "1f854142829a3d1f60871e50d49145e0b90b80832bc64cb000e2f2f5a488988d" => :el_capitan
   end
 
   option "with-experimental", "Enable experimental features"
@@ -20,23 +18,27 @@ class Docker < Formula
   depends_on "go" => :build
 
   if build.with? "experimental"
-    depends_on "libtool" => :run
+    depends_on "libtool"
     depends_on "yubico-piv-tool" => :recommended
   end
 
   def install
-    ENV["AUTO_GOPATH"] = "1"
     ENV["DOCKER_EXPERIMENTAL"] = "1" if build.with? "experimental"
+    ENV["GOPATH"] = buildpath
+    dir = buildpath/"src/github.com/docker/cli"
+    dir.install (buildpath/"components/cli").children
+    cd dir do
+      commit = Utils.popen_read("git rev-parse --short HEAD").chomp
+      ldflags = ["-X github.com/docker/cli/cli.GitCommit=#{commit}",
+                 "-X github.com/docker/cli/cli.Version=#{version}-ce"]
+      system "go", "build", "-o", bin/"docker", "-ldflags", ldflags.join(" "),
+             "github.com/docker/cli/cmd/docker"
 
-    system "hack/make.sh", "dynbinary-client"
-
-    build_version = build.head? ? File.read("VERSION").chomp : "#{version}-ce"
-    bin.install "bundles/#{build_version}/dynbinary-client/docker-#{build_version}" => "docker"
-
-    if build.with? "completions"
-      bash_completion.install "contrib/completion/bash/docker"
-      fish_completion.install "contrib/completion/fish/docker.fish"
-      zsh_completion.install "contrib/completion/zsh/_docker"
+      if build.with? "completions"
+        bash_completion.install "contrib/completion/bash/docker"
+        fish_completion.install "contrib/completion/fish/docker.fish"
+        zsh_completion.install "contrib/completion/zsh/_docker"
+      end
     end
   end
 

@@ -1,14 +1,14 @@
 class Widelands < Formula
-  desc "Free real-time strategy game like Settlers II."
+  desc "Free real-time strategy game like Settlers II"
   homepage "https://wl.widelands.org/"
   url "https://launchpad.net/widelands/build19/build19/+download/widelands-build19-src.tar.bz2"
   sha256 "e511f9d26828a2b71b64cdfc6674e6e847543b2da73961ab882acca36c7c01a6"
-  revision 1
+  revision 9
 
   bottle do
-    sha256 "7beb3a76b5f1a8c8b80b0b7493e460b69e081fd6b104447fa6e8f4f47f132ef4" => :sierra
-    sha256 "7a967bf3d290c73b0c14d130fbb4f3303a06c672dd0115fc457a223bf5f8345d" => :el_capitan
-    sha256 "f2a311478b98388a32f62a440b39cb0b1b8b675338dd1623c68b21b8007698bc" => :yosemite
+    sha256 "e72bc4e255dc48c9a0dc066901b0efdaae326b22f8057061622a224fafbd7112" => :high_sierra
+    sha256 "ae23f5836cc6898cb9ee0582571d58a6cfcddd23951007a5ed40334da1cbf5b9" => :sierra
+    sha256 "be4f36e0ea0b262154c3cc879c4947be4c4d7c249ff73f483e9447b519c0eabf" => :el_capitan
   end
 
   depends_on "cmake" => :build
@@ -28,6 +28,9 @@ class Widelands < Formula
   needs :cxx11
 
   def install
+    # icu4c 61.1 compatability
+    ENV.append "CXXFLAGS", "-DU_USING_ICU_NAMESPACE=1"
+
     ENV.cxx11
     mkdir "build" do
       system "cmake", "..",
@@ -37,7 +40,7 @@ class Widelands < Formula
                        *std_cmake_args
       system "make", "install"
 
-      (bin/"widelands").write <<-EOS.undent
+      (bin/"widelands").write <<~EOS
         #!/bin/sh
         exec #{prefix}/widelands "$@"
       EOS

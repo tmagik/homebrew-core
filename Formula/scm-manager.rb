@@ -1,23 +1,21 @@
 class ScmManager < Formula
   desc "Manage Git, Mercurial, and Subversion repos over HTTP"
   homepage "https://www.scm-manager.org"
-  url "https://maven.scm-manager.org/nexus/content/repositories/releases/sonia/scm/scm-server/1.51/scm-server-1.51-app.tar.gz"
-  version "1.51"
-  sha256 "a7302f064443c814da44baf961227568575aff110e3e974d0a7d07894f81567f"
+  url "https://maven.scm-manager.org/nexus/content/repositories/releases/sonia/scm/scm-server/1.59/scm-server-1.59-app.tar.gz"
+  sha256 "8628e82f3bfd452412260dd2d82c2e76ee57013223171f2908d75cbc6258f261"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "cbb23c6303c54721d611c3a2205df2e8f6b293251b54a04f5ff0deede96e50f4" => :sierra
-    sha256 "cbb23c6303c54721d611c3a2205df2e8f6b293251b54a04f5ff0deede96e50f4" => :el_capitan
-    sha256 "cbb23c6303c54721d611c3a2205df2e8f6b293251b54a04f5ff0deede96e50f4" => :yosemite
+    sha256 "42e177bd72cba3b27750308aeeaf8afa0ec8cc553b8a9acf1a02a6d5a698ce14" => :high_sierra
+    sha256 "42e177bd72cba3b27750308aeeaf8afa0ec8cc553b8a9acf1a02a6d5a698ce14" => :sierra
+    sha256 "42e177bd72cba3b27750308aeeaf8afa0ec8cc553b8a9acf1a02a6d5a698ce14" => :el_capitan
   end
 
-  depends_on :java => "1.7+"
+  depends_on :java => "1.8"
 
   resource "client" do
-    url "https://maven.scm-manager.org/nexus/content/repositories/releases/sonia/scm/clients/scm-cli-client/1.51/scm-cli-client-1.51-jar-with-dependencies.jar"
-    version "1.51"
-    sha256 "9697f390fb0a3d02a805ea66e9b6bb2b3fdf4d53036ec1bea7348e0872e1baae"
+    url "https://maven.scm-manager.org/nexus/content/repositories/releases/sonia/scm/clients/scm-cli-client/1.59/scm-cli-client-1.59-jar-with-dependencies.jar"
+    sha256 "ac09437ae6cf20d07224895b30b23369e142055b9d1713835d8c0e3095bf68d2"
   end
 
   def install
@@ -25,11 +23,11 @@ class ScmManager < Formula
 
     libexec.install Dir["*"]
 
-    (bin/"scm-server").write <<-EOS.undent
+    (bin/"scm-server").write <<~EOS
       #!/bin/bash
       BASEDIR="#{libexec}"
       REPO="#{libexec}/lib"
-      export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)
+      export JAVA_HOME=$(#{Language::Java.java_home_cmd("1.8")})
       "#{libexec}/bin/scm-server" "$@"
     EOS
     chmod 0755, bin/"scm-server"
@@ -38,8 +36,9 @@ class ScmManager < Formula
     tools.install resource("client")
 
     scm_cli_client = bin/"scm-cli-client"
-    scm_cli_client.write <<-EOS.undent
+    scm_cli_client.write <<~EOS
       #!/bin/bash
+      export JAVA_HOME=$(#{Language::Java.java_home_cmd("1.8")})
       java -jar "#{tools}/scm-cli-client-#{version}-jar-with-dependencies.jar" "$@"
     EOS
     chmod 0755, scm_cli_client
@@ -47,7 +46,7 @@ class ScmManager < Formula
 
   plist_options :manual => "scm-server start"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

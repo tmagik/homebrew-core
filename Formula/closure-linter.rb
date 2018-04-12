@@ -8,6 +8,7 @@ class ClosureLinter < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "b93802ba6fda7d6efe06b996c3400b8b3f378608398394c6739191fbbc3259fe" => :high_sierra
     sha256 "8e4828aa41cd75296b08d19d01bedd4657c8ebd19f9da8e471c8c8e720381bb2" => :sierra
     sha256 "44607d2104144e462b1a87313345f9205f66d9d2ee03f5ad306e5f532a95d0c0" => :el_capitan
     sha256 "1fba2b6ce208cc1944ecb7aaf1e4998f439f248234f51854523b04be96babb8d" => :yosemite
@@ -15,10 +16,10 @@ class ClosureLinter < Formula
     sha256 "beaed6105607c8d7096707904aa6b1d51dfe3f119d709ddb6d0dba93691323bb" => :mountain_lion
   end
 
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
 
   resource "python-gflags" do
-    url "https://pypi.python.org/packages/source/p/python-gflags/python-gflags-2.0.tar.gz"
+    url "https://files.pythonhosted.org/packages/source/p/python-gflags/python-gflags-2.0.tar.gz"
     sha256 "0dff6360423f3ec08cbe3bfaf37b339461a54a21d13be0dd5d9c9999ce531078"
   end
 

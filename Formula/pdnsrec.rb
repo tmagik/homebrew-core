@@ -1,13 +1,13 @@
 class Pdnsrec < Formula
   desc "Non-authoritative/recursing DNS server"
   homepage "https://www.powerdns.com/recursor.html"
-  url "https://downloads.powerdns.com/releases/pdns-recursor-4.0.5.tar.bz2"
-  sha256 "ba43ce4280b3a06afebe58c5d63680f51dd525c63d1de7f3b229b380e6b1b7af"
+  url "https://downloads.powerdns.com/releases/pdns-recursor-4.1.2.tar.bz2"
+  sha256 "db4652f171c41bcd4345d6ad094b85a4d546caab72fd02fe523c73a8ce44ed76"
 
   bottle do
-    sha256 "03762bdb4660c3801b3707d8380b1329404c60bf3f1aee30de8df869deed91be" => :sierra
-    sha256 "8dc88ce84b649c2d32d7a939ca32d15c302792dc901a05989d0b98e515a28d0e" => :el_capitan
-    sha256 "47dfb88865e8b74a08a23331ec5cd55e9c6979701f58fe568563688e51226c7e" => :yosemite
+    sha256 "5efee3e6ea8fde8c92baa0f2d400d3044c3032bc4dd1cac7d4d7c5d808d8e419" => :high_sierra
+    sha256 "bb55dff8a5cd5151144bfb7c112d4e4b4c8843193b844e620eaa1408246d81f8" => :sierra
+    sha256 "4404cbb99cd7a2b3fbd7b7c78a2d32462be5cad1b5cfe95c35b2b1a57e1febfe" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -31,8 +31,9 @@ class Pdnsrec < Formula
       --sysconfdir=#{etc}/powerdns
       --disable-silent-rules
       --with-boost=#{Formula["boost"].opt_prefix}
-      --with-openssl=#{Formula["openssl"].opt_prefix}
+      --with-libcrypto=#{Formula["openssl"].opt_prefix}
       --with-lua
+      --without-net-snmp
     ]
 
     system "./configure", *args

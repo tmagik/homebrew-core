@@ -1,15 +1,14 @@
 class Compcert < Formula
   desc "Formally verified C compiler"
   homepage "http://compcert.inria.fr"
-  url "http://compcert.inria.fr/release/compcert-3.0.1.tgz"
-  sha256 "09c7dc18c681231c6e83a963b283b66a9352a9611c9695f4b0c4b7df8c90f935"
-  revision 2
+  url "https://github.com/AbsInt/CompCert/archive/v3.2.tar.gz"
+  sha256 "23b1a9585e6e9fa211dccae40fc9053c75e7f5519e4b698751bb67a083080487"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "7349f901864850d9dac7f70409d234fe0748a6cb1394229386c38a0be627464f" => :sierra
-    sha256 "4cb2b5afa636df760398eeefb4cd136a2e2ff59919b9893b92401aa646145a18" => :el_capitan
-    sha256 "d311acd5219f517b5069e1569bae9cc4263357d1a5055b6d405eeabfc8ba1e17" => :yosemite
+    sha256 "365f0f9df5be211dd090d112d659fbcc01b0dc145f2ec493e17301aa8c3b471b" => :high_sierra
+    sha256 "af8952aa293ca948c04646eaadbf4acbc1c606686e244b1eff47fca447f7bab8" => :sierra
+    sha256 "3a5d5d6de9c4ca77739dd44776e664f4b551524a285036343aa6d5b39d1b7571" => :el_capitan
   end
 
   option "with-config-x86_64", "Build Compcert with ./configure 'x86_64'"
@@ -35,7 +34,7 @@ class Compcert < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       int printf(const char *fmt, ...);
       int main(int argc, char** argv) {
         printf("Hello, world!\\n");

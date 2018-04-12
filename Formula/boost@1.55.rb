@@ -11,13 +11,13 @@ class BoostAT155 < Formula
     # https://github.com/Homebrew/homebrew/issues/27396
     # https://github.com/Homebrew/homebrew/pull/27436
     patch :p2 do
-      url "https://github.com/boostorg/atomic/commit/6bb71fdd.diff"
-      sha256 "eb139160a33d8ef3e810ce3e47da278563d03d7be6d0a75c109f708030a7abcb"
+      url "https://github.com/boostorg/atomic/commit/6bb71fdd.diff?full_index=1"
+      sha256 "1574ef5c1c3ec28cf3786e40e4a8608f2bbb1c426ef2f14a2515e7a1a9313fab"
     end
 
     patch :p2 do
-      url "https://github.com/boostorg/atomic/commit/e4bde20f.diff"
-      sha256 "8c5efeea91d44b2a48fdeee9cde71e831dad78f0930e8f65b7223ba0ecdfec9b"
+      url "https://github.com/boostorg/atomic/commit/e4bde20f.diff?full_index=1"
+      sha256 "fa6676d83993c59e3566fff105f7e99c193a54ef7dba5c3b327ebdb5b6dcba37"
     end
 
     # Patch fixes upstream issue reported here (https://svn.boost.org/trac/boost/ticket/9698).
@@ -25,13 +25,14 @@ class BoostAT155 < Formula
     # See this issue (https://github.com/Homebrew/homebrew/issues/30592) for more details.
 
     patch :p2 do
-      url "https://github.com/boostorg/chrono/commit/143260d.diff"
-      sha256 "d8ff71e910df35f6e5b6adb15a3a927988e184e65ddc219e741db3a67b2f9dd2"
+      url "https://github.com/boostorg/chrono/commit/143260d.diff?full_index=1"
+      sha256 "96ba2f3a028df323e9bdffb400cc7c30c0c67e3d681c8c5a867c40ae0549cb62"
     end
   end
 
   bottle do
     cellar :any
+    sha256 "268a8123cf956c5f8e79115b4a5d5807a9125891ac5df161357f31f917bbe16f" => :high_sierra
     sha256 "bf89ab11c1ceab224a5ece4629987b4d8d137c5c3506a4577301f70b05d0ea97" => :sierra
     sha256 "30bb554952cdbcc445b247f570243c31ab4cafebf55bcfe96b9cabcb5ca2f716" => :el_capitan
     sha256 "f861f79bde1988282064245c5b1080f66f6a4e034162656b627c2bb8de42ebb2" => :yosemite
@@ -42,14 +43,15 @@ class BoostAT155 < Formula
   option "with-icu", "Build regexp engine with icu support"
   option "without-single", "Disable building single-threading variant"
   option "without-static", "Disable building static library variant"
-  option "with-mpi", "Build with MPI support"
   option :cxx11
 
-  depends_on :python => :optional
-  depends_on :python3 => :optional
+  deprecated_option "with-python3" => "with-python"
 
-  if build.with?("python3") && build.with?("python")
-    odie "boost@1.55: --with-python3 cannot be specified when using --with-python"
+  depends_on "python" => :optional
+  depends_on "python@2" => :optional
+
+  if build.with?("python") && build.with?("python@2")
+    odie "boost@1.55: --with-python cannot be specified when using --with-python@2"
   end
 
   if build.with? "icu"
@@ -60,14 +62,6 @@ class BoostAT155 < Formula
     end
   end
 
-  if build.with? "mpi"
-    if build.cxx11?
-      depends_on "open-mpi" => "c++11"
-    else
-      depends_on :mpi => [:cc, :cxx, :optional]
-    end
-  end
-
   def install
     # Patch boost::serialization for Clang
     # https://svn.boost.org/trac/boost/raw-attachment/ticket/8757/0005-Boost.S11n-include-missing-algorithm.patch
@@ -75,36 +69,17 @@ class BoostAT155 < Formula
       "#include <boost/iterator/iterator_traits.hpp>",
       "#include <boost/iterator/iterator_traits.hpp>\n#include <algorithm>"
 
-    # https://svn.boost.org/trac/boost/ticket/8841
-    if build.with?("mpi") && build.with?("single")
-      raise <<-EOS.undent
-        Building MPI support for both single and multi-threaded flavors
-        is not supported.  Please use "--with-mpi" together with
-        "--without-single".
-      EOS
-    end
-
-    if build.cxx11? && build.with?("mpi") && (build.with?("python") \
-                                               || build.with?("python3"))
-      raise <<-EOS.undent
-        Building MPI support for Python using C++11 mode results in
-        failure and hence disabled.  Please don"t use this combination
-        of options.
-      EOS
-    end
-
     # Force boost to compile using the appropriate GCC version.
     open("user-config.jam", "a") do |file|
       file.write "using darwin : : #{ENV.cxx} ;\n"
-      file.write "using mpi ;\n" if build.with? "mpi"
 
       # Link against correct version of Python if python3 build was requested
-      if build.with? "python3"
+      if build.with? "python"
         py3executable = `which python3`.strip
         py3version = `python3 -c "import sys; print(sys.version[:3])"`.strip
         py3prefix = `python3 -c "import sys; print(sys.prefix)"`.strip
 
-        file.write <<-EOS.undent
+        file.write <<~EOS
           using python : #{py3version}
                        : #{py3executable}
                        : #{py3prefix}/include/python#{py3version}m
@@ -124,14 +99,13 @@ class BoostAT155 < Formula
     end
 
     # Handle libraries that will not be built.
-    without_libraries = []
+    without_libraries = ["mpi"]
 
     # Boost.Log cannot be built using Apple GCC at the moment. Disabled
     # on such systems.
     without_libraries << "log" if ENV.compiler == :gcc
     without_libraries << "python" if build.without?("python") \
-                                      && build.without?("python3")
-    without_libraries << "mpi" if build.without? "mpi"
+                                      && build.without?("python@2")
 
     bargs << "--without-libraries=#{without_libraries.join(",")}"
 
@@ -173,9 +147,8 @@ class BoostAT155 < Formula
     # ENV.compiler doesn"t exist in caveats. Check library availability
     # instead.
     if Dir["#{lib}/libboost_log*"].empty?
-      s += <<-EOS.undent
-
-      Building of Boost.Log is disabled because it requires newer GCC or Clang.
+      s += <<~EOS
+        Building of Boost.Log is disabled because it requires newer GCC or Clang.
       EOS
     end
 
@@ -183,7 +156,7 @@ class BoostAT155 < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <boost/algorithm/string.hpp>
       #include <boost/version.hpp>
       #include <string>

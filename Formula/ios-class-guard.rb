@@ -7,6 +7,7 @@ class IosClassGuard < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "1962e7dde167e41141680b1347318396c0878fb8eeae55ec9f09460fcee33142" => :high_sierra
     sha256 "a7843a0767e916aa6be1509a984eb698bb54d125d06ad762fd25f4a3d6a55db1" => :sierra
     sha256 "0bb9abaac82cbc4e66a12493548659197559a01a779db6ceda4cf6c4439ea0bb" => :el_capitan
     sha256 "4cada6d32bb82fbd8ad2afa58b7041bd5da12dc5d9fceab6277eec97459a2d33" => :yosemite
@@ -22,10 +23,10 @@ class IosClassGuard < Formula
   end
 
   test do
-    (testpath/"crashdump").write <<-EOS.undent
+    (testpath/"crashdump").write <<~EOS
       1   MYAPP                           0x0006573a -[C03B setR02:] + 42
     EOS
-    (testpath/"symbols.json").write <<-EOS.undent
+    (testpath/"symbols.json").write <<~EOS
       {
         "C03B" : "MyViewController",
         "setR02" : "setRightButtons"

@@ -1,18 +1,20 @@
 class Mapnik < Formula
   desc "Toolkit for developing mapping applications"
   homepage "http://www.mapnik.org/"
-  url "https://github.com/mapnik/mapnik/releases/download/v3.0.13/mapnik-v3.0.13.tar.bz2"
-  sha256 "d6213d514a0e3cd84d9bfcb6d97208d169ffcaae1f36250f6555655cdfe57bcc"
+  url "https://github.com/mapnik/mapnik/releases/download/v3.0.19/mapnik-v3.0.19.tar.bz2"
+  sha256 "5bf17afaf456e63021a4c948e25cf5e756782ef369226441a1e436adc3e790e9"
+  revision 1
   head "https://github.com/mapnik/mapnik.git"
 
   bottle do
     cellar :any
-    sha256 "79f1a036cd98eb7d94f416e5c8e0ad55a9d92aba90a0b09a5df6def0dd02ac1b" => :sierra
-    sha256 "2f6d9de1df7ab5266684c01a2c12577bdbf9a8e77fe58e5c130865c06904234e" => :el_capitan
-    sha256 "44d3c6b9302e185c3ad2933fdcb28e666891f2ed2cffd2fa506ea031ba676f9a" => :yosemite
+    sha256 "f7af14e81cfc7573d5882e17e0276fd8219af8954d68fe86e9cceb28c55d80f3" => :high_sierra
+    sha256 "33bf392af7c8c2cc5f1f0c0d96090a5f6e7e12f4e97ae218a80a5373b72c0ba0" => :sierra
+    sha256 "d9488612e560aecff101e67e0e4265c24378e61c1ecb6686d87b96f75cc8e6ec" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
+  depends_on "boost"
   depends_on "freetype"
   depends_on "harfbuzz"
   depends_on "libpng"
@@ -25,16 +27,15 @@ class Mapnik < Formula
   depends_on "postgresql" => :optional
   depends_on "cairo" => :optional
 
-  if MacOS.version < :mavericks
-    depends_on "boost" => "c++11"
-  else
-    depends_on "boost"
-  end
-
   needs :cxx11
 
   def install
     ENV.cxx11
+
+    # Work around "error: no member named 'signbit' in the global namespace"
+    # encountered when trying to detect boost regex in configure
+    ENV.delete("SDKROOT") if DevelopmentTools.clang_build_version >= 900
+
     icu = Formula["icu4c"].opt_prefix
     boost = Formula["boost"].opt_prefix
     proj = Formula["proj"].opt_prefix
@@ -49,6 +50,7 @@ class Mapnik < Formula
             "CXX=\"#{ENV.cxx}\"",
             "PREFIX=#{prefix}",
             "CUSTOM_CXXFLAGS=\"-DBOOST_EXCEPTION_DISABLE\"",
+            "CUSTOM_DEFINES=-DU_USING_ICU_NAMESPACE=1", # icu4c 61.1 compatability
             "ICU_INCLUDES=#{icu}/include",
             "ICU_LIBS=#{icu}/lib",
             "JPEG_INCLUDES=#{jpeg}/include",

@@ -6,6 +6,7 @@ class ZshNavigationTools < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "5122287e2fb30bde73acb7174e1310ea41ef049d201203bc559edf02555a2e33" => :high_sierra
     sha256 "fca68610ba67c19d8516719d03ed5074a5611ba01941dcb135c87d6d561f3cb1" => :sierra
     sha256 "fca68610ba67c19d8516719d03ed5074a5611ba01941dcb135c87d6d561f3cb1" => :el_capitan
     sha256 "fca68610ba67c19d8516719d03ed5074a5611ba01941dcb135c87d6d561f3cb1" => :yosemite
@@ -15,7 +16,7 @@ class ZshNavigationTools < Formula
     system "make", "install", "PREFIX=#{prefix}"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     To run zsh-navigation-tools, add the following at the end of your .zshrc:
       source #{HOMEBREW_PREFIX}/share/zsh-navigation-tools/zsh-navigation-tools.plugin.zsh
 

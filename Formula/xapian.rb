@@ -1,15 +1,15 @@
 class Xapian < Formula
   desc "C++ search engine library with many bindings"
   homepage "https://xapian.org/"
-  url "https://oligarchy.co.uk/xapian/1.4.3/xapian-core-1.4.3.tar.xz"
-  mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/x/xapian-core/xapian-core_1.4.3.orig.tar.xz"
-  sha256 "7d5295511ca2de70463a29e75f6a2393df5dc1485bf33074b778c66e1721e475"
+  url "https://oligarchy.co.uk/xapian/1.4.5/xapian-core-1.4.5.tar.xz"
+  mirror "https://fossies.org/linux/www/xapian-core-1.4.5.tar.xz"
+  sha256 "85b5f952de9df925fd13e00f6e82484162fd506d38745613a50b0a2064c6b02b"
 
   bottle do
     cellar :any
-    sha256 "e11248557890fdeb41d5bb33640c86b2f19fed4313fed931c23af4f3d76116bb" => :sierra
-    sha256 "eb3cae89feb72d72af15bdaadc09e166fce85d630bb19a9db82408e9c870c234" => :el_capitan
-    sha256 "10c2dcc8f3370a94485092a65d5cd147c3bf0f52b07b00895154dc6fca4bd556" => :yosemite
+    sha256 "091e71844cbd10c6d47e1a3bd7bc6eafc6868d01c73f7bc80ec0c5c89b3953e5" => :high_sierra
+    sha256 "0575873ed3b9ccd8193e8d643541e68b84b4cc258c8a62bb28a6dd62188adb1e" => :sierra
+    sha256 "2fdf665d79e63dc34597f64d457326af35154e37bb4e24db6dd030a8973fbf8e" => :el_capitan
   end
 
   option "with-java", "Java bindings"
@@ -19,20 +19,21 @@ class Xapian < Formula
   deprecated_option "java" => "with-java"
   deprecated_option "php" => "with-php"
   deprecated_option "ruby" => "with-ruby"
+  deprecated_option "with-python" => "with-python@2"
 
-  depends_on :ruby => ["2.1", :optional]
-  depends_on :python => :optional
-  depends_on "sphinx-doc" => :build if build.with?("python")
+  depends_on "ruby" => :optional if MacOS.version <= :sierra
+  depends_on "python@2" => :optional
+  depends_on "sphinx-doc" => :build if build.with? "python@2"
 
   skip_clean :la
 
   resource "bindings" do
-    url "https://oligarchy.co.uk/xapian/1.4.3/xapian-bindings-1.4.3.tar.xz"
-    sha256 "65b5455bf81e4f39fda49a6ad99353b05889d11d7c4c2cae001a0a1e0dac0d87"
+    url "https://oligarchy.co.uk/xapian/1.4.5/xapian-bindings-1.4.5.tar.xz"
+    sha256 "647886730a71bcc0e9f666fcd702b7141d4e9a82e1085e44eb4470624e1a9d33"
   end
 
   def install
-    build_binds = build.with?("ruby") || build.with?("python") || build.with?("java") || build.with?("php")
+    build_binds = build.with?("ruby") || build.with?("python@2") || build.with?("java") || build.with?("php")
 
     system "./configure", "--disable-dependency-tracking",
                           "--disable-silent-rules",
@@ -56,15 +57,12 @@ class Xapian < Formula
           args << "--with-ruby"
         end
 
-        if build.with? "python"
+        if build.with? "python@2"
           # https://github.com/Homebrew/homebrew-core/issues/2422
           ENV.delete("PYTHONDONTWRITEBYTECODE")
 
           (lib/"python2.7/site-packages").mkpath
           ENV["PYTHON_LIB"] = lib/"python2.7/site-packages"
-
-          # configure looks for python2 and system python doesn't install one
-          ENV["PYTHON"] = which "python"
 
           ENV.append_path "PYTHONPATH",
                           Formula["sphinx-doc"].opt_libexec/"lib/python2.7/site-packages"
@@ -88,7 +86,7 @@ class Xapian < Formula
 
   def caveats
     if build.with? "ruby"
-      <<-EOS.undent
+      <<~EOS
         You may need to add the Ruby bindings to your RUBYLIB from:
           #{HOMEBREW_PREFIX}/lib/ruby/site_ruby
 

@@ -5,24 +5,25 @@ class Hledger < Formula
 
   desc "Command-line accounting tool"
   homepage "http://hledger.org"
-  url "https://hackage.haskell.org/package/hledger-1.2/hledger-1.2.tar.gz"
-  sha256 "06f4bae5a49916e0291b1b6d6c2017794c98f14bb22ffa20c49e9650278247a2"
+  url "https://hackage.haskell.org/package/hledger-1.9/hledger-1.9.tar.gz"
+  sha256 "b5fa4c5cce79210342524503fe5b512f7ec96c00b68a65627ee77daf72809a82"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "a610bd5c0f4dbc1f98d83888b944212d0d5608caae8cf658c6004126c6a9fb8a" => :sierra
-    sha256 "2a53f7ca6d0f99fe6c439497fb1e0f2ca84028683c9cb40e0f344b1fc7c115f1" => :el_capitan
-    sha256 "b2347dcf7e7abb6877c1fd5e95c3fedef2ffe044726b7a29e7cc609cb656c70e" => :yosemite
+    sha256 "565012c295cccdf2458a7c8b97a753406dce0dff3272a3195f3c9603a93532bf" => :high_sierra
+    sha256 "783c9ac9f6f52c2980e228f67f5bc27cf06c3bcfe36d6493f47164374a57ed26" => :sierra
+    sha256 "1701f551254a3e7d1cd76abc881e2080d0431f2d70bd25932653b508a80a8999" => :el_capitan
   end
 
-  depends_on "ghc" => :build
   depends_on "cabal-install" => :build
+  depends_on "ghc" => :build
 
   def install
     install_cabal_package :using => ["happy"]
   end
 
   test do
+    touch ".hledger.journal"
     system "#{bin}/hledger", "test"
   end
 end

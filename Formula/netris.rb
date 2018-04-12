@@ -1,12 +1,13 @@
 class Netris < Formula
   desc "Networked variant of tetris"
   homepage "https://web.archive.org/web/20071223041235/www.netris.be/"
-  url "ftp://ftp.netris.org/pub/netris/netris-0.52.tar.gz"
-  mirror "https://ftp.de.debian.org/debian/pool/main/n/netris/netris_0.52.orig.tar.gz"
+  url "https://mirrors.ocf.berkeley.edu/debian/pool/main/n/netris/netris_0.52.orig.tar.gz"
+  mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/n/netris/netris_0.52.orig.tar.gz"
   sha256 "8bc770ebb2c3ead1611ca7a1a2f3d833e169536c78d53b3fcf49381164ee9706"
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "2ba4eea757cc21504d1da74796a29fcd23264b5d735c0c6debe1083614c2d57a" => :high_sierra
     sha256 "4ac49c49b3d000fcb5c9161f4b217231e9bee9faf29d5e4e7fc9f5d8e10772ec" => :sierra
     sha256 "0e793cab922cded47c3eccbf4e9ba8840a71f24830d7e01da8e2262d08d61c56" => :el_capitan
     sha256 "1a1e54ff92dd1e8ecd745e149874071cb6e67662296c96d84538cf71b65b9bfe" => :yosemite

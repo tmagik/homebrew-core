@@ -1,16 +1,15 @@
 class Sqlcipher < Formula
   desc "SQLite extension providing 256-bit AES encryption"
   homepage "http://sqlcipher.net"
-  url "https://github.com/sqlcipher/sqlcipher/archive/v3.4.1.tar.gz"
-  sha256 "4172cc6e5a79d36e178d36bd5cc467a938e08368952659bcd95eccbaf0fa4ad4"
-
+  url "https://github.com/sqlcipher/sqlcipher/archive/v3.4.2.tar.gz"
+  sha256 "69897a5167f34e8a84c7069f1b283aba88cdfa8ec183165c4a5da2c816cfaadb"
   head "https://github.com/sqlcipher/sqlcipher.git"
 
   bottle do
     cellar :any
-    sha256 "af99accb6d78fc570855dba4e740d0dc873e1e7b53efe1de247e82334d1e21ff" => :sierra
-    sha256 "8f0d85daab5aea9effc3c7ae027263f8b72d88ab38ed2c0f613c6eba7c16aeff" => :el_capitan
-    sha256 "f8f87d549868829e2825b07b36fd1dfe490be35a0d3aa5b26d1c065631683640" => :yosemite
+    sha256 "5b8aaeb3f3f41a57f171a3f1175887ea9d98511982354479d4171ebae24377c6" => :high_sierra
+    sha256 "9462222059285b70d3a301812a38516ce0337e7dddb064ab052549124b9aca3f" => :sierra
+    sha256 "6370ce68ccb2f598f42bee2f799f7e97d7f1bac75ec71aeb446ee57761436642" => :el_capitan
   end
 
   option "with-fts", "Build with full-text search enabled"
@@ -27,13 +26,27 @@ class Sqlcipher < Formula
     ]
 
     if build.with?("fts")
-      args << "CFLAGS=-DSQLITE_HAS_CODEC -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS3_PARENTHESIS -DSQLITE_ENABLE_FTS5"
+      args << "CFLAGS=-DSQLITE_HAS_CODEC -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS3_PARENTHESIS -DSQLITE_ENABLE_FTS5"
     else
-      args << "CFLAGS=-DSQLITE_HAS_CODEC"
+      args << "CFLAGS=-DSQLITE_HAS_CODEC -DSQLITE_ENABLE_JSON1"
     end
 
     system "./configure", *args
     system "make"
     system "make", "install"
+  end
+
+  test do
+    path = testpath/"school.sql"
+    path.write <<~EOS
+      create table students (name text, age integer);
+      insert into students (name, age) values ('Bob', 14);
+      insert into students (name, age) values ('Sue', 12);
+      insert into students (name, age) values ('Tim', json_extract('{"age": 13}', '$.age'));
+      select name from students order by age asc;
+    EOS
+
+    names = shell_output("#{bin}/sqlcipher < #{path}").strip.split("\n")
+    assert_equal %w[Sue Tim Bob], names
   end
 end

@@ -1,14 +1,14 @@
 class Libmwaw < Formula
   desc "Library for converting legacy Mac document formats"
   homepage "https://sourceforge.net/p/libmwaw/wiki/Home/"
-  url "https://downloads.sourceforge.net/project/libmwaw/libmwaw/libmwaw-0.3.9/libmwaw-0.3.9.tar.xz"
-  sha256 "f7fca4d31510e52cda94f1272147f385e372448c0aaef16f07a5e8b3ceb5b2a0"
+  url "https://downloads.sourceforge.net/project/libmwaw/libmwaw/libmwaw-0.3.13/libmwaw-0.3.13.tar.xz"
+  sha256 "db55c728448f9c795cd71a0bb6043f6d4744e3e001b955a018a2c634981d5aea"
 
   bottle do
     cellar :any
-    sha256 "75a60bcfcde26dab886a88ee7d67fd80f729971aea3b1a957a26ff866447349a" => :sierra
-    sha256 "a25a61fe09ba938e8b6437f933d28e3baef920ce130113110521466250c8b3be" => :el_capitan
-    sha256 "442749dbf4088d00406428942a6bd5cb5d5ee300b2070bc8a82a942cd9ffed8e" => :yosemite
+    sha256 "df8f0b79f09b6fa30a010d892d603ad132b7e3afcd99b4ddb3de18b4b58e9991" => :high_sierra
+    sha256 "e819d6a8f20f6cbab7d4cbdb189e2ee3ce1c974e596134e3b80927b6c70ea54a" => :sierra
+    sha256 "bdcd4556d74bfa584addfb584b2ebdab04746662955d4d265c762944243d9398" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -17,6 +17,16 @@ class Libmwaw < Formula
   resource "test_document" do
     url "https://github.com/openpreserve/format-corpus/raw/825c8a5af012a93cf7aac408b0396e03a4575850/office-examples/Old%20Word%20file/NEWSSLID.DOC"
     sha256 "df0af8f2ae441f93eb6552ed2c6da0b1971a0d82995e224b7663b4e64e163d2b"
+  end
+
+  # Remove for > 0.3.13
+  # Upstream commit from 15 Nov 2017 "fix call of explicit ctor"
+  # See https://sourceforge.net/p/libmwaw/libmwaw/ci/4bc8ec0481f89b989b0c34236c9d5d9b8038d4a9/
+  if DevelopmentTools.clang_build_version <= 800
+    patch do
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/0eedf78/libmwaw/ctor.patch"
+      sha256 "1a443f16bf8918c642ce92c623c94ecc11198711c062ed0637ec36dd6ff6bb8b"
+    end
   end
 
   def install

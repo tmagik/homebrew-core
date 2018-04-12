@@ -1,14 +1,14 @@
 class MysqlCluster < Formula
   desc "Shared-nothing clustering and auto-sharding for MySQL"
   homepage "https://www.mysql.com/products/cluster/"
-  url "https://dev.mysql.com/get/Downloads/MySQL-Cluster-7.5/mysql-cluster-gpl-7.5.6.tar.gz"
-  sha256 "f799932e0baeb4cf61d735b662ebefba6d2d7b156cb66fc81c1bef4a4a43848d"
+  url "https://dev.mysql.com/get/Downloads/MySQL-Cluster-7.5/mysql-cluster-gpl-7.5.7.tar.gz"
+  sha256 "c40551603a9aacc4db96416be7f15700af6039a2247b83c2dce637c793cb10d8"
 
   bottle do
-    rebuild 1
-    sha256 "3eec1779c488fed8866ce5648c46fb76747b9028d41db67d1d56117e6497737a" => :sierra
-    sha256 "ea45e531c06a0e6aa7c3d8d3a8cf33efc2548bc6f5406ab5a3d8630729030351" => :el_capitan
-    sha256 "6a01cbaba92ed7538facca6acacf0eb792b7eed1a887bbfbd3d5a8afe580bb7f" => :yosemite
+    sha256 "a45135631bc0a4af03386ff3d812b1375dcd6f1cfc609b19bbdcf67dd676396a" => :high_sierra
+    sha256 "91bf3e3613e86df1f8fec9785d236a9ecffe72bc0e8fbe81e1c5961f77052f48" => :sierra
+    sha256 "84a754a7f71e34ee076774027930bbd7667961e2ecf82724a56d3b73b5eeac76" => :el_capitan
+    sha256 "29692861b897e6b013d01396bd0cea9541b109a7d691007ddb67a64de91d0a44" => :yosemite
   end
 
   option "with-test", "Build with unit tests"
@@ -136,7 +136,7 @@ class MysqlCluster < Formula
     (var/"mysql-cluster/conf/config.ini").write config_ini unless File.exist? var/"mysql-cluster/conf/config.ini"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     To get started with MySQL Cluster, read MySQL Cluster Quick Start at
       https://dev.mysql.com/downloads/cluster/
 
@@ -172,7 +172,7 @@ class MysqlCluster < Formula
     EOS
   end
 
-  def my_cnf; <<-EOCNF.undent
+  def my_cnf; <<~EOS
     [mysqld]
     ndbcluster
     datadir=#{var}/mysql-cluster/mysqld_data
@@ -180,10 +180,10 @@ class MysqlCluster < Formula
     port=5000
     # Only allow connections from localhost
     bind-address = 127.0.0.1
-    EOCNF
+    EOS
   end
 
-  def config_ini; <<-EOCNF.undent
+  def config_ini; <<~EOS
     [ndb_mgmd]
     hostname=localhost
     datadir=#{var}/mysql-cluster/ndb_data
@@ -203,7 +203,7 @@ class MysqlCluster < Formula
 
     [mysqld]
     NodeId=50
-    EOCNF
+    EOS
   end
 
   # Override Formula#plist_name
@@ -218,7 +218,7 @@ class MysqlCluster < Formula
 
   plist_options :manual => "mysql.server start"
 
-  def mysqld_startup_plist(name); <<-EOS.undent
+  def mysqld_startup_plist(name); <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
@@ -241,7 +241,7 @@ class MysqlCluster < Formula
     EOS
   end
 
-  def ndb_mgmd_startup_plist(name); <<-EOS.undent
+  def ndb_mgmd_startup_plist(name); <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
@@ -270,7 +270,7 @@ class MysqlCluster < Formula
     EOS
   end
 
-  def ndbd_startup_plist(name); <<-EOS.undent
+  def ndbd_startup_plist(name); <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

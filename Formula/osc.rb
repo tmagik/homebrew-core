@@ -3,19 +3,18 @@ class Osc < Formula
 
   desc "The command-line interface to work with an Open Build Service"
   homepage "https://github.com/openSUSE/osc"
-  url "https://github.com/openSUSE/osc/archive/0.158.0.tar.gz"
-  sha256 "467efd9628aa745d5be76176d5bfb5cbad47f820208051b35c6a1b54928ab912"
-  revision 1
+  url "https://github.com/openSUSE/osc/archive/0.162.1.tar.gz"
+  sha256 "529d627bf10117f43f52f6e6db09e9663474ae984b7be93cae9a686b52bd932c"
   head "https://github.com/openSUSE/osc.git"
 
   bottle do
     cellar :any
-    sha256 "67e5fd956a0eda970b7cd02ee877a1c78ec5698f42a0fa5d695982569656fb02" => :sierra
-    sha256 "45acffc71bb69257e17d1437cad60ddb710c647861181986a8cb18a70f3098cb" => :el_capitan
-    sha256 "56b1e8dd313976b31a598498db72e032209920dc0d196aa0b991c11c7e6ddb96" => :yosemite
+    sha256 "5a6ceb89aa5c491bd61e53107dd9b28f10c8393791158f5b8ecf034dbdbc7d6d" => :high_sierra
+    sha256 "0ca18dc46293ce26f11e46bfc18670dc036b7c692608a93b2ab306c80bbaa695" => :sierra
+    sha256 "043bdca5680a6bf33dc77a570263e1745c1d245f44dddd3b41381b652422bfa7" => :el_capitan
   end
 
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
   depends_on "swig" => :build
   depends_on "openssl" # For M2Crypto
 
@@ -30,13 +29,13 @@ class Osc < Formula
   end
 
   resource "M2Crypto" do
-    url "https://files.pythonhosted.org/packages/11/29/0b075f51c38df4649a24ecff9ead1ffc57b164710821048e3d997f1363b9/M2Crypto-0.26.0.tar.gz"
-    sha256 "05d94fd9b2dae2fb8e072819a795f0e05d3611b09ea185f68e1630530ec09ae8"
+    url "https://files.pythonhosted.org/packages/01/bd/a41491718f9e2bebab015c42b5be7071c6695acfa301e3fc0480bfd6a15b/M2Crypto-0.27.0.tar.gz"
+    sha256 "82317459d653322d6b37f122ce916dc91ddcd9d1b814847497ac796c4549dd68"
   end
 
   resource "typing" do
-    url "https://files.pythonhosted.org/packages/17/75/3698d7992a828ad6d7be99c0a888b75ed173a9280e53dbae67326029b60e/typing-3.6.1.tar.gz"
-    sha256 "c36dec260238e7464213dcd50d4b5ef63a507972f5780652e835d0228d0edace"
+    url "https://files.pythonhosted.org/packages/ca/38/16ba8d542e609997fdcd0214628421c971f8c395084085354b11ff4ac9c3/typing-3.6.2.tar.gz"
+    sha256 "d514bd84b284dd3e844f0305ac07511f097e325171f6cc4a20878d11ad771849"
   end
 
   def install
@@ -44,10 +43,23 @@ class Osc < Formula
     ENV.delete "SDKROOT"
 
     venv = virtualenv_create(libexec)
-    venv.pip_install resources.reject { |r| r.name == "M2Crypto" }
+    venv.pip_install resources.reject { |r| r.name == "M2Crypto" || r.name == "pycurl" }
+
     resource("M2Crypto").stage do
-      inreplace "setup.py", %r{(self.openssl = )'/usr'}, "\\1'#{Formula["openssl"].prefix}'"
+      inreplace "setup.py" do |s|
+        s.gsub! "self.openssl = '/usr'",
+                "self.openssl = '#{Formula["openssl"].opt_prefix}'"
+        s.gsub! "platform.system() == \"Linux\"",
+                "platform.system() == \"Darwin\" or \\0"
+      end
       venv.pip_install "."
+    end
+
+    # avoid error about libcurl link-time and compile-time ssl backend mismatch
+    resource("pycurl").stage do
+      system libexec/"bin/pip", "install",
+             "--install-option=--libcurl-dll=/usr/lib/libcurl.dylib", "-v",
+             "--no-binary", ":all:", "--ignore-installed", "."
     end
 
     inreplace "osc/conf.py", "'/etc/ssl/certs'", "'#{etc}/openssl/cert.pem'"

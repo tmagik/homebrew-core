@@ -1,13 +1,13 @@
 class Riemann < Formula
   desc "Event stream processor"
   homepage "http://riemann.io"
-  url "https://github.com/riemann/riemann/releases/download/0.2.13/riemann-0.2.13.tar.bz2"
-  sha256 "a401bae3d939b2ed15db1436798b7167531cbfd6cdba4df6d659d76296b2f40f"
+  url "https://github.com/riemann/riemann/releases/download/0.3.0/riemann-0.3.0.tar.bz2"
+  sha256 "2c4c8f07f90a7b7a5e902380382ddd789864d4af50a6677a83f745382d6a3f94"
 
   bottle :unneeded
 
   def shim_script
-    <<-EOS.undent
+    <<~EOS
       #!/bin/bash
       if [ -z "$1" ]
       then
@@ -28,7 +28,7 @@ class Riemann < Formula
     (bin+"riemann").write shim_script
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     You may also wish to install these Ruby gems:
       riemann-client
       riemann-tools
@@ -38,7 +38,7 @@ class Riemann < Formula
 
   plist_options :manual => "riemann"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
     "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

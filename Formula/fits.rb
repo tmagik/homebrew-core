@@ -1,21 +1,20 @@
 class Fits < Formula
   desc "File Information Tool Set"
   homepage "https://projects.iq.harvard.edu/fits"
-  url "https://github.com/harvard-lts/fits/archive/1.1.1.tar.gz"
-  sha256 "cc2fb1e3c60d18b4c7a5cf092e4177a14d435ac76824fff01a4b522ba0dd3099"
+  url "https://github.com/harvard-lts/fits/archive/1.2.1.tar.gz"
+  sha256 "2cf9e39f7bf129d447ebe96a426d1d8dd1f1af9b1664b34e0918e9dc65c046bc"
 
   bottle do
     cellar :any
-    sha256 "fd792587001bce49cd0fbe5633a3186929e0acc220f0479f111081fdacf2acce" => :sierra
-    sha256 "b3a8fd54515d275b0abc18c700787b701b01aa1f773c1b08354d28909dc8eb76" => :el_capitan
-    sha256 "e44149423edebe64d2ba1e4002b3bb2b2b7c37e090bf26bda8e39bdbed4fde05" => :yosemite
+    sha256 "7d6dd16320473df3523432254f211dc846f8002c72c805f336811d530de7df7f" => :high_sierra
+    sha256 "89566466a165dfca0947c7686ed6559a202da46375344906625a0f0e4cf3a057" => :sierra
+    sha256 "135d0c1a755ecb3cbd2277a789849eb0178f62e972de2e43ea4bfe1b14d17b26" => :el_capitan
   end
 
   depends_on "ant" => :build
   depends_on :java => "1.7+"
 
   def install
-    ENV.java_cache
     system "ant", "clean-compile-jar", "-noinput"
 
     libexec.install "lib",

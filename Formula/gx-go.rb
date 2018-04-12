@@ -1,28 +1,54 @@
 require "language/go"
 
 class GxGo < Formula
-  desc "Tool to use with the gx package manager for packages written in go."
+  desc "Tool to use with the gx package manager for packages written in go"
   homepage "https://github.com/whyrusleeping/gx-go"
-  url "https://github.com/whyrusleeping/gx-go/archive/v1.4.0.tar.gz"
-  sha256 "d7c217cbef3e5d1b2c7fa69d2ff6729e12db396ef839704d5c86969a6e863272"
+  url "https://github.com/whyrusleeping/gx-go/archive/v1.6.0.tar.gz"
+  sha256 "9f7d9ec600a3ce5dd6a04bf99b6fd2248c0a81652c4049ea83e537111b4df856"
   head "https://github.com/whyrusleeping/gx-go.git"
 
   bottle do
-    sha256 "136e707e21e4b1e969eb2b6b43188d5bd887fca77683c4ad88a81dd29c6b65ed" => :sierra
-    sha256 "3a7fe9c10b04b49ccd8d8545e38c125ec14b1e2b270fbe05452eabddbe3a8240" => :el_capitan
-    sha256 "e0be79f60c0f358ef312bb827c2eee0563fad60bed3eac82dcee4b2a57b3aff7" => :yosemite
+    cellar :any_skip_relocation
+    sha256 "cda1bd1bd255c06339ae3b21d09d1588b359ce2974affb1751fb5c833f560f5d" => :high_sierra
+    sha256 "a6a923b5d582cc871b4e75f217a7922636138db32a952a730fbcd69d6ce23eb2" => :sierra
+    sha256 "46939a07dd402dfdb380f32cd11088d933f5f92c524a2d4710b54e17c27b11b5" => :el_capitan
   end
 
   depends_on "go" => :build
 
+  go_resource "github.com/agl/ed25519" do
+    url "https://github.com/agl/ed25519.git",
+        :revision => "5312a61534124124185d41f09206b9fef1d88403"
+  end
+
+  go_resource "github.com/btcsuite/btcd" do
+    url "https://github.com/btcsuite/btcd.git",
+        :revision => "8cea3866d0f7fb12d567a20744942c0d078c7d15"
+  end
+
   go_resource "github.com/codegangsta/cli" do
     url "https://github.com/codegangsta/cli.git",
-        :revision => "55f715e28c46073d0e217e2ce8eb46b0b45e3db6"
+        :revision => "7ace96b43d4bdc46f81d0d1219742b2469874cf6"
+  end
+
+  go_resource "github.com/gogo/protobuf" do
+    url "https://github.com/gogo/protobuf.git",
+        :revision => "616a82ed12d78d24d4839363e8f3c5d3f20627cf"
   end
 
   go_resource "github.com/ipfs/go-ipfs-api" do
     url "https://github.com/ipfs/go-ipfs-api.git",
-        :revision => "0ee867280b9b85f2fcd6a3aa324728fc775dae48"
+        :revision => "08c2643ffe65b5e2dc2785093fa6b006fc9b8402"
+  end
+
+  go_resource "github.com/ipfs/go-ipfs-cmdkit" do
+    url "https://github.com/ipfs/go-ipfs-cmdkit.git",
+        :revision => "f3631e8ddde711a7aefed041806902d907a1f9ae"
+  end
+
+  go_resource "github.com/ipfs/go-log" do
+    url "https://github.com/ipfs/go-log.git",
+        :revision => "48d644b006ba26f1793bffc46396e981801078e3"
   end
 
   go_resource "github.com/jbenet/go-base58" do
@@ -40,29 +66,59 @@ class GxGo < Formula
         :revision => "2788f0dbd16903de03cb8186e5c7d97b69ad387b"
   end
 
+  go_resource "github.com/libp2p/go-libp2p-crypto" do
+    url "https://github.com/libp2p/go-libp2p-crypto.git",
+        :revision => "e89e1de117dd65c6129d99d1d853f48bc847cf17"
+  end
+
+  go_resource "github.com/libp2p/go-libp2p-peer" do
+    url "https://github.com/libp2p/go-libp2p-peer.git",
+        :revision => "d863b451638c441d046c53834ccfef13beebd025"
+  end
+
+  go_resource "github.com/libp2p/go-libp2p-pubsub" do
+    url "https://github.com/libp2p/go-libp2p-pubsub.git",
+        :revision => "a031ab4d1b8142714eec946acb7033abafade3d7"
+  end
+
   go_resource "github.com/mitchellh/go-homedir" do
     url "https://github.com/mitchellh/go-homedir.git",
-        :revision => "756f7b183b7ab78acdbbee5c7f392838ed459dda"
+        :revision => "b8bc1bf767474819792c23f32d8286a45736f1c6"
   end
 
   go_resource "github.com/multiformats/go-multiaddr" do
     url "https://github.com/multiformats/go-multiaddr.git",
-        :revision => "0de18dfd8007f3c2508a5635e5b1f1aec8231dfa"
+        :revision => "6a3fc2bc0c9f2cae466f61d658136d8da99e66f5"
   end
 
   go_resource "github.com/multiformats/go-multiaddr-net" do
     url "https://github.com/multiformats/go-multiaddr-net.git",
-        :revision => "08107ee53b70f1516800744a64a25c248de68963"
+        :revision => "376ba58703c84bfff9ca6e0057adf38ad48d3de5"
+  end
+
+  go_resource "github.com/multiformats/go-multicodec-packed" do
+    url "https://github.com/multiformats/go-multicodec-packed.git",
+        :revision => "0ee69486dc1c9087aacfcc575e333f305009997e"
   end
 
   go_resource "github.com/multiformats/go-multihash" do
     url "https://github.com/multiformats/go-multihash.git",
-        :revision => "cb7bd6c14af4c504c8c486c36f5accd29ca1c30d"
+        :revision => "9f612d271047a209928f7310045cad25250f39c6"
   end
 
   go_resource "github.com/sabhiram/go-git-ignore" do
     url "https://github.com/sabhiram/go-git-ignore.git",
-        :revision => "228fcfa2a06e870a3ef238d54c45ea847f492a37"
+        :revision => "362f9845770f1606d61ba3ddf9cfb1f0780d2ffe"
+  end
+
+  go_resource "github.com/spaolacci/murmur3" do
+    url "https://github.com/spaolacci/murmur3.git",
+        :revision => "9f5d223c60793748f04a9d5b4b4eacddfc1f755d"
+  end
+
+  go_resource "github.com/whyrusleeping/go-logging" do
+    url "https://github.com/whyrusleeping/go-logging.git",
+        :revision => "0457bb6b88fc1973573aaf6b5145d8d3ae972390"
   end
 
   go_resource "github.com/whyrusleeping/go-multipart-files" do
@@ -72,7 +128,12 @@ class GxGo < Formula
 
   go_resource "github.com/whyrusleeping/gx" do
     url "https://github.com/whyrusleeping/gx.git",
-        :revision => "1c51b785eb40b3c2723dcae51e7aab3b8f9a2ebb"
+        :revision => "89a08d0e93418bb67e807dd8fbd127a525a20cda"
+  end
+
+  go_resource "github.com/whyrusleeping/progmeter" do
+    url "https://github.com/whyrusleeping/progmeter.git",
+        :revision => "30d42a105341e640d284d9920da2078029764980"
   end
 
   go_resource "github.com/whyrusleeping/stump" do
@@ -87,7 +148,12 @@ class GxGo < Formula
 
   go_resource "golang.org/x/crypto" do
     url "https://go.googlesource.com/crypto.git",
-        :revision => "4cd25d65a015cc83d41bf3454e6e8d6c116d16da"
+        :revision => "9f005a07e0d31d45e6656d241bb5c0f2efd4bc94"
+  end
+
+  go_resource "leb.io/hashland" do
+    url "https://github.com/tildeleb/hashland.git",
+        :revision => "07375b562deaa8d6891f9618a04e94a0b98e2ee7"
   end
 
   def install

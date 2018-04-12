@@ -1,15 +1,15 @@
 class Gtkmm3 < Formula
   desc "C++ interfaces for GTK+ and GNOME"
   homepage "https://www.gtkmm.org/"
-  url "https://download.gnome.org/sources/gtkmm/3.22/gtkmm-3.22.0.tar.xz"
-  sha256 "05da4d4b628fb20c8384630ddf478a3b5562952b2d6181fe28d58f6cbc0514f5"
+  url "https://download.gnome.org/sources/gtkmm/3.22/gtkmm-3.22.2.tar.xz"
+  sha256 "91afd98a31519536f5f397c2d79696e3d53143b80b75778521ca7b48cb280090"
   revision 1
 
   bottle do
     cellar :any
-    sha256 "44bace026b2f99cd52f6fd38944d900464ed97675566b9d58c1635efa8d54ee0" => :sierra
-    sha256 "a7f83483da7dcbe06e4f4ce7d0ebb248b9280959c011162aee08063543a5074b" => :el_capitan
-    sha256 "78002f674ecec3f63842e65abc73fbaec4235d44a61cac6378cb4e5544a2cb5b" => :yosemite
+    sha256 "6e468e40dbe7e4ca10361980514d949f45ff770ddd3e68e2c8f4fd6ee6409f14" => :high_sierra
+    sha256 "abd9eac77cbae6970e31119621ac5cd7e57cde621431525984604b4e2bddc851" => :sierra
+    sha256 "ca321d85ad747dc3565acb82ea3c7b2de3b2fcb196b3d093eafd71267496bac2" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -27,7 +27,7 @@ class Gtkmm3 < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <gtkmm.h>
       class MyLabel : public Gtk::Label {
         MyLabel(Glib::ustring text) : Gtk::Label(text) {}

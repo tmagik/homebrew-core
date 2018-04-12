@@ -1,22 +1,24 @@
 class Gxml < Formula
   desc "GObject-based XML DOM API"
   homepage "https://wiki.gnome.org/GXml"
-  url "https://download.gnome.org/sources/gxml/0.14/gxml-0.14.3.tar.xz"
-  sha256 "b4f9739f924fefc90dd5d54da7680a50377bfba1342bd16436ab387c631e3b41"
+  url "https://download.gnome.org/sources/gxml/0.16/gxml-0.16.3.tar.xz"
+  sha256 "520d4d779b1d31591762b2a98f84072531b9e17ac401df9668493e189eafc6ba"
+  revision 1
 
   bottle do
-    sha256 "0822d594967ff897b5da4f78312bcb4acaa0ffa7e2ac046e4c1e07569d6726f7" => :sierra
-    sha256 "ab52ecbdd84a6213ac2d96ed167d4e367b3f980360e1aa5b0cfd3e118717dd38" => :el_capitan
-    sha256 "c515994080f2dab325b5777142a785bb6ba8c42a0c0a5bf89f5a6d25e1fd8bd1" => :yosemite
+    sha256 "0908c2bd5015de8acbab29ea0c42d9d274705b830424fb7c31f4c1a6088b5c1e" => :high_sierra
+    sha256 "d85960c0109b86ac07a51aea852b5d19bafb75bc55dd360b140ac27aa4de4721" => :sierra
+    sha256 "078acc418ec19bdfb68c826279ac31dd143a4992d580dcacd9d6c5a33c9e0bd1" => :el_capitan
   end
 
+  depends_on "gobject-introspection" => :build
+  depends_on "gtk-doc" => :build
   depends_on "pkg-config" => :build
   depends_on "intltool" => :build
   depends_on "vala" => :build
   depends_on "libxml2"
   depends_on "glib"
   depends_on "libgee"
-  depends_on "gobject-introspection"
 
   def install
     # ensures that the gobject-introspection files remain within the keg
@@ -40,7 +42,7 @@ class Gxml < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <gxml/gxml.h>
 
       int main(int argc, char *argv[]) {
@@ -57,7 +59,7 @@ class Gxml < Formula
       -I#{libxml2.opt_include}/libxml2
       -I#{glib.opt_include}/glib-2.0
       -I#{glib.opt_lib}/glib-2.0/include
-      -I#{include}/gxml-0.14
+      -I#{include}/gxml-0.16
       -I#{libgee.opt_include}/gee-0.8
       -D_REENTRANT
       -L#{gettext.opt_lib}
@@ -69,7 +71,7 @@ class Gxml < Formula
       -lgio-2.0
       -lglib-2.0
       -lgobject-2.0
-      -lgxml-0.14
+      -lgxml-0.16
       -lintl
       -lxml2
     ]

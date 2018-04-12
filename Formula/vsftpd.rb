@@ -7,6 +7,7 @@ class Vsftpd < Formula
 
   bottle do
     rebuild 2
+    sha256 "dbfc9b28f5ea49dda09d31fb630d995b72fd63b83b358e04156329252c3ab25b" => :high_sierra
     sha256 "22349437bd4d75b1ffd2fddfd90f92367e0a4f478f540b9086457541883f2c3b" => :sierra
     sha256 "108243559f3fea06d140173a3e3cb497c2f22c47d45e85ae108c088c1a1370df" => :el_capitan
     sha256 "25a9d2e92ca7e3efda6c9882a62ad5927c0c5e450eca4d62d7829c467dd086d9" => :yosemite
@@ -39,14 +40,14 @@ class Vsftpd < Formula
     s = ""
 
     if build.with? "openssl"
-      s += <<-EOS.undent
+      s += <<~EOS
         vsftpd was compiled with SSL support. To use it you must generate a SSL
         certificate and set 'enable_ssl=YES' in your config file.
 
       EOS
     end
 
-    s += <<-EOS.undent
+    s += <<~EOS
       To use chroot, vsftpd requires root privileges, so you will need to run
       `sudo vsftpd`.
       You should be certain that you trust any software you grant root privileges.
@@ -59,7 +60,7 @@ class Vsftpd < Formula
 
   plist_options :startup => true, :manual => "sudo vsftpd"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

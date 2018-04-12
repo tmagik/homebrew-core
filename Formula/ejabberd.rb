@@ -1,13 +1,13 @@
 class Ejabberd < Formula
   desc "XMPP application server"
   homepage "https://www.ejabberd.im"
-  url "https://www.process-one.net/downloads/ejabberd/17.04/ejabberd-17.04.tgz"
-  sha256 "b8395bc65b09f135a60320b62338258acd6056cc241e9e245fde267fb18dd3c9"
+  url "https://www.process-one.net/downloads/ejabberd/18.03/ejabberd-18.03.tgz"
+  sha256 "9688dc8eafd7746b8c6594fa7e2857d7dfdffa501e4d1103fb88031371c89c6e"
 
   bottle do
-    sha256 "acf6cafde085065fd6d6a9857c92ea41218a0921baaca76fec7e753c324a6b4d" => :sierra
-    sha256 "05fee3e510aaa61277cf22ed6d4545a4668a8ae1c8922f4c32413e270ce04cc4" => :el_capitan
-    sha256 "5cfe591d532c9b739835611a2a504449cf85c36a3f9f68d7b52bdcf5d6eb3b87" => :yosemite
+    sha256 "51e4b5ec56674844bf385ec14dabb3e5cf338d24960e9e35daa9c62436c41b93" => :high_sierra
+    sha256 "9eafe8585cb38b7a70a8608010a8191f1c9c1a9da975e3d8332d7751e095df75" => :sierra
+    sha256 "bd8ab1e7b90c84deb8f383e2a10b8a40c95e4903a40f866505678ff8947968ab" => :el_capitan
   end
 
   head do
@@ -19,6 +19,7 @@ class Ejabberd < Formula
 
   depends_on "openssl"
   depends_on "erlang"
+  depends_on "gd"
   depends_on "libyaml"
   # for CAPTCHA challenges
   depends_on "imagemagick" => :optional
@@ -51,7 +52,7 @@ class Ejabberd < Formula
     (var/"spool/ejabberd").mkpath
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     If you face nodedown problems, concat your machine name to:
       /private/etc/hosts
     after 'localhost'.
@@ -60,7 +61,7 @@ class Ejabberd < Formula
 
   plist_options :manual => "#{HOMEBREW_PREFIX}/sbin/ejabberdctl start"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

@@ -1,40 +1,42 @@
 class Valabind < Formula
   desc "Vala bindings for radare, reverse engineering framework"
   homepage "https://radare.org/"
-  revision 4
-
+  url "https://github.com/radare/valabind/archive/1.4.0.tar.gz"
+  sha256 "b2e4939912feada6138b8269d228ea82fb0f1391fd2e2e7003f404677b0cdbc9"
   head "https://github.com/radare/valabind.git"
 
-  stable do
-    url "https://www.radare.org/get/valabind-0.10.0.tar.gz"
-    sha256 "35517455b4869138328513aa24518b46debca67cf969f227336af264b8811c19"
-    # patch necessary to support vala 0.36.0
-    # remove upon next release
-    patch do
-      url "https://github.com/radare/valabind/commit/f23ff9421c1875d18b1e558596557009b45faa19.patch"
-      sha256 "9fe8f9485e1a4f52c68831670b880efcbbae33c6bc70e67297a00cc1d2fe0d4f"
-    end
-
-    # patch to support BSD sed
-    # remove upon next release
-    patch do
-      url "https://github.com/radare/valabind/commit/03762a0fca7ff4bbfe3e668f70bb75422e05ac07.patch"
-      sha256 "13c5712ed5b081135d1e2df0dd04e1a05856b76de1e0acfef838c2fbc76964c5"
-    end
-  end
-
   bottle do
-    cellar :any
-    sha256 "43ebff45cdbe8c7f8fcc098e65b37e07356e3f2889cd9ca674d90c7640d34cfa" => :sierra
-    sha256 "aa97b62c200bbf957d1e312bbd99f8f2100addbd43076b1a385c7e24321f6f9c" => :el_capitan
-    sha256 "b916fc236518c29a64f7f86e7b0be611564532ab21855822be966107e52d8103" => :yosemite
+    sha256 "09ecd58afe5c101c661d20c18a229ca4d8204adfd65d508e6e46387faf8a5980" => :high_sierra
+    sha256 "05e13594c23aca12a1ea9c7ff4a5e3a17bbe1a68a65dea80d5a8aa89892d26cf" => :sierra
+    sha256 "bf466be7a14313608f3d68a86135b2b25094457c0fb89b7dd389f57fc4cd173c" => :el_capitan
   end
 
-  depends_on "pkg-config" => :build
-  depends_on "swig" => :run
-  depends_on "vala"
+  depends_on "pkg-config" # not :build, for vala
+  depends_on "swig"
+
+  # vala dependencies
+  depends_on "gettext"
+  depends_on "glib"
+
+  # Upstream issue "Build failure with vala 0.38.0"
+  # Reported 6 Sep 2017 https://github.com/radare/valabind/issues/43
+  resource "vala" do
+    url "https://download.gnome.org/sources/vala/0.36/vala-0.36.5.tar.xz"
+    sha256 "7ae7eb8a976005afecf4f647b9043f2bb11e8b263c7fe9e905ab740b3d8a9f40"
+  end
 
   def install
+    resource("vala").stage do
+      system "./configure", "--disable-dependency-tracking",
+                            "--disable-silent-rules",
+                            "--prefix=#{libexec}"
+      system "make"
+      system "make", "install"
+    end
+
+    ENV.prepend_path "PATH", libexec/"bin"
+    ENV.prepend_path "PKG_CONFIG_PATH", libexec/"lib/pkgconfig"
+
     system "make"
     system "make", "install", "PREFIX=#{prefix}"
   end

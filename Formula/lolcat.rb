@@ -2,14 +2,14 @@ class Lolcat < Formula
   desc "Rainbows and unicorns in your console!"
   homepage "https://github.com/busyloop/lolcat"
   url "https://github.com/busyloop/lolcat.git",
-      :tag => "v42.24.1",
-      :revision => "9f300c6771906e94624f9370a1b758f5749ec6ff"
+      :tag => "v99.9.10",
+      :revision => "a30aab7f973832c785c08fd2456c77a2d986ca2a"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "543a885917eb4ca99f191d640cdb8271f2e9b18530a9a6e6dc577246d22fde52" => :sierra
-    sha256 "581dce6a68add5a6506a147fdc3943240c0b80d9c42d8110256a0fed753f728f" => :el_capitan
-    sha256 "90275ea5161e9ed964e965d0df6e08e03713a064cd2e117096c325c14c337122" => :yosemite
+    sha256 "5ef4486eb2d3247c74d11fbc41e8aa8b8b62839f297a8b0b8b48505dfa7faa36" => :high_sierra
+    sha256 "f31fe40b97c83ba23c7925c650e3f3f7d25a5e78dae3ad7c4106f95224f89a2d" => :sierra
+    sha256 "e0cc835f1f2258ee8ada70feeb61e7a8ac7d8b85845439a6c108bf192e59f28f" => :el_capitan
   end
 
   def install
@@ -21,7 +21,7 @@ class Lolcat < Formula
   end
 
   test do
-    (testpath/"test.txt").write <<-EOS.undent
+    (testpath/"test.txt").write <<~EOS
       This is
       a test
     EOS

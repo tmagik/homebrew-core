@@ -1,14 +1,14 @@
 class Passenger < Formula
   desc "Server for Ruby, Python, and Node.js apps via Apache/NGINX"
   homepage "https://www.phusionpassenger.com/"
-  url "https://s3.amazonaws.com/phusion-passenger/releases/passenger-5.1.5.tar.gz"
-  sha256 "ea4139d2f0d9f7aa6488be966ffbfe602f80764a47b7077892d92324bff5eb47"
-  head "https://github.com/phusion/passenger.git"
+  url "https://s3.amazonaws.com/phusion-passenger/releases/passenger-5.2.3.tar.gz"
+  sha256 "0a06a2c75688a0e6c85717fb67b57940bebca5e56b7c76337c50b8c3d024345b"
+  head "https://github.com/phusion/passenger.git", :branch => "stable-5.1"
 
   bottle do
-    sha256 "7cdd317eb405051e61d5821abec42f3ac3d2704b7774419e29ee93f001dadaaf" => :sierra
-    sha256 "d1ab061ecb53395263b6068a5aa0d0623b9cb9b148cc52ebea7ad928105345a6" => :el_capitan
-    sha256 "582dc26fbe968268c28cda14b43aa592f98f32ff6fa09716efc317387110cefc" => :yosemite
+    sha256 "d0619a778c90e2df7fdd4d1ee04b194e5797306b3730d4c9380cf2aecd3455d2" => :high_sierra
+    sha256 "89898f30e16a661e0e4ad156ddfeed66ee64d1214476abe17ec732547519ae2c" => :sierra
+    sha256 "a924eeed46731cff530eeb60eb804614098df8864ed3744b75ac0c5e5762afb1" => :el_capitan
   end
 
   option "without-apache2-module", "Disable Apache2 module"
@@ -26,8 +26,8 @@ class Passenger < Formula
       s.gsub! "-L/usr/local/opt/openssl/lib", "-L#{Formula["openssl"].opt_lib}"
     end
 
-    rake "apache2" if build.with? "apache2-module"
-    rake "nginx"
+    system "rake", "apache2" if build.with? "apache2-module"
+    system "rake", "nginx"
 
     (libexec/"download_cache").mkpath
 
@@ -36,10 +36,10 @@ class Passenger < Formula
     rm_rf "buildout/libuv"
     rm_rf "buildout/cache"
 
-    necessary_files = Dir[".editorconfig", "configure", "Rakefile", "README.md", "CONTRIBUTORS",
-      "CONTRIBUTING.md", "LICENSE", "CHANGELOG", "INSTALL.md",
-      "passenger.gemspec", "build", "bin", "doc", "man", "dev", "src",
-      "resources", "buildout"]
+    necessary_files = %w[.editorconfig configure Rakefile README.md CONTRIBUTORS
+                         CONTRIBUTING.md LICENSE CHANGELOG INSTALL.md
+                         passenger.gemspec build bin doc man dev src resources
+                         buildout]
     libexec.mkpath
     cp_r necessary_files, libexec, :preserve => true
 
@@ -70,13 +70,13 @@ class Passenger < Formula
   end
 
   def caveats
-    s = <<-EOS.undent
+    s = <<~EOS
       To activate Phusion Passenger for Nginx, run:
         brew install nginx --with-passenger
 
       EOS
 
-    s += <<-EOS.undent if build.with? "apache2-module"
+    s += <<~EOS if build.with? "apache2-module"
       To activate Phusion Passenger for Apache, create /etc/apache2/other/passenger.conf:
         LoadModule passenger_module #{opt_libexec}/buildout/apache2/mod_passenger.so
         PassengerRoot #{opt_libexec}/src/ruby_supportlib/phusion_passenger/locations.ini

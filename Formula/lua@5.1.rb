@@ -1,18 +1,17 @@
 class LuaAT51 < Formula
-  # 5.2 is not fully backwards compatible so we must retain 2 Luas for now.
-  # The transition has begun. Lua will now become Lua51, and Lua52 will become Lua.
+  # 5.3 is not fully backwards compatible so we must retain 2 Luas for now.
   desc "Powerful, lightweight programming language (v5.1.5)"
   homepage "https://www.lua.org/"
   url "https://www.lua.org/ftp/lua-5.1.5.tar.gz"
   mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/l/lua5.1/lua5.1_5.1.5.orig.tar.gz"
   sha256 "2640fc56a795f29d28ef15e13c34a47e223960b0240e8cb0a82d9b0738695333"
-  revision 4
+  revision 7
 
   bottle do
     cellar :any
-    sha256 "550dd46b8849792fe96aa3878bdbe47972b8b39a3af8d7e3df15c2d0e2969ab8" => :sierra
-    sha256 "bb5aed7c3b485ec7a102706d84dbcb9878cd2be20ac8cd686a0ef6eba9de7cba" => :el_capitan
-    sha256 "1bc63e65986763d0501b26de2d712b055ae7d2e036b9257d48cb59fd6cb6e3c4" => :yosemite
+    sha256 "d15ca25fd066ed059219faf39a6597ea5b0777ad9ca733b2c2a5f7ddf84bf582" => :high_sierra
+    sha256 "a6304c0dee627086dbba1a26e514d94602db0dffe629f190762d805afafc4952" => :sierra
+    sha256 "808ca67cb42bf72cab1a62cefecb1f0848b004d90762ab2086cbad5ffddfae37" => :el_capitan
   end
 
   option "with-completion", "Enables advanced readline support"
@@ -42,13 +41,14 @@ class LuaAT51 < Formula
   end
 
   resource "luarocks" do
-    url "https://keplerproject.github.io/luarocks/releases/luarocks-2.3.0.tar.gz"
-    sha256 "68e38feeb66052e29ad1935a71b875194ed8b9c67c2223af5f4d4e3e2464ed97"
+    url "https://luarocks.org/releases/luarocks-2.4.4.tar.gz"
+    sha256 "3938df33de33752ff2c526e604410af3dceb4b7ff06a770bc4a240de80a1f934"
   end
 
   def install
     # Use our CC/CFLAGS to compile.
     inreplace "src/Makefile" do |s|
+      s.gsub! "@LUA_PREFIX@", prefix
       s.remove_make_var! "CC"
       s.change_make_var! "CFLAGS", "#{ENV.cflags} $(MYCFLAGS)"
       s.change_make_var! "MYLDFLAGS", ENV.ldflags
@@ -75,15 +75,16 @@ class LuaAT51 < Formula
     # Renaming from Lua to Lua51.
     # Note that the naming must be both lua-version & lua.version.
     # Software can't find the libraries without supporting both the hyphen or full stop.
-    mv "#{bin}/lua", "#{bin}/lua-5.1"
-    mv "#{bin}/luac", "#{bin}/luac-5.1"
-    mv "#{man1}/lua.1", "#{man1}/lua-5.1.1"
-    mv "#{man1}/luac.1", "#{man1}/luac-5.1.1"
-    mv "#{lib}/pkgconfig/lua.pc", "#{lib}/pkgconfig/lua-5.1.pc"
+    mv bin/"lua", bin/"lua-5.1"
+    mv bin/"luac", bin/"luac-5.1"
+    mv man1/"lua.1", man1/"lua-5.1.1"
+    mv man1/"luac.1", man1/"luac-5.1.1"
+    mv lib/"pkgconfig/lua.pc", lib/"pkgconfig/lua-5.1.pc"
     bin.install_symlink "lua-5.1" => "lua5.1"
     bin.install_symlink "luac-5.1" => "luac5.1"
     include.install_symlink "lua-5.1" => "lua5.1"
     (lib/"pkgconfig").install_symlink "lua-5.1.pc" => "lua5.1.pc"
+    (libexec/"lib/pkgconfig").install_symlink lib/"pkgconfig/lua-5.1.pc" => "lua.pc"
 
     # This resource must be handled after the main install, since there's a lua dep.
     # Keeping it in install rather than postinstall means we can bottle.
@@ -93,7 +94,8 @@ class LuaAT51 < Formula
 
         system "./configure", "--prefix=#{libexec}", "--rocks-tree=#{HOMEBREW_PREFIX}",
                               "--sysconfdir=#{etc}/luarocks51", "--with-lua=#{prefix}",
-                              "--lua-version=5.1", "--versioned-rocks-dir"
+                              "--with-lua-include=#{include}/lua-5.1", "--lua-version=5.1",
+                              "--versioned-rocks-dir"
         system "make", "build"
         system "make", "install"
 
@@ -103,18 +105,18 @@ class LuaAT51 < Formula
 
         # This block ensures luarock exec scripts don't break across updates.
         inreplace libexec/"share/lua/5.1/luarocks/site_config.lua" do |s|
-          s.gsub! libexec.to_s, opt_libexec.to_s
-          s.gsub! include.to_s, "#{HOMEBREW_PREFIX}/include"
-          s.gsub! lib.to_s, "#{HOMEBREW_PREFIX}/lib"
-          s.gsub! bin.to_s, "#{HOMEBREW_PREFIX}/bin"
+          s.gsub! libexec, opt_libexec
+          s.gsub! include, HOMEBREW_PREFIX/"include"
+          s.gsub! lib, HOMEBREW_PREFIX/"lib"
+          s.gsub! bin, HOMEBREW_PREFIX/"bin"
         end
       end
     end
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     Please be aware due to the way Luarocks is designed any binaries installed
-    via Luarocks-5.2 AND 5.1 will overwrite each other in #{HOMEBREW_PREFIX}/bin.
+    via Luarocks-5.3 AND 5.1 will overwrite each other in #{HOMEBREW_PREFIX}/bin.
 
     This is, for now, unavoidable. If this is troublesome for you, you can build
     rocks with the `--tree=` command to a special, non-conflicting location and
@@ -128,7 +130,7 @@ class LuaAT51 < Formula
     if File.exist?(bin/"luarocks-5.1")
       mkdir testpath/"luarocks"
       system bin/"luarocks-5.1", "install", "moonscript", "--tree=#{testpath}/luarocks"
-      assert File.exist? testpath/"luarocks/bin/moon"
+      assert_predicate testpath/"luarocks/bin/moon", :exist?
     end
   end
 end
@@ -175,7 +177,7 @@ index e0d4c9f..4477d7b 100644
  $(LUA_A): $(CORE_O) $(LIB_O)
 -	$(AR) $@ $(CORE_O) $(LIB_O)	# DLL needs all object files
 -	$(RANLIB) $@
-+	$(CC) -dynamiclib -install_name HOMEBREW_PREFIX/lib/liblua.5.1.dylib \
++	$(CC) -dynamiclib -install_name @LUA_PREFIX@/lib/liblua.5.1.dylib \
 +		-compatibility_version 5.1 -current_version 5.1.5 \
 +		-o liblua.5.1.5.dylib $^
 

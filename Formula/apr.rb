@@ -1,19 +1,17 @@
 class Apr < Formula
   desc "Apache Portable Runtime library"
   homepage "https://apr.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=apr/apr-1.5.2.tar.bz2"
-  sha256 "7d03ed29c22a7152be45b8e50431063736df9e1daa1ddf93f6a547ba7a28f67a"
-  revision 3
+  url "https://www.apache.org/dyn/closer.cgi?path=apr/apr-1.6.3.tar.bz2"
+  sha256 "131f06d16d7aabd097fa992a33eec2b6af3962f93e6d570a9bd4d85e95993172"
 
   bottle do
     cellar :any
-    sha256 "7421ebf15011c00fff76530a40fe78aca7ddec4d1c6dbf2327bc13ea22dbc361" => :sierra
-    sha256 "63628dded3e37b9768b32ca65837ef0c1adcd0aa6d065c5604315cfa6069ceda" => :el_capitan
-    sha256 "1364ce1a6a2786b9b6fcb10a2df966678383a650d99b369ee2cd811ded4afd57" => :yosemite
-    sha256 "a4e7a90d12fac10ac788be3472c3e77a12e2db1a889d7be45f521d8387df28a0" => :mavericks
+    sha256 "df09dd9ba91dc0db6a6f5ac8d97b82203d5930af14494a790860b9cf3635c0a4" => :high_sierra
+    sha256 "2e3d88d6204b023756dd52d70385dcbd405bdc91295b023b7d04e1bfe1f95ccf" => :sierra
+    sha256 "16cdb68cf34cc80919c8689c64310313b04a181c6a57901440398d19a668dd38" => :el_capitan
   end
 
-  keg_only :provided_by_osx, "Apple's CLT package contains apr"
+  keg_only :provided_by_macos, "Apple's CLT package contains apr"
 
   def install
     ENV["SED"] = "sed" # prevent libtool from hardcoding sed path from superenv
@@ -26,6 +24,8 @@ class Apr < Formula
     system "./configure", "--prefix=#{libexec}"
     system "make", "install"
     bin.install_symlink Dir["#{libexec}/bin/*"]
+
+    rm Dir[libexec/"lib/*.la"]
 
     # No need for this to point to the versioned path.
     inreplace libexec/"bin/apr-1-config", libexec, opt_libexec

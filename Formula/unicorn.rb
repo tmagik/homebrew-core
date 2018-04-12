@@ -1,12 +1,13 @@
 class Unicorn < Formula
   desc "Lightweight multi-architecture CPU emulation framework"
-  homepage "http://www.unicorn-engine.org"
+  homepage "https://www.unicorn-engine.org/"
   url "https://github.com/unicorn-engine/unicorn/archive/1.0.1.tar.gz"
   sha256 "3a6a4f2b8c405ab009040ca43af8e4aa10ebe44d9c8b336aa36dc35df955017c"
   head "https://github.com/unicorn-engine/unicorn.git"
 
   bottle do
     cellar :any
+    sha256 "a12e18a0a334fa19a2dc54a43fc5d56861e31cf5a9ad352cb1150bb6ec61703c" => :high_sierra
     sha256 "81d29e7f28335317dd40976d904636ccd7d0679b71747ad13530dc991f327122" => :sierra
     sha256 "3519d8189333c5ae43eb618e18db7b6be4cf9cc288c6a45ca3b618964d62395c" => :el_capitan
     sha256 "f8c7cb546985c5e34dddb2c2e338314d024e266085fcbdc3f7e52e0f426e4e29" => :yosemite
@@ -37,8 +38,8 @@ class Unicorn < Formula
   end
 
   test do
-    (testpath/"test1.c").write <<-EOS
-      /* Adapted from http://www.unicorn-engine.org/docs/tutorial.html
+    (testpath/"test1.c").write <<~EOS
+      /* Adapted from https://www.unicorn-engine.org/docs/tutorial.html
        * shamelessly and without permission. This almost certainly needs
        * replacement, but for now it should be an OK placeholder
        * assertion that the libraries are intact and available.
@@ -81,7 +82,7 @@ class Unicorn < Formula
       }
     EOS
     system ENV.cc, "-o", testpath/"test1", testpath/"test1.c",
-      "-lpthread", "-lm", "-lunicorn"
+      "-lpthread", "-lm", "-L#{lib}", "-lunicorn"
     system testpath/"test1"
   end
 end

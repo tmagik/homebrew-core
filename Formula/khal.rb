@@ -1,21 +1,22 @@
 class Khal < Formula
   include Language::Python::Virtualenv
 
-  desc "CLI calendar application."
+  desc "CLI calendar application"
   homepage "https://lostpackets.de/khal/"
   url "https://github.com/pimutils/khal.git",
-      :tag => "v0.9.5",
-      :revision => "0c0b0490bdda590349b328002279c9ffdb712f19"
+      :tag => "v0.9.8",
+      :revision => "b03df58c129f99a35ba74cda0fbc253eb47cfeac"
+  revision 3
   head "https://github.com/pimutils/khal.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "95b35870fe2be264d2b763f2596cb0918b3f012530eea837ac46cf4ddf7e91cc" => :sierra
-    sha256 "aa053aabfc947734b71d58bb5d3a145699bda8d3764d97b9b97bc210702cb6c7" => :el_capitan
-    sha256 "ab3f5f5d4c645b32762aecf99b437522476e905e73ec0b44fd106d256706d63b" => :yosemite
+    sha256 "f1101eed34e6af72597a0a48508286ee5200827cc8d169891cad195633619fd5" => :high_sierra
+    sha256 "ae921563d0850bf485daccd2eeaa857bcadaf4f29e295ae2f2e8443791d12723" => :sierra
+    sha256 "e0bd837784b1f659ea7d1753eeb057500602aa65c3bb79b46af284eeb35544b8" => :el_capitan
   end
 
-  depends_on :python3
+  depends_on "python"
 
   def install
     venv = virtualenv_create(libexec, "python3")
@@ -28,7 +29,7 @@ class Khal < Formula
   test do
     ENV["LC_ALL"] = "en_US.UTF-8"
     ENV["LANG"] = "en_US.UTF-8"
-    (testpath/".calendar/test/01ef8547.ics").write <<-EOS.undent
+    (testpath/".calendar/test/01ef8547.ics").write <<~EOS
       BEGIN:VCALENDAR
       VERSION:2.0
       BEGIN:VEVENT
@@ -42,7 +43,7 @@ class Khal < Formula
       END:VEVENT
       END:VCALENDAR
     EOS
-    (testpath/".config/khal/config").write <<-EOS.undent
+    (testpath/".config/khal/config").write <<~EOS
       [calendars]
       [[test]]
       path = #{testpath}/.calendar/test/

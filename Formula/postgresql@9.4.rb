@@ -1,13 +1,13 @@
 class PostgresqlAT94 < Formula
   desc "Object-relational database system"
   homepage "https://www.postgresql.org/"
-  url "https://ftp.postgresql.org/pub/source/v9.4.12/postgresql-9.4.12.tar.bz2"
-  sha256 "fca055481875d1c49e31c28443f56472a1474b3fbe25b7ae64440c6118f82e64"
+  url "https://ftp.postgresql.org/pub/source/v9.4.17/postgresql-9.4.17.tar.bz2"
+  sha256 "7a320cd335052b840d209dc9688f09965763351c590e3cc7bf577591179fd7c6"
 
   bottle do
-    sha256 "18c0730abb8c6722231bd61c28da3ac649f378547afa6e7ffaa30831a04119e5" => :sierra
-    sha256 "1514a47e4147b522986eca8337e27bc7a2001e12f82d6e6641c3fda0ef028998" => :el_capitan
-    sha256 "d54bcce2a9c033541b19969795c039efc88ce62a265892595e550e46ac32ba92" => :yosemite
+    sha256 "4de12464ffdd58c47480e6ba8f1a90e8dafe552f50d464bb4c002c136682e0ba" => :high_sierra
+    sha256 "aa382b559a415c56678fa2e35447394572c9ab6718d2c20088f4735882516deb" => :sierra
+    sha256 "44a39ef02931473bcfa938806d14befc931718e80710d70707ebdb589cd580d2" => :el_capitan
   end
 
   keg_only :versioned_formula
@@ -16,9 +16,11 @@ class PostgresqlAT94 < Formula
   option "without-tcl", "Build without Tcl support"
   option "with-dtrace", "Build with DTrace support"
 
+  deprecated_option "with-python" => "with-python@2"
+
   depends_on "openssl"
   depends_on "readline"
-  depends_on :python => :optional
+  depends_on "python@2" => :optional
 
   fails_with :clang do
     build 211
@@ -26,6 +28,11 @@ class PostgresqlAT94 < Formula
   end
 
   def install
+    # Fix "configure: error: readline library not found"
+    if MacOS.version == :sierra || MacOS.version == :el_capitan
+      ENV["SDKROOT"] = MacOS.sdk_path
+    end
+
     ENV.prepend "LDFLAGS", "-L#{Formula["openssl"].opt_lib} -L#{Formula["readline"].opt_lib}"
     ENV.prepend "CPPFLAGS", "-I#{Formula["openssl"].opt_include} -I#{Formula["readline"].opt_include}"
     ENV.append_to_cflags "-D_XOPEN_SOURCE"
@@ -46,7 +53,7 @@ class PostgresqlAT94 < Formula
     ]
 
     args << "--with-perl" if build.with? "perl"
-    args << "--with-python" if build.with? "python"
+    args << "--with-python" if build.with? "python@2"
 
     # The CLT is required to build tcl support on 10.7 and 10.8 because tclConfig.sh is not part of the SDK
     if build.with?("tcl") && (MacOS.version >= :mavericks || MacOS::CLT.installed?)
@@ -73,22 +80,22 @@ class PostgresqlAT94 < Formula
   end
 
   def caveats
-    s = <<-EOS.undent
-    If builds of PostgreSQL 9 are failing and you have version 8.x installed,
-    you may need to remove the previous version first. See:
-      https://github.com/Homebrew/legacy-homebrew/issues/2510
+    s = <<~EOS
+      If builds of PostgreSQL 9 are failing and you have version 8.x installed,
+      you may need to remove the previous version first. See:
+        https://github.com/Homebrew/legacy-homebrew/issues/2510
 
-    To migrate existing data from a previous major version (pre-9.3) of PostgreSQL, see:
-      https://www.postgresql.org/docs/9.3/static/upgrading.html
+      To migrate existing data from a previous major version (pre-9.3) of PostgreSQL, see:
+        https://www.postgresql.org/docs/9.3/static/upgrading.html
     EOS
 
     if MacOS.prefer_64_bit?
-      s << <<-EOS.undent
-      \nWhen installing the postgres gem, including ARCHFLAGS is recommended:
-        ARCHFLAGS="-arch x86_64" gem install pg
+      s << <<~EOS
+        \nWhen installing the postgres gem, including ARCHFLAGS is recommended:
+          ARCHFLAGS="-arch x86_64" gem install pg
 
-      To install gems without sudo, see the Homebrew documentation:
-      https://github.com/Homebrew/brew/blob/master/docs/Gems%2C-Eggs-and-Perl-Modules.md
+        To install gems without sudo, see the Homebrew documentation:
+          https://docs.brew.sh/Gems,-Eggs-and-Perl-Modules
       EOS
     end
 
@@ -97,7 +104,7 @@ class PostgresqlAT94 < Formula
 
   plist_options :manual => "pg_ctl -D #{HOMEBREW_PREFIX}/var/postgresql@9.4 start"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

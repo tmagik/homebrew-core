@@ -1,14 +1,15 @@
 class Moc < Formula
   desc "Terminal-based music player"
-  homepage "https://moc.daper.net"
+  homepage "https://moc.daper.net/"
   url "http://ftp.daper.net/pub/soft/moc/stable/moc-2.5.2.tar.bz2"
   sha256 "f3a68115602a4788b7cfa9bbe9397a9d5e24c68cb61a57695d1c2c3ecf49db08"
-  revision 1
+  revision 2
 
   bottle do
-    sha256 "310b5d45eba637fd748a1b83688d68c5fc280ac6e8457dbb278d9d5ed9e6487b" => :sierra
-    sha256 "68d17bf31ee1e3632d8b33ec87ab1604c3bb28c7cefa61811328b98ae41d6247" => :el_capitan
-    sha256 "a2aa1968a00d16c9225d7b6eb0ae8fa4dba3826cc710e05da06321d72b99cd1b" => :yosemite
+    rebuild 1
+    sha256 "fbabdaaaea2215a4b20636cf32f0fcf1723dbbfe3c522448c1d9bd4057ee8a7e" => :high_sierra
+    sha256 "785c68d5b1657c4bd9cd5a28bf0a1707cad2e7c3b822e1571871cb42464f4844" => :sierra
+    sha256 "09e0d32b7feaf0fc50e1cfe52a0692c5e514ea3f22463becd47b94a001cb8bcd" => :el_capitan
   end
 
   devel do
@@ -38,23 +39,12 @@ class Moc < Formula
     depends_on "popt"
   end
 
-  option "with-ncurses", "Build with wide character support."
-
   depends_on "pkg-config" => :build
-  depends_on "libtool" => :run
   depends_on "berkeley-db"
+  depends_on "ffmpeg"
   depends_on "jack"
-  depends_on "ffmpeg" => :recommended
-  depends_on "mad" => :optional
-  depends_on "flac" => :optional
-  depends_on "speex" => :optional
-  depends_on "musepack" => :optional
-  depends_on "libsndfile" => :optional
-  depends_on "wavpack" => :optional
-  depends_on "faad2" => :optional
-  depends_on "timidity" => :optional
-  depends_on "libmagic" => :optional
-  depends_on "ncurses" => :optional
+  depends_on "libtool"
+  depends_on "ncurses"
 
   def install
     # Remove build.devel? when 2.6-alpha4 comes out
@@ -64,11 +54,11 @@ class Moc < Formula
   end
 
   def caveats
-    <<-EOS.undent
-        You must start the jack daemon prior to running mocp.
-        If you need wide-character support in the player, for example
-        with Chinese characters, you can install using
-            --with-ncurses
+    <<~EOS
+      You must start the jack daemon prior to running mocp.
+      If you need wide-character support in the player, for example
+      with Chinese characters, you can install using
+          --with-ncurses
     EOS
   end
 

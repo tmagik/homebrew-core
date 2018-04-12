@@ -1,14 +1,14 @@
 class Zeromq < Formula
   desc "High-performance, asynchronous messaging library"
   homepage "http://www.zeromq.org/"
-  url "https://github.com/zeromq/libzmq/releases/download/v4.2.2/zeromq-4.2.2.tar.gz"
-  sha256 "5b23f4ca9ef545d5bd3af55d305765e3ee06b986263b31967435d285a3e6df6b"
+  url "https://github.com/zeromq/libzmq/releases/download/v4.2.5/zeromq-4.2.5.tar.gz"
+  sha256 "cc9090ba35713d59bb2f7d7965f877036c49c5558ea0c290b0dcc6f2a17e489f"
 
   bottle do
     cellar :any
-    sha256 "e10289e3a44f78b2234347b04b9369f45455afa8b0fd61d538bc92a6de69b517" => :sierra
-    sha256 "72ca74ca177ff8ffd765d2e010b5027e3640b1e68964b1e5c7f7f3acc0a6acdd" => :el_capitan
-    sha256 "e98d0623b86749fe766a518d256493bd5cb78a73002a10dfb748a8c65763b45a" => :yosemite
+    sha256 "de552cb61eea442ce7935cf3d5adcd5c194f3536e6de541e3d412b55493d3a70" => :high_sierra
+    sha256 "b564e9f3b8e30e324701d7eb30e83a8ea703e3b5f4f7049a30f0574d510b92ea" => :sierra
+    sha256 "c90d4d425e1b9e6f8a73c576880a0f0bcc027b33739c45ae2ee3e8e3ef9b62a3" => :el_capitan
   end
 
   head do
@@ -43,7 +43,8 @@ class Zeromq < Formula
     args << "--enable-drafts" if build.with?("drafts")
 
     ENV["LIBUNWIND_LIBS"] = "-framework System"
-    ENV["LIBUNWIND_CFLAGS"] = "-I#{MacOS.sdk_path}/usr/include"
+    sdk = MacOS::CLT.installed? ? "" : MacOS.sdk_path
+    ENV["LIBUNWIND_CFLAGS"] = "-I#{sdk}/usr/include"
 
     system "./autogen.sh" if build.head?
     system "./configure", *args
@@ -52,7 +53,7 @@ class Zeromq < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <assert.h>
       #include <zmq.h>
 

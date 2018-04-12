@@ -1,14 +1,15 @@
 class FaasCli < Formula
   desc "CLI for templating and/or deploying FaaS functions"
-  homepage "http://docs.get-faas.com/"
-  url "https://github.com/alexellis/faas-cli/archive/0.3.tar.gz"
-  sha256 "d4db7ddb0ea1dadf469c3da9893b004874d19570d09457e8cf86e5aef0df00f5"
+  homepage "https://docs.get-faas.com/"
+  url "https://github.com/openfaas/faas-cli.git",
+      :tag => "0.6.5",
+      :revision => "ae7390005a2fe13873f2cb6fcfa2d830dad4a40b"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "10511119a3f28175c2ef1218567f3de0c2b5a6348b19bf3e0ddd76b47f8e168d" => :sierra
-    sha256 "71cb387663c38625d0c470c8d9f13d5149c13ab0828a9f0f6ba58fcf0e3dce90" => :el_capitan
-    sha256 "65ebcc5d6c95735ada15b51e1b7aeef4a50b71a686889ba490f97ea362206239" => :yosemite
+    sha256 "a154159a560783ff216042b2d983b663a23d669f3f47667bce5f8c8cc5fa9ded" => :high_sierra
+    sha256 "a44aab7969ba9d134f3bc6a3b46907c39d7e813a18176c121af06d0e0d670741" => :sierra
+    sha256 "be299e9eb0d2233f0d9f5c68a540223a6bee9ce82547abf2bd5a903ae13c575e" => :el_capitan
   end
 
   depends_on "go" => :build
@@ -17,9 +18,15 @@ class FaasCli < Formula
     ENV["XC_OS"] = "darwin"
     ENV["XC_ARCH"] = MacOS.prefer_64_bit? ? "amd64" : "386"
     ENV["GOPATH"] = buildpath
-    (buildpath/"src/github.com/alexellis/faas-cli").install buildpath.children
-    cd "src/github.com/alexellis/faas-cli" do
-      system "go", "build", "-o", bin/"faas-cli"
+    (buildpath/"src/github.com/openfaas/faas-cli").install buildpath.children
+    cd "src/github.com/openfaas/faas-cli" do
+      project = "github.com/openfaas/faas-cli"
+      commit = Utils.popen_read("git", "rev-parse", "HEAD").chomp
+      system "go", "build", "-ldflags",
+             "-s -w -X #{project}/version.GitCommit=#{commit} -X #{project}/version.Version=#{version}", "-a",
+             "-installsuffix", "cgo", "-o", bin/"faas-cli"
+      bin.install_symlink "faas-cli" => "faas"
+      pkgshare.install "template"
       prefix.install_metafiles
     end
   end
@@ -42,7 +49,7 @@ class FaasCli < Formula
       end
     end
 
-    (testpath/"test.yml").write <<-EOF.undent
+    (testpath/"test.yml").write <<~EOS
       provider:
         name: faas
         gateway: http://localhost:#{port}
@@ -53,18 +60,38 @@ class FaasCli < Formula
           lang: python
           handler: ./dummy_function
           image: dummy_image
-    EOF
+    EOS
 
-    expected = <<-EOS.undent
+    expected = <<~EOS
       Deploying: dummy_function.
-      Removing old service.
-      200 OK
+      Function dummy_function already exists, attempting rolling-update.
+
+      Deployed. 200 OK.
       URL: http://localhost:#{port}/function/dummy_function
     EOS
 
     begin
-      output = shell_output("#{bin}/faas-cli -action deploy -yaml test.yml")
+      cp_r pkgshare/"template", testpath
+
+      output = shell_output("#{bin}/faas-cli deploy -yaml test.yml")
       assert_equal expected, output.chomp
+
+      rm_rf "template"
+
+      output = shell_output("#{bin}/faas-cli deploy -yaml test.yml 2>&1", 1)
+      assert_match "stat ./template/python/template.yml", output
+
+      assert_match "ruby", shell_output("#{bin}/faas-cli template pull 2>&1")
+      assert_match "node", shell_output("#{bin}/faas-cli new --list")
+
+      output = shell_output("#{bin}/faas-cli deploy -yaml test.yml")
+      assert_equal expected, output.chomp
+
+      stable_resource = stable.instance_variable_get(:@resource)
+      commit = stable_resource.instance_variable_get(:@specs)[:revision]
+      faas_cli_version = shell_output("#{bin}/faas-cli version")
+      assert_match /\s#{commit}$/, faas_cli_version
+      assert_match /\s#{version}$/, faas_cli_version
     ensure
       Process.kill("TERM", pid)
       Process.wait(pid)

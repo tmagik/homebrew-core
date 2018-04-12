@@ -1,15 +1,14 @@
 class Opendetex < Formula
   desc "Tool to strip TeX or LaTeX commands from documents"
-  homepage "https://code.google.com/archive/p/opendetex/"
-  url "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/opendetex/opendetex-2.8.1.tar.bz2"
-  sha256 "8a47e4c7052672dfe5e0a4214dd5db42ac4322eb382efe6fd1fb271b409d051e"
+  homepage "https://github.com/pkubowicz/opendetex"
+  url "https://github.com/pkubowicz/opendetex/archive/v2.8.3.tar.gz"
+  sha256 "1f8a967ff7445ec498586e045def35474bf2cbc2b5669043fffbc569deb84c10"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "b189aeead03a4ab3b98007b793e869f84e8266acf562492f4bdbedb8d2966ca0" => :sierra
-    sha256 "279c7801888a46fdfea578b6a40874aa61b775b87f0ea6a92e738f57f0a21f27" => :el_capitan
-    sha256 "25c4ce538ac084436d393a29e9cd24a5d0da8ccab59e25bc76b65c0852563bd3" => :yosemite
-    sha256 "a640db332cfcb428d1994321aa0da127ec48eab01fc98b89509033eb6a189b89" => :mavericks
+    sha256 "39f296a67d7bb776673c7bf967612c0978f3d9a9bae6f96604e8ac1e18c76cbf" => :high_sierra
+    sha256 "a5e9edb249ef5d97a72afaa586effbdd4ef7b48ff4b1fb0d0078615849bbea27" => :sierra
+    sha256 "4cc67ed6010d4b4ac0c0df288af9fe66e55ab7446a297b1fa65bf5e78c7d769b" => :el_capitan
   end
 
   patch :DATA

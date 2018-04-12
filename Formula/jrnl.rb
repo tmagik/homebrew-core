@@ -7,12 +7,13 @@ class Jrnl < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "fae247f2ebb1f66243fcbb4c8912075adc019928f6cb45651abf5fe3b159d877" => :high_sierra
     sha256 "ecd709c46c9bb70293fdec35d5024eb018682293dad29fc66a604cc649d5c0bf" => :sierra
     sha256 "f29a67273bdd14e87e93ff3062a81e8e946aada52acbb61f9e1b75e372fabc00" => :el_capitan
     sha256 "9e44aeb99a2923c3c7b00619f85c30d6d160289dfe43901c2e4df46d914009db" => :yosemite
   end
 
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
 
   resource "future" do
     url "https://files.pythonhosted.org/packages/00/2b/8d082ddfed935f3608cc61140df6dcbf0edea1bc3ab52fb6c29ae3e81e85/future-0.16.0.tar.gz"
@@ -64,7 +65,7 @@ class Jrnl < Formula
   end
 
   test do
-    (testpath/"write_journal.sh").write <<-EOS.undent
+    (testpath/"write_journal.sh").write <<~EOS
       #!/usr/bin/expect -f
       set timeout -1
       spawn #{bin}/jrnl today: Wrote this fancy test.
@@ -81,7 +82,7 @@ class Jrnl < Formula
     chmod 0755, testpath/"write_journal.sh"
 
     system "./write_journal.sh"
-    assert File.exist?("journal")
-    assert File.exist?(".jrnl_config")
+    assert_predicate testpath/"journal", :exist?
+    assert_predicate testpath/".jrnl_config", :exist?
   end
 end

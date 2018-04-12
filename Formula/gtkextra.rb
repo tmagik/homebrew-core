@@ -1,24 +1,21 @@
 class Gtkextra < Formula
   desc "Widgets for creating GUIs for GTK+"
   homepage "https://gtkextra.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/gtkextra/3.3/gtkextra-3.3.3.tar.gz"
-  sha256 "7889f958ee9fb6bd564aa941891909c3af7a03b92e232c5a90bab0289407d884"
+  url "https://downloads.sourceforge.net/project/gtkextra/3.3/gtkextra-3.3.4.tar.gz"
+  sha256 "651b738a78edbd5d6ccb64f5a256c39ec35fbbed898e54a3ab7e6cf8fd82f1d6"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "e1c1be18254cb2598000bec74511879089a7431ae338fdd4e5ddb05769355fcb" => :sierra
-    sha256 "7b32a82119aa9de2c9f8998db3db68a1700a73bfda917b6047ccc09c5c95e1a5" => :el_capitan
-    sha256 "7ee8be67c7fb4c9c1cb16248055aeecdc6a6f936e80fe767bfdbe4b98975baf3" => :yosemite
+    sha256 "dccb6576a9313eec96b7b7c7abd6e9411959b351b996f19592021c7c2348d518" => :high_sierra
+    sha256 "74d2f3a62c9a008d18f68e40aec68e94f6054ce0b94f5d0e5f67c79d88610411" => :sierra
+    sha256 "3bd2f9a0bfc2296316e69702a126b23dc126a513192ce709b6d8d5120bc16904" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
-  depends_on "autoconf" => :build
-  depends_on "automake" => :build
-  depends_on "libtool" => :build
   depends_on "gtk+"
 
   def install
-    system "autoreconf", "-i"
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--disable-silent-rules",
@@ -29,13 +26,12 @@ class Gtkextra < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
-    #include <gtkextra/gtkextra.h>
-    int main(int argc, char *argv[]) {
-      GtkWidget *canvas = gtk_plot_canvas_new(GTK_PLOT_A4_H, GTK_PLOT_A4_W, 0.8);
-      return 0;
-    }
-
+    (testpath/"test.c").write <<~EOS
+      #include <gtkextra/gtkextra.h>
+      int main(int argc, char *argv[]) {
+        GtkWidget *canvas = gtk_plot_canvas_new(GTK_PLOT_A4_H, GTK_PLOT_A4_W, 0.8);
+        return 0;
+      }
     EOS
     atk = Formula["atk"]
     cairo = Formula["cairo"]

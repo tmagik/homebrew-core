@@ -5,11 +5,10 @@ class Apcupsd < Formula
   sha256 "db7748559b6b4c3784f9856561ef6ac6199ef7bd019b3edcd7e0a647bf8f9867"
 
   bottle do
-    cellar :any
-    sha256 "bc7b9ee40a28adf5351ca70e4bf7f44d28cc849d6327d728e54309ebfb8b0289" => :sierra
-    sha256 "faf979d85d50adebb20de24efbb113a52fe3760f5d4cc4bebda6eaec2268eb09" => :el_capitan
-    sha256 "49cc19f7e0d435d5b70ef75d393de827207ad3ea821e9104d783c61692ea62ba" => :yosemite
-    sha256 "488ed2fc48933a1c4ca08037016ae5af81050bdc27e7975296fd1c172cf10b31" => :mavericks
+    rebuild 1
+    sha256 "beee3be60fc8aafbd2a8fdb215ec8f0d531cc6750d00fd176039a0e5d8ee0d1e" => :high_sierra
+    sha256 "8cf3f4840ec564f859fa0b02eda9aec274180de519b512e28e19a31b6eab583c" => :sierra
+    sha256 "d000cc771fde79714b634a49b31afd207d6a26b76924c586e0af9fa80f539db5" => :el_capitan
   end
 
   depends_on "gd"
@@ -48,7 +47,7 @@ class Apcupsd < Formula
   end
 
   def caveats
-    s = <<-EOS.undent
+    s = <<~EOS
       For #{name} to be able to communicate with UPSes connected via USB,
       the kernel extension must be installed by the root user:
 
@@ -59,7 +58,7 @@ class Apcupsd < Formula
     EOS
 
     if MacOS.version >= :el_capitan
-      s += <<-EOS.undent
+      s += <<~EOS
         Note: On OS X El Capitan and above, the kernel extension currently
         does not work as expected.
 
@@ -69,7 +68,7 @@ class Apcupsd < Formula
       EOS
     end
 
-    s += <<-EOS.undent
+    s += <<~EOS
       To load #{name} at startup, activate the included Launch Daemon:
 
         sudo cp #{prefix}/Library/LaunchDaemons/org.apcupsd.apcupsd.plist /Library/LaunchDaemons

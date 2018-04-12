@@ -1,24 +1,28 @@
 class Elvish < Formula
-  desc "Novel UNIX shell written in Go"
+  desc "Friendly and expressive shell"
   homepage "https://github.com/elves/elvish"
-  url "https://github.com/elves/elvish/archive/0.8.tar.gz"
-  sha256 "74ce8baf5dc76cf1b9aede6781331c30177c6856c1d6a55f3eb62d6af53b78bb"
+  url "https://github.com/elves/elvish/archive/0.11.tar.gz"
+  sha256 "711f67d8730990deed00c3e0c59198c8a51c8441371416faab5ef603c26010b6"
   head "https://github.com/elves/elvish.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "798b87a13d8df584485dd03984a89418024dbf87212a3a63891481b97c4ee325" => :sierra
-    sha256 "fe54f770b4e487a2dd6d907d7e95091db0f020a0ca5aafba198f34f0bc9c2848" => :el_capitan
-    sha256 "6d5e348ae39b40755d4f81126853c964e2a8ec6f0172ffd1c9ee789ada4bf558" => :yosemite
+    sha256 "8900fd1eeaeacf2125d852ef1b3296b0c5ea4db260d1ae3575da46e3853bb4ca" => :high_sierra
+    sha256 "807d836f433fe94e3bc87e85eb30c33070acec97304fa25d90a0f305b0931ebf" => :sierra
+    sha256 "95790ba99de1ef6e2fcdd10019a2fcf72ed703e0e0292bec0ab8ad3089c140aa" => :el_capitan
   end
 
   depends_on "go" => :build
 
   def install
     ENV["GOPATH"] = buildpath
-    (buildpath/"src/github.com/elves").mkpath
-    ln_sf buildpath, buildpath/"src/github.com/elves/elvish"
-    system "go", "build", "-o", bin/"elvish"
+    (buildpath/"src/github.com/elves/elvish").install buildpath.children
+    cd "src/github.com/elves/elvish" do
+      system "go", "build", "-ldflags",
+             "-X github.com/elves/elvish/build.Version=#{version}", "-o",
+             bin/"elvish"
+      prefix.install_metafiles
+    end
   end
 
   test do

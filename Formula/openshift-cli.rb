@@ -2,26 +2,19 @@ class OpenshiftCli < Formula
   desc "OpenShift command-line interface tools"
   homepage "https://www.openshift.com/"
   url "https://github.com/openshift/origin.git",
-    :tag => "v1.5.1",
-    :revision => "7b451fc9cade386042723a2c03c2deee626b579c"
+    :tag => "v3.9.0",
+    :revision => "191fece9305a76f262baacc9de72c2c8cb4d5601",
+    :shallow => false
 
   head "https://github.com/openshift/origin.git"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "349a5809fc1e681f722147bfa4044d3f2d3d6ff39a99b1264fe313be71c183c4" => :sierra
-    sha256 "9f30956118d9a9a009d737818a70498befa62432f222865b33bca23f943a9910" => :el_capitan
-    sha256 "b76d411adf0a5beabd7ea380f2013ecfb91ee6dc30f35b9cccd67265967817fc" => :yosemite
+    sha256 "4bf526a8099ad57cfc6208b45d3854f83b684f7dd7b450bf8478afb6ef5ca912" => :high_sierra
+    sha256 "4f7abe45f4993f6c61e10c199d8a002091c1eb64e494421db6d533a53164f761" => :sierra
+    sha256 "8e43f2b64310d9d38769ebbbc4acc5f6a0ceddc6721f7c3921641f560143dff7" => :el_capitan
   end
 
-  devel do
-    url "https://github.com/openshift/origin.git",
-      :tag => "v3.6.0-alpha.1",
-      :revision => "46942adea0aed0ff58965f846aa5d5021ce30e50"
-    version "3.6.0-alpha.1"
-  end
-
-  depends_on "go" => :build
+  depends_on "go@1.9" => :build
   depends_on "socat"
 
   def install
@@ -30,8 +23,7 @@ class OpenshiftCli < Formula
 
     system "make", "all", "WHAT=cmd/oc", "GOFLAGS=-v", "OS_OUTPUT_GOPATH=1"
 
-    arch = MacOS.prefer_64_bit? ? "amd64" : "x86"
-    bin.install "_output/local/bin/darwin/#{arch}/oc"
+    bin.install "_output/local/bin/darwin/amd64/oc"
     bin.install_symlink "oc" => "oadm"
 
     bash_completion.install Dir["contrib/completions/bash/*"]
@@ -39,10 +31,6 @@ class OpenshiftCli < Formula
 
   test do
     assert_match /^oc v#{version}/, shell_output("#{bin}/oc version")
-    if version >= "3.6.0-alpha.0"
-      assert_match /^oc v#{version}/, shell_output("#{bin}/oadm version")
-    else
-      assert_match /^oadm v#{version}/, shell_output("#{bin}/oadm version")
-    end
+    assert_match /^oc v#{version}/, shell_output("#{bin}/oadm version")
   end
 end

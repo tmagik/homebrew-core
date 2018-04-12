@@ -7,6 +7,7 @@ class Libsvm < Formula
 
   bottle do
     cellar :any
+    sha256 "6fae589e624777638a8a5bc1c8b03e3bb48f88a61380b608273b44bd2d25aec4" => :high_sierra
     sha256 "39f3552e425be4bcb6e42d917b508bf94904520526c49ec52712c017680583fd" => :sierra
     sha256 "67867d2ddde33efd85da4c1a03757af0e3dcf591186552140876ddd11916d5df" => :el_capitan
     sha256 "3ee2001f87f2a58e698aeb0bfc413baa820184dba1caa2b3ec0a5a593a80d651" => :yosemite
@@ -23,18 +24,18 @@ class Libsvm < Formula
   end
 
   test do
-    (testpath/"train_classification.txt").write <<-EOS.undent
-    +1 201:1.2 3148:1.8 3983:1 4882:1
-    -1 874:0.3 3652:1.1 3963:1 6179:1
-    +1 1168:1.2 3318:1.2 3938:1.8 4481:1
-    +1 350:1 3082:1.5 3965:1 6122:0.2
-    -1 99:1 3057:1 3957:1 5838:0.3
+    (testpath/"train_classification.txt").write <<~EOS
+      +1 201:1.2 3148:1.8 3983:1 4882:1
+      -1 874:0.3 3652:1.1 3963:1 6179:1
+      +1 1168:1.2 3318:1.2 3938:1.8 4481:1
+      +1 350:1 3082:1.5 3965:1 6122:0.2
+      -1 99:1 3057:1 3957:1 5838:0.3
     EOS
 
-    (testpath/"train_regression.txt").write <<-EOS.undent
-    0.23 201:1.2 3148:1.8 3983:1 4882:1
-    0.33 874:0.3 3652:1.1 3963:1 6179:1
-    -0.12 1168:1.2 3318:1.2 3938:1.8 4481:1
+    (testpath/"train_regression.txt").write <<~EOS
+      0.23 201:1.2 3148:1.8 3983:1 4882:1
+      0.33 874:0.3 3652:1.1 3963:1 6179:1
+      -0.12 1168:1.2 3318:1.2 3938:1.8 4481:1
     EOS
 
     system "#{bin}/svm-train", "-s", "0", "train_classification.txt"

@@ -1,14 +1,13 @@
 class Dateutils < Formula
   desc "Tools to manipulate dates with a focus on financial data"
-  homepage "http://www.fresse.org/dateutils/"
-  url "https://bitbucket.org/hroptatyr/dateutils/downloads/dateutils-0.4.1.tar.xz"
-  mirror "https://github.com/hroptatyr/dateutils/releases/download/v0.4.1/dateutils-0.4.1.tar.xz"
-  sha256 "6ccce48975fc4d3af2e27c7893e181c46ab5df1cb37e4a428b4b521a77d55278"
+  homepage "https://www.fresse.org/dateutils/"
+  url "https://bitbucket.org/hroptatyr/dateutils/downloads/dateutils-0.4.3.tar.xz"
+  sha256 "b0d579062bc957823fb7efcb2c520fb6fb43ab79a352026402b06ecfc4c58f1a"
 
   bottle do
-    sha256 "12baf49c378b3e5f1f2c32aff5dd753d467290b3f531022824287733f8d8b0a3" => :sierra
-    sha256 "d6a4966375bc9756aa188f1201fba14e4329e1a6b6957f9a50b6d9978df2a5ea" => :el_capitan
-    sha256 "6c47012fd125727a10006fbadd0e42ee529102e9c6f6578b84942e437290bf70" => :yosemite
+    sha256 "21e481eb6f462bc525ac1b37dd816ea63f8d56fba328f34540c10a8a2d367dfd" => :high_sierra
+    sha256 "e0f523c86070087139383d3ab86ae25abcae2904148478b71e343bec101eb62b" => :sierra
+    sha256 "89d36dc29ffa59f15ce4a8d16d6dc981590efe8e4989633d9748e95baade4a98" => :el_capitan
   end
 
   head do

@@ -3,44 +3,26 @@ require "language/go"
 class Terraform < Formula
   desc "Tool to build, change, and version infrastructure"
   homepage "https://www.terraform.io/"
-  url "https://github.com/hashicorp/terraform/archive/v0.9.8.tar.gz"
-  sha256 "df2bf4710360778dec1b3ebe1e60e692fe4ff1474947ecb05903d2cc62e5d6ad"
+  url "https://github.com/hashicorp/terraform/archive/v0.11.7.tar.gz"
+  sha256 "f9a2730dcd68dad754cf0efa017d51929a7f333a89d07ddff3c6ff7b2d1e8be3"
   head "https://github.com/hashicorp/terraform.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "768fa90a7864302855e67551150c46fcf93fe68ed347a8e819032f58824fe342" => :sierra
-    sha256 "dd5cc1af0deda44c5656e3ac429959e253805b6ad9157085c1380f790ec3a3d3" => :el_capitan
-    sha256 "f34bc477fe83d4b5878bbc60edbcc08e001f945c82fbf7c2c813362b801e22e4" => :yosemite
+    sha256 "7bce9a18c6b533bce2794ebe0876387cc1639bc4689ee5d1ec9ff38f556e0e39" => :high_sierra
+    sha256 "675d1edc6917527a0724b84ac214d7ce0b95864a2680dd404843492c1803b81c" => :sierra
+    sha256 "db14ad02da3e44831145641e57500c6f80b6be056bfb10c05dc402a93e088043" => :el_capitan
   end
 
   depends_on "go" => :build
+  depends_on "gox" => :build
 
   conflicts_with "tfenv", :because => "tfenv symlinks terraform binaries"
 
-  go_resource "github.com/mitchellh/gox" do
-    url "https://github.com/mitchellh/gox.git",
-        :revision => "c9740af9c6574448fd48eb30a71f964014c7a837"
-  end
-
-  go_resource "github.com/mitchellh/iochan" do
-    url "https://github.com/mitchellh/iochan.git",
-        :revision => "87b45ffd0e9581375c491fef3d32130bb15c5bd7"
-  end
-
-  go_resource "github.com/kisielk/errcheck" do
-    url "https://github.com/kisielk/errcheck.git",
-        :revision => "23699b7e2cbfdb89481023524954ba2aeff6be90"
-  end
-
-  go_resource "github.com/kisielk/gotool" do
-    url "https://github.com/kisielk/gotool.git",
-        :revision => "0de1eaf82fa3f583ce21fde859f1e7e0c5e9b220"
-  end
-
+  # stringer is a build tool dependency
   go_resource "golang.org/x/tools" do
     url "https://go.googlesource.com/tools.git",
-        :revision => "5682db0e919ed9cfc6f52ac32e170511a106eb3b"
+        :branch => "release-branch.go1.10"
   end
 
   def install
@@ -51,9 +33,8 @@ class Terraform < Formula
     dir.install buildpath.children - [buildpath/".brew_home"]
     Language::Go.stage_deps resources, buildpath/"src"
 
-    %w[src/github.com/mitchellh/gox src/golang.org/x/tools/cmd/stringer
-       src/github.com/kisielk/errcheck].each do |path|
-      cd(path) { system "go", "install" }
+    cd "src/golang.org/x/tools/cmd/stringer" do
+      system "go", "install"
     end
 
     cd dir do
@@ -64,17 +45,16 @@ class Terraform < Formula
       arch = MacOS.prefer_64_bit? ? "amd64" : "386"
       ENV["XC_OS"] = "darwin"
       ENV["XC_ARCH"] = arch
-      system "make", "test", "vet", "bin"
+      system "make", "test", "bin"
 
       bin.install "pkg/darwin_#{arch}/terraform"
-      zsh_completion.install "contrib/zsh-completion/_terraform"
       prefix.install_metafiles
     end
   end
 
   test do
     minimal = testpath/"minimal.tf"
-    minimal.write <<-EOS.undent
+    minimal.write <<~EOS
       variable "aws_region" {
           default = "us-west-2"
       }
@@ -101,6 +81,7 @@ class Terraform < Formula
         count = 4
       }
     EOS
-    system "#{bin}/terraform", "graph", testpath
+    system "#{bin}/terraform", "init"
+    system "#{bin}/terraform", "graph"
   end
 end

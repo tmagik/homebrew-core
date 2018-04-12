@@ -1,15 +1,15 @@
 class Mapserver < Formula
   desc "Publish spatial data and interactive mapping apps to the web"
   homepage "http://mapserver.org/"
-  url "http://download.osgeo.org/mapserver/mapserver-7.0.4.tar.gz"
-  sha256 "c91d40da5cc242b20ca7e29c41bd9eb23097b98a77908b1d708e9708f6f6cf69"
-  revision 1
+  url "https://download.osgeo.org/mapserver/mapserver-7.0.7.tar.gz"
+  sha256 "37a8c3008328bae0fea05109d6d544a3284f756a23956e8a2f5ec10a6b5fef67"
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "770f4416f9dad46fb24d4c77655ce5b4f0fde80c01e87140d6d01fd3be010f5b" => :sierra
-    sha256 "410fcf486c9f534ed45fa676f3ac12b08dfa7765a0d4b611deef2736231922cd" => :el_capitan
-    sha256 "750bf42407ba4718345924fb793a5cb7101d6abb93af3be9776e47bbdea8d74c" => :yosemite
+    sha256 "861890728eb6d3fb016b9b820f301da7f79136f454820ef8d3eb1387711f8df3" => :high_sierra
+    sha256 "00e9069aba52817cbd8e27ee77113bdfd4f4ac3f0fc6fb89f16b8ae451e53fda" => :sierra
+    sha256 "e1c69d346d18201436a8afdbc40e7ef0b0e6ed80ec8ac47eba6ac5e04f65af8e" => :el_capitan
   end
 
   option "with-fastcgi", "Build with fastcgi support"
@@ -36,13 +36,18 @@ class Mapserver < Formula
     # harfbuzz but fribidi currently fails to build with:
     # fribidi-common.h:61:12: fatal error: 'glib.h' file not found
     args = std_cmake_args + %w[
+      -DWITH_KML=ON
+      -DWITH_CURL=ON
+      -DWITH_CLIENT_WMS=ON
+      -DWITH_CLIENT_WFS=ON
+      -DWITH_SOS=ON
       -DWITH_PROJ=ON
       -DWITH_GDAL=ON
       -DWITH_OGR=ON
       -DWITH_WFS=ON
       -DWITH_FRIBIDI=OFF
       -DWITH_HARFBUZZ=OFF
-      -DPYTHON_EXECUTABLE:FILEPATH=#{which("python")}
+      -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python
     ]
 
     # Install within our sandbox.
@@ -92,7 +97,7 @@ class Mapserver < Formula
     end
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     The Mapserver CGI executable is #{opt_bin}/mapserv
 
     If you built the PHP option:
@@ -105,6 +110,6 @@ class Mapserver < Formula
 
   test do
     assert_match version.to_s, shell_output("#{bin}/mapserv -v")
-    system "python", "-c", "import mapscript"
+    system "python2.7", "-c", "import mapscript"
   end
 end

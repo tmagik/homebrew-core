@@ -1,34 +1,36 @@
 class Notmuch < Formula
   desc "Thread-based email index, search, and tagging"
   homepage "https://notmuchmail.org"
-  url "https://notmuchmail.org/releases/notmuch-0.24.2.tar.gz"
-  sha256 "aa76a96684d5c5918d940182b6fe40f7d6745f144476fdda57388479d586cc51"
-  head "git://git.notmuchmail.org/git/notmuch"
+  url "https://notmuchmail.org/releases/notmuch-0.26.1.tar.gz"
+  sha256 "d3f7e44f4dd0a75150b73e41737c4923ba94ea2947b9fe585f0aab591bb4a837"
+  head "git://notmuchmail.org/git/notmuch"
 
   bottle do
     cellar :any
-    sha256 "06a9306db0c26b38989d7857901fb405c8afd526fd6440af69e52158f0bb6d3b" => :sierra
-    sha256 "3d29b0dfb986dd17a1aec423a7cce1b335155a5e31cdc21f09285c8165303c18" => :el_capitan
-    sha256 "5784e44063cdd04a095db78811c16f002f997670705f217b462657c9779869a3" => :yosemite
+    rebuild 1
+    sha256 "1a319af5dd3a42454ccc1bc77a08beb6e1479efc444e741b34346aafdd677297" => :high_sierra
+    sha256 "11155f61ad9941f98e0703a0f51a9b48bfeb567369cf0b4a0c0236f4331a934c" => :sierra
+    sha256 "920c47a612a5a400c54b14eee7d86aa3c4c4c04eb1da8291cc04de221ea92d1e" => :el_capitan
   end
 
-  option "without-python", "Build without python support"
+  option "without-python@2", "Build without python2 support"
 
-  depends_on "pkg-config" => :build
+  deprecated_option "with-python3" => "with-python"
+  deprecated_option "without-python" => "without-python@2"
+
+  depends_on "doxygen" => :build
   depends_on "libgpg-error" => :build
+  depends_on "pkg-config" => :build
+  depends_on "sphinx-doc" => :build
   depends_on "glib"
+  depends_on "gmime"
   depends_on "talloc"
   depends_on "xapian"
   depends_on "zlib"
-  depends_on :emacs => ["24.1", :optional]
-  depends_on :python3 => :optional
-  depends_on :ruby => ["1.9", :optional]
-
-  # Currently requires gmime 2.6.x
-  resource "gmime" do
-    url "https://download.gnome.org/sources/gmime/2.6/gmime-2.6.23.tar.xz"
-    sha256 "7149686a71ca42a1390869b6074815106b061aaeaaa8f2ef8c12c191d9a79f6a"
-  end
+  depends_on "python@2" => :recommended
+  depends_on "emacs" => :optional
+  depends_on "python" => :optional
+  depends_on "ruby" => :optional
 
   # Fix SIP issue with python bindings
   # A more comprehensive patch has been submitted upstream
@@ -36,13 +38,12 @@ class Notmuch < Formula
   patch :DATA
 
   def install
-    resource("gmime").stage do
-      system "./configure", "--prefix=#{prefix}/gmime", "--disable-introspection"
-      system "make", "install"
-      ENV.append_path "PKG_CONFIG_PATH", "#{prefix}/gmime/lib/pkgconfig"
-    end
+    # configure runs `python -m sphinx.writers.manpage` to detect if
+    # `sphinx-build` will work
+    ENV.prepend_path "PYTHONPATH", Formula["sphinx-doc"].opt_libexec/"vendor/lib/python2.7/site-packages"
+    ENV.prepend_path "PYTHONPATH", Formula["sphinx-doc"].opt_libexec/"lib/python2.7/site-packages"
 
-    args = %W[--prefix=#{prefix}]
+    args = %W[--prefix=#{prefix} --mandir=#{man}]
 
     if build.with? "emacs"
       ENV.deparallelize # Emacs and parallel builds aren't friends

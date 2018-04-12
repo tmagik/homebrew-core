@@ -1,8 +1,8 @@
 class Gws < Formula
   desc "Manage workspaces composed of git repositories"
   homepage "https://streakycobra.github.io/gws/"
-  url "https://github.com/StreakyCobra/gws/archive/0.1.10.tar.gz"
-  sha256 "816592f3fec8c437ba96d17dbbfa911d88d1fa70071d3d127efc64f73551f747"
+  url "https://github.com/StreakyCobra/gws/archive/0.1.16.tar.gz"
+  sha256 "695df2ca872fc0ab4b8175c74fdab4d843534574e05885c6a1a6328951ccca74"
 
   bottle :unneeded
 

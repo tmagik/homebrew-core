@@ -8,16 +8,17 @@ class EulerPy < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "f5ba1b2823b4d55d4ab4bb0724676496ce9d2f70e9e65fd69ba260ed57be3fe3" => :high_sierra
     sha256 "c5ee4cdc8330f84084b0b145b9183b6c21683de758a3f052158f3dc6d0d6adb8" => :sierra
     sha256 "4c887a4af203e4991ff844f4836663cbaf1afc835ae8c628d769e32ff0f1e4e1" => :el_capitan
     sha256 "69ffb29dd9b1f1fdf6fa7ecf31871c5010a06a94eda99e916681aac73d9bca15" => :yosemite
     sha256 "6006f400f9f2e010c104325f4e1903c8fe825884b54ef88bea47918b58876576" => :mavericks
   end
 
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
 
   resource "click" do
-    url "https://pypi.python.org/packages/source/c/click/click-4.0.tar.gz"
+    url "https://files.pythonhosted.org/packages/source/c/click/click-4.0.tar.gz"
     sha256 "f49e03611f5f2557788ceeb80710b1c67110f97c5e6740b97edf70245eea2409"
   end
 

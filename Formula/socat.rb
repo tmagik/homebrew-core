@@ -3,22 +3,17 @@ class Socat < Formula
   homepage "http://www.dest-unreach.org/socat/"
   url "http://www.dest-unreach.org/socat/download/socat-1.7.3.2.tar.gz"
   sha256 "ce3efc17e3e544876ebce7cd6c85b3c279fda057b2857fcaaf67b9ab8bdaf034"
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "63cba17ba8512ae70e018d6e918b67e4d3646bbd44b6aa77d7e4c92833f4a79c" => :sierra
-    sha256 "65e0fd67dbb8f8615110beb7a10710aa73ec8cd4dcfb19408558a56d368728e2" => :el_capitan
-    sha256 "8bbbe3d993e937ee42499de4efdf02c168c97b30bb75077e5489c4b165829e1f" => :yosemite
+    sha256 "8440c4f765cf7c068461e33088e80057fbfa6be598107666714ba7cd0bb8c97d" => :high_sierra
+    sha256 "c630c4273615556c167da5875a67e28d79e51bc7493eb07ba73b7f7fead14372" => :sierra
+    sha256 "78787f35cdbc55bc5bce5f12c253eace7db1ae39767d55ad1e032eadc4f33ad3" => :el_capitan
   end
 
-  devel do
-    url "http://www.dest-unreach.org/socat/download/socat-2.0.0-b9.tar.gz"
-    version "2.0.0-b9"
-    sha256 "f9496ea44898d7707507a728f1ff16b887c80ada63f6d9abb0b727e96d5c281a"
-  end
-
-  depends_on "readline"
   depends_on "openssl"
+  depends_on "readline"
 
   def install
     system "./configure", "--prefix=#{prefix}", "--mandir=#{man}"

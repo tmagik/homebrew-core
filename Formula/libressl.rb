@@ -2,14 +2,14 @@ class Libressl < Formula
   desc "Version of the SSL/TLS protocol forked from OpenSSL"
   homepage "https://www.libressl.org/"
   # Please ensure when updating version the release is from stable branch.
-  url "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.5.4.tar.gz"
-  mirror "https://mirrorservice.org/pub/OpenBSD/LibreSSL/libressl-2.5.4.tar.gz"
-  sha256 "107a5b522fbb8318d4c3be668075e5e607296f0a9255d71674caa94571336efa"
+  url "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.7.2.tar.gz"
+  mirror "https://mirrorservice.org/pub/OpenBSD/LibreSSL/libressl-2.7.2.tar.gz"
+  sha256 "917a8779c342177ff3751a2bf955d0262d1d8916a4b408930c45cef326700995"
 
   bottle do
-    sha256 "266a78adbadfd8698691c4d43d06f55a130d3600e8da07b703e17e511ec32f5b" => :sierra
-    sha256 "88c9cf082ba35d9f3c63e9d15e27315e7502bdd569a6551f0a0cbbed62e4e893" => :el_capitan
-    sha256 "f5571d4fd87840911e683c2240a1d5a2bf940a3de6e14033d1759af824f6840e" => :yosemite
+    sha256 "c94862d720fb74d8abdd52ccc978bcf4e39ef72d368591d0bb4bba55a473d979" => :high_sierra
+    sha256 "546be1e176392db3d44c537b9ebe55f04026eaaa18e89520116a359a1d52b028" => :sierra
+    sha256 "1056a555641a1199fdf53efb217c46c6a4ef5ca997187a9ed0df5ceef928edb0" => :el_capitan
   end
 
   head do
@@ -62,7 +62,7 @@ class Libressl < Formula
     (etc/"libressl/cert.pem").atomic_write(valid_certs.join("\n"))
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     A CA file has been bootstrapped using certificates from the SystemRoots
     keychain. To add additional certificates (e.g. the certificates added in
     the System keychain), place .pem files in
@@ -75,7 +75,7 @@ class Libressl < Formula
 
   test do
     # Make sure the necessary .cnf file exists, otherwise LibreSSL gets moody.
-    assert (HOMEBREW_PREFIX/"etc/libressl/openssl.cnf").exist?,
+    assert_predicate HOMEBREW_PREFIX/"etc/libressl/openssl.cnf", :exist?,
             "LibreSSL requires the .cnf file for some functionality"
 
     # Check LibreSSL itself functions as expected.

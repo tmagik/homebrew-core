@@ -1,22 +1,17 @@
 class Ffe < Formula
   desc "Parse flat file structures and print them in different formats"
   homepage "https://ff-extractor.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/ff-extractor/ff-extractor/0.3.7/ffe-0.3.7.tar.gz"
-  sha256 "20ef5fda32e6576e7c81a7a30f2929e99eb84ddeb0f2fa7fa8337e8c6c740141"
+  url "https://downloads.sourceforge.net/project/ff-extractor/ff-extractor/0.3.8/ffe-0.3.8.tar.gz"
+  sha256 "46f4e728e3f9bb73a021afc1080972356bbd6d6c883598d8fd7876ad44b60835"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "e8c56b7ac4c2fdd8c67716aacca8857ce364d8711b6ff09340d5b9feedba3481" => :sierra
-    sha256 "666dc2469aeaf63a90ce687eba70efa56c955acd768664c96a1bf85fe8dcb9d6" => :el_capitan
-    sha256 "526a95e0b9565c15a2fb6dfd2ad7ce3bb58d56872c1a8bb203c4ea2093b09929" => :yosemite
+    sha256 "42240b29cbf5a1f54881c37d1062d8466f763dcefdef56690830012a585c1c5c" => :high_sierra
+    sha256 "a023c41a3bbef25ab1eb38b2e7ff202f93b580242df0b883b39e30e82e966d92" => :sierra
+    sha256 "192298bb0e1b0594b64831a943cf4d0e490d17d633b2ea4d3b225fa119705e6a" => :el_capitan
   end
 
   def install
-    # Work around build failure "ffe.c:326:23: error: non-void function
-    # 'update_anon_info' should return a value [-Wreturn-type]"
-    # Reported 7 Feb 2017 to tjsa@iki.fi
-    ENV.append_to_cflags "-Wno-return-type"
-
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--disable-silent-rules",
@@ -26,7 +21,7 @@ class Ffe < Formula
 
   test do
     (testpath/"source").write "EArthur Guinness   25"
-    (testpath/"test.rc").write <<-EOS.undent
+    (testpath/"test.rc").write <<~EOS
       structure personel_fix {
         type fixed
         record employee {

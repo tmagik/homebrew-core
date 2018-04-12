@@ -1,15 +1,15 @@
 class Libuv < Formula
   desc "Multi-platform support library with a focus on asynchronous I/O"
   homepage "https://github.com/libuv/libuv"
-  url "https://github.com/libuv/libuv/archive/v1.12.0.tar.gz"
-  sha256 "41ce914a88da21d3b07a76023beca57576ca5b376c6ac440c80bc581cbca1250"
+  url "https://github.com/libuv/libuv/archive/v1.20.0.tar.gz"
+  sha256 "6d36f18f556cc288813032a168fd9181b45d9e66e3e18e54a8dbdfd8ea3c3dba"
   head "https://github.com/libuv/libuv.git", :branch => "v1.x"
 
   bottle do
     cellar :any
-    sha256 "b90231cc5adc008fd591d9ddd67fd3e16c9f0756888b73b5d13e87749cc7fc91" => :sierra
-    sha256 "c3b092d92769caee81f1152999e934f983f93da17ac882712a5a75a117b982b5" => :el_capitan
-    sha256 "b18481786a308945b5cb19f7d1ceaf94e715d59ac473d34a713c56b8eb98e507" => :yosemite
+    sha256 "476c88880da45abdbf7a544eec324460e47d166781f3a04f3291535d71531d21" => :high_sierra
+    sha256 "15dfa2c0d814b37c546d3f292ee8e3f0b23e976a4dc6902d51548224ba0389af" => :sierra
+    sha256 "89ee31a4552be7aeccfb6430a12925f05960bd314a77621ddf7e4272bcacf9b9" => :el_capitan
   end
 
   option "with-test", "Execute compile time checks (Requires Internet connection)"
@@ -41,7 +41,7 @@ class Libuv < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <uv.h>
       #include <stdlib.h>
 
@@ -54,7 +54,7 @@ class Libuv < Formula
         return 0;
       }
     EOS
-    system ENV.cc, "test.c", "-luv", "-o", "test"
+    system ENV.cc, "test.c", "-L#{lib}", "-luv", "-o", "test"
     system "./test"
   end
 end

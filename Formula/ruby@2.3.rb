@@ -1,69 +1,44 @@
 class RubyAT23 < Formula
   desc "Powerful, clean, object-oriented scripting language"
   homepage "https://www.ruby-lang.org/"
-
-  url "https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.4.tar.xz"
-  sha256 "341cd9032e9fd17c452ed8562a8d43f7e45bfe05e411d0d7d627751dd82c578c"
-
-  # Reverts an upstream commit which incorrectly tries to install headers
-  # into SDKROOT, if defined
-  # See https://bugs.ruby-lang.org/issues/11881
-  # The issue has been fixed on HEAD as of 1 Jan 2016, but has not been
-  # backported to the 2.3 branch yet and patch is still required.
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/ba8cc6b88e6b7153ac37739e5a1a6bbbd8f43817/ruby/mkconfig.patch"
-    sha256 "929c618f74e89a5e42d899a962d7d2e4af75716523193af42626884eaba1d765"
-  end
+  url "https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.7.tar.xz"
+  sha256 "c61f8f2b9d3ffff5567e186421fa191f0d5e7c2b189b426bb84498825d548edb"
 
   bottle do
-    sha256 "51a3027c44128bbb9655b9d793a2bd2b14496870bc8ab353ab62b853871d0e35" => :sierra
-    sha256 "be70a90b4589fa664ece570627ab5886373eb01db3e57555588b1a81d5a532bb" => :el_capitan
-    sha256 "3d0cb6bdbac9062f6c3ee880013e2282f33351d0e6dd7951c3fe43f21c9362d3" => :yosemite
+    sha256 "278cfe1d06b0773308c8ecc24774da4a889d483143b1ebdd43a18373104a7992" => :high_sierra
+    sha256 "f577b57573e40294476496bea32214a4cd4ff11e4ff065e9ac5c162566d34c59" => :sierra
+    sha256 "fd7d9688aa54d13ab9874fdba05fb02bfb86db0eb796091bba5c087e5ce09c29" => :el_capitan
   end
 
   keg_only :versioned_formula
 
-  option "with-suffix", "Suffix commands with '23'"
-  option "with-doc", "Install documentation"
-  option "with-tcltk", "Install with Tcl/Tk support"
-
   depends_on "pkg-config" => :build
-  depends_on "readline" => :recommended
-  depends_on "gdbm" => :optional
-  depends_on "gmp" => :optional
-  depends_on "libffi" => :optional
   depends_on "libyaml"
   depends_on "openssl"
-  depends_on :x11 if build.with? "tcltk"
+  depends_on "readline"
+
+  def api_version
+    "2.3.0"
+  end
+
+  def rubygems_bindir
+    HOMEBREW_PREFIX/"lib/ruby/gems/#{api_version}/bin"
+  end
 
   def install
     # otherwise `gem` command breaks
     ENV.delete("SDKROOT")
 
+    paths = %w[libyaml openssl readline].map { |f| Formula[f].opt_prefix }
     args = %W[
       --prefix=#{prefix}
       --enable-shared
       --disable-silent-rules
       --with-sitedir=#{HOMEBREW_PREFIX}/lib/ruby/site_ruby
       --with-vendordir=#{HOMEBREW_PREFIX}/lib/ruby/vendor_ruby
+      --with-opt-dir=#{paths.join(":")}
     ]
-
-    args << "--program-suffix=#{program_suffix}" if build.with? "suffix"
-    args << "--with-out-ext=tk" if build.without? "tcltk"
-    args << "--disable-install-doc" if build.without? "doc"
     args << "--disable-dtrace" unless MacOS::CLT.installed?
-    args << "--without-gmp" if build.without? "gmp"
-
-    paths = [
-      Formula["libyaml"].opt_prefix,
-      Formula["openssl"].opt_prefix,
-    ]
-
-    %w[readline gdbm gmp libffi].each do |dep|
-      paths << Formula[dep].opt_prefix if build.with? dep
-    end
-
-    args << "--with-opt-dir=#{paths.join(":")}"
 
     system "./configure", *args
 
@@ -88,32 +63,29 @@ class RubyAT23 < Formula
   end
 
   def post_install
+    # Since Gem ships Bundle we want to provide that full/expected installation
+    # but to do so we need to handle the case where someone has previously
+    # installed bundle manually via `gem install`.
+    rm_f %W[
+      #{rubygems_bindir}/bundle
+      #{rubygems_bindir}/bundler
+    ]
+    rm_rf Dir[HOMEBREW_PREFIX/"lib/ruby/gems/#{api_version}/gems/bundler-*"]
+    rubygems_bindir.install_symlink Dir[libexec/"gembin/*"]
+
     # Customize rubygems to look/install in the global gem directory
     # instead of in the Cellar, making gems last across reinstalls
-    config_file = lib/"ruby/#{abi_version}/rubygems/defaults/operating_system.rb"
+    config_file = lib/"ruby/#{api_version}/rubygems/defaults/operating_system.rb"
     config_file.unlink if config_file.exist?
     config_file.write rubygems_config
 
     # Create the sitedir and vendordir that were skipped during install
-    ruby="#{bin}/ruby#{program_suffix}"
     %w[sitearchdir vendorarchdir].each do |dir|
-      mkdir_p `#{ruby} -rrbconfig -e 'print RbConfig::CONFIG["#{dir}"]'`
+      mkdir_p `#{bin}/ruby -rrbconfig -e 'print RbConfig::CONFIG["#{dir}"]'`
     end
   end
 
-  def abi_version
-    "2.3.0"
-  end
-
-  def program_suffix
-    build.with?("suffix") ? "23" : ""
-  end
-
-  def rubygems_bindir
-    "#{HOMEBREW_PREFIX}/bin"
-  end
-
-  def rubygems_config; <<-EOS.undent
+  def rubygems_config; <<~EOS
     module Gem
       class << self
         alias :old_default_dir :default_dir
@@ -128,7 +100,7 @@ class RubyAT23 < Formula
           "lib",
           "ruby",
           "gems",
-          "#{abi_version}"
+          "#{api_version}"
         ]
 
         @default_dir ||= File.join(*path)
@@ -172,16 +144,24 @@ class RubyAT23 < Formula
       end
 
       def self.ruby
-        "#{opt_bin}/ruby#{program_suffix}"
+        "#{opt_bin}/ruby"
       end
     end
     EOS
   end
 
+  def caveats; <<~EOS
+    By default, binaries installed by gem will be placed into:
+      #{rubygems_bindir}
+
+    You may want to add this to your PATH.
+    EOS
+  end
+
   test do
-    hello_text = shell_output("#{bin}/ruby#{program_suffix} -e 'puts :hello'")
+    hello_text = shell_output("#{bin}/ruby -e 'puts :hello'")
     assert_equal "hello\n", hello_text
     ENV["GEM_HOME"] = testpath
-    system "#{bin}/gem#{program_suffix}", "install", "json"
+    system "#{bin}/gem", "install", "json"
   end
 end

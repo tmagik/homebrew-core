@@ -1,14 +1,13 @@
 class Vifm < Formula
   desc "Ncurses based file manager with vi like keybindings"
   homepage "https://vifm.info/"
-  url "https://github.com/vifm/vifm/releases/download/v0.8.2/vifm-0.8.2.tar.bz2"
-  sha256 "8b466d766658a24d07fc2039a26fefc6a018f5653684a6035183ca79f02c211f"
+  url "https://github.com/vifm/vifm/releases/download/v0.9.1/vifm-0.9.1.tar.bz2"
+  sha256 "28b9a4b670d9ddc9af8c9804dc22fa93f4fd0adabce94d43ebedc157a5dce7b3"
 
   bottle do
-    sha256 "c371771e464449ebc7d8ef84c89f0b9b75eccc91bf1f1d35ca7b9d38bca885f7" => :sierra
-    sha256 "cd87c86ced448263187664d65b06a627a311d0ea456a6eda4c68bddadca82de6" => :el_capitan
-    sha256 "0967f7e9dce7d0fa2572e897532dea2af274726a944a518c13119547a2b4f699" => :yosemite
-    sha256 "7cf24c1685bbf8b4cdc799f3f6ff767809207dd72b1f2f121d1a7b74c6c909c4" => :mavericks
+    sha256 "85ed156c78b6259286e1bbde0559efbb7d184f061f1fe6d7dfa3c9e73262cbce" => :high_sierra
+    sha256 "7123769c4a1a3ea3e59871d3150182bbf3da2d98a4036b3a06a39ebacfaf65ed" => :sierra
+    sha256 "88bda24c638a68880447a6e10dcfa06ac2e49a2b77415b6a85ac3dfd33c20114" => :el_capitan
   end
 
   def install

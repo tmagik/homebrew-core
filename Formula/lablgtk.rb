@@ -1,14 +1,14 @@
 class Lablgtk < Formula
   desc "Objective Caml interface to gtk+"
   homepage "http://lablgtk.forge.ocamlcore.org"
-  url "https://forge.ocamlcore.org/frs/download.php/1627/lablgtk-2.18.5.tar.gz"
-  sha256 "2bf251db21c077fdd26c035ea03edd8fe609187f908e520e87a8ffdd9c36d233"
+  url "https://forge.ocamlcore.org/frs/download.php/1726/lablgtk-2.18.6.tar.gz"
+  sha256 "4ddca243066418e2a88ac49ebf2d846fac4b667b1b1753efadd078ae777368f8"
   revision 1
 
   bottle do
-    sha256 "24c2697e509bff51bf97b773ebfa2a3189a7adcaa540900b79720dcb107f30a7" => :sierra
-    sha256 "9a28cc19708864cc3bc3ddadb66cf1198efcfedd85a48f9f5a1a347ecf9da55d" => :el_capitan
-    sha256 "4dfb34503d939d1b2587d813b9418682a3c091a232dde202a7f158f15fbf15d6" => :yosemite
+    sha256 "61e6105e3dbec9060d899f983e134b20baeea36d9df0fb5b8b1734b35f167fec" => :high_sierra
+    sha256 "efc3825041fc4f161fa2dca93c285d14483a75a345ad2cafea1218b7cd57f01c" => :sierra
+    sha256 "8a3802f67e3a0b87cecec5627f3598bf60ceae9838fab26d59cd9bf5768d6b84" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -29,7 +29,7 @@ class Lablgtk < Formula
   end
 
   test do
-    (testpath/"test.ml").write <<-EOS.undent
+    (testpath/"test.ml").write <<~EOS
       let _ =
         GtkMain.Main.init ()
     EOS

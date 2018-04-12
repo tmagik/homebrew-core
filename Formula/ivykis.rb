@@ -1,14 +1,14 @@
 class Ivykis < Formula
   desc "Async I/O-assisting library"
   homepage "https://sourceforge.net/projects/libivykis"
-  url "https://downloads.sourceforge.net/project/libivykis/0.41/ivykis-0.41.tar.gz"
-  sha256 "2c934539a59029851b1332c8143ba9f21b79fb0185dd68d6eb259ae1b61ef3c5"
+  url "https://downloads.sourceforge.net/project/libivykis/0.42.2/ivykis-0.42.2.tar.gz"
+  sha256 "886b260369be22e438f7917ed2bc823d1cf4134bbfbc9339385a752247306b93"
 
   bottle do
     cellar :any
-    sha256 "8aa737754faeda65a8f369f85d89822d78f5285e131eaba4d3fe57c578f57051" => :sierra
-    sha256 "1914551ff67e301b8700e51a6e93096de43c793c19603b09302fff5d4e74ef0b" => :el_capitan
-    sha256 "b5b60d80ac9f9c1891d3f965b4d963b427497e0127cb6ca7892bb71943f0709e" => :yosemite
+    sha256 "6de73482d7d358088ded2c8af43993710f2967c2e8c4cd8aa67a6600aefb35bd" => :high_sierra
+    sha256 "3a9f5bdc6f40b4d7f9e7cdfcee7ad993cf02e2ac8fda0d20217ba6c10b783446" => :sierra
+    sha256 "1f202587109188602e9da0e064ffbf08242726eba5fd51037638441ada78d3e1" => :el_capitan
   end
 
   depends_on "automake" => :build
@@ -22,7 +22,7 @@ class Ivykis < Formula
   end
 
   test do
-    (testpath/"test_ivykis.c").write <<-EOS.undent
+    (testpath/"test_ivykis.c").write <<~EOS
       #include <stdio.h>
       #include <iv.h>
       int main()
@@ -32,7 +32,7 @@ class Ivykis < Formula
         return 0;
       }
     EOS
-    system ENV.cc, "test_ivykis.c", "-livykis", "-o", "test_ivykis"
+    system ENV.cc, "test_ivykis.c", "-L#{lib}", "-livykis", "-o", "test_ivykis"
     system "./test_ivykis"
   end
 end

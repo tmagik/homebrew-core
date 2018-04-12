@@ -1,11 +1,12 @@
 class Unarj < Formula
   desc "ARJ file archiver"
   homepage "http://www.arjsoftware.com/files.htm"
-  url "http://pkgs.fedoraproject.org/repo/pkgs/unarj/unarj-2.65.tar.gz/c6fe45db1741f97155c7def322aa74aa/unarj-2.65.tar.gz"
+  url "https://src.fedoraproject.org/repo/pkgs/unarj/unarj-2.65.tar.gz/c6fe45db1741f97155c7def322aa74aa/unarj-2.65.tar.gz"
   sha256 "d7dcc325160af6eb2956f5cb53a002edb2d833e4bb17846669f92ba0ce3f0264"
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "3b7158daf585ed94c61106abb7cbfc956f1a918e4d185ffaa89c755b1c9deba6" => :high_sierra
     sha256 "44c4722b1e3d30d987bcbd9fc9ccd7015c54d087bedb7da030e50cc84d0a52e6" => :sierra
     sha256 "7bdcd771f852f59915623dae370c8f807cbf20f242dad60d62afa1dc683cdf4a" => :el_capitan
     sha256 "95794638930505f1d4a23553571d62de07dd3f62da7687ef571c6f7e893bba42" => :yosemite
@@ -28,7 +29,7 @@ class Unarj < Formula
     # Ensure that you can extract ARJ.EXE from a sample self-extracting file
     resource("testfile").stage do
       system "#{bin}/unarj", "e", "ARJ286.EXE"
-      assert File.exist? "ARJ.EXE"
+      assert_predicate Pathname.pwd/"ARJ.EXE", :exist?
     end
   end
 end

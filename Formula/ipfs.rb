@@ -2,15 +2,15 @@ class Ipfs < Formula
   desc "Peer-to-peer hypermedia protocol"
   homepage "https://ipfs.io/"
   url "https://github.com/ipfs/go-ipfs.git",
-      :tag => "v0.4.9",
-      :revision => "7ea34c6c6ed18e886f869a1fbe725a848d13695c"
+      :tag => "v0.4.14",
+      :revision => "5db38464bfea73e94cb96e011cf93051fe691e65"
   head "https://github.com/ipfs/go-ipfs.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "c84486e1b6b73cd71555cbb7b068c00ae1c6a269b5724917e6515106247af7b8" => :sierra
-    sha256 "f1c0aa48b9140d408a89a48375255c85af150e457ed99c797229fe2802c2747e" => :el_capitan
-    sha256 "17a9a3ab32e70311f13e74d9f737aad86ccaba0f700ee290535d5298e30dc946" => :yosemite
+    sha256 "df19f3a4470facb659a08ae6ac3fe5c9ecaf9a8fd7eee23586e326c73a4c7d6f" => :high_sierra
+    sha256 "11842cd3d44b6ab9b0f07fb664d5c9df5ea2cf63f301b39b958bdf3fac97f71c" => :sierra
+    sha256 "5598b26f5293b4a12def593467ab5bfd1175cf82890ca6f45e9c28fed33bd3f0" => :el_capitan
   end
 
   depends_on "go" => :build
@@ -25,9 +25,9 @@ class Ipfs < Formula
     bin.install "bin/ipfs"
   end
 
-  plist_options :manual => "ipfs"
+  plist_options :manual => "ipfs daemon"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

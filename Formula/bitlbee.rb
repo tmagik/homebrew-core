@@ -9,17 +9,18 @@ class Bitlbee < Formula
 
     # Fixes a couple of bugs/potential crashes.
     patch do
-      url "https://github.com/bitlbee/bitlbee/commit/17a58dfa.patch"
-      sha256 "c0b65656c8ba0c4df3bf422891bc8a3dc86f544c1efd5d5282573b528a93537e"
+      url "https://github.com/bitlbee/bitlbee/commit/17a58dfa.patch?full_index=1"
+      sha256 "3a5729fd68bedabd1df717124e1950897eaee9feaf8237f6d67746e73df6cc6b"
     end
 
     patch do
-      url "https://github.com/bitlbee/bitlbee/commit/eb73d05e.patch"
-      sha256 "2f48226cca5149f62b446101e1104b9782f3c80f0bcab6fa34a6b4f71fc2ce7c"
+      url "https://github.com/bitlbee/bitlbee/commit/eb73d05e.patch?full_index=1"
+      sha256 "a54bdc82ff2959992e081586f5dd478a1719cd5037ebb0bfa54db6013853e0a5"
     end
   end
 
   bottle do
+    sha256 "75272001af19553b23bd5d999c76570e9f53c5f0386fe8377f4e8af6e525fb50" => :high_sierra
     sha256 "a73fcc3ea892e02dff11eda82c9338230f16778d786dbcfecae89802fb0859cb" => :sierra
     sha256 "f1e4ace83358ed1164d5d8cfbe7ffe239b5698d24211150b86dbf4d4fb589a37" => :el_capitan
     sha256 "85eebf3ba9ee2e986ef1c54b99a8df958cf48a1d5112f765e5498d9be23b9426" => :yosemite
@@ -74,7 +75,7 @@ class Bitlbee < Formula
 
   plist_options :manual => "bitlbee -D"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

@@ -1,12 +1,14 @@
 class MecabUnidic < Formula
   desc "Morphological analyzer for MeCab"
-  homepage "https://osdn.jp/projects/unidic/"
-  url "http://dl.osdn.jp/unidic/58338/unidic-mecab-2.1.2_src.zip"
+  homepage "https://osdn.net/projects/unidic/"
+  # Canonical: https://osdn.net/dl/unidic/unidic-mecab-2.1.2_src.zip
+  url "https://dotsrc.dl.osdn.net/osdn/unidic/58338/unidic-mecab-2.1.2_src.zip"
   sha256 "6cce98269214ce7de6159f61a25ffc5b436375c098cc86d6aa98c0605cbf90d4"
 
   bottle do
     cellar :any_skip_relocation
     rebuild 1
+    sha256 "9062af2305cf97efe00b42bda1b89253b487cea1ef3675e6f4c187dea1e37033" => :high_sierra
     sha256 "083c740c7c309410266eb793755477b6d37da6f6c85dddbb62e31b27dcbae135" => :sierra
     sha256 "9ece990d89f8949c82003296bd256ebafddaf5d9caf03a63ea692f2009d52783" => :el_capitan
     sha256 "f81fd4ff64eb6b7731fd4b818b17398b1eaea3d12d533a7340b9b12aa2331c0d" => :yosemite
@@ -25,14 +27,15 @@ class MecabUnidic < Formula
     system "make", "install"
   end
 
-  def caveats; <<-EOS.undent
-     To enable mecab-unidic dictionary, add to #{HOMEBREW_PREFIX}/etc/mecabrc:
-       dicdir = #{HOMEBREW_PREFIX}/lib/mecab/dic/unidic
+  def caveats
+    <<~EOS
+      To enable mecab-unidic dictionary, add to #{HOMEBREW_PREFIX}/etc/mecabrc:
+        dicdir = #{HOMEBREW_PREFIX}/lib/mecab/dic/unidic
     EOS
   end
 
   test do
-    (testpath/"mecabrc").write <<-EOS.undent
+    (testpath/"mecabrc").write <<~EOS
       dicdir = #{HOMEBREW_PREFIX}/lib/mecab/dic/unidic
     EOS
 

@@ -1,8 +1,8 @@
 class Activemq < Formula
   desc "Apache ActiveMQ: powerful open source messaging server"
   homepage "https://activemq.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=/activemq/5.14.4/apache-activemq-5.14.4-bin.tar.gz"
-  sha256 "16ec52bece0a4759f9d70f4132d7d8da67d662e4af029081c492e65510a695c1"
+  url "https://www.apache.org/dyn/closer.cgi?path=/activemq/5.15.2/apache-activemq-5.15.2-bin.tar.gz"
+  sha256 "a8ba99124df7bbd22b22d568d2cfbe4fb3feb310bd81a282dea0aa9d141c9548"
 
   bottle :unneeded
 
@@ -16,7 +16,7 @@ class Activemq < Formula
 
   plist_options :manual => "activemq start"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
     "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

@@ -1,18 +1,16 @@
 class Stunnel < Formula
   desc "SSL tunneling program"
   homepage "https://www.stunnel.org/"
-  url "https://www.stunnel.org/downloads/stunnel-5.41.tar.gz"
-  mirror "https://www.usenix.org.uk/mirrors/stunnel/stunnel-5.41.tar.gz"
-  sha256 "f05c6321ee1f6ddebacc234ccf20825971941e831b5beea6d0ce0b8e1668148f"
+  url "https://www.stunnel.org/downloads/stunnel-5.44.tar.gz"
+  mirror "https://www.usenix.org.uk/mirrors/stunnel/stunnel-5.44.tar.gz"
+  sha256 "990a325dbb47d77d88772dd02fbbd27d91b1fea3ece76c9ff4461eca93f12299"
 
   bottle do
-    sha256 "6c40cc75d38798febde053d609a5829a32098e35bc597a354d9250823c9c6195" => :sierra
-    sha256 "1184496138c87b15e3aee13b1499a531e6bdf85b5c28ab9312de4468d8c4da7e" => :el_capitan
-    sha256 "e71dae8c515ca851e64e60418d54bc12791bddbd1eee4126b9e960ec89fafcd9" => :yosemite
+    sha256 "3999aeebd42c9be5a6264746dfa009709d164929d20d26f86cfff30740c4639d" => :high_sierra
+    sha256 "619f3838b8e165fc019854242d8c60f5d4d72369d70be1d78cecc46042a2c0b9" => :sierra
+    sha256 "20be9c5027e7d0990079543d0288d51962fdb1d1812f0bdbce22884969eb45ef" => :el_capitan
   end
 
-  # Please revision me whenever OpenSSL is updated
-  # "Update OpenSSL shared libraries or rebuild stunnel"
   depends_on "openssl"
 
   def install
@@ -41,7 +39,7 @@ class Stunnel < Formula
   end
 
   def caveats
-    <<-EOS.undent
+    <<~EOS
       A bogus SSL server certificate has been installed to:
         #{etc}/stunnel/stunnel.pem
 
@@ -54,7 +52,7 @@ class Stunnel < Formula
   end
 
   test do
-    (testpath/"tstunnel.conf").write <<-EOS.undent
+    (testpath/"tstunnel.conf").write <<~EOS
       cert = #{etc}/stunnel/stunnel.pem
 
       setuid = nobody

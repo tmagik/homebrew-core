@@ -1,15 +1,19 @@
 class Neo4j < Formula
   desc "Robust (fully ACID) transactional property graph database"
   homepage "https://neo4j.com/"
-  url "https://neo4j.com/artifact.php?name=neo4j-community-3.2.0-unix.tar.gz"
-  version "3.2.0"
-  sha256 "77c0c142343ea834852d237828f1ddd8cb2d4b7be9131a00b4ec4e3c48d6f6d0"
+  url "https://neo4j.com/artifact.php\?name\=neo4j-community-3.3.4-unix.tar.gz"
+  sha256 "cc2fda6ededfc4678d1fc9be9dc1c5c2902fe2bc184125b59ae6f9183a98571c"
 
   bottle :unneeded
 
   depends_on :java => "1.8+"
 
   def install
+    inreplace %w[bin/cypher-shell bin/neo4j bin/neo4j-admin bin/neo4j-import
+                 bin/neo4j-shell],
+              'JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"',
+              'JAVA_HOME="$(/usr/libexec/java_home -v 1.8+)"'
+
     ENV["NEO4J_HOME"] = libexec
     # Remove windows files
     rm_f Dir["bin/*.bat"]
@@ -23,7 +27,7 @@ class Neo4j < Formula
 
     # Adjust UDC props
     # Suppress the empty, focus-stealing java gui.
-    (libexec/"conf/neo4j.conf").append_lines <<-EOS.undent
+    (libexec/"conf/neo4j.conf").append_lines <<~EOS
       wrapper.java.additional=-Djava.awt.headless=true
       wrapper.java.additional.4=-Dneo4j.ext.udc.source=homebrew
     EOS
@@ -35,7 +39,7 @@ class Neo4j < Formula
 
   plist_options :manual => "neo4j start"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
@@ -64,7 +68,6 @@ class Neo4j < Formula
 
   test do
     ENV["NEO4J_HOME"] = libexec
-    ENV.java_cache
     ENV["NEO4J_LOG"] = testpath/"libexec/data/log/neo4j.log"
     ENV["NEO4J_PIDFILE"] = testpath/"libexec/data/neo4j-service.pid"
     mkpath testpath/"libexec/data/log"

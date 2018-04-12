@@ -1,12 +1,13 @@
 class Libntlm < Formula
   desc "Implements Microsoft's NTLM authentication"
-  homepage "http://www.nongnu.org/libntlm/"
-  url "http://www.nongnu.org/libntlm/releases/libntlm-1.4.tar.gz"
+  homepage "https://www.nongnu.org/libntlm/"
+  url "https://www.nongnu.org/libntlm/releases/libntlm-1.4.tar.gz"
   sha256 "8415d75e31d3135dc7062787eaf4119b984d50f86f0d004b964cdc18a3182589"
 
   bottle do
     cellar :any
     rebuild 1
+    sha256 "16f8a36b728098991792d9a1f83090997db76123545250e09953b8607a943885" => :high_sierra
     sha256 "3ecf99f8e70bbbcdef3a6ce5f6fb6c887ed2a85421faf1af0b59ac7d87ae3d7d" => :sierra
     sha256 "c8da369479c9e222ee9e89af8da7991bed067ee3a1e496220226c9adc883d4a2" => :el_capitan
     sha256 "605133351d91c2a3f0f2899deef01b6536143ffe804495fb19b6e134511e2a8c" => :yosemite

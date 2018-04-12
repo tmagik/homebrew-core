@@ -1,16 +1,16 @@
 class Fossil < Formula
   desc "Distributed software configuration management"
   homepage "https://www.fossil-scm.org/"
-  url "https://www.fossil-scm.org/index.html/uv/fossil-src-2.2.tar.gz"
-  sha256 "9b8f82196eb89e4a2e82b4bcc51e314ae509a22c37073a18a0b325f11c53cf71"
+  url "https://www.fossil-scm.org/index.html/uv/fossil-src-2.5.tar.gz"
+  sha256 "f9b07360811f432dfb36ebfb44c83886872556ecce1c80387629ce90e1e4aad3"
 
   head "https://www.fossil-scm.org/", :using => :fossil
 
   bottle do
     cellar :any
-    sha256 "12deae19321986607119513bf6f7b0b71b0754a7d12615ea17b89c78d721ff6d" => :sierra
-    sha256 "ea864189bd14e2b9ff2b699a4f7f42426449550a22c71bf6de4a5a49c825ea8f" => :el_capitan
-    sha256 "e0eb6dd0f08800d8939ba216c5e068f8ba0efddc79b571d5adb9590aabfe45dc" => :yosemite
+    sha256 "ae7668a24eb90519dd006aab8b58f90c2ec6c74c288b842a0a4a58792bd4ef14" => :high_sierra
+    sha256 "202def77982dcc29a4e47dd6d6184ed42f34fceda71810bfc1cb3b44ce20e113" => :sierra
+    sha256 "8f231707dd22e094a41cd14fee7269c87126fe314e8d9b4a203f21eb1fd93198" => :el_capitan
   end
 
   option "without-json", "Build without 'json' command support"
@@ -28,7 +28,8 @@ class Fossil < Formula
     args << "--json" if build.with? "json"
 
     if MacOS::CLT.installed? && build.with?("tcl")
-      args << "--with-tcl"
+      sdk = MacOS::CLT.installed? ? "" : MacOS.sdk_path
+      args << "--with-tcl=#{sdk}/System/Library/Frameworks/Tcl.framework"
     else
       args << "--with-tcl-stubs"
     end

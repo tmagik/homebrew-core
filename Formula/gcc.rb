@@ -1,24 +1,23 @@
 class Gcc < Formula
   desc "GNU compiler collection"
   homepage "https://gcc.gnu.org/"
-
+  revision 1
   head "svn://gcc.gnu.org/svn/gcc/trunk"
 
   stable do
-    url "https://ftp.gnu.org/gnu/gcc/gcc-7.1.0/gcc-7.1.0.tar.bz2"
-    mirror "https://ftpmirror.gnu.org/gcc/gcc-7.1.0/gcc-7.1.0.tar.bz2"
-    sha256 "8a8136c235f64c6fef69cac0d73a46a1a09bb250776a050aec8f9fc880bebc17"
+    url "https://ftp.gnu.org/gnu/gcc/gcc-7.3.0/gcc-7.3.0.tar.xz"
+    mirror "https://ftpmirror.gnu.org/gcc/gcc-7.3.0/gcc-7.3.0.tar.xz"
+    sha256 "832ca6ae04636adbb430e865a1451adf6979ab44ca1c8374f61fba65645ce15c"
   end
 
   bottle do
-    sha256 "a9e9e939786a0f13c75dfbfe47c12b1e0b0c577f2aae942dfc16d2f8d0fd487c" => :sierra
-    sha256 "e237e79704d0738745ecff5286d9466624ecf942761c2735467b04f1de6fbd68" => :el_capitan
-    sha256 "551031101225e76d9268f2ac5bdddc48a24c8dd7810aeccca8e95f481ae5b1e0" => :yosemite
+    sha256 "e28abdcd4b1eca7b8bdfc76779e8d6343eb11d8fc4e9c523f03c3c1c887aac2a" => :high_sierra
+    sha256 "eef4c6b68313e913b3c71329575699e960a384044b12a76fd880a500fb8dbf1c" => :sierra
+    sha256 "a2a77d7caeda7cb6dcacebc2f5113f7a8a3579a146b3a9b539f060409198bba1" => :el_capitan
   end
 
   option "with-jit", "Build just-in-time compiler"
   option "with-nls", "Build with native language support (localization)"
-  option "without-multilib", "Build without multilib support"
 
   depends_on "gmp"
   depends_on "libmpc"
@@ -37,7 +36,7 @@ class Gcc < Formula
 
   def version_suffix
     if build.head?
-      (stable.version.to_s.slice(/\d/).to_i + 1).to_s
+      "HEAD"
     else
       version.to_s.slice(/\d/)
     end
@@ -47,17 +46,21 @@ class Gcc < Formula
   # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64089
   # https://github.com/Homebrew/homebrew-core/issues/1872#issuecomment-225625332
   # https://github.com/Homebrew/homebrew-core/issues/1872#issuecomment-225626490
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/e9e0ee09389a54cc4c8fe1c24ebca3cd765ed0ba/gcc/6.1.0-jit.patch"
-    sha256 "863957f90a934ee8f89707980473769cff47ca0663c3906992da6afb242fb220"
+  # Now fixed on GCC trunk for GCC 8, may backported to other branches
+  unless build.head?
+    patch do
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/e9e0ee09389a54cc4c8fe1c24ebca3cd765ed0ba/gcc/6.1.0-jit.patch"
+      sha256 "863957f90a934ee8f89707980473769cff47ca0663c3906992da6afb242fb220"
+    end
   end
 
-  # Use -headerpad_max_install_names in the build,
-  # otherwise lto1 load commands cannot be edited on El Capitan
-  if MacOS.version == :el_capitan
+  # Fix parallel build on APFS filesystem
+  # Remove for 7.4.0 and later
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81797
+  if MacOS.version >= :high_sierra
     patch do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/32cf103/gcc/7.1.0-headerpad.patch"
-      sha256 "dd884134e49ae552b51085116e437eafa63460b57ce84252bfe7a69df8401640"
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/df0465c02a/gcc/apfs.patch"
+      sha256 "f7772a6ba73f44a6b378e4fe3548e0284f48ae2d02c701df1be93780c1607074"
     end
   end
 
@@ -93,7 +96,6 @@ class Gcc < Formula
       "--with-bugurl=https://github.com/Homebrew/homebrew-core/issues",
     ]
 
-    args << "--disable-multilib" if build.without?("multilib")
     args << "--disable-nls" if build.without? "nls"
     args << "--enable-host-shared" if build.with?("jit")
 
@@ -110,7 +112,15 @@ class Gcc < Formula
       end
 
       system "../configure", *args
-      system "make"
+
+      make_args = []
+      # Use -headerpad_max_install_names in the build,
+      # otherwise lto1 load commands cannot be edited on El Capitan
+      if MacOS.version == :el_capitan
+        make_args << "BOOT_LDFLAGS=-Wl,-headerpad_max_install_names"
+      end
+
+      system "make", *make_args
       system "make", "install"
 
       bin.install_symlink bin/"gfortran-#{version_suffix}" => "gfortran"
@@ -132,7 +142,7 @@ class Gcc < Formula
   end
 
   test do
-    (testpath/"hello-c.c").write <<-EOS.undent
+    (testpath/"hello-c.c").write <<~EOS
       #include <stdio.h>
       int main()
       {
@@ -143,7 +153,7 @@ class Gcc < Formula
     system "#{bin}/gcc-#{version_suffix}", "-o", "hello-c", "hello-c.c"
     assert_equal "Hello, world!\n", `./hello-c`
 
-    (testpath/"hello-cc.cc").write <<-EOS.undent
+    (testpath/"hello-cc.cc").write <<~EOS
       #include <iostream>
       int main()
       {
@@ -154,7 +164,7 @@ class Gcc < Formula
     system "#{bin}/g++-#{version_suffix}", "-o", "hello-cc", "hello-cc.cc"
     assert_equal "Hello, world!\n", `./hello-cc`
 
-    (testpath/"test.f90").write <<-EOS.undent
+    (testpath/"test.f90").write <<~EOS
       integer,parameter::m=10000
       real::a(m), b(m)
       real::fact=0.5

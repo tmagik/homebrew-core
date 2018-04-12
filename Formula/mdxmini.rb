@@ -7,6 +7,7 @@ class Mdxmini < Formula
   bottle do
     cellar :any
     rebuild 1
+    sha256 "5bf36e82084146ab4604b4746bcf6634cfe4268f2044712e4d13519b21ab5165" => :high_sierra
     sha256 "8e0daf3d508dad59074c567b8c8e60bd88c8026b7dfe1305e4e9c50ec5d8fbbd" => :sierra
     sha256 "d20b94107c25833096401be6336544f283e6956758d4238e207e6a4e34fa5fdf" => :el_capitan
     sha256 "55cf6b84d9a0e649e25db7626db954a47bf1061afd20a959972470b6e5cc9fa2" => :yosemite
@@ -42,20 +43,20 @@ class Mdxmini < Formula
 
   test do
     resource("test_song").stage testpath
-    (testpath/"mdxtest.c").write <<-EOS.undent
-    #include <stdio.h>
-    #include "libmdxmini/mdxmini.h"
+    (testpath/"mdxtest.c").write <<~EOS
+      #include <stdio.h>
+      #include "libmdxmini/mdxmini.h"
 
-    int main(int argc, char** argv)
-    {
-        t_mdxmini mdx;
-        char title[100];
-        mdx_open(&mdx, argv[1], argv[2]);
-        mdx_get_title(&mdx, title);
-        printf("%s\\n", title);
-    }
+      int main(int argc, char** argv)
+      {
+          t_mdxmini mdx;
+          char title[100];
+          mdx_open(&mdx, argv[1], argv[2]);
+          mdx_get_title(&mdx, title);
+          printf("%s\\n", title);
+      }
     EOS
-    system ENV.cc, "mdxtest.c", "-lmdxmini", "-o", "mdxtest"
+    system ENV.cc, "mdxtest.c", "-L#{lib}", "-lmdxmini", "-o", "mdxtest"
 
     result = `#{testpath}/mdxtest #{testpath}/pop-00.mdx #{testpath}`.chomp
     result.force_encoding("ascii-8bit") if result.respond_to? :force_encoding

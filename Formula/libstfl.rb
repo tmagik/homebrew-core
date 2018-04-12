@@ -3,19 +3,20 @@ class Libstfl < Formula
   homepage "http://www.clifford.at/stfl/"
   url "http://www.clifford.at/stfl/stfl-0.24.tar.gz"
   sha256 "d4a7aa181a475aaf8a8914a8ccb2a7ff28919d4c8c0f8a061e17a0c36869c090"
-  revision 2
+  revision 6
 
   bottle do
     cellar :any
-    sha256 "9841b8b540515d2df6f40a6801c8d0a129b78aa8f3237dc50592ef9eb3154491" => :sierra
-    sha256 "4ebbe11b13902da1463edfed85321269dcf74a712beabdf153ff1be80253f018" => :el_capitan
-    sha256 "c3aea6561c3114809767ccdaae3f8b8b5bb2f0ec1afeaf459c621844476ade84" => :yosemite
+    sha256 "6b5656c0ec03676968efed42dfdd87c2ab27b37638461274fed870f131ae1321" => :high_sierra
+    sha256 "8e0258e39c281826514ba49c3add732ada3ae097cd6f840bf5e22849016e5a7d" => :sierra
+    sha256 "88971ef99df357abe7189391d3c6fe559dcd24c3faaf0e0b22d91a94ccbbeefb" => :el_capitan
   end
 
   option "without-perl", "Build without Perl support"
   option "without-python", "Build without Python 2 support"
+  option "without-ruby", "Build without Ruby support"
 
-  depends_on :ruby => ["1.8", :recommended]
+  depends_on "ruby" => :recommended if MacOS.version <= :mountain_lion
   depends_on "swig" => :build if build.with?("python") || build.with?("ruby") || build.with?("perl")
 
   def install
@@ -67,7 +68,7 @@ class Libstfl < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <stfl.h>
       int main() {
         stfl_ipool * pool = stfl_ipool_create("utf-8");

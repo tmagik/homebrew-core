@@ -4,18 +4,20 @@
 class Openssl < Formula
   desc "SSL/TLS cryptography library"
   homepage "https://openssl.org/"
-  url "https://www.openssl.org/source/openssl-1.0.2l.tar.gz"
-  mirror "https://dl.bintray.com/homebrew/mirror/openssl-1.0.2l.tar.gz"
-  mirror "https://www.mirrorservice.org/sites/ftp.openssl.org/source/openssl-1.0.2l.tar.gz"
-  sha256 "ce07195b659e75f4e1db43552860070061f156a98bb37b672b101ba6e3ddf30c"
+  url "https://www.openssl.org/source/openssl-1.0.2o.tar.gz"
+  mirror "https://dl.bintray.com/homebrew/mirror/openssl-1.0.2o.tar.gz"
+  mirror "https://www.mirrorservice.org/sites/ftp.openssl.org/source/openssl-1.0.2o.tar.gz"
+  mirror "http://artfiles.org/openssl.org/source/openssl-1.0.2o.tar.gz"
+  sha256 "ec3f5c9714ba0fd45cb4e087301eb1336c317e0d20b575a125050470e8089e4d"
+  revision 1
 
   bottle do
-    sha256 "b9a6d41e2889890de8db396c2c2809711baff4272494eb4011c6473f099ba4f1" => :sierra
-    sha256 "8650d9af7937c232b54b3229ac86f0fc141799040564d57488f70caeed1b4ee4" => :el_capitan
-    sha256 "d1bc6fd09adc76f099f810f3bfe2b96baf87219432ca0a104fafac48ffaa88b6" => :yosemite
+    sha256 "67a795f419adcc7f2cc9c204538f2606ed9cf11f2e9587dea9c4f8189a592dee" => :high_sierra
+    sha256 "06ae39a0167691a104a490b5518600f314f72944a18dc1fbdae8405d000b585b" => :sierra
+    sha256 "3470a25f36a68d96b00dffcd1452d3d5d171ab3656e126f6e2cf233e2705423d" => :el_capitan
   end
 
-  keg_only :provided_by_osx,
+  keg_only :provided_by_macos,
     "Apple has deprecated use of OpenSSL in favor of its own TLS and crypto libraries"
 
   option "without-test", "Skip build-time tests (not recommended)"
@@ -34,8 +36,10 @@ class Openssl < Formula
   def configure_args; %W[
     --prefix=#{prefix}
     --openssldir=#{openssldir}
+    no-comp
     no-ssl2
-    zlib-dynamic
+    no-ssl3
+    no-zlib
     shared
     enable-cms
   ]
@@ -47,14 +51,6 @@ class Openssl < Formula
     # along with perl modules in PERL5LIB.
     ENV.delete("PERL")
     ENV.delete("PERL5LIB")
-
-    # Load zlib from an explicit path instead of relying on dyld's fallback
-    # path, which is empty in a SIP context. This patch will be unnecessary
-    # when we begin building openssl with no-comp to disable TLS compression.
-    # https://langui.sh/2015/11/27/sip-and-dlopen
-    inreplace "crypto/comp/c_zlib.c",
-              'zlib_dso = DSO_load(NULL, "z", NULL, 0);',
-              'zlib_dso = DSO_load(NULL, "/usr/lib/libz.dylib", NULL, DSO_FLAG_NO_NAME_TRANSLATION);'
 
     if MacOS.prefer_64_bit?
       arch = Hardware::CPU.arch_64_bit
@@ -98,7 +94,7 @@ class Openssl < Formula
     (openssldir/"cert.pem").atomic_write(valid_certs.join("\n"))
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     A CA file has been bootstrapped using certificates from the SystemRoots
     keychain. To add additional certificates (e.g. the certificates added in
     the System keychain), place .pem files in
@@ -111,7 +107,7 @@ class Openssl < Formula
 
   test do
     # Make sure the necessary .cnf file exists, otherwise OpenSSL gets moody.
-    assert (HOMEBREW_PREFIX/"etc/openssl/openssl.cnf").exist?,
+    assert_predicate HOMEBREW_PREFIX/"etc/openssl/openssl.cnf", :exist?,
             "OpenSSL requires the .cnf file for some functionality"
 
     # Check OpenSSL itself functions as expected.

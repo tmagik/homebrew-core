@@ -1,16 +1,14 @@
 class Abcmidi < Formula
   desc "Converts abc music notation files to MIDI files"
-  homepage "http://www.ifdo.ca/~seymour/runabc/top.html"
-  url "http://www.ifdo.ca/~seymour/runabc/abcMIDI-2016.03.03.zip"
-  version "2016-03-03"
-  sha256 "a9070dbb49758474805252d1a3e837aef8dc1266f6415f8eccc7df118af3dc1e"
+  homepage "https://www.ifdo.ca/~seymour/runabc/top.html"
+  url "https://www.ifdo.ca/~seymour/runabc/abcMIDI-2018.04.01.zip"
+  sha256 "8745f7e9e6fea518084763f20f014b4fdd965fd5b8c42596479d068fcf65c18c"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "b1d97a0bde643f3565272c15ddfe375fc173cae7c12ccc4d68f39c2aeee83365" => :sierra
-    sha256 "f94a95a09103ae6db8b8b58abbed55dfbd6b2c66ca63aa3128915dacf16cf2a4" => :el_capitan
-    sha256 "8c6720778cf90577c598fe35eb76a9afa05f522335c39600435bbc26d59ff7df" => :yosemite
-    sha256 "adb9d06a2dea9d285dc73ccbc7146e9badb026a5900f325fdc760cacd02f7857" => :mavericks
+    sha256 "9b12eee9e7ce20afcfe60d4989d3abfaac046ae4e0056e1e2892b9c09abce90b" => :high_sierra
+    sha256 "de054d909bc29a9f05139a86bc562034e6b6c6179a4e926f681d2c8c2ae69912" => :sierra
+    sha256 "261d0f4caaea59648309235d2fbd749ff9fb31f848744cf0bbed290e5fad9c84" => :el_capitan
   end
 
   def install
@@ -26,7 +24,7 @@ class Abcmidi < Formula
   end
 
   test do
-    (testpath/"balk.abc").write <<-EOF.undent
+    (testpath/"balk.abc").write <<~EOS
       X: 1
       T: Abdala
       F: https://www.youtube.com/watch?v=YMf8yXaQDiQ
@@ -43,7 +41,7 @@ class Abcmidi < Formula
       |:=B,CDE |D2C=B,|C2=B,2 |C2D2   |\
         =B,CDE |D2C=B,|C2=B,2 |A,2G,2 :|
       |:C2=B,2 |A,2G,2| C2=B,2|A,2G,2 :|
-    EOF
+    EOS
 
     system "#{bin}/abc2midi", (testpath/"balk.abc")
   end

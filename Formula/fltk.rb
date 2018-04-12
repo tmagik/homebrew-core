@@ -1,13 +1,15 @@
 class Fltk < Formula
   desc "Cross-platform C++ GUI toolkit"
   homepage "http://www.fltk.org/"
-  url "https://fossies.org/linux/misc/fltk-1.3.4-source.tar.gz"
-  sha256 "c8ab01c4e860d53e11d40dc28f98d2fe9c85aaf6dbb5af50fd6e66afec3dc58f"
+  url "http://fltk.org/pub/fltk/1.3.4/fltk-1.3.4-2-source.tar.gz"
+  mirror "https://dl.bintray.com/homebrew/mirror/fltk-1.3.4-2.tar.gz"
+  version "1.3.4-2"
+  sha256 "25d349c18c99508737d48f225a2eb26a43338f9247551cab72a317fa42cda910"
 
   bottle do
-    sha256 "145440139990f28366947502ac96c89ecea165dd6e328b30495291ea55b0bd17" => :sierra
-    sha256 "8fc20e6d86ac3c9866b614365b25942cba95855ae748f284848224df9de7c90d" => :el_capitan
-    sha256 "b30e0f6d843720c277f5e2c393abb2505d2fe69c8335c152f645ce87cc91d735" => :yosemite
+    sha256 "5dd4bbb5cf10af5e0a1ff2f29c6d12657f09626fab43811b441b27c677afd0af" => :high_sierra
+    sha256 "e22929035ced94a301c1294de6d305079e34d9709d3e9551b19555ab2f06656e" => :sierra
+    sha256 "5481ffce354c2c98ed7634b036d678c7476780085e1a518af186f2e4b22d2c31" => :el_capitan
   end
 
   depends_on "libpng"
@@ -21,7 +23,7 @@ class Fltk < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <FL/Fl.H>
       #include <FL/Fl_Window.H>
       #include <FL/Fl_Box.H>

@@ -1,13 +1,13 @@
 class MysqlAT55 < Formula
   desc "Open source relational database management system"
   homepage "https://dev.mysql.com/doc/refman/5.5/en/"
-  url "https://dev.mysql.com/get/Downloads/MySQL-5.5/mysql-5.5.56.tar.gz"
-  sha256 "3fd30a24267cef84ee8aeb327a5b08a669d3ab8c4d76d1b1b3b66d26cf777a0a"
+  url "https://dev.mysql.com/get/Downloads/MySQL-5.5/mysql-5.5.59.tar.gz"
+  sha256 "ee920177c9dec770c30b673a21143d5e92a67e8207f9b720d41d51cda05d8513"
 
   bottle do
-    sha256 "57a68b94580d89ac07c633904da7218bb73092dcbc7d31071d96090a9b65c517" => :sierra
-    sha256 "867a059b4ea2769b2c54b6124f3c6d0558bdea87d5880043b084850d226d91f3" => :el_capitan
-    sha256 "477c1abafe1181b27fde3588725e475a0204159621214953deeaf3d4c4c21efa" => :yosemite
+    sha256 "0f3e0b62063f28d43ad0e14e2d5a30c341e4c556a6b7bfc43130dec765d7cd65" => :high_sierra
+    sha256 "10ec1d0e791a67f21ea30cdb6bdb9d5672f3a9deb7cc1c298f63822f76da11ba" => :sierra
+    sha256 "d1dafa246bc2153d33af3ad12e55dfc72cc8e73d4d66274459b9acd76684539f" => :el_capitan
   end
 
   keg_only :versioned_formula
@@ -108,7 +108,7 @@ class MysqlAT55 < Formula
     libexec.install bin/"mysqlaccess.conf"
 
     # Install my.cnf that binds to 127.0.0.1 by default
-    (buildpath/"my.cnf").write <<-EOS.undent
+    (buildpath/"my.cnf").write <<~EOS
       # Default Homebrew MySQL server config
       [mysqld]
       # Only allow connections from localhost
@@ -127,7 +127,7 @@ class MysqlAT55 < Formula
     end
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     A "/etc/my.cnf" from another install may interfere with a Homebrew-built
     server starting up correctly.
 
@@ -140,7 +140,7 @@ class MysqlAT55 < Formula
 
   plist_options :manual => "#{HOMEBREW_PREFIX}/opt/mysql@5.5/bin/mysql.server start"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

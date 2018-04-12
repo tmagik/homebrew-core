@@ -3,12 +3,15 @@ class Vice < Formula
   homepage "https://vice-emu.sourceforge.io/"
   url "https://downloads.sourceforge.net/project/vice-emu/releases/vice-3.1.tar.gz"
   sha256 "3eb8159633816095006dec36c5c3edd055a87fd8bda193a1194a6801685d1240"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "2ddbb25b61c97ffbef3f4524a58f799eecd967b767a687f614db8d4ee649ab15" => :sierra
-    sha256 "f45720b53433063638ea7844a7dbbb4867ba0c36f48428e119d2fc7779f31b86" => :el_capitan
-    sha256 "63894c6d60877e61bc0f03606c486cae09d97b53640327bd1e026f5ed486754a" => :yosemite
+    rebuild 1
+    sha256 "cfc6a84e02744b85867aeeef591fb185de4a8560a1fbbc7dc50a53a8d0393b59" => :high_sierra
+    sha256 "39bfe0b566c65cb01ce976dbb5be3fbf46b4486bc9678f8c5b288fd2d8bb265d" => :sierra
+    sha256 "34ff96ca0fdc51f4a873970d00bcab347c3483fad7ee1a670e1c49182690cd2e" => :el_capitan
+    sha256 "ab4044f958907bd7d756575fc97e0e42ffc24307c621176da0d0522feadb22f4" => :yosemite
   end
 
   depends_on "pkg-config" => :build
@@ -62,7 +65,7 @@ class Vice < Formula
     bin.install_symlink Dir[prefix/"tools/*"]
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     Apps for these emulators have been installed to #{opt_prefix}.
   EOS
   end

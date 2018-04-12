@@ -1,15 +1,14 @@
 class Rkhunter < Formula
   desc "Rootkit hunter"
   homepage "https://rkhunter.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/rkhunter/rkhunter/1.4.2/rkhunter-1.4.2.tar.gz"
-  sha256 "789cc84a21faf669da81e648eead2e62654cfbe0b2d927119d8b1e55b22b65c3"
+  url "https://downloads.sourceforge.net/project/rkhunter/rkhunter/1.4.6/rkhunter-1.4.6.tar.gz"
+  sha256 "9c0f310583ff0dd8168010acd45c7d2e3a37e176300ac642269bce3d759ebda0"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "d314b78c20ac638e0e8db2488cde0d249fffcaf4fff983202019f7918fbd69e3" => :sierra
-    sha256 "7c13ec707da81dfb0cdc9ad8b8ffd9d3549454db698379c6159f3d69c4ed617d" => :el_capitan
-    sha256 "5269398b0bc05b26f47033f790c96c508ba8a072d904d6e06a4abbe4c3778e95" => :yosemite
-    sha256 "1eeeab51dfa8dafeb1b4f9b283f89bf18180c4c55ef65b9b716f892ef53ee85f" => :mavericks
+    sha256 "35df7b4e420968fc71fc0fc0217716393c624594ff51245c80a969a5bb1569eb" => :high_sierra
+    sha256 "8d00f31cf5150d841b22dd3c1cdda33dc8705075529f000d41678d05cb733e0f" => :sierra
+    sha256 "1aca76cf8e890112cad63d353ca8369e301e0e990e5380bb5fc4236ded810147" => :el_capitan
   end
 
   def install

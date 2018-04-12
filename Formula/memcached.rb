@@ -1,14 +1,14 @@
 class Memcached < Formula
   desc "High performance, distributed memory object caching system"
   homepage "https://memcached.org/"
-  url "https://www.memcached.org/files/memcached-1.4.36.tar.gz"
-  sha256 "773b6bb20bf80223ca6a15d75f570fbab346ad11ec98595e5af5e33f54bd82d8"
+  url "https://www.memcached.org/files/memcached-1.5.7.tar.gz"
+  sha256 "5bb706a8fc7ae7461a6788eaddd85e4a4e84e952d3a80c21926342c2838f4e46"
 
   bottle do
     cellar :any
-    sha256 "bdd0aa093595f71eb60f5d80d2db4cf1c648695f5ba5244671a77450cd69f20c" => :sierra
-    sha256 "1cfff2115f1a6c8336e5575d0512d6ea03178720a3e57967cc02ba07675b0b5e" => :el_capitan
-    sha256 "12d6c28f78cae0b7ca22dfabe35d631489430b48560cb3bd71c123b2842b3928" => :yosemite
+    sha256 "acd08eb0c4e2b4237364123faade971a049f09d92fd1c0221867fb009705d671" => :high_sierra
+    sha256 "88f2db94e693718d392b3bf6a2433a64453fd2f949c911956125e47a7222ceed" => :sierra
+    sha256 "80c5d28051f3e6ee6b3033e22ad9e6aa9f6f174077ecf4752a4d38e082470a17" => :el_capitan
   end
 
   option "with-sasl", "Enable SASL support -- disables ASCII protocol!"
@@ -32,7 +32,7 @@ class Memcached < Formula
 
   plist_options :manual => "#{HOMEBREW_PREFIX}/opt/memcached/bin/memcached"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
@@ -57,6 +57,12 @@ class Memcached < Formula
   end
 
   test do
-    system "#{bin}/memcached", "-h"
+    pidfile = testpath/"memcached.pid"
+    # Assumes port 11211 is not already taken
+    system bin/"memcached", "--listen=localhost:11211", "--daemon", "--pidfile=#{pidfile}"
+    sleep 1
+    assert_predicate pidfile, :exist?, "Failed to start memcached daemon"
+    pid = (testpath/"memcached.pid").read.chomp.to_i
+    Process.kill "TERM", pid
   end
 end

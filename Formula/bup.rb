@@ -7,6 +7,7 @@ class Bup < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "364b59cc6d16740e56d5295636670f1084f541027c72f0f4ba18e3a12dba8959" => :high_sierra
     sha256 "ffe848617a641266d6915ce1c0fa6713dd02d978f47da33ffb9b91b15adbbe05" => :sierra
     sha256 "d17a4b3cfa4233179a4828b23fdae5bf19a8bb605080c697b52d548354e797cb" => :el_capitan
     sha256 "462b39a188a6fd32d9df4812a629b3bf8692f38439125d98e58e306261277903" => :yosemite
@@ -20,7 +21,7 @@ class Bup < Formula
   deprecated_option "with-tests" => "with-test"
 
   depends_on "pandoc" => [:optional, :build]
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
 
   resource "backports_abc" do
     url "https://files.pythonhosted.org/packages/68/3c/1317a9113c377d1e33711ca8de1e80afbaf4a3c950dd0edfaf61f9bfe6d8/backports_abc-0.5.tar.gz"
@@ -50,7 +51,7 @@ class Bup < Formula
   def install
     # `make test` gets stuck unless the Python Tornado module is installed
     # Fix provided 12 Jun 2016 by upstream in #bup channel on IRC freenode
-    inreplace "t/test-web.sh", "if test -n \"$run_test\"; then", <<-EOS.undent
+    inreplace "t/test-web.sh", "if test -n \"$run_test\"; then", <<~EOS
       if ! python -c 'import tornado'; then
           WVSTART 'unable to import tornado; skipping test'
           run_test=''
@@ -80,6 +81,6 @@ class Bup < Formula
 
   test do
     system bin/"bup", "init"
-    assert File.exist?("#{testpath}/.bup")
+    assert_predicate testpath/".bup", :exist?
   end
 end

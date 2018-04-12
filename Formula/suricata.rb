@@ -1,16 +1,16 @@
 class Suricata < Formula
   desc "Network IDS, IPS, and security monitoring engine"
   homepage "https://suricata-ids.org/"
-  url "https://www.openinfosecfoundation.org/download/suricata-3.2.1.tar.gz"
-  sha256 "0e0b0cf49016804bb2fb1fc4327341617e76a67902f4e03e0ef6d16c1d7d3994"
+  url "https://www.openinfosecfoundation.org/download/suricata-4.0.4.tar.gz"
+  sha256 "617e83b6e20b03aa7d5e05a980d3cb6d2810ec18a6f15a36bf66c81c9c0a2abb"
 
   bottle do
-    sha256 "b99cf91adf35b491fdfa2c4421c918a6fbe619cac5bdc2382d692abb4afca15a" => :sierra
-    sha256 "a7ae9bbda83bcce4ffef56961305164802994930118f307b07fe7fef028e852f" => :el_capitan
-    sha256 "5fdf576e4d3d4558879493e2875d13a9200ab71d33c68711259e3aa46e384b86" => :yosemite
+    sha256 "d01576e7a951c8909a2193e758ca7d19b5d47d818547172317d4e47a63b08245" => :high_sierra
+    sha256 "45581acbe7020a50fea0dc1fb72a71739053b1ad12f493f10b20b2a910809c9f" => :sierra
+    sha256 "76b6f1235a829f6744181f82ed216a31060b1e266cbdb519d78629416b46b18a" => :el_capitan
   end
 
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
   depends_on "pkg-config" => :build
   depends_on "libmagic"
   depends_on "libnet"
@@ -25,19 +25,16 @@ class Suricata < Formula
   depends_on "hiredis" => :optional
 
   resource "argparse" do
-    url "https://pypi.python.org/packages/source/a/argparse/argparse-1.3.0.tar.gz"
-    sha256 "b3a79a23d37b5a02faa550b92cbbbebeb4aa1d77e649c3eb39c19abf5262da04"
+    url "https://files.pythonhosted.org/packages/source/a/argparse/argparse-1.4.0.tar.gz"
+    sha256 "62b089a55be1d8949cd2bc7e0df0bddb9e028faefc8c32038cc84862aefdd6e4"
   end
 
   resource "simplejson" do
-    url "https://pypi.python.org/packages/source/s/simplejson/simplejson-3.6.5.tar.gz"
-    sha256 "2a3189f79d1c7b8a2149a0e783c0b4217fad9b30a6e7d60450f2553dc2c0e57e"
+    url "https://files.pythonhosted.org/packages/source/s/simplejson/simplejson-3.13.2.tar.gz"
+    sha256 "4c4ecf20e054716cc1e5a81cadc44d3f4027108d8dd0861d8b1e3bd7a32d4f0a"
   end
 
   def install
-    # bug raised https://redmine.openinfosecfoundation.org/issues/1470
-    ENV.deparallelize
-
     libnet = Formula["libnet"]
     libmagic = Formula["libmagic"]
 
@@ -79,7 +76,7 @@ class Suricata < Formula
     if build.with? "hiredis"
       hiredis = Formula["hiredis"]
       args << "--enable-hiredis"
-      args << "--with-libjansson-includes=#{hiredis.opt_include}"
+      args << "--with-libhiredis-includes=#{hiredis.opt_include}"
       args << "--with-libhiredis-libraries=#{hiredis.opt_lib}"
     end
     system "./configure", *args

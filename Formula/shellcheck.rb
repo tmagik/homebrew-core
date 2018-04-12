@@ -5,18 +5,19 @@ class Shellcheck < Formula
 
   desc "Static analysis and lint tool, for (ba)sh scripts"
   homepage "https://www.shellcheck.net/"
-  url "https://github.com/koalaman/shellcheck/archive/v0.4.6.tar.gz"
-  sha256 "1c3cd8995ebebf6c8e5475910809762b91bebf0a3827ad87a0c392c168326de2"
+  url "https://github.com/koalaman/shellcheck/archive/v0.4.7.tar.gz"
+  sha256 "3fd7ebec821b96585ba9137b7b8c7bd9410876490f4ec89f2cca9975080a8206"
   head "https://github.com/koalaman/shellcheck.git"
 
   bottle do
-    sha256 "3981e4c97f80caa26393d3f935a227741a9c81b7a2df63a0e3708801eeb0cef0" => :sierra
-    sha256 "7d5ffab5c7e530e369b428caab2285ed4dfb2deba034e6f8fadd7389953149a0" => :el_capitan
-    sha256 "c8b22afa52149b48b9e58c60cd200b937c2e9b3ef12abb8914c7f6c31ab63e43" => :yosemite
+    cellar :any_skip_relocation
+    sha256 "4670b4952117677a171f4e3312d5b6660ad6b443c1e2c65aed8fb17fe46b2342" => :high_sierra
+    sha256 "8eb344f3f20995bd7210f12b337116b0295755bf78990ea824ba160e8e6b0bf9" => :sierra
+    sha256 "7136c486a8faf29e840b96abc02a68420b641261ba3ed252fbc5ac0da7161721" => :el_capitan
   end
 
-  depends_on "ghc" => :build
   depends_on "cabal-install" => :build
+  depends_on "ghc@8.2" => :build
   depends_on "pandoc" => :build
 
   def install
@@ -27,7 +28,7 @@ class Shellcheck < Formula
 
   test do
     sh = testpath/"test.sh"
-    sh.write <<-EOS.undent
+    sh.write <<~EOS
       for f in $(ls *.wav)
       do
         echo "$f"

@@ -1,13 +1,13 @@
 class Getdns < Formula
   desc "Modern asynchronous DNS API"
   homepage "https://getdnsapi.net"
-  url "https://getdnsapi.net/releases/getdns-1-1-1/getdns-1.1.1.tar.gz"
-  sha256 "fa414c30d5f2d2b2453b5cec77362b4cc0f44d440be5893233748d82bd6a1a56"
+  url "https://getdnsapi.net/releases/getdns-1-4-1/getdns-1.4.1.tar.gz"
+  sha256 "245233dc780f615b6ab1472f2b9cdcd957a451a736f3036717d0da466ab1c51e"
 
   bottle do
-    sha256 "2a1613d58172712b33f30b4fcb9c9ca75130967e935127a583dd098ff07805ee" => :sierra
-    sha256 "429fd53521d7de2d16e2857a7c99159447e410b39c7625988489522823d136e1" => :el_capitan
-    sha256 "6cecdf22e2699604880964b4758b99655923c5f6fd853c3f680abdd28605b567" => :yosemite
+    sha256 "d80644beb47575554da2473d294956859e8ff96b45f38d0f23a4b49c64d7a1ff" => :high_sierra
+    sha256 "9483906284202975572bdf52a8556de1bf25be69ad36edd703528692a487c342" => :sierra
+    sha256 "5dfc428706294f5f608749170520feb4d6b87bdeb362800e8fea50314a4a2a2c" => :el_capitan
   end
 
   head do
@@ -34,6 +34,7 @@ class Getdns < Formula
     args = [
       "--with-ssl=#{Formula["openssl"].opt_prefix}",
       "--with-trust-anchor=#{etc}/getdns-root.key",
+      "--without-stubby",
     ]
     args << "--enable-stub-only" if build.without? "unbound"
     args << "--without-libidn" if build.without? "libidn"
@@ -41,17 +42,16 @@ class Getdns < Formula
     args << "--with-libuv" if build.with? "libuv"
     args << "--with-libev" if build.with? "libev"
 
-    # Current Makefile layout prevents simultaneous job execution
-    # https://github.com/getdnsapi/getdns/issues/166
-    ENV.deparallelize
-
     system "./configure", "--prefix=#{prefix}", *args
+    system "make"
+    ENV.deparallelize
     system "make", "install"
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <getdns/getdns.h>
+      #include <stdio.h>
 
       int main(int argc, char *argv[]) {
         getdns_context *context;

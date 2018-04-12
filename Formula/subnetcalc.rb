@@ -1,14 +1,14 @@
 class Subnetcalc < Formula
   desc "IPv4/IPv6 subnet calculator"
   homepage "https://www.uni-due.de/~be0001/subnetcalc/"
-  url "https://www.uni-due.de/~be0001/subnetcalc/download/subnetcalc-2.4.5.tar.gz"
-  sha256 "7f0472481bbc182160fb8ab5fb85a6f57691733b5a45ee0ec17cab4855640be1"
+  url "https://www.uni-due.de/~be0001/subnetcalc/download/subnetcalc-2.4.8.tar.gz"
+  sha256 "bb99c5e20e1f1861913d0747e32fcd9f174f674a723b5c255f44b7b43754ae09"
 
   bottle do
     cellar :any
-    sha256 "343b5a8f3b93f3690ffd8fb9fc2a5d25834f848cde5116c06923f764590031a4" => :sierra
-    sha256 "ec894fb019887560fa4b11c46f472d9788f7bbe7418666ee93c54d76bfc140bf" => :el_capitan
-    sha256 "0d119ceba4bc98bac876ad593e8483c902f1f530d5f34e5aff9fe70fb420f522" => :yosemite
+    sha256 "c730ad755d22afd5e2fd2017910c4d69d693813fb632d761ea52992847b47f88" => :high_sierra
+    sha256 "29f37e42624b4fb437bf7795c0341f3b1b2e31dcf025b796b6a198532c21ba4b" => :sierra
+    sha256 "5d90401c8ef320206a3479945b536c0dace81e1c18bfcd3ce67d418fea059b55" => :el_capitan
   end
 
   head do

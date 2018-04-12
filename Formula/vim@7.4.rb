@@ -1,14 +1,14 @@
 class VimAT74 < Formula
-  desc "Vi \"workalike\" with many additional features"
-  homepage "http://www.vim.org/"
+  desc "Vi 'workalike' with many additional features"
+  homepage "https://www.vim.org/"
   url "https://github.com/vim/vim/archive/v7.4.2367.tar.gz"
   sha256 "a9ae4031ccd73cc60e771e8bf9b3c8b7f10f63a67efce7f61cd694cd8d7cda5c"
-  revision 1
+  revision 10
 
   bottle do
-    sha256 "cedecb3829f8f0ee0a7f1a066a6d85684d1abfd05548b4ecdf255a78718efea3" => :sierra
-    sha256 "5ce0f9a0c6b528dc7d9a66a7fcd83540161847a0ba545ecb079243eedc15af3f" => :el_capitan
-    sha256 "b2006d6c7cc350e6186e7b41b22ffe8f7db0acab06251862d83dc7fc3701bd7c" => :yosemite
+    sha256 "1deefc2ef842a11dcb981e2082fee269124e021ea9c3716410058c047d346b3b" => :high_sierra
+    sha256 "c0cab85366ccef4d0c71df731aae3444b5c372461e78265351442c52b5b65bf3" => :sierra
+    sha256 "fb9421dcebf3adda3585a4829319ba4753090d8d2e49d0546eb97402a60ea56d" => :el_capitan
   end
 
   keg_only :versioned_formula
@@ -17,16 +17,10 @@ class VimAT74 < Formula
   option "without-nls", "Build vim without National Language Support (translated messages, keymaps)"
   option "with-client-server", "Enable client/server mode"
 
-  LANGUAGES_OPTIONAL = %w[lua mzscheme python3 tcl].freeze
-  LANGUAGES_DEFAULT  = %w[perl python ruby].freeze
+  LANGUAGES_OPTIONAL = %w[lua mzscheme python@2 tcl].freeze
+  LANGUAGES_DEFAULT  = %w[python].freeze
 
-  if MacOS.version >= :mavericks
-    option "with-custom-python", "Build with a custom Python 2 instead of the Homebrew version."
-    option "with-custom-ruby", "Build with a custom Ruby instead of the Homebrew version."
-    option "with-custom-perl", "Build with a custom Perl instead of the Homebrew version."
-  end
-
-  option "with-python3", "Build vim with python3 instead of python[2] support"
+  option "with-python@2", "Build vim with python@2 instead of python[3] support"
   LANGUAGES_OPTIONAL.each do |language|
     option "with-#{language}", "Build vim with #{language} support"
   end
@@ -34,15 +28,17 @@ class VimAT74 < Formula
     option "without-#{language}", "Build vim without #{language} support"
   end
 
-  depends_on :python => :recommended
-  depends_on :python3 => :optional
-  depends_on :ruby => "1.8" # Can be compiled against 1.8.x or >= 1.9.3-p385.
-  depends_on :perl => "5.3"
+  depends_on "perl"
+  depends_on "ruby"
+  depends_on "python" => :recommended
   depends_on "lua" => :optional
   depends_on "luajit" => :optional
+  depends_on "python@2" => :optional
   depends_on :x11 if build.with? "client-server"
 
   def install
+    ENV.prepend_path "PATH", Formula["python"].opt_libexec/"bin"
+
     # https://github.com/Homebrew/homebrew-core/pull/1046
     ENV.delete("SDKROOT")
     ENV["LUA_PREFIX"] = HOMEBREW_PREFIX if build.with?("lua") || build.with?("luajit")
@@ -50,23 +46,20 @@ class VimAT74 < Formula
     # vim doesn't require any Python package, unset PYTHONPATH.
     ENV.delete("PYTHONPATH")
 
-    if build.with?("python") && which("python").to_s == "/usr/bin/python" && !MacOS::CLT.installed?
-      # break -syslibpath jail
-      ln_s "/System/Library/Frameworks", buildpath
-      ENV.append "LDFLAGS", "-F#{buildpath}/Frameworks"
-    end
-
-    opts = []
+    opts = ["--enable-perlinterp", "--enable-rubyinterp"]
 
     (LANGUAGES_OPTIONAL + LANGUAGES_DEFAULT).each do |language|
-      opts << "--enable-#{language}interp" if build.with? language
+      feature = { "python" => "python3", "python@2" => "python" }
+      if build.with? language
+        opts << "--enable-#{feature.fetch(language, language)}interp"
+      end
     end
 
     if opts.include?("--enable-pythoninterp") && opts.include?("--enable-python3interp")
-      # only compile with either python or python3 support, but not both
+      # only compile with either python or python@2 support, but not both
       # (if vim74 is compiled with +python3/dyn, the Python[3] library lookup segfaults
       # in other words, a command like ":py3 import sys" leads to a SEGV)
-      opts -= %w[--enable-pythoninterp]
+      opts -= %w[--enable-python3interp]
     end
 
     opts << "--disable-nls" if build.without? "nls"
@@ -108,18 +101,20 @@ class VimAT74 < Formula
   end
 
   test do
-    # Simple test to check if Vim was linked to Python version in $PATH
-    if build.with? "python"
-      vim_path = bin/"vim"
-
-      # Get linked framework using otool
-      otool_output = `otool -L #{vim_path} | grep -m 1 Python`.gsub(/\(.*\)/, "").strip.chomp
-
-      # Expand the link and get the python exec path
-      vim_framework_path = Pathname.new(otool_output).realpath.dirname.to_s.chomp
-      system_framework_path = `python-config --exec-prefix`.chomp
-
-      assert_equal system_framework_path, vim_framework_path
+    if build.with? "python@2"
+      (testpath/"commands.vim").write <<~EOS
+        :python import vim; vim.current.buffer[0] = 'hello world'
+        :wq
+      EOS
+      system bin/"vim", "-T", "dumb", "-s", "commands.vim", "test.txt"
+      assert_equal "hello world", File.read("test.txt").chomp
+    elsif build.with? "python"
+      (testpath/"commands.vim").write <<~EOS
+        :python3 import vim; vim.current.buffer[0] = 'hello python3'
+        :wq
+      EOS
+      system bin/"vim", "-T", "dumb", "-s", "commands.vim", "test.txt"
+      assert_equal "hello python3", File.read("test.txt").chomp
     end
   end
 end

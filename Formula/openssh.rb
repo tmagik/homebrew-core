@@ -1,22 +1,23 @@
 class Openssh < Formula
   desc "OpenBSD freely-licensed SSH connectivity tools"
   homepage "https://www.openssh.com/"
-  url "https://www.mirrorservice.org/pub/OpenBSD/OpenSSH/portable/openssh-7.5p1.tar.gz"
-  mirror "https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-7.5p1.tar.gz"
-  version "7.5p1"
-  sha256 "9846e3c5fab9f0547400b4d2c017992f914222b3fd1f8eee6c7dc6bc5e59f9f0"
-  revision 1
+  url "https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-7.7p1.tar.gz"
+  mirror "https://mirror.vdms.io/pub/OpenBSD/OpenSSH/portable/openssh-7.7p1.tar.gz"
+  version "7.7p1"
+  sha256 "d73be7e684e99efcd024be15a30bffcbe41b012b2f7b3c9084aed621775e6b8f"
 
   bottle do
-    sha256 "87916642682b44296aa06297aaeeb2ef10519c6d0363d5286be74657e8758167" => :sierra
-    sha256 "d3573d5402f065728fed6bd00085d6d4599b7151f14ac1cdf000a3140a9526a6" => :el_capitan
-    sha256 "36eab43111afa57e0a3c112b09e85453613196e85922ae546a599d54b555556b" => :yosemite
+    sha256 "d378e6ea62cc33ab02df2c7394c8b9dc90fa7ab7d0a54a2f5f9a1db4c6f69dd4" => :high_sierra
+    sha256 "f30f9b4163419d95b59e62dc6b55b956ab0612b49a654ace9fae3f67d18d3198" => :sierra
+    sha256 "8c163dd34c4fbde8de02c58ccca743966b4f755be40049740f604509d2135a3c" => :el_capitan
   end
 
   # Please don't resubmit the keychain patch option. It will never be accepted.
   # https://github.com/Homebrew/homebrew-dupes/pull/482#issuecomment-118994372
 
   depends_on "openssl"
+  depends_on "ldns" => :optional
+  depends_on "pkg-config" => :build if build.with? "ldns"
 
   # Both these patches are applied by Apple.
   patch do
@@ -41,13 +42,20 @@ class Openssh < Formula
     # We introduce this issue with patching, it's not an upstream bug.
     inreplace "sandbox-darwin.c", "@PREFIX@/share/openssh", etc/"ssh"
 
-    system "./configure", "--with-libedit",
-                          "--with-kerberos5",
-                          "--prefix=#{prefix}",
-                          "--sysconfdir=#{etc}/ssh",
-                          "--with-pam",
-                          "--with-ssl-dir=#{Formula["openssl"].opt_prefix}"
+    args = %W[
+      --with-libedit
+      --with-kerberos5
+      --prefix=#{prefix}
+      --sysconfdir=#{etc}/ssh
+      --with-pam
+      --with-ssl-dir=#{Formula["openssl"].opt_prefix}
+    ]
+
+    args << "--with-ldns" if build.with? "ldns"
+
+    system "./configure", *args
     system "make"
+    ENV.deparallelize
     system "make", "install"
 
     # This was removed by upstream with very little announcement and has

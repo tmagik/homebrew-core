@@ -5,14 +5,15 @@ class Cgrep < Formula
 
   desc "Context-aware grep for source code"
   homepage "https://github.com/awgn/cgrep"
-  url "https://github.com/awgn/cgrep/archive/v6.6.17.tar.gz"
-  sha256 "2508563701365d9b49c9a5610a4ff7ea3905b2d9cd77ac332f485322d93bcd07"
+  url "https://github.com/awgn/cgrep/archive/v6.6.24.tar.gz"
+  sha256 "0958549a6d1989abad493845b788dd67bf65a50162393deedf8738dbc7f3a7cd"
   head "https://github.com/awgn/cgrep.git"
 
   bottle do
-    sha256 "8f3fcc507950c77381ec98e28806cc23851559975de8d71404697685a9e93fb6" => :sierra
-    sha256 "3576ca83c22cb12ad59b3c4821e7b474675a0167c711859ad4cf5c8774456d0f" => :el_capitan
-    sha256 "015553f35840cd8e3f88b231a90cee8ad96b90772356f411d87f40b50fc36863" => :yosemite
+    cellar :any
+    sha256 "f3468796fdaf43c65bb77d2fc3eb376b434743225b555e235aea01ffd24f2ed6" => :high_sierra
+    sha256 "01a5cca60e69cdbc82bcb8e7923eb7ea9a18ee7f95eee94523d44171ba79da64" => :sierra
+    sha256 "07e0201c1c2ef9b0c820d518987f8c56552eb5748002e9c2f57afd2322396d2a" => :el_capitan
   end
 
   depends_on "ghc" => :build
@@ -24,17 +25,14 @@ class Cgrep < Formula
   end
 
   test do
-    path = testpath/"test.rb"
-    path.write <<-EOS.undent
+    (testpath/"t.rb").write <<~EOS
       # puts test comment.
       puts "test literal."
     EOS
 
-    assert_match ":1",
-      shell_output("script -q /dev/null #{bin}/cgrep --count --comment test #{path}")
-    assert_match ":1",
-      shell_output("script -q /dev/null #{bin}/cgrep --count --literal test #{path}")
-    assert_match ":1",
-      shell_output("script -q /dev/null #{bin}/cgrep --count --code puts #{path}")
+    assert_match ":1", shell_output("#{bin}/cgrep --count --comment test t.rb")
+    assert_match ":1", shell_output("#{bin}/cgrep --count --literal test t.rb")
+    assert_match ":1", shell_output("#{bin}/cgrep --count --code puts t.rb")
+    assert_match ":2", shell_output("#{bin}/cgrep --count puts t.rb")
   end
 end

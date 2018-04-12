@@ -1,16 +1,14 @@
 class Freexl < Formula
   desc "Library to extract data from Excel .xls files"
   homepage "https://www.gaia-gis.it/fossil/freexl/index"
-  url "https://www.gaia-gis.it/gaia-sins/freexl-sources/freexl-1.0.2.tar.gz"
-  sha256 "b39a4814a0f53f5e09a9192c41e3e51bd658843f770399023a963eb064f6409d"
+  url "https://www.gaia-gis.it/gaia-sins/freexl-sources/freexl-1.0.5.tar.gz"
+  sha256 "3dc9b150d218b0e280a3d6a41d93c1e45f4d7155829d75f1e5bf3e0b0de6750d"
 
   bottle do
     cellar :any
-    sha256 "744647fb68f9c06dc5eb591cea572ad5dfa85a772b7141a0b30fcb429646f203" => :sierra
-    sha256 "5c6edd364f1c97cca352eba13ea5c594ec5bb4a1a2878b1ea187ec6728d72f31" => :el_capitan
-    sha256 "8e7233c0b1c33adad45ef88a52e1e797aa677933b5348fe46cc99085a6975a7c" => :yosemite
-    sha256 "04495f65384391622533b8fbe4c23579a3704ce4da491e3b7c53cb171c50c8c6" => :mavericks
-    sha256 "ae6d78c69b399ea733ff6ef346d83499408c0c510fe40484072c423b9552925b" => :mountain_lion
+    sha256 "b8f89ff36ac865e56d050bad7a4eb81c47d38e5b108d6f2f47260fff047df4ed" => :high_sierra
+    sha256 "55a1495b30ea8018b334ef30a9511653c212f29af11c34335dc82ddd46a64ab6" => :sierra
+    sha256 "a93a9e687fd78a6eb8129896a068f0e982664bf75a06eae236a79fcfbfe0f6ce" => :el_capitan
   end
 
   option "without-test", "Skip compile-time make checks"

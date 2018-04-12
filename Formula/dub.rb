@@ -1,19 +1,24 @@
 class Dub < Formula
   desc "Build tool for D projects"
   homepage "https://code.dlang.org/getting_started"
-  url "https://github.com/dlang/dub/archive/v1.3.0.tar.gz"
-  sha256 "670eae9df5a2bbfbcb8e4b7da4f545188993b1f2a75b1ce26038941f80dbd514"
+  url "https://github.com/dlang/dub/archive/v1.8.0.tar.gz"
+  sha256 "acffbdee967a20aba2c08d2a9de6a8b23b8fb5a703eece684781758db2831d50"
   version_scheme 1
 
   head "https://github.com/dlang/dub.git"
 
   bottle do
-    sha256 "6f7d63d42f60d169dd756ff518a935c2c03cea10dafe2ee5028e82e022393143" => :sierra
-    sha256 "827b58d1f554b3892c69d2ffaaf2d4c9ba6703d598f436444ed5032d62943180" => :el_capitan
-    sha256 "b0882c369fb17175f79b2f4b469d91dc0da2bd777686fabbbe53b02ff259d412" => :yosemite
+    sha256 "55d6329cc5b3ff35a86afe1fe2dd344028f5720368b2352a1f31e0cf223d2ee2" => :high_sierra
+    sha256 "29dff693089f35e3c09022b79ae153dbaf8457087b528d56ae0ac10feccd9024" => :sierra
+    sha256 "43959b85a6cb66c18d4835eca8dc3183fa1cd80af3f71dc90f38b3ed54b30038" => :el_capitan
   end
 
-  depends_on "pkg-config" => [:recommended, :run]
+  devel do
+    url "https://github.com/dlang/dub/archive/v1.8.1-beta.1.tar.gz"
+    sha256 "ea5be7a58ee4b25b0766fd73406e5ba256c9d8ee9cfa94ee921187b58e80cebd"
+  end
+
+  depends_on "pkg-config" => :recommended
   depends_on "dmd" => :build
 
   def install
@@ -23,6 +28,6 @@ class Dub < Formula
   end
 
   test do
-    assert_match version.to_s, shell_output("#{bin}/dub --version")
+    assert_match version.to_s, shell_output("#{bin}/dub --version").split(/[ ,]/)[2]
   end
 end

@@ -3,14 +3,14 @@ class I3status < Formula
   homepage "https://i3wm.org/i3status"
   url "https://i3wm.org/i3status/i3status-2.11.tar.bz2"
   sha256 "98db7e730f0ce908eb656ac10d713ae6a885676621391d54f00b719752f18c5f"
-  revision 1
+  revision 3
   head "https://github.com/i3/i3status.git"
 
   bottle do
     cellar :any
-    sha256 "109cf545c41a93607a72fe507e0da22a8ad0fdcea41c7493a8f825286acf1f4f" => :sierra
-    sha256 "5d2fb48e3a6d74b7a1426986efff59b05688b408630fbba1cdd3b8970c5f3eb9" => :el_capitan
-    sha256 "b81096aac3d8c989d22d670643ad00c74f531f17e9b6dcba4113f1890a4ce3fc" => :yosemite
+    sha256 "84e266369b0e59fbb5cb293c340a20773a81079ea80e484b5ecb5bbc6b03875b" => :high_sierra
+    sha256 "8044ac2d7c39945c3ca02cb943e485333351080c5f12c421f7d87ea0c877bc74" => :sierra
+    sha256 "af7fa1f5913eaaa9f824fa5f11e50523d474473d034d91712b9cf18bb1a56b5f" => :el_capitan
   end
 
   depends_on :x11

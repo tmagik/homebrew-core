@@ -1,17 +1,16 @@
 class Godep < Formula
   desc "Dependency tool for go"
   homepage "https://godoc.org/github.com/tools/godep"
-  url "https://github.com/tools/godep/archive/v79.tar.gz"
-  sha256 "3dd2e6c4863077762498af98fa0c8dc5fedffbca6a5c0c4bb42b452c8268383d"
-  revision 5
-
+  url "https://github.com/tools/godep/archive/v80.tar.gz"
+  sha256 "029adc1a0ce5c63cd40b56660664e73456648e5c031ba6c214ba1e1e9fc86cf6"
+  revision 3
   head "https://github.com/tools/godep.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "1f6bd3efc87edb29f57a1aa6b845a16edf56b0610017d071bae857e21ec4a3aa" => :sierra
-    sha256 "d57f07b80218a02851c8b58e13f31af1c29892f5667622ff6620aaa467a3a5f5" => :el_capitan
-    sha256 "3501adaa7d374a1875212aa00ce100ec962993a6514be7af88a64782d6218b54" => :yosemite
+    sha256 "fbeb77fcc8e322f8ade2aef3fc87e4a923d2832bf2910afbdc4f17c8c58206ca" => :high_sierra
+    sha256 "55de9c8888344eff81142d319405393706965236cd6aa4f03f052a089d48db82" => :sierra
+    sha256 "3e467f5d8820402fdcc9360487c6e93683748f53b440211f2ad26d7c77dfed56" => :el_capitan
   end
 
   depends_on "go"
@@ -19,12 +18,15 @@ class Godep < Formula
   def install
     ENV["GOPATH"] = buildpath
     (buildpath/"src/github.com/tools/godep").install buildpath.children
-    cd("src/github.com/tools/godep") { system "go", "build", "-o", bin/"godep" }
+    cd buildpath/"src/github.com/tools/godep" do
+      system "go", "build", "-o", bin/"godep"
+      prefix.install_metafiles
+    end
   end
 
   test do
     ENV["GOPATH"] = testpath.realpath
-    (testpath/"Godeps/Godeps.json").write <<-EOS.undent
+    (testpath/"Godeps/Godeps.json").write <<~EOS
       {
         "ImportPath": "github.com/tools/godep",
         "GoVersion": "go1.8",

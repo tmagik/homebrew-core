@@ -3,12 +3,13 @@ class ImapUw < Formula
   # no active successor project.
   desc "University of Washington IMAP toolkit"
   homepage "https://www.washington.edu/imap/"
-  url "ftp://ftp.cac.washington.edu/imap/imap-2007f.tar.gz"
-  mirror "http://ftp.ntua.gr/pub/net/mail/imap/imap-2007f.tar.gz"
+  url "https://mirrorservice.org/sites/ftp.cac.washington.edu/imap/imap-2007f.tar.gz"
+  mirror "https://fossies.org/linux/misc/old/imap-2007f.tar.gz"
   sha256 "53e15a2b5c1bc80161d42e9f69792a3fa18332b7b771910131004eb520004a28"
 
   bottle do
     cellar :any
+    sha256 "b051874130e8c65f442ff4fdb9875ec981da9f73e24ba0e1577bb23f4c379d8d" => :high_sierra
     sha256 "714de61f534fb8f9264183a96b527868ffee4e568f10b2ad5c283276896ffa2f" => :sierra
     sha256 "2b9f5cbd682299610f20f1fda87c5d5c63b378ec071be2ed4889276bed53f0b4" => :el_capitan
     sha256 "001a10201375e639d4dbb4c8cba174ef02b19b89ba8e71ce2e2182610b6f120d" => :yosemite

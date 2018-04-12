@@ -1,15 +1,15 @@
 class Subversion < Formula
   desc "Version control system designed to be a better CVS"
   homepage "https://subversion.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=subversion/subversion-1.9.5.tar.bz2"
-  mirror "https://archive.apache.org/dist/subversion/subversion-1.9.5.tar.bz2"
-  sha256 "8a4fc68aff1d18dcb4dd9e460648d24d9e98657fbed496c582929c6b3ce555e5"
+  url "https://www.apache.org/dyn/closer.cgi?path=subversion/subversion-1.9.7.tar.bz2"
+  mirror "https://archive.apache.org/dist/subversion/subversion-1.9.7.tar.bz2"
+  sha256 "c3b118333ce12e501d509e66bb0a47bcc34d053990acab45559431ac3e491623"
   revision 3
 
   bottle do
-    sha256 "42e3082d6c0afb51e4009e790296b7d651c3f8df389450524607ceaa807b5985" => :sierra
-    sha256 "8a772eefe1665751e1b09b97c68f08f2c58d25ed34874c8119a2375755c3a6c4" => :el_capitan
-    sha256 "b55deafb9fb766c7251c3008b3b3964849ed99f0679c0278ec3e1294a0b8dedf" => :yosemite
+    sha256 "7482d281e4e0ff5b10377a576f3e97ed867795645291308d35adf51747ff2162" => :high_sierra
+    sha256 "a181531a3a3ad04d429b7aead29fec814c6e042482ea35abc581cc9e4571a25a" => :sierra
+    sha256 "6cb9acb883f5d7045324846bab0d51315da6fbb462b9ef664e0c9d0c9b58ef8d" => :el_capitan
   end
 
   deprecated_option "java" => "with-java"
@@ -22,18 +22,13 @@ class Subversion < Formula
   option "with-gpg-agent", "Build with support for GPG Agent"
 
   depends_on "pkg-config" => :build
+  depends_on "swig" => :build
   depends_on "apr-util"
   depends_on "apr"
 
   # Always build against Homebrew versions instead of system versions for consistency.
   depends_on "sqlite"
-  depends_on :python => :optional
-  depends_on :perl => ["5.6", :recommended]
-
-  # Bindings require swig
-  if build.with?("perl") || build.with?("python") || build.with?("ruby")
-    depends_on "swig" => :build
-  end
+  depends_on "perl" => :recommended
 
   # For Serf
   depends_on "scons" => :build
@@ -41,6 +36,7 @@ class Subversion < Formula
 
   # Other optional dependencies
   depends_on "gpg-agent" => :optional
+  depends_on "gettext" => :optional
   depends_on :java => :optional
 
   resource "serf" do
@@ -65,6 +61,8 @@ class Subversion < Formula
   end
 
   def install
+    ENV.prepend_path "PATH", "/System/Library/Frameworks/Python.framework/Versions/2.7/bin"
+
     serf_prefix = libexec/"serf"
 
     resource("serf").stage do
@@ -100,13 +98,13 @@ class Subversion < Formula
       --with-apxs=no
       --with-serf=#{serf_prefix}
       --disable-mod-activation
-      --disable-nls
       --without-apache-libexecdir
       --without-berkeley-db
     ]
 
     args << "--enable-javahl" << "--without-jikes" if build.with? "java"
     args << "--without-gpg-agent" if build.without? "gpg-agent"
+    args << "--disable-nls" if build.without? "gettext"
 
     if build.with? "ruby"
       args << "--with-ruby-sitedir=#{lib}/ruby"
@@ -130,11 +128,9 @@ class Subversion < Formula
     system "make", "tools"
     system "make", "install-tools"
 
-    if build.with? "python"
-      system "make", "swig-py"
-      system "make", "install-swig-py"
-      (lib/"python2.7/site-packages").install_symlink Dir["#{lib}/svn-python/*"]
-    end
+    system "make", "swig-py"
+    system "make", "install-swig-py"
+    (lib/"python2.7/site-packages").install_symlink Dir["#{lib}/svn-python/*"]
 
     if build.with? "perl"
       # In theory SWIG can be built in parallel, in practice...
@@ -151,9 +147,6 @@ class Subversion < Formula
       system "make", "swig-pl"
       system "make", "install-swig-pl"
 
-      # Some of the libraries get installed into the wrong place, they end up
-      # having the prefix in the directory name twice.
-      lib.install Dir["#{prefix}/#{lib}/*"]
       # This is only created when building against system Perl, but it isn't
       # purged by Homebrew's post-install cleaner because that doesn't check
       # "Library" directories. It is however pointless to keep around as it
@@ -174,22 +167,22 @@ class Subversion < Formula
   end
 
   def caveats
-    s = <<-EOS.undent
+    s = <<~EOS
       svntools have been installed to:
         #{opt_libexec}
     EOS
 
     if build.with? "perl"
-      s += <<-EOS.undent
-
+      s += "\n"
+      s += <<~EOS
         The perl bindings are located in various subdirectories of:
           #{opt_lib}/perl5
       EOS
     end
 
     if build.with? "ruby"
-      s += <<-EOS.undent
-
+      s += "\n"
+      s += <<~EOS
         If you wish to use the Ruby bindings you may need to add:
           #{HOMEBREW_PREFIX}/lib/ruby
         to your RUBYLIB.
@@ -197,8 +190,8 @@ class Subversion < Formula
     end
 
     if build.with? "java"
-      s += <<-EOS.undent
-
+      s += "\n"
+      s += <<~EOS
         You may need to link the Java bindings into the Java Extensions folder:
           sudo mkdir -p /Library/Java/Extensions
           sudo ln -s #{HOMEBREW_PREFIX}/lib/libsvnjavahl-1.dylib /Library/Java/Extensions/libsvnjavahl-1.dylib

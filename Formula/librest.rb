@@ -1,20 +1,20 @@
 class Librest < Formula
   desc "Library to access RESTful web services"
   homepage "https://wiki.gnome.org/Projects/Librest"
-  url "https://download.gnome.org/sources/rest/0.8/rest-0.8.0.tar.xz"
-  sha256 "e7b89b200c1417073aef739e8a27ff2ab578056c27796ec74f5886a5e0dff647"
+  url "https://download.gnome.org/sources/rest/0.8/rest-0.8.1.tar.xz"
+  sha256 "0513aad38e5d3cedd4ae3c551634e3be1b9baaa79775e53b2dba9456f15b01c9"
+  revision 1
 
   bottle do
-    sha256 "da794be6ebdfde460d0e447123c45672861198afa8d651dd77cebf3df20d0c4c" => :sierra
-    sha256 "493c2bf876de213bce3ec5aa739c437a0b0384ac8f8f722a23ba7987d2604879" => :el_capitan
-    sha256 "8b98b39acc982309f1d15c20466a6675185100fdf9a21da6ff30ed4cc32a9946" => :yosemite
-    sha256 "d2e3fbb297d83bcf4064539968f5c070443786c187c803d264ad4a30d8454a35" => :mavericks
+    sha256 "677a14fd8dde39e068cc8bb4fe771619a13bdde7e92903756ecb056b79ee69e7" => :high_sierra
+    sha256 "79fed6ba59358147b84ee7f793df20542e21c1537f3b7a1ff0572296d5503e20" => :sierra
+    sha256 "5333e6b41033827ec7db0fedb3510fe4ab442cd53180c5cd1ebc613b4e1b3bfc" => :el_capitan
   end
 
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "glib"
   depends_on "libsoup"
-  depends_on "gobject-introspection"
 
   def install
     system "./configure", "--disable-dependency-tracking",
@@ -27,7 +27,7 @@ class Librest < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <stdlib.h>
       #include <rest/rest-proxy.h>
 

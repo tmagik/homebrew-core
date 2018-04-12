@@ -1,15 +1,14 @@
 class PerconaServerAT56 < Formula
   desc "Drop-in MySQL replacement"
   homepage "https://www.percona.com"
-  url "https://www.percona.com/downloads/Percona-Server-5.6/Percona-Server-5.6.35-81.0/source/tarball/percona-server-5.6.35-81.0.tar.gz"
-  version "5.6.35-81.0"
-  sha256 "c71c3f80662982ade22a0a538c5fd595b1761472c98efc2509124ecc4004d1e7"
+  url "https://www.percona.com/downloads/Percona-Server-5.6/Percona-Server-5.6.39-83.1/source/tarball/percona-server-5.6.39-83.1.tar.gz"
+  version "5.6.39-83.1"
+  sha256 "48939062738cd5e7769381e31ec581492317ff48c19d0b7ce362e0e61b5d01e2"
 
   bottle do
-    rebuild 2
-    sha256 "cc19cbb74b1decb3299739b83d9ed362b91ff0d1416104bb4bfef247ad3b17cd" => :sierra
-    sha256 "c08a8da7d0744e63bf0a4723e7a18718ca5fb3409e2e8a0b498c65c10ab9e5e0" => :el_capitan
-    sha256 "8466687c1b3048a4b4163f09010052dabb60be2c2dd7c15fa79341a1f0a457c6" => :yosemite
+    sha256 "4721a4848f088e8dc1c9d5d2b922b90c28855894a60ebcbb25a41a366fcf854c" => :high_sierra
+    sha256 "2eeb81c41ddf49663247c3c966b34d6bb05383a8f059fb2aa48a09ef6a7c15e0" => :sierra
+    sha256 "0f0fd06fe7616b708756f208954557deb3cf0c39c3731ae1a886243ab88653dc" => :el_capitan
   end
 
   keg_only :versioned_formula
@@ -44,6 +43,7 @@ class PerconaServerAT56 < Formula
 
     args = std_cmake_args + %W[
       -DMYSQL_DATADIR=#{datadir}
+      -DINSTALL_PLUGINDIR=lib/plugin
       -DSYSCONFDIR=#{etc}
       -DINSTALL_MANDIR=#{man}
       -DINSTALL_DOCDIR=#{doc}
@@ -98,11 +98,8 @@ class PerconaServerAT56 < Formula
     bin.install_symlink prefix/"scripts/mysql_install_db"
 
     # Fix up the control script and link into bin
-    inreplace "#{prefix}/support-files/mysql.server" do |s|
-      s.gsub!(/^(PATH=".*)(")/, "\\1:#{HOMEBREW_PREFIX}/bin\\2")
-      # pidof can be replaced with pgrep from proctools on Mountain Lion
-      s.gsub!(/pidof/, "pgrep") if MacOS.version >= :mountain_lion
-    end
+    inreplace "#{prefix}/support-files/mysql.server",
+              /^(PATH=".*)(")/, "\\1:#{HOMEBREW_PREFIX}/bin\\2"
 
     bin.install_symlink prefix/"support-files/mysql.server"
 
@@ -114,7 +111,7 @@ class PerconaServerAT56 < Formula
     mv "#{bin}/mysqlaccess.conf", libexec
 
     # Install my.cnf that binds to 127.0.0.1 by default
-    (buildpath/"my.cnf").write <<-EOS.undent
+    (buildpath/"my.cnf").write <<~EOS
       # Default Homebrew MySQL server config
       [mysqld]
       # Only allow connections from localhost
@@ -133,7 +130,7 @@ class PerconaServerAT56 < Formula
     end
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     A "/etc/my.cnf" from another install may interfere with a Homebrew-built
     server starting up correctly.
 
@@ -146,7 +143,7 @@ class PerconaServerAT56 < Formula
 
   plist_options :manual => "mysql.server start"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

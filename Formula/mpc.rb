@@ -1,22 +1,27 @@
 class Mpc < Formula
   desc "Command-line music player client for mpd"
   homepage "https://www.musicpd.org/clients/mpc/"
-  url "https://www.musicpd.org/download/mpc/0/mpc-0.28.tar.gz"
-  sha256 "53385c2d9af0a0025943045b46cb2079b300c1224d615ac98f7ff140e968600d"
+  url "https://www.musicpd.org/download/mpc/0/mpc-0.29.tar.xz"
+  sha256 "02f1daec902cb48f8cdaa6fe21c7219f6231b091dddbe437a3a4fb12cb07b9d3"
 
   bottle do
-    cellar :any
-    sha256 "26f8fd128483fa5ce7b3543f4152c1f1ee49ea6e2ec8f5e59874991d84627e96" => :sierra
-    sha256 "40b5cd34fd7b212a4d83476f0511bdd50bdc7533450665fc1ca5f0f008d510b7" => :el_capitan
-    sha256 "b521e1e20acbe6b1cfb0bc52cd810e8fc8c5b8ae69441964122606c81bfc0dea" => :yosemite
-    sha256 "8e96cbd74506a8d2b86e3fab070bdb36a30fe2fba987d928053d160e5b036f6f" => :mavericks
+    sha256 "baffb4e58d39af2f18d3def335cb231826e1a94fafa4f31367e7372dbbfe769f" => :high_sierra
+    sha256 "400ac144b7f8ca93a2cf2489e0b25031a0086b95e283c6537b037acf008e80cf" => :sierra
+    sha256 "0ed8bc8a4a93e8df393e23d19229719ff057ebd3a6e27ff42324451753c399d0" => :el_capitan
   end
 
+  depends_on "meson" => :build
+  depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "libmpdclient"
 
   def install
-    system "./configure", "--prefix=#{prefix}", "--disable-debug", "--disable-dependency-tracking"
-    system "make", "install"
+    system "meson", "--prefix=#{prefix}", ".", "output"
+    system "ninja", "-C", "output"
+    system "ninja", "-C", "output", "install"
+  end
+
+  test do
+    assert_match "query", shell_output("#{bin}/mpc list 2>&1", 1)
   end
 end

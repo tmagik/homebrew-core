@@ -1,58 +1,65 @@
-require "language/go"
-
 class Mongodb < Formula
   desc "High-performance, schema-free, document-oriented database"
   homepage "https://www.mongodb.org/"
 
-  stable do
-    url "https://fastdl.mongodb.org/src/mongodb-src-r3.4.4.tar.gz"
-    sha256 "09e962bf3428474b9790bbd464cb6176817f9da6121c30e096240dbb4d51c9f6"
-
-    go_resource "github.com/mongodb/mongo-tools" do
-      url "https://github.com/mongodb/mongo-tools.git",
-          :tag => "r3.4.4",
-          :revision => "17fbdf31abca50cdfe27482b05b1476f42ecab0a",
-          :shallow => false
-    end
-  end
+  url "https://fastdl.mongodb.org/src/mongodb-src-r3.6.3.tar.gz"
+  sha256 "df2d5c05c569ca93eacf88b68e0feb3ff52ffbfc8ccd8736ff20d86850db207c"
 
   bottle do
-    sha256 "6bce1a94cb3cda934bc9c12bd8ca1da3411fa6959f7e71fa6ba822a399fd5a82" => :sierra
-    sha256 "23169e737a9c73dde8aa497ea754d370a102c634a2d12fb96224556e4b8063c6" => :el_capitan
-    sha256 "5124e03c37ef9d6dd673ddebeb9bd403456170c2168c6f558b9b4c1379df8459" => :yosemite
-  end
-
-  devel do
-    url "https://fastdl.mongodb.org/src/mongodb-src-r3.5.6.tar.gz"
-    sha256 "57839e0e19c5fa986d498857e7ac617c368f1a5768539b28b7740d7079ea1670"
-
-    go_resource "github.com/mongodb/mongo-tools" do
-      url "https://github.com/mongodb/mongo-tools.git",
-        :tag => "r3.5.6",
-        :revision => "8bda55730d30c414a71dfbe6f45f5c54ef97811d"
-    end
+    sha256 "d243b8524d03bf5002439c0be367c02012ad078d8b37ce37c54c1ecada2a515d" => :high_sierra
+    sha256 "4d471fb6d3cb3f5f1caa5b2a52594298327519bc67099cd8ea94998e14398483" => :sierra
   end
 
   option "with-boost", "Compile using installed boost, not the version shipped with mongodb"
   option "with-sasl", "Compile with SASL support"
 
+  depends_on :xcode => ["8.3.2", :build]
   depends_on "boost" => :optional
   depends_on "go" => :build
   depends_on :macos => :mountain_lion
   depends_on "scons" => :build
   depends_on "openssl" => :recommended
 
+  resource "Cheetah" do
+    url "https://files.pythonhosted.org/packages/cd/b0/c2d700252fc251e91c08639ff41a8a5203b627f4e0a2ae18a6b662ab32ea/Cheetah-2.4.4.tar.gz"
+    sha256 "be308229f0c1e5e5af4f27d7ee06d90bb19e6af3059794e5fd536a6f29a9b550"
+  end
+
+  resource "PyYAML" do
+    url "https://files.pythonhosted.org/packages/4a/85/db5a2df477072b2902b0eb892feb37d88ac635d36245a72a6a69b23b383a/PyYAML-3.12.tar.gz"
+    sha256 "592766c6303207a20efc445587778322d7f73b161bd994f227adaa341ba212ab"
+  end
+
+  resource "typing" do
+    url "https://files.pythonhosted.org/packages/ec/cc/28444132a25c113149cec54618abc909596f0b272a74c55bab9593f8876c/typing-3.6.4.tar.gz"
+    sha256 "d400a9344254803a2368533e4533a4200d21eb7b6b729c173bc38201a74db3f2"
+  end
+
   needs :cxx11
 
   def install
     ENV.cxx11 if MacOS.version < :mavericks
-    ENV.libcxx if build.devel?
+
+    ENV.libcxx
+
+    ["Cheetah", "PyYAML", "typing"].each do |r|
+      resource(r).stage do
+        system "python", *Language::Python.setup_install_args(buildpath/"vendor")
+      end
+    end
+    (buildpath/".brew_home/Library/Python/2.7/lib/python/site-packages/vendor.pth").write <<~EOS
+      import site; site.addsitedir("#{buildpath}/vendor/lib/python2.7/site-packages")
+    EOS
 
     # New Go tools have their own build script but the server scons "install" target is still
     # responsible for installing them.
-    Language::Go.stage_deps resources, buildpath/"src"
 
-    cd "src/github.com/mongodb/mongo-tools" do
+    cd "src/mongo/gotools" do
+      inreplace "build.sh" do |s|
+        s.gsub! "$(git describe)", version.to_s
+        s.gsub! "$(git rev-parse HEAD)", "homebrew"
+      end
+
       args = %w[]
 
       if build.with? "openssl"
@@ -66,23 +73,23 @@ class Mongodb < Formula
       system "./build.sh", *args
     end
 
-    mkdir "src/mongo-tools"
-    cp Dir["src/github.com/mongodb/mongo-tools/bin/*"], "src/mongo-tools/"
+    (buildpath/"src/mongo-tools").install Dir["src/mongo/gotools/bin/*"]
 
     args = %W[
       --prefix=#{prefix}
       -j#{ENV.make_jobs}
     ]
 
-    args << "--osx-version-min=#{MacOS.version}" if build.stable?
-    args << "CCFLAGS=-mmacosx-version-min=#{MacOS.version}" if build.devel?
-    args << "LINKFLAGS=-mmacosx-version-min=#{MacOS.version}" if build.devel?
     args << "CC=#{ENV.cc}"
     args << "CXX=#{ENV.cxx}"
+
+    args << "CCFLAGS=-mmacosx-version-min=#{MacOS.version}"
+    args << "LINKFLAGS=-mmacosx-version-min=#{MacOS.version}"
 
     args << "--use-sasl-client" if build.with? "sasl"
     args << "--use-system-boost" if build.with? "boost"
     args << "--use-new-tools"
+    args << "--build-mongoreplay=true"
     args << "--disable-warnings-as-errors" if MacOS.version >= :yosemite
 
     if build.with? "openssl"
@@ -94,14 +101,16 @@ class Mongodb < Formula
 
     scons "install", *args
 
-    (buildpath+"mongod.conf").write mongodb_conf
+    (buildpath/"mongod.conf").write mongodb_conf
     etc.install "mongod.conf"
-
-    (var+"mongodb").mkpath
-    (var+"log/mongodb").mkpath
   end
 
-  def mongodb_conf; <<-EOS.undent
+  def post_install
+    (var/"mongodb").mkpath
+    (var/"log/mongodb").mkpath
+  end
+
+  def mongodb_conf; <<~EOS
     systemLog:
       destination: file
       path: #{var}/log/mongodb/mongo.log
@@ -115,7 +124,7 @@ class Mongodb < Formula
 
   plist_options :manual => "mongod --config #{HOMEBREW_PREFIX}/etc/mongod.conf"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

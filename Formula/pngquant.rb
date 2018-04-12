@@ -1,46 +1,30 @@
 class Pngquant < Formula
   desc "PNG image optimizing utility"
   homepage "https://pngquant.org/"
-  url "https://pngquant.org/pngquant-2.9.1-src.tar.gz"
-  sha256 "ac2138207ef40acd4e5fdae18798139a9d75dae4f1d0837aea918a2a8c433481"
-  head "https://github.com/pornel/pngquant.git"
+  url "https://pngquant.org/pngquant-2.11.7-src.tar.gz"
+  sha256 "d70b46c3335c7abf21944aced2d9d2b54819ab84ed1a140b354d5e8cc9f0fb0a"
+  head "https://github.com/kornelski/pngquant.git"
 
   bottle do
     cellar :any
-    sha256 "12a99cb2ebb120aa3a8a25772f3467f8d6f5922f49eb9e7173aaa87a34346b18" => :sierra
-    sha256 "e57ca58f2c181b5cc741598ea7045e4bbed7223e98f547a5ec434e8e2c977057" => :el_capitan
-    sha256 "1462b92b4b7dcce3bb9c3d862561719d1f1e5925af674eb8b417c870b2b5dda0" => :yosemite
+    sha256 "15fab42baf4df4cf6fb56554024eed3ec28fd94ebcedd7075acfb5fcc5ee5291" => :high_sierra
+    sha256 "d5c88987657ada8f05f0632701d691fa518815ba5b084f9e31c77722700d4da7" => :sierra
+    sha256 "5ee791b257c7ca2a3cd08f87adc5f674b24ab08a3384f7f8745f72f166e3fea3" => :el_capitan
   end
 
-  option "with-openmp", "Enable OpenMP"
-
   depends_on "pkg-config" => :build
+  depends_on "rust" => :build
   depends_on "libpng"
-  depends_on "little-cms2" => :optional
-
-  needs :openmp if build.with? "openmp"
+  depends_on "little-cms2"
 
   def install
-    ENV.append_to_cflags "-DNDEBUG" # Turn off debug
-
-    args = ["--prefix=#{prefix}"]
-    args << "--with-lcms2" if build.with? "little-cms2"
-
-    if build.with? "openmp"
-      args << "--with-openmp"
-      args << "--without-cocoa"
-    end
-
-    system "./configure", *args
-    system "make", "install", "CC=#{ENV.cc}"
-
+    system "cargo", "build", "--release"
+    bin.install "target/release/pngquant"
     man1.install "pngquant.1"
-    lib.install "lib/libimagequant.a"
-    include.install "lib/libimagequant.h"
   end
 
   test do
     system "#{bin}/pngquant", test_fixtures("test.png"), "-o", "out.png"
-    File.exist? testpath/"out.png"
+    assert_predicate testpath/"out.png", :exist?
   end
 end

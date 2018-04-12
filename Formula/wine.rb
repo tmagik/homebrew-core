@@ -1,60 +1,48 @@
-# NOTE: When updating Wine, please check Wine-Gecko and Wine-Mono for updates
-# too:
+# NOTE: When updating Wine, please make sure to match Wine-Gecko and Wine-Mono
+# versions:
 #  - https://wiki.winehq.org/Gecko
 #  - https://wiki.winehq.org/Mono
+# with `GECKO_VERSION` and `MONO_VERSION`, as in:
+#    https://source.winehq.org/git/wine.git/blob/refs/tags/wine-3.0:/dlls/appwiz.cpl/addons.c
 class Wine < Formula
   desc "Run Windows applications without a copy of Microsoft Windows"
   homepage "https://www.winehq.org/"
-  revision 3
-  head "https://source.winehq.org/git/wine.git"
+  revision 1
 
   stable do
-    url "https://dl.winehq.org/wine/source/2.0/wine-2.0.1.tar.xz"
-    mirror "https://downloads.sourceforge.net/project/wine/Source/wine-2.0.1.tar.xz"
-    sha256 "6cfb4eaae566dc7afb7ac0f1f2db2c0d69969952acab0debf084ee8f7b071583"
+    url "https://dl.winehq.org/wine/source/3.0/wine-3.0.tar.xz"
+    mirror "https://downloads.sourceforge.net/project/wine/Source/wine-3.0.tar.xz"
+    sha256 "346a050aca5cd0d9978a655af11c30e68c201a58aea0c70d5e4c4f1b63c2fbec"
 
-    # Patch to fix texture compression issues. Still relevant on 2.0.
-    # https://bugs.winehq.org/show_bug.cgi?id=14939
-    patch do
-      url "https://bugs.winehq.org/attachment.cgi?id=52384"
-      sha256 "30766403f5064a115f61de8cacba1defddffe2dd898b59557956400470adc699"
-    end
-
-    # Patch to fix screen-flickering issues. Still relevant on 2.0.
+    # Patch to fix screen-flickering issues. Still relevant on 3.0.
     # https://bugs.winehq.org/show_bug.cgi?id=34166
     patch do
-      url "https://bugs.winehq.org/attachment.cgi?id=55968"
-      sha256 "1b5086798ce6dc959b3cbb8f343ee236ae06c7910e4bbae7d9fde3f162f03a79"
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/74c2566/wine/2.14.patch"
+      sha256 "6907471d18996ada60cc0cbc8462a1698e90720c0882846dfbfb163e5d3899b8"
+    end
+
+    resource "mono" do
+      url "https://dl.winehq.org/wine/wine-mono/4.7.1/wine-mono-4.7.1.msi", :using => :nounzip
+      sha256 "2c8d5db7f833c3413b2519991f5af1f433d59a927564ec6f38a3f1f8b2c629aa"
     end
   end
 
   bottle do
-    sha256 "3d3adabd3b438c8b36c3ab9665a29274eecc4d29997d9f93988e0c54ede94066" => :sierra
-    sha256 "b73051da82b2caf14d9fbadb43bfd6673d86429660d7d7072242642c1f15da54" => :el_capitan
-    sha256 "9a07e30a16149ce98bb8d5fd601278707eee85b0787e1426321868241429acbe" => :yosemite
+    sha256 "bf84c0a02b7d7b4fc8814891f5542c0e35c30c922e0d2bcf4af168a1f34e36e4" => :high_sierra
+    sha256 "cceea27c906e9e5e7916281a57c36872c943802e998fede387fa7ccbc9d297ac" => :sierra
+    sha256 "309e0b2978bb79ea627caba23d7f3bbb0cb54d3a6b08836b2cde387a743dae50" => :el_capitan
   end
 
-  devel do
-    url "https://dl.winehq.org/wine/source/2.x/wine-2.10.tar.xz"
-    mirror "https://downloads.sourceforge.net/project/wine/Source/wine-2.10.tar.xz"
-    sha256 "488df7ffd2e81da455bf428fc9eb784bb4273a890334500895665711bd52f179"
+  head do
+    url "https://source.winehq.org/git/wine.git"
 
-    # Patch to fix screen-flickering issues. Still relevant on 2.3.
-    # https://bugs.winehq.org/show_bug.cgi?id=34166
-    patch do
-      url "https://bugs.winehq.org/attachment.cgi?id=57353"
-      sha256 "55436526e786c3cac35c7b522f01ca5cc5b826bd0d2bd9e98f53e6a5043a151e"
+    resource "mono" do
+      url "https://dl.winehq.org/wine/wine-mono/4.7.1/wine-mono-4.7.1.msi", :using => :nounzip
+      sha256 "2c8d5db7f833c3413b2519991f5af1f433d59a927564ec6f38a3f1f8b2c629aa"
     end
   end
 
-  if MacOS.version >= :el_capitan
-    option "without-win64", "Build without 64-bit support"
-    depends_on :xcode => ["8.0", :build] if build.with? "win64"
-  end
-
-  # Wine will build both the Mac and the X11 driver by default, and you can switch
-  # between them. But if you really want to build without X11, you can.
-  depends_on :x11 => :recommended
+  depends_on :macos => :el_capitan
   depends_on "pkg-config" => :build
   depends_on "cmake" => :build
   depends_on "makedepend" => :build
@@ -69,15 +57,10 @@ class Wine < Formula
     sha256 "c565ea25e50ea953937d4ab01299e4306da4a556946327d253ea9b28357e4a7d"
   end
 
-  resource "mono" do
-    url "https://dl.winehq.org/wine/wine-mono/4.7.0/wine-mono-4.7.0.msi", :using => :nounzip
-    sha256 "7698474dd9cb9eb80796b5812dff37386ba97b78b21ca23b20079ca5ad6ca5a1"
-  end
-
   resource "openssl" do
-    url "https://www.openssl.org/source/openssl-1.0.2l.tar.gz"
-    mirror "https://dl.bintray.com/homebrew/mirror/openssl-1.0.2l.tar.gz"
-    sha256 "ce07195b659e75f4e1db43552860070061f156a98bb37b672b101ba6e3ddf30c"
+    url "https://www.openssl.org/source/openssl-1.0.2o.tar.gz"
+    mirror "https://dl.bintray.com/homebrew/mirror/openssl-1.0.2o.tar.gz"
+    sha256 "ec3f5c9714ba0fd45cb4e087301eb1336c317e0d20b575a125050470e8089e4d"
   end
 
   resource "libtool" do
@@ -87,67 +70,62 @@ class Wine < Formula
   end
 
   resource "jpeg" do
-    url "http://www.ijg.org/files/jpegsrc.v9b.tar.gz"
-    mirror "https://mirrors.kernel.org/debian/pool/main/libj/libjpeg9/libjpeg9_9b.orig.tar.gz"
-    sha256 "240fd398da741669bf3c90366f58452ea59041cacc741a489b99f2f6a0bad052"
+    url "http://www.ijg.org/files/jpegsrc.v9c.tar.gz"
+    mirror "https://fossies.org/linux/misc/jpegsrc.v9c.tar.gz"
+    sha256 "650250979303a649e21f87b5ccd02672af1ea6954b911342ea491f351ceb7122"
   end
 
   resource "libtiff" do
-    url "http://download.osgeo.org/libtiff/tiff-4.0.8.tar.gz"
-    mirror "https://fossies.org/linux/misc/tiff-4.0.8.tar.gz"
-    sha256 "59d7a5a8ccd92059913f246877db95a2918e6c04fb9d43fd74e5c3390dac2910"
+    url "https://download.osgeo.org/libtiff/tiff-4.0.9.tar.gz"
+    mirror "https://fossies.org/linux/misc/tiff-4.0.9.tar.gz"
+    sha256 "6e7bdeec2c310734e734d19aae3a71ebe37a4d842e0e23dbb1b8921c0026cfcd"
   end
 
   resource "little-cms2" do
-    url "https://downloads.sourceforge.net/project/lcms/lcms/2.8/lcms2-2.8.tar.gz"
-    mirror "https://mirrors.kernel.org/debian/pool/main/l/lcms2/lcms2_2.8.orig.tar.gz"
-    sha256 "66d02b229d2ea9474e62c2b6cd6720fde946155cd1d0d2bffdab829790a0fb22"
+    url "https://downloads.sourceforge.net/project/lcms/lcms/2.9/lcms2-2.9.tar.gz"
+    mirror "https://mirrors.kernel.org/debian/pool/main/l/lcms2/lcms2_2.9.orig.tar.gz"
+    sha256 "48c6fdf98396fa245ed86e622028caf49b96fa22f3e5734f853f806fbc8e7d20"
   end
 
   resource "libpng" do
-    url "ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-1.6.29.tar.xz"
-    mirror "https://downloads.sourceforge.net/project/libpng/libpng16/1.6.29/libpng-1.6.29.tar.xz"
-    sha256 "4245b684e8fe829ebb76186327bb37ce5a639938b219882b53d64bd3cfc5f239"
+    url "https://downloads.sourceforge.net/libpng/libpng-1.6.34.tar.xz"
+    mirror "https://sourceforge.mirrorservice.org/l/li/libpng/libpng16/1.6.34/libpng-1.6.34.tar.xz"
+    sha256 "2f1e960d92ce3b3abd03d06dfec9637dfbd22febf107a536b44f7a47c60659f6"
   end
 
   resource "freetype" do
-    url "https://downloads.sourceforge.net/project/freetype/freetype2/2.8/freetype-2.8.tar.bz2"
-    mirror "https://download.savannah.gnu.org/releases/freetype/freetype-2.8.tar.bz2"
-    sha256 "a3c603ed84c3c2495f9c9331fe6bba3bb0ee65e06ec331e0a0fb52158291b40b"
+    url "https://downloads.sourceforge.net/project/freetype/freetype2/2.9/freetype-2.9.tar.bz2"
+    mirror "https://download.savannah.gnu.org/releases/freetype/freetype-2.9.tar.bz2"
+    sha256 "e6ffba3c8cef93f557d1f767d7bc3dee860ac7a3aaff588a521e081bc36f4c8a"
   end
 
   resource "libusb" do
-    url "https://github.com/libusb/libusb/releases/download/v1.0.21/libusb-1.0.21.tar.bz2"
-    mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/libu/libusb-1.0/libusb-1.0_1.0.21.orig.tar.bz2"
-    sha256 "7dce9cce9a81194b7065ee912bcd55eeffebab694ea403ffb91b67db66b1824b"
-  end
-
-  resource "libusb-compat" do
-    url "https://downloads.sourceforge.net/project/libusb/libusb-compat-0.1/libusb-compat-0.1.5/libusb-compat-0.1.5.tar.bz2"
-    sha256 "404ef4b6b324be79ac1bfb3d839eac860fbc929e6acb1ef88793a6ea328bc55a"
+    url "https://github.com/libusb/libusb/releases/download/v1.0.22/libusb-1.0.22.tar.bz2"
+    mirror "https://downloads.sourceforge.net/project/libusb/libusb-1.0/libusb-1.0.22/libusb-1.0.22.tar.bz2"
+    sha256 "75aeb9d59a4fdb800d329a545c2e6799f732362193b465ea198f2aa275518157"
   end
 
   resource "webp" do
-    url "http://downloads.webmproject.org/releases/webp/libwebp-0.6.0.tar.gz"
-    sha256 "c928119229d4f8f35e20113ffb61f281eda267634a8dc2285af4b0ee27cf2b40"
+    url "https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-0.6.1.tar.gz"
+    sha256 "06503c782d9f151baa325591c3579c68ed700ffc62d4f5a32feead0ff017d8ab"
   end
 
   resource "fontconfig" do
-    url "https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.3.tar.bz2"
-    mirror "https://ftp.osuosl.org/pub/blfs/conglomeration/fontconfig/fontconfig-2.12.3.tar.bz2"
-    sha256 "bd24bf6602731a11295c025909d918180e98385625182d3b999fd6f1ab34f8bd"
+    url "https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.6.tar.bz2"
+    mirror "https://ftp.osuosl.org/pub/blfs/conglomeration/fontconfig/fontconfig-2.12.6.tar.bz2"
+    sha256 "cf0c30807d08f6a28ab46c61b8dbd55c97d2f292cf88f3a07d3384687f31f017"
   end
 
   resource "gd" do
-    url "https://github.com/libgd/libgd/releases/download/gd-2.2.4/libgd-2.2.4.tar.xz"
-    mirror "https://fossies.org/linux/www/libgd-2.2.4.tar.xz"
-    sha256 "137f13a7eb93ce72e32ccd7cebdab6874f8cf7ddf31d3a455a68e016ecd9e4e6"
+    url "https://github.com/libgd/libgd/releases/download/gd-2.2.5/libgd-2.2.5.tar.xz"
+    mirror "https://src.fedoraproject.org/repo/pkgs/gd/libgd-2.2.5.tar.xz/sha512/946675b0a9dbecdee3dda927d496a35d6b5b071d3252a82cd649db0d959a82fcc65ce067ec34d07eed0e0497cd92cc0d93803609a4854f42d284e950764044d0/libgd-2.2.5.tar.xz"
+    sha256 "8c302ccbf467faec732f0741a859eef4ecae22fea2d2ab87467be940842bde51"
   end
 
   resource "libgphoto2" do
-    url "https://downloads.sourceforge.net/project/gphoto/libgphoto/2.5.14/libgphoto2-2.5.14.tar.bz2"
-    mirror "https://fossies.org/linux/privat/libgphoto2-2.5.14.tar.bz2"
-    sha256 "d3ce70686fb87d6791b9adcbb6e5693bfbe1cfef9661c23c75eb8a699ec4e274"
+    url "https://downloads.sourceforge.net/project/gphoto/libgphoto/2.5.16/libgphoto2-2.5.16.tar.bz2"
+    mirror "https://fossies.org/linux/privat/libgphoto2-2.5.16.tar.bz2"
+    sha256 "e757416d1623e01a9d0d294b2e790162e434c0964f50d3b7ff1a3424b62a2906"
   end
 
   resource "net-snmp" do
@@ -163,9 +141,9 @@ class Wine < Formula
   end
 
   resource "mpg123" do
-    url "https://downloads.sourceforge.net/project/mpg123/mpg123/1.25.0/mpg123-1.25.0.tar.bz2"
-    mirror "https://www.mpg123.de/download/mpg123-1.25.0.tar.bz2"
-    sha256 "552e3e1db045e00f474252917007795ac295863fc8b13891859b3382d2f24e48"
+    url "https://downloads.sourceforge.net/project/mpg123/mpg123/1.25.10/mpg123-1.25.10.tar.bz2"
+    mirror "https://www.mpg123.de/download/mpg123-1.25.10.tar.bz2"
+    sha256 "6c1337aee2e4bf993299851c70b7db11faec785303cfca3a5c3eb5f329ba7023"
   end
 
   fails_with :clang do
@@ -259,7 +237,7 @@ class Wine < Formula
                                   "#{dirs.last}/openssl")
 
         confs = archs.map do |arch|
-          <<-EOS.undent
+          <<~EOS
             #ifdef __#{arch}__
             #{(Pathname.pwd/"build-#{arch}/opensslconf.h").read}
             #endif
@@ -339,14 +317,6 @@ class Wine < Formula
         system "make", "install"
       end
 
-      resource("libusb-compat").stage do
-        system "./configure", "--disable-dependency-tracking",
-                              "--prefix=#{libexec}",
-                              "--disable-static",
-                              *depflags
-        system "make", "install"
-      end
-
       resource("webp").stage do
         system "./configure", "--disable-dependency-tracking",
                               "--prefix=#{libexec}",
@@ -371,10 +341,6 @@ class Wine < Formula
       end
 
       resource("gd").stage do
-        # Poor man's patch as this is a resource
-        inreplace "src/gd_gd2.c",
-                  "#include <math.h>",
-                  "#include <math.h>\n#include <limits.h>"
         system "./configure", "--disable-dependency-tracking",
                               "--prefix=#{libexec}",
                               "--disable-static",
@@ -401,6 +367,7 @@ class Wine < Formula
         ln_s "darwin13.h", "include/net-snmp/system/darwin14.h"
         ln_s "darwin13.h", "include/net-snmp/system/darwin15.h"
         ln_s "darwin13.h", "include/net-snmp/system/darwin16.h"
+        ln_s "darwin13.h", "include/net-snmp/system/darwin17.h"
 
         system "./configure", "--disable-debugging",
                               "--prefix=#{libexec}",
@@ -427,9 +394,13 @@ class Wine < Formula
                                 "--localstatedir=#{var}",
                                 "--without-gphoto2",
                                 "--enable-local-backends",
-                                "--enable-libusb",
-                                "--disable-latex",
+                                "--with-usb=yes",
                                 *depflags
+          # Remove for > 1.0.27
+          # Workaround for bug in Makefile.am described here:
+          # https://lists.alioth.debian.org/pipermail/sane-devel/2017-August/035576.html.
+          # Fixed in https://anonscm.debian.org/cgit/sane/sane-backends.git/commit/?id=519ff57
+          system "make"
           system "make", "install"
         end
       end
@@ -450,24 +421,20 @@ class Wine < Formula
       ENV["ac_cv_lib_soname_#{dep}"] = (libexec/"lib/lib#{dep}.dylib").realpath
     end
 
-    if build.with? "win64"
-      args64 = ["--prefix=#{prefix}"] + depflags
-      args64 << "--enable-win64"
-      args64 << "--without-x" if build.without? "x11"
-
-      mkdir "wine-64-build" do
-        system "../configure", *args64
-        system "make", "install"
-      end
+    mkdir "wine-64-build" do
+      system "../configure", "--prefix=#{prefix}",
+                             "--enable-win64",
+                             "--without-x",
+                             *depflags
+      system "make", "install"
     end
-
-    args = ["--prefix=#{prefix}"] + depflags
-    args << "--with-wine64=../wine-64-build" if build.with? "win64"
-    args << "--without-x" if build.without? "x11"
 
     mkdir "wine-32-build" do
       ENV.m32
-      system "../configure", *args
+      system "../configure", "--prefix=#{prefix}",
+                             "--with-wine64=../wine-64-build",
+                             "--without-x",
+                             *depflags
       system "make", "install"
     end
     (pkgshare/"gecko").install resource("gecko-x86")
@@ -475,24 +442,10 @@ class Wine < Formula
     (pkgshare/"mono").install resource("mono")
   end
 
-  def caveats
-    s = <<-EOS.undent
-      You may want to get winetricks:
-        brew install winetricks
+  def caveats; <<~EOS
+    You may also want winetricks:
+      brew install winetricks
     EOS
-
-    if build.with? "x11"
-      s += <<-EOS.undent
-
-        By default Wine uses a native Mac driver. To switch to the X11 driver, use
-        regedit to set the "graphics" key under "HKCU\Software\Wine\Drivers" to
-        "x11" (or use winetricks).
-
-        For best results with X11, install the latest version of XQuartz:
-          https://www.xquartz.org/
-      EOS
-    end
-    s
   end
 
   def post_install
@@ -507,8 +460,6 @@ class Wine < Formula
 
   test do
     assert_equal shell_output("hostname").chomp, shell_output("#{bin}/wine hostname.exe 2>/dev/null").chomp
-    if build.with? "win64"
-      assert_equal shell_output("hostname").chomp, shell_output("#{bin}/wine64 hostname.exe 2>/dev/null").chomp
-    end
+    assert_equal shell_output("hostname").chomp, shell_output("#{bin}/wine64 hostname.exe 2>/dev/null").chomp
   end
 end

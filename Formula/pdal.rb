@@ -1,41 +1,33 @@
 class Pdal < Formula
   desc "Point data abstraction library"
   homepage "https://www.pdal.io/"
-  url "https://github.com/PDAL/PDAL/archive/1.5.tar.gz"
-  sha256 "b5ce59a87a9cb8b4c8cd2b63e92b559b0bae16e3adf7ab9b5f85d4c9f11d185e"
+  url "https://github.com/PDAL/PDAL/archive/1.7.1.tar.gz"
+  sha256 "a560d3962b5ffdf58876155b33f816f24dbaf9a313ae308d9bf63adb8edac951"
   head "https://github.com/PDAL/PDAL.git"
 
   bottle do
-    sha256 "fa7b413b522192c334d6d9a8b682f6024793fdb1d63d6e8287d4bd71432f2c49" => :sierra
-    sha256 "f36b4f1f4e313fb50a2f502a025d2eac88afde01c63e896d3c60b4a94cb335df" => :el_capitan
-    sha256 "7af040afe945077595f4160d6ef220e5e36965afeb59d2b066788e701516c99f" => :yosemite
+    sha256 "023eabc1b5936f68d22f449523d031ade6c226f5cc001e24fc18e5b7a89a2cbc" => :high_sierra
+    sha256 "62ebaf21b4dcf1afec384c417f6903177a9b75a7633e60cd17e7a8108c204157" => :sierra
+    sha256 "66771bf1a508a9191296ab451a2d0edf02e3541dad30055fea91f193e6f944b9" => :el_capitan
   end
 
   depends_on "cmake" => :build
   depends_on "gdal"
-  depends_on "laszip" => :optional
-
-  if MacOS.version < :mavericks
-    depends_on "boost" => "c++11"
-  else
-    depends_on "boost"
-  end
+  depends_on "hdf5"
+  depends_on "laszip"
+  depends_on "pcl"
+  depends_on "postgresql"
 
   def install
-    ENV.cxx11 if MacOS.version < :mavericks
+    system "cmake", ".", *std_cmake_args,
+                         "-DWITH_LASZIP=TRUE",
+                         "-DBUILD_PLUGIN_GREYHOUND=ON",
+                         "-DBUILD_PLUGIN_ICEBRIDGE=ON",
+                         "-DBUILD_PLUGIN_PCL=ON",
+                         "-DBUILD_PLUGIN_PGPOINTCLOUD=ON",
+                         "-DBUILD_PLUGIN_PYTHON=ON",
+                         "-DBUILD_PLUGIN_SQLITE=ON"
 
-    args = std_cmake_args
-    if build.with? "laszip"
-      args << "-DWITH_LASZIP=TRUE"
-    else
-      # CMake error "Target 'pdalcpp' INTERFACE_INCLUDE_DIRECTORIES property
-      # contains path: ... LASZIP_INCLUDE_DIR-NOTFOUND"
-      # Reported 7 Apr 2017 https://github.com/PDAL/PDAL/issues/1558
-      inreplace "CMakeLists.txt", /^        \${LASZIP_INCLUDE_DIR}\n/, ""
-      args << "-DWITH_LASZIP=FALSE"
-    end
-
-    system "cmake", ".", *args
     system "make", "install"
     doc.install "examples", "test"
   end

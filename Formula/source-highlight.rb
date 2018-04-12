@@ -5,12 +5,12 @@ class SourceHighlight < Formula
   mirror "https://ftpmirror.gnu.org/src-highlite/source-highlight-3.1.8.tar.gz"
   mirror "https://fossies.org/linux/www/source-highlight-3.1.8.tar.gz"
   sha256 "01336a7ea1d1ccc374201f7b81ffa94d0aecb33afc7d6903ebf9fbf33a55ada3"
-  revision 5
+  revision 8
 
   bottle do
-    sha256 "a366f9add09de541bed40859ff81417b6a8639366187492258c8b1af5725ba71" => :sierra
-    sha256 "9146b9804b82a54f197105d1b37eb8af2a9a29b96ed1c7343d6dbec905886b63" => :el_capitan
-    sha256 "a5e76856bc46279d1fb59e89db29b496baf9042200a1216b2127ee31511ee936" => :yosemite
+    sha256 "3101cb3776039eba399f7a9d42cbd68120abaa2c3fd02401bd43128020bdf22c" => :high_sierra
+    sha256 "c8f9401b678b754e82d3cd7a78f6e7c164a1ece1832ca73ac77f11023de87de9" => :sierra
+    sha256 "d8f960586c5a0b5249ceacbe3996042fdfbce29a50c3adc65087e02f3daf361b" => :el_capitan
   end
 
   depends_on "boost"

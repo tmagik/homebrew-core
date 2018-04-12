@@ -1,21 +1,19 @@
 class Cfssl < Formula
   desc "CloudFlare's PKI toolkit"
   homepage "https://cfssl.org/"
-  url "https://github.com/cloudflare/cfssl/archive/1.2.0.tar.gz"
-  sha256 "28e1d1ec6862eb926336490e2fcd1de626113d3e227293a4138fec59b7b6e443"
-  revision 2
-
+  url "https://github.com/cloudflare/cfssl/archive/1.3.1.tar.gz"
+  sha256 "3d0e409d30d41d797974559ae782a11e6823f38f5000544e604058cd43726528"
   head "https://github.com/cloudflare/cfssl.git"
 
   bottle do
-    rebuild 2
-    sha256 "df9604a452ffbab49d4944e3af38575777f65c8026852b743e3f3ff5d5447063" => :sierra
-    sha256 "9c215477cd204590d087f02fb0a7b852728feb05e337f92a978c261148177c26" => :el_capitan
-    sha256 "979ed2a7e0dd26725c7475795409cbd9112532cf2ec480c0abfe1ab123bc7708" => :yosemite
+    cellar :any_skip_relocation
+    sha256 "e234b37b5cd985fce65227a810df2ceffd40922155e687e47ec84a470f9efd72" => :high_sierra
+    sha256 "474d8c8a9a28ba8ae217382efcf5161742ca7f992ce3fc40a14bbc9686b036d0" => :sierra
+    sha256 "9c2fc7027b2136c1d228a84f0abd1bfe80c542f89b650ae864f792e9fc63f3fb" => :el_capitan
   end
 
   depends_on "go" => :build
-  depends_on "libtool" => :run
+  depends_on "libtool"
 
   def install
     ENV["GOPATH"] = buildpath
@@ -28,31 +26,31 @@ class Cfssl < Formula
     end
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     `mkbundle` has been installed as `cfsslmkbundle` to avoid conflict
     with Mono and other tools that ship the same executable.
   EOS
   end
 
   test do
-    (testpath/"request.json").write <<-EOS.undent
-    {
-      "CN" : "Your Certificate Authority",
-      "hosts" : [],
-      "key" : {
-        "algo" : "rsa",
-        "size" : 4096
-      },
-      "names" : [
-        {
-          "C" : "US",
-          "ST" : "Your State",
-          "L" : "Your City",
-          "O" : "Your Organization",
-          "OU" : "Your Certificate Authority"
-        }
-      ]
-    }
+    (testpath/"request.json").write <<~EOS
+      {
+        "CN" : "Your Certificate Authority",
+        "hosts" : [],
+        "key" : {
+          "algo" : "rsa",
+          "size" : 4096
+        },
+        "names" : [
+          {
+            "C" : "US",
+            "ST" : "Your State",
+            "L" : "Your City",
+            "O" : "Your Organization",
+            "OU" : "Your Certificate Authority"
+          }
+        ]
+      }
     EOS
     shell_output("#{bin}/cfssl genkey -initca request.json > response.json")
     response = JSON.parse(File.read(testpath/"response.json"))

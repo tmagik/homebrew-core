@@ -8,6 +8,7 @@ class Cosi < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "91a07519054c07be10182099d75adf74d017a74053d14985653e272ec1238fff" => :high_sierra
     sha256 "b387fbd7aa15c4348e56fd1e28adbabee656cd142c979ea556e2d5e8dc56d4b1" => :sierra
     sha256 "e73fd1b11e66d3931c91d6504b9958d44059aa4f3bbc547ed6cc8bdbc3717c6e" => :el_capitan
     sha256 "2953f8c62a93c976bf450d9605cab850d6d442e9e1885f3a455243942e59f6dd" => :yosemite
@@ -75,12 +76,12 @@ class Cosi < Formula
   end
 
   test do
-    (testpath/"config.toml").write <<-EOS.undent
+    (testpath/"config.toml").write <<~EOS
       Public = "7b6d6361686d0c76d9f4b40961736eb5d0849f7db3f8bfd8f869b8015d831d45"
       Private = "01a80f4fef21db2aea18e5288fe9aa71324a8ad202609139e5cfffc4ffdc4484"
       Addresses = ["0.0.0.0:6879"]
     EOS
-    (testpath/"group.toml").write <<-EOS.undent
+    (testpath/"group.toml").write <<~EOS
       [[servers]]
         Addresses = ["127.0.0.1:6879"]
         Public = "e21jYWhtDHbZ9LQJYXNutdCEn32z+L/Y+Gm4AV2DHUU="

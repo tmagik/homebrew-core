@@ -3,11 +3,12 @@ class Xmoto < Formula
   homepage "https://xmoto.tuxfamily.org/"
   url "https://download.tuxfamily.org/xmoto/xmoto/0.5.11/xmoto-0.5.11-src.tar.gz"
   sha256 "a584a6f9292b184686b72c78f16de4b82d5c5b72ad89e41912ff50d03eca26b2"
+  revision 2
 
   bottle do
-    sha256 "d0beb0f81e97e0495fd012a01865a3a14fe9649077dbea2b91a660e90dd77248" => :sierra
-    sha256 "350e2da36abf8fff00315730804f996f19693e35abaf9575fe0695db2266a60c" => :el_capitan
-    sha256 "6f75a5d9669357094f10beaefedf52819c9a8a525a876ddb51d27f5f77e2fe07" => :yosemite
+    sha256 "7bccb7306789c62b620ee83a0adf494744c96894eba69dd1536575cffb1f1a42" => :high_sierra
+    sha256 "5b8e90cc8c4f88b7f189b5ef4d5e213af984bdb4ad6f378cdbbab0b7a2b5a462" => :sierra
+    sha256 "42bfe9707509681912b5ab0d08d715edbc7d1b15f779a569e99e0edab26734cb" => :el_capitan
   end
 
   head do
@@ -26,7 +27,9 @@ class Xmoto < Formula
   depends_on "libxml2"
   depends_on "gettext" => :recommended
   depends_on "libxdg-basedir"
-  depends_on "lua" => :recommended
+  depends_on "lua@5.1" => :recommended
+
+  deprecated_option "without-lua" => "without-lua@5.1"
 
   def install
     # Fix issues reported upstream
@@ -34,6 +37,9 @@ class Xmoto < Formula
 
     # Set up single precision ODE
     ENV.append_to_cflags "-DdSINGLE"
+
+    ENV.prepend "CPPFLAGS", "-I#{Formula["lua@5.1"].opt_include}/lua-5.1"
+    ENV.append "LDFLAGS", "-L#{Formula["lua@5.1"].opt_lib} -llua.5.1"
 
     # Use same type as Apple OpenGL.framework
     inreplace "src/glext.h", "unsigned int GLhandleARB", "void *GLhandleARB"

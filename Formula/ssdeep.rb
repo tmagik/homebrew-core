@@ -1,16 +1,14 @@
 class Ssdeep < Formula
   desc "Recursive piecewise hashing tool"
-  homepage "https://ssdeep.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/ssdeep/ssdeep-2.13/ssdeep-2.13.tar.gz"
-  sha256 "6e4ca94457cb50ff3343d4dd585473817a461a55a666da1c5a74667924f0f8c5"
+  homepage "https://ssdeep-project.github.io/ssdeep/"
+  url "https://github.com/ssdeep-project/ssdeep/releases/download/release-2.14.1/ssdeep-2.14.1.tar.gz"
+  sha256 "ff2eabc78106f009b4fb2def2d76fb0ca9e12acf624cbbfad9b3eb390d931313"
 
   bottle do
     cellar :any
-    sha256 "fa344811991146d2d53fd6d66399e8f3bb05c53bf5baadb190e5ff0ddf91d9e5" => :sierra
-    sha256 "1cfc5e0f2bda54443383d58583d9d23279820201350cb5d97ba37b4e7b14a17a" => :el_capitan
-    sha256 "e01ebfb4bfb63ff3fa3f491c5b8bbf28055c70ccb1440ddacd4a2e31f84fe41d" => :yosemite
-    sha256 "fb7b2a4b78b97b348f5a385bc58fb2ccfb285677a04f4ac73caffd2e4bf34921" => :mavericks
-    sha256 "0077b7bb0348eb0b66e8cd575dd687e2dd82237beab1e2cd2f56ccb741614071" => :mountain_lion
+    sha256 "1c8a9a487676961755daf5688ec478a5925f3a0dfe36faeb7027878600ef2384" => :high_sierra
+    sha256 "84677545f87098d9c5d74719044c56616a8788f1320c9258794807dac2343328" => :sierra
+    sha256 "c07f5558ed32f7de17f349cbc62e56cf277d3d30c83fa7844bdf41000729dcba" => :el_capitan
   end
 
   def install
@@ -19,9 +17,9 @@ class Ssdeep < Formula
   end
 
   test do
-    expected = <<-EOS.undent
+    expected = <<~EOS
       ssdeep,1.1--blocksize:hash:hash,filename
-      192:15Jsxlk/azhE79EEfpm0sfQ+CfQoDfpw3RtU:15JsPz+7OEBCYLYYB7,"#{include}/fuzzy.h"
+      192:1xJsxlk/aMhud9Eqfpm0sfQ+CfQoDfpw3RtU:1xJsPMIdOqBCYLYYB7,"#{include}/fuzzy.h"
     EOS
     assert_equal expected, shell_output("#{bin}/ssdeep #{include}/fuzzy.h")
   end

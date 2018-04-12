@@ -1,13 +1,13 @@
 class AflFuzz < Formula
   desc "American fuzzy lop: Security-oriented fuzzer"
   homepage "http://lcamtuf.coredump.cx/afl/"
-  url "http://lcamtuf.coredump.cx/afl/releases/afl-2.43b.tgz"
-  sha256 "9db797848efa9507e509379aeffdd89b3806a79a119dfa2c4477cc5156f262cb"
+  url "http://lcamtuf.coredump.cx/afl/releases/afl-2.52b.tgz"
+  sha256 "43614b4b91c014d39ef086c5cc84ff5f068010c264c2c05bf199df60898ce045"
 
   bottle do
-    sha256 "1a99cb8b0054b1c8fca257ef85b4f5629a009c7d4e81304b52cc70e59b5f57a2" => :sierra
-    sha256 "983a57b6b32ae4d53be8f4944bf4b5bed2b0c98af04f5a831bbf88d047a32d32" => :el_capitan
-    sha256 "53175ed5fc804c702985131e6458069dc3672c8d2a9b3e80be28694b304870f9" => :yosemite
+    sha256 "4cd6b08ecfe35a62136b7a52222c59e055b80aef599404e29c7c9b8bf4f8fd50" => :high_sierra
+    sha256 "b45ff3036dddc75cf64689b3f2660938834f393256315ed33ba72ed1924c695e" => :sierra
+    sha256 "ef5e7c2e25020bf2d468c81ced4fdd9014dbdc0bb523f5acd8d91d8badc97d59" => :el_capitan
   end
 
   def install
@@ -17,7 +17,7 @@ class AflFuzz < Formula
 
   test do
     cpp_file = testpath/"main.cpp"
-    cpp_file.write <<-EOS.undent
+    cpp_file.write <<~EOS
       #include <iostream>
 
       int main() {

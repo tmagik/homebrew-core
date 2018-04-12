@@ -1,21 +1,22 @@
 class ClutterGtk < Formula
   desc "GTK+ integration library for Clutter"
   homepage "https://wiki.gnome.org/Projects/Clutter"
-  url "https://download.gnome.org/sources/clutter-gtk/1.8/clutter-gtk-1.8.2.tar.xz"
-  sha256 "da27d486325490ad3f65d2abf9413aeb8b4a8f7b559e4b2f73567a5344a26b94"
+  url "https://download.gnome.org/sources/clutter-gtk/1.8/clutter-gtk-1.8.4.tar.xz"
+  sha256 "521493ec038973c77edcb8bc5eac23eed41645117894aaee7300b2487cb42b06"
+  revision 1
 
   bottle do
-    sha256 "1d2a5f05a4df6167bf6a84f3bc09cf4be38b227ebe39a69c41a951a303356022" => :sierra
-    sha256 "6d8dfc08f45ca9acd13eae05db400d71b4a4b5cb0340b60edefa4f90b8113629" => :el_capitan
-    sha256 "d63dbbb10bad2cb8d844523eb4e09a848f01596cbfeda179fc479336791d50cb" => :yosemite
+    sha256 "20e4d6eafb36559b56406f5e26e8989d7d636945cabe9f6d4aa29a1661e46500" => :high_sierra
+    sha256 "2b0b873bc1f679f76216ee07ebc79fa0dffb8a0be3f7239868141f342e2a700e" => :sierra
+    sha256 "ce3e5e2f2a6107b17b521812fe7ab985e8d6e1cf57b8a3aa84a19cb760809e16" => :el_capitan
   end
 
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "glib"
   depends_on "gdk-pixbuf"
   depends_on "gtk+3"
   depends_on "clutter"
-  depends_on "gobject-introspection"
 
   def install
     args = %W[
@@ -32,7 +33,7 @@ class ClutterGtk < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <clutter-gtk/clutter-gtk.h>
 
       int main(int argc, char *argv[]) {

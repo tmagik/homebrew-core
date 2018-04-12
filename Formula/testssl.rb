@@ -1,10 +1,9 @@
 class Testssl < Formula
   desc "Tool which checks for the support of TLS/SSL ciphers and flaws"
   homepage "https://testssl.sh/"
-  url "https://github.com/drwetter/testssl.sh/archive/v2.8.tar.gz"
-  sha256 "76c1b21fcbaa4e625b77c9a9c7a137a2272cd84d07911fb213101aa6b9ce8cfa"
-  revision 1
-
+  url "https://github.com/drwetter/testssl.sh/archive/v2.9.5-4.tar.gz"
+  version "2.9.5-4"
+  sha256 "5163f76d40acfe404d65145c498cbe8fb716bb49119e8d0773e063203cff9c03"
   head "https://github.com/drwetter/testssl.sh.git"
 
   bottle :unneeded
@@ -12,12 +11,17 @@ class Testssl < Formula
   depends_on "openssl"
 
   def install
-    ENV.prepend_create_path "PATH", Formula["openssl"].opt_prefix.to_s
     bin.install "testssl.sh"
-    bin.env_script_all_files(libexec+"bin", :PATH => ENV["PATH"])
+    man1.install "doc/testssl.1"
+    prefix.install "etc"
+    env = {
+      :PATH => "#{Formula["openssl"].opt_bin}:$PATH",
+      :TESTSSL_INSTALL_DIR => prefix,
+    }
+    bin.env_script_all_files(libexec/"bin", env)
   end
 
   test do
-    system "#{bin}/testssl.sh", "--local"
+    system "#{bin}/testssl.sh", "--local", "--warnings", "off"
   end
 end

@@ -1,39 +1,27 @@
 class Cc65 < Formula
   desc "6502 C compiler"
   homepage "https://cc65.github.io/cc65/"
-  url "ftp://ftp.musoftware.de/pub/uz/cc65/cc65-sources-2.13.3.tar.bz2"
-  sha256 "a98a1b69d3fa15551fe7d53d5bebfc5f9b2aafb9642ee14b735587a421e00468"
-
-  # CC65 stable has ceased to be maintained as of March 2013.
-  # The head build has a new home, and new maintainer, but no new stable release yet.
+  url "https://github.com/cc65/cc65/archive/V2.17.tar.gz"
+  sha256 "73b89634655bfc6cef9aa0b8950f19657a902ee5ef0c045886e418bb116d2eac"
   head "https://github.com/cc65/cc65.git"
 
   bottle do
-    sha256 "991ea27c27b192abe257e46ac503583254539a6bb71e1394c069acb42cff0807" => :sierra
-    sha256 "a8d0601368f3f6c4048c63e4f785d5159c0aab3f4e3a86c49a65cd3cdf69ae53" => :el_capitan
-    sha256 "0320f31da62970bce189a3d6b8bdae5e595fa113eba7a37b5812e75dc6f89d72" => :yosemite
-    sha256 "8f56a19db5bfa9d606e7f636c3780a7e29206e0f9b845365f91550f58e46d2b4" => :mavericks
+    sha256 "12c9533c600dda022dc121f51f668648cd89a98e407e02aeb2119c21d8e8cc54" => :high_sierra
+    sha256 "f470bfeec0cc01b3da7656945e401815a852f2d6fbca5197f9dd41dc3391a539" => :sierra
+    sha256 "46e8dc043981d55e0b62e77cd12dae35b1ab13b3164f1510010e73bbe8ee76a9" => :el_capitan
   end
 
   conflicts_with "grc", :because => "both install `grc` binaries"
 
   def install
-    ENV.deparallelize
-
-    make_vars = ["prefix=#{prefix}", "libdir=#{share}"]
-
-    if head?
-      system "make", *make_vars
-      system "make", "install", *make_vars
-    else
-      system "make", "-f", "make/gcc.mak", *make_vars
-      system "make", "-f", "make/gcc.mak", "install", *make_vars
-    end
+    system "make", "PREFIX=#{prefix}"
+    system "make", "install", "PREFIX=#{prefix}"
   end
 
-  def caveats; <<-EOS.undent
-    Library files have been installed to:
-      #{pkgshare}
+  def caveats
+    <<~EOS
+      Library files have been installed to:
+        #{pkgshare}
     EOS
   end
 
@@ -41,6 +29,6 @@ class Cc65 < Formula
     (testpath/"foo.c").write "int main (void) { return 0; }"
 
     system bin/"cl65", "foo.c" # compile and link
-    assert File.exist?("foo")  # binary
+    assert_predicate testpath/"foo", :exist? # binary
   end
 end

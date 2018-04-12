@@ -1,13 +1,13 @@
 class Pike < Formula
   desc "Dynamic programming language"
   homepage "https://pike.lysator.liu.se"
-  url "https://pike.lysator.liu.se/pub/pike/all/8.0.438/Pike-v8.0.438.tar.gz"
-  sha256 "3865f8a4c9ba95c006602f24cc6ad0c07e9f936135d2346e21da627807a90ca0"
+  url "https://pike.lysator.liu.se/pub/pike/all/8.0.498/Pike-v8.0.498.tar.gz"
+  sha256 "b14ceccb26f37dbd9e078d87648a95f0501f290e89ae9b8197b2376d13eb1f2b"
 
   bottle do
-    sha256 "38300c1ce81213b7e0ecacb708843aa32864c63262833da5334e37295dabbfc9" => :sierra
-    sha256 "0f3a1cfde2029f9136684dac3d7462ef5311a5bcb03ccbe75aaf4727130c230b" => :el_capitan
-    sha256 "4501daa2c71467f7bb40b2f3ad4848fb55c284c1dcb0ca1a8bc940a1189cb8b6" => :yosemite
+    sha256 "9b3c1d8c9a1eceef90ce1bfe78137b0ccd726ec5dfc12f9746a471c5e855f92a" => :high_sierra
+    sha256 "c8abc1e8fcc26523b257cd2144c22a27ed6063c07e33193c70e3d0898c94fa86" => :sierra
+    sha256 "1ecfea274c44b5d087003b51acb934c4c3cc8494667cbaa4f6d57c1e919a2e20" => :el_capitan
   end
 
   option "with-gettext", "Include Gettext support"
@@ -95,7 +95,7 @@ class Pike < Formula
 
   test do
     path = testpath/"test.pike"
-    path.write <<-EOS.undent
+    path.write <<~EOS
       int main() {
         for (int i=0; i<10; i++) { write("%d", i); }
         return 0;

@@ -1,20 +1,32 @@
 class Creduce < Formula
   desc "Reduce a C/C++ program while keeping a property of interest"
   homepage "https://embed.cs.utah.edu/creduce/"
-  url "https://embed.cs.utah.edu/creduce/creduce-2.7.0.tar.gz"
-  sha256 "36dca859c97a988e71b1a08e0cbd5849e4da051d248c5e483494194c4a231a41"
+  revision 3
   head "https://github.com/csmith-project/creduce.git"
+
+  stable do
+    url "https://embed.cs.utah.edu/creduce/creduce-2.7.0.tar.gz"
+    sha256 "36dca859c97a988e71b1a08e0cbd5849e4da051d248c5e483494194c4a231a41"
+
+    # LLVM 5 compat
+    # Fix "error: use of undeclared identifier 'IK_C'" and similar errors
+    # Upstream commit from 27 Apr 2017 "Fix build failure with LLVM trunk"
+    patch do
+      url "https://github.com/csmith-project/creduce/commit/97e2b299.patch?full_index=1"
+      sha256 "89197f11c1c32bc234a4ba2102c65b96cc2141286e74cb838189c074c9a750d2"
+    end
+  end
 
   bottle do
     cellar :any
-    sha256 "4120c4b554d246afc4830bdb600a03b59e066f7ca7785aeb59c2898f0fbf9263" => :sierra
-    sha256 "7d9c698240b32363e90f448e9ca7083d0b8ca7490ca3ae8054d5d9b8fd04db09" => :el_capitan
-    sha256 "6278c6d29696dcdc7abf5e008afb9f1ebd454ced27a82b6e07dffc8a05680889" => :yosemite
+    sha256 "fbf09e354c9e1da58a93153eade303df094affe643e52422abb3795971723c79" => :high_sierra
+    sha256 "f2e4746773e42becc90d3068eaf9aee64701a51dab6349ea44947a88c128b0ee" => :sierra
+    sha256 "667d3b67033eb93718a83f63eede85f1d48965e2cb729d4ddb33f655c485c936" => :el_capitan
   end
 
   depends_on "astyle"
   depends_on "delta"
-  depends_on "llvm"
+  depends_on "llvm@5"
 
   depends_on :macos => :mavericks
 
@@ -32,7 +44,6 @@ class Creduce < Formula
 
   resource "File::Which" do
     url "https://cpan.metacpan.org/authors/id/P/PL/PLICEASE/File-Which-1.21.tar.gz"
-    mirror "http://search.cpan.org/CPAN/authors/id/P/PL/PLICEASE/File-Which-1.21.tar.gz"
     sha256 "9def5f10316bfd944e56b7f8a2501be1d44c288325309462aa9345e340854bcc"
   end
 
@@ -50,7 +61,6 @@ class Creduce < Formula
 
   resource "Sys::CPU" do
     url "https://cpan.metacpan.org/authors/id/M/MZ/MZSANFORD/Sys-CPU-0.61.tar.gz"
-    mirror "http://search.cpan.org/CPAN/authors/id/M/MZ/MZSANFORD/Sys-CPU-0.61.tar.gz"
     sha256 "250a86b79c231001c4ae71d2f66428092a4fbb2070971acafd471aa49739c9e4"
   end
 
@@ -58,7 +68,7 @@ class Creduce < Formula
     ENV.prepend_create_path "PERL5LIB", libexec/"lib/perl5"
 
     # Avoid ending up with llvm's Cellar path hard coded.
-    ENV["CLANG_FORMAT"] = Formula["llvm"].opt_bin/"clang-format"
+    ENV["CLANG_FORMAT"] = Formula["llvm@5"].opt_bin/"clang-format"
 
     resources.each do |r|
       r.stage do
@@ -70,7 +80,7 @@ class Creduce < Formula
 
     system "./configure", "--prefix=#{prefix}",
                           "--disable-dependency-tracking",
-                          "--with-llvm=#{Formula["llvm"].opt_prefix}",
+                          "--with-llvm=#{Formula["llvm@5"].opt_prefix}",
                           "--bindir=#{libexec}"
     system "make"
     system "make", "install"
@@ -79,7 +89,7 @@ class Creduce < Formula
   end
 
   test do
-    (testpath/"test1.c").write <<-EOS.undent
+    (testpath/"test1.c").write <<~EOS
       #include <stdio.h>
 
       int main() {
@@ -89,7 +99,7 @@ class Creduce < Formula
       }
 
     EOS
-    (testpath/"test1.sh").write <<-EOS.undent
+    (testpath/"test1.sh").write <<~EOS
       #!/usr/bin/env bash
 
       clang -Weverything "$(dirname "${BASH_SOURCE[0]}")"/test1.c 2>&1 | \

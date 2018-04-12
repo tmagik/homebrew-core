@@ -1,15 +1,14 @@
 class Dynamips < Formula
   desc "Cisco 7200/3600/3725/3745/2600/1700 Router Emulator"
   homepage "https://github.com/GNS3/dynamips"
-  url "https://github.com/GNS3/dynamips/archive/v0.2.16.tar.gz"
-  sha256 "0fcf18d701898a77cb589bd9bad16dde436ac1ccb87516fefe07d09de1a196c0"
+  url "https://github.com/GNS3/dynamips/archive/v0.2.18.tar.gz"
+  sha256 "39b8ab22f410d56db3161eaf7a16a70cf55aed200a7ac53bb737c71f34decac0"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "b0dff444d30aee825fb6324fb32b78514cf6dcd4c7bdfcaf6e92d3845338faf8" => :sierra
-    sha256 "4e81ee17602f6ef530e3e8e36d0f71b453ed7d790cc17a336b6f22143f7eb6a5" => :el_capitan
-    sha256 "6b5cee3e5085ace5329386b70e72a357e3d3a2f980de60eaa4104a2db4e8620d" => :yosemite
-    sha256 "c29879e87cb14a0ba3f6c031fa52a3864566e84930593125ec47f6a7ca02cd96" => :mavericks
+    sha256 "2be862a260ddf2ef632c6030412d54c2ed0744bcb45385390fabcc191c0765a7" => :high_sierra
+    sha256 "eb641e0fbad0c964571f22371c200abce479ae26a722551303e015db61600a49" => :sierra
+    sha256 "a6a7863cea9ce3666dc90117f6bcbbf81e1b97a2e6466a3760e83c1b72cc6dc1" => :el_capitan
   end
 
   depends_on "libelf"

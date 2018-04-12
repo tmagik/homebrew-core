@@ -2,14 +2,15 @@ class Kapacitor < Formula
   desc "Open source time series data processor"
   homepage "https://github.com/influxdata/kapacitor"
   url "https://github.com/influxdata/kapacitor.git",
-      :tag => "v1.3.1",
-      :revision => "3b5512f7276483326577907803167e4bb213c613"
+      :tag => "v1.4.1",
+      :revision => "b05bb0f6be089d6a1a391867ad4020344ce42a53"
   head "https://github.com/influxdata/kapacitor.git"
 
   bottle do
-    sha256 "dd6cfcc235187b91b39cd5eb5554a611392393bef9a7fa4b72132514287fb43b" => :sierra
-    sha256 "9d7c0cbb06c1a70c8d817fd3bcb64c1322ad0a55d73e5a32951b691d8e1bb6ea" => :el_capitan
-    sha256 "77030a37f2b1b15236230badfa1668c2ebbfe36c13df66717f658eb02f487afc" => :yosemite
+    cellar :any_skip_relocation
+    sha256 "cea8c73229b3ddfc68ed1f11d4c53a625604f6db532b3ec62b1b0964d2cffb39" => :high_sierra
+    sha256 "34deafa5e72e360424d2be3db71303bfc5ff2e4f98232370f200d254b007ae6f" => :sierra
+    sha256 "060e3b452c09f6e66c5ab90da292ed98b244a95b2ddba1bcbdac0ec0bfc14f24" => :el_capitan
   end
 
   depends_on "go" => :build
@@ -42,7 +43,7 @@ class Kapacitor < Formula
 
   plist_options :manual => "kapacitord -config #{HOMEBREW_PREFIX}/etc/kapacitor.conf"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

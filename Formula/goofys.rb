@@ -3,45 +3,29 @@ require "language/go"
 class Goofys < Formula
   desc "Filey-System interface to Amazon S3"
   homepage "https://github.com/kahing/goofys"
+  url "https://github.com/kahing/goofys.git",
+      :tag => "v0.19.0",
+      :revision => "943e017724ea820eb4185419ef3c41d6f921a324"
   head "https://github.com/kahing/goofys.git"
-
-  stable do
-    url "https://github.com/kahing/goofys.git",
-        :tag => "v0.0.12",
-        :revision => "2f5cac015cb09482b60f0e9f7976ec353c5ad063"
-
-    # Remove for > 0.0.12
-    # Fix "case-insensitive import collision"
-    # Upstream commit from 6 Jun 2017 "Lowercase github.com/Sirupsen/logrus"
-    patch do
-      url "https://github.com/kahing/goofys/commit/04ee797.patch"
-      sha256 "a659701b9ae750cb387f3aa329a8e8054fc4fdcaa742487c985b8b3135ed8a19"
-    end
-  end
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "05b9c356a3fa68746fdf7e2f82b80567aba078a34b3c0fcbbe4b5fbfccc03914" => :sierra
-    sha256 "61b5088aa3eae805a9dcc58483a4a59fbc2b95737d551525f9389770a6cec27d" => :el_capitan
-    sha256 "1fd955ceee7f6da1feadc193c37d036f0b22d63a2d4a7472b7aec32788d264bf" => :yosemite
+    sha256 "d708238d9bb052cf595749580af1706860e81818ea135b9d7de045ed0e21b914" => :high_sierra
+    sha256 "1e8cd32b9160837052a9da63e315a85d120ebe6b131b4b85784e03b22da2fcaa" => :sierra
+    sha256 "87db731108b8d838376750c335aa98048ad4b8e157b0b1cd0ceec1a151a0c513" => :el_capitan
   end
 
   depends_on "go" => :build
   depends_on :osxfuse
 
-  go_resource "github.com/Sirupsen/logrus" do
-    url "https://github.com/Sirupsen/logrus.git",
-        :revision => "85b1699d505667d13f8ac4478c1debbf85d6c5de"
-  end
-
-  go_resource "github.com/codegangsta/cli" do
-    url "https://github.com/codegangsta/cli.git",
-        :revision => "d70f47eeca3afd795160003bc6e28b001d60c67c"
-  end
-
   go_resource "github.com/jacobsa/fuse" do
     url "https://github.com/jacobsa/fuse.git",
-        :revision => "fe7f3a55dcaa3a8f3d5ff6a85b16b62b7a2c446c"
+        :revision => "c4e473376f7d5be650b11657ded3afb1cd80ad7c"
+  end
+
+  go_resource "github.com/jinzhu/copier" do
+    url "https://github.com/jinzhu/copier.git",
+        :revision => "db4671f3a9b8df855e993f7c94ec5ef1ffb0a23b"
   end
 
   go_resource "github.com/kardianos/osext" do
@@ -51,22 +35,37 @@ class Goofys < Formula
 
   go_resource "github.com/sevlyar/go-daemon" do
     url "https://github.com/sevlyar/go-daemon.git",
-        :revision => "821596c79672d38b7923916e766363184c00079c"
+        :revision => "e49ef56654f54139c4dc0285f973f74e9649e729"
   end
 
   go_resource "github.com/shirou/gopsutil" do
     url "https://github.com/shirou/gopsutil.git",
-        :revision => "3dd8bd46d9a1ccbd37b3ba6e3dc1dc7d37ba8dc5"
+        :revision => "2ae56c34ce208b38309ab1618fc82866a1051811"
+  end
+
+  go_resource "github.com/sirupsen/logrus" do
+    url "https://github.com/sirupsen/logrus.git",
+        :revision => "d682213848ed68c0a260ca37d6dd5ace8423f5ba"
+  end
+
+  go_resource "github.com/urfave/cli" do
+    url "https://github.com/urfave/cli.git",
+        :revision => "75104e932ac2ddb944a6ea19d9f9f26316ff1145"
+  end
+
+  go_resource "golang.org/x/crypto" do
+    url "https://go.googlesource.com/crypto.git",
+        :revision => "0fcca4842a8d74bfddc2c96a073bd2a4d2a7a2e8"
   end
 
   go_resource "golang.org/x/net" do
     url "https://go.googlesource.com/net.git",
-        :revision => "59a0b19b5533c7977ddeb86b017bf507ed407b12"
+        :revision => "434ec0c7fe3742c984919a691b2018a6e9694425"
   end
 
   go_resource "golang.org/x/sys" do
     url "https://go.googlesource.com/sys.git",
-        :revision => "0b25a408a50076fbbcae6b7ac0ea5fbb0b085e79"
+        :revision => "d38bf781f16e180a1b2ad82697d2f81d7b7ecfac"
   end
 
   def install
@@ -79,7 +78,9 @@ class Goofys < Formula
     Language::Go.stage_deps resources, gopath/"src"
 
     cd gopath/"src/github.com/kahing/goofys" do
-      system "go", "build", "-o", "goofys"
+      commit = Utils.popen_read("git rev-parse HEAD").chomp
+      system "go", "build", "-o", "goofys", "-ldflags",
+             "-X main.Version=#{commit}"
       bin.install "goofys"
       prefix.install_metafiles
     end

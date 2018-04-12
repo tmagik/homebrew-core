@@ -7,12 +7,13 @@ class Sshconfigfs < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "8a6fe6649349ad9d1f14bcbe96d4bef0039aaab16bc8b320f052c053d468af70" => :high_sierra
     sha256 "5e5f5ccfa8356cc53e19bf1a794b0152d6a2083cee84f0777c4e5b9d371e4dfc" => :sierra
     sha256 "f84991229a6701f9483c79232c5e25f3e4577d2e6748c06b5f49808c0ee8354b" => :el_capitan
     sha256 "f84991229a6701f9483c79232c5e25f3e4577d2e6748c06b5f49808c0ee8354b" => :yosemite
   end
 
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
   depends_on :osxfuse
 
   resource "fusepy" do
@@ -33,7 +34,8 @@ class Sshconfigfs < Formula
 
   plist_options :manual => "sshconfigfs"
 
-  def plist; <<-EOS.undent
+  def plist
+    <<~EOS
       <?xml version="1.0" encoding="UTF-8"?>
       <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
       <plist version="1.0">

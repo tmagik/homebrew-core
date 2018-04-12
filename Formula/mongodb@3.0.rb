@@ -3,13 +3,14 @@ require "language/go"
 class MongodbAT30 < Formula
   desc "High-performance document-oriented database"
   homepage "https://www.mongodb.org/"
-  url "https://fastdl.mongodb.org/src/mongodb-src-r3.0.12.tar.gz"
-  sha256 "b9bea5e3d59b93775d5d55fb1dd161272aeefa193c2311a8f6722ad46d7a21ab"
+  url "https://fastdl.mongodb.org/src/mongodb-src-r3.0.15.tar.gz"
+  sha256 "09ad76e06df007085520025c94a5e5840d65f37660c2b359f4962e135e4ae259"
 
   bottle do
-    sha256 "565c1889532eaf3848a9ee5799dc82a469a53b5f829296d8e4a910d9972288cb" => :sierra
-    sha256 "488cb8a0bcc8d5ee3f1a951fc28750bd5f079260d9a86641013287d1c7fb95cf" => :el_capitan
-    sha256 "55947a755d9c1efa9f8dc0e1419596574fc5a192adeaa2ccafc8732084782ac2" => :yosemite
+    cellar :any_skip_relocation
+    sha256 "a3c4c9fcf5c44c34f96395923937c65e7cf6cb52bd937ef2878afe91633672fe" => :high_sierra
+    sha256 "51f78308884b822d7406e12c897b613445cd0cb41add89b4835a203190c658d5" => :sierra
+    sha256 "3a8d91eba9e8342e325e6fe1643b63687429ce2866c61a27bef836928b264c6b" => :el_capitan
   end
 
   keg_only :versioned_formula
@@ -26,8 +27,8 @@ class MongodbAT30 < Formula
 
   go_resource "github.com/mongodb/mongo-tools" do
     url "https://github.com/mongodb/mongo-tools.git",
-      :tag => "r3.0.12",
-      :revision => "81c527a658a687b83564dfb9767df64420e9bcab"
+      :tag => "r3.0.15",
+      :revision => "86d15daf966ce58f5ce01985db07a7a5a3641ecb"
   end
 
   def install
@@ -38,9 +39,6 @@ class MongodbAT30 < Formula
     Language::Go.stage_deps resources, buildpath/"src"
 
     cd "src/github.com/mongodb/mongo-tools" do
-      # https://github.com/Homebrew/homebrew/issues/40136
-      inreplace "build.sh", '-ldflags "-X github.com/mongodb/mongo-tools/common/options.Gitspec=`git rev-parse HEAD` -X github.com/mongodb/mongo-tools/common/options.VersionStr=$(git describe)"', ""
-
       args = %w[]
 
       if build.with? "openssl"
@@ -79,7 +77,7 @@ class MongodbAT30 < Formula
     (var+"log/mongodb").mkpath
   end
 
-  def mongodb_conf; <<-EOS.undent
+  def mongodb_conf; <<~EOS
     systemLog:
       destination: file
       path: #{var}/log/mongodb/mongo.log
@@ -93,7 +91,7 @@ class MongodbAT30 < Formula
 
   plist_options :manual => "mongod --config #{HOMEBREW_PREFIX}/etc/mongod.conf"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

@@ -5,15 +5,17 @@ class Shyaml < Formula
   homepage "https://github.com/0k/shyaml"
   url "https://files.pythonhosted.org/packages/f7/ec/4143e8ba92d1d3654535f17bc4354f72d3a3e7d6984926d9a7ce1dec46ed/shyaml-0.5.0.tar.gz"
   sha256 "b3711011d37aae4e07b68b31e989aa3715548d5b0759898eda2ba437b9ae3c36"
+  revision 3
   head "https://github.com/0k/shyaml.git"
 
   bottle do
-    sha256 "6d86232a4ca67acb50fab9be145a1baa3c45993caada432a7af8a70b1f1aa0ca" => :sierra
-    sha256 "be14cfecf6a74831f8968ae64de0035b30b5303e89bf511b5eb0238ae36f52c2" => :el_capitan
-    sha256 "0084dabfc70ff9d2567ede796fe9f6721e32deaa533f66323546de1827102a6f" => :yosemite
+    cellar :any
+    sha256 "26cccc39de54519c6d5b506116004381a6e25b28be340f79cfb48483ef938e49" => :high_sierra
+    sha256 "f050e1186aa6354b3479b62680f7c0496b55c9da75cfe188ff4c095331bcc64c" => :sierra
+    sha256 "6a76d82e213292df97ae5303a52dd3a28294bc7ed43f1842e0bd18e5ef320399" => :el_capitan
   end
 
-  depends_on :python3
+  depends_on "python"
   depends_on "libyaml"
 
   resource "PyYAML" do
@@ -27,7 +29,7 @@ class Shyaml < Formula
   end
 
   test do
-    yaml = <<-EOS.undent
+    yaml = <<~EOS
       key: val
       arr:
         - 1st

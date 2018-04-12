@@ -1,13 +1,13 @@
 class IrcdHybrid < Formula
   desc "High-performance secure IRC server"
   homepage "http://www.ircd-hybrid.org/"
-  url "https://downloads.sourceforge.net/project/ircd-hybrid/ircd-hybrid/ircd-hybrid-8.2.21/ircd-hybrid-8.2.21.tgz"
-  sha256 "c37f67ff087bb471e6a4fbdd172e4b92d4c9924ba3ddfe481787855febcb8fa5"
+  url "https://downloads.sourceforge.net/project/ircd-hybrid/ircd-hybrid/ircd-hybrid-8.2.24/ircd-hybrid-8.2.24.tgz"
+  sha256 "eaa42d8bf10c0e619e3bda96f35d31bb20715305a85a1386cfbc6b8761fed50e"
 
   bottle do
-    sha256 "6c4b9bd6f5a995452b965710994b622ff713a665d256c433a83969bbebd5602c" => :sierra
-    sha256 "be751fd518ea469356f7976d11a2fc57974f4e2ad6c43d48b4a3422a01cf62ad" => :el_capitan
-    sha256 "4ed29598b245938e36eae68005ef3108c2f3415ed78002316dc0d1750394cc36" => :yosemite
+    sha256 "a3c6846e6cdad9e8615f01d1539b857a4a02aa87b475f0b7e576c29716f9b4e2" => :high_sierra
+    sha256 "1be9a361ecfcadda2db262d7af21b3a4518fa2dbb1400fc9b6bfd21e3b080949" => :sierra
+    sha256 "cb2919d989ee6ae1fa2ed37b4cdc24ff32d10512d436ec29d47218b75ab3f3a3" => :el_capitan
   end
 
   # ircd-hybrid needs the .la files
@@ -29,7 +29,7 @@ class IrcdHybrid < Formula
     etc.install "doc/reference.conf" => "ircd.conf"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     You'll more than likely need to edit the default settings in the config file:
       #{etc}/ircd.conf
     EOS
@@ -37,7 +37,7 @@ class IrcdHybrid < Formula
 
   plist_options :manual => "ircd"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

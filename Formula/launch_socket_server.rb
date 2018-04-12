@@ -10,6 +10,7 @@ class LaunchSocketServer < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "fe79eb83f0516ca648f75c0f0e2442ddbdd7475971b799e2cca56c75ae2f2cae" => :high_sierra
     sha256 "c41218460d421b9cbed6740f00ac0e1cd3a2d1a5fd91a58ba58f354e77faba55" => :sierra
     sha256 "393c5e9e891e553aa69f0233ac5966b014df4e63beda2a567e8c59bf34a167f8" => :el_capitan
     sha256 "97464d0f611bcc2bd568d1a12c96c4bec49e6f12b43528f44a08eccb6dd27f03" => :yosemite
@@ -25,7 +26,7 @@ class LaunchSocketServer < Formula
   plist_options :startup => true
 
   def plist
-    <<-EOS.undent
+    <<~EOS
       <?xml version="1.0" encoding="UTF-8"?>
       <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
       <plist version="1.0">
@@ -69,7 +70,7 @@ class LaunchSocketServer < Formula
     launch_port = 9272
     echo_port = 6752
 
-    (testpath/"launch_socket_server.plist").write <<-EOS.undent
+    (testpath/"launch_socket_server.plist").write <<~EOS
       <?xml version="1.0" encoding="UTF-8"?>
       <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
       <plist version="1.0">
@@ -109,7 +110,7 @@ class LaunchSocketServer < Formula
       </plist>
     EOS
 
-    (testpath/"echo_server.rb").write <<-EOS.undent
+    (testpath/"echo_server.rb").write <<~EOS
       require "socket"
 
       server = TCPServer.new("127.0.0.1", "#{echo_port}")

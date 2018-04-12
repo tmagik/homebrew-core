@@ -1,24 +1,30 @@
 class Kompose < Formula
   desc "Tool to move from `docker-compose` to Kubernetes"
   homepage "http://kompose.io"
-  url "https://github.com/kubernetes-incubator/kompose/archive/v0.7.0.tar.gz"
-  sha256 "6b649e91494e57ffd6c6f1d6150072d4c5589d75568172a8f3a0d6cbd7322599"
+  url "https://github.com/kubernetes/kompose/archive/v1.11.0.tar.gz"
+  sha256 "f74ac2061fb535cb35f09ad1971684692816e6cf79d559b716824a3ade3a39df"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "8a0d5319a877e3f090de17aa16d68b272ed429c686d85e54d92abe9117c2744f" => :sierra
-    sha256 "e6a08e3bffaa6fc55cd908e0e0a815db234c2d974f3c81f386d8277c2bb6c581" => :el_capitan
-    sha256 "a24475f05304ee7f357128bdef2c3e5dd5e70e99ede80148675ba8a91016873c" => :yosemite
+    sha256 "cc69957bd59ac3abaebc75117fa5f907b63b2ce1b910250aa34a05d45a8f139f" => :high_sierra
+    sha256 "d7c87e233736b65de5652783958eb2796b13234ee408151e4e26ac4df21cdb37" => :sierra
+    sha256 "4dc9eeff2221913c230985d3950566a0ec411e72651441b18fd844d6f268c5c3" => :el_capitan
   end
 
   depends_on "go" => :build
 
   def install
     ENV["GOPATH"] = buildpath
-    mkdir_p buildpath/"src/github.com/kubernetes-incubator"
-    ln_s buildpath, buildpath/"src/github.com/kubernetes-incubator/kompose"
+    mkdir_p buildpath/"src/github.com/kubernetes"
+    ln_s buildpath, buildpath/"src/github.com/kubernetes/kompose"
     system "make", "bin"
     bin.install "kompose"
+
+    output = Utils.popen_read("#{bin}/kompose completion bash")
+    (bash_completion/"kompose").write output
+
+    output = Utils.popen_read("#{bin}/kompose completion zsh")
+    (zsh_completion/"_kompose").write output
   end
 
   test do

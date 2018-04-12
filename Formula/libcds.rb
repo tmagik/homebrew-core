@@ -1,15 +1,14 @@
 class Libcds < Formula
   desc "C++ library of Concurrent Data Structures"
   homepage "https://libcds.sourceforge.io/doc/cds-api/index.html"
-  url "https://github.com/khizmax/libcds/archive/v2.2.0.tar.gz"
-  sha256 "e582fbd6492c91ff24b11468f094b111d5f62eca69e6445c88bf16cad50e40ed"
-  revision 1
+  url "https://github.com/khizmax/libcds/archive/v2.3.2.tar.gz"
+  sha256 "c174dc6c142e6c69b515186c597d8eb5f7add0040a4e64d4d77596bbfa2e977c"
 
   bottle do
     cellar :any
-    sha256 "ee0060141ee5b0540715f3f178421cf12d3e1ba2c539aadb070d2b1412efc4be" => :sierra
-    sha256 "a8a24425aa1107fe73725f01cfed435a468691ac95bfd19616026385bd86b379" => :el_capitan
-    sha256 "924226a8aaaa7502c847ac0f9d0335e46edcb17f107fc308d122eade0d450c44" => :yosemite
+    sha256 "b1fb46232f36fd9bc2fef02b1118e5398609b3343b3376d5130a5c7633c7c9ae" => :high_sierra
+    sha256 "cf6b35c96cdf54f090fb02f519bb00581ae9e4214416dbeabdc89235a5c94e57" => :sierra
+    sha256 "5f6db23a55e3bc9ce3358662b1f9122e9eb032f7eedef4b47e6bf9f27ebc052d" => :el_capitan
   end
 
   depends_on "cmake" => :build
@@ -25,7 +24,7 @@ class Libcds < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <cds/init.h>
       int main() {
         cds::Initialize();

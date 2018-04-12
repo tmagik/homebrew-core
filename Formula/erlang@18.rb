@@ -1,15 +1,15 @@
 class ErlangAT18 < Formula
   desc "Programming language for highly scalable real-time systems"
   homepage "https://www.erlang.org/"
-  url "https://github.com/erlang/otp/archive/OTP-18.3.4.tar.gz"
-  sha256 "d9e68a8cdef4db0935b02d4b163cf3af403405f756488874736298cf48b90ae9"
+  url "https://github.com/erlang/otp/archive/OTP-18.3.4.8.tar.gz"
+  sha256 "26df069142401924dc10d37f994a5de5ed971824880c5e5cce041b1e82c9250d"
   head "https://github.com/erlang/otp.git", :branch => "maint-18"
 
   bottle do
     cellar :any
-    sha256 "44d49f4e02a162114a8e4760315278490482f2fabe61cce2e56e6606abec72c6" => :sierra
-    sha256 "e01b1d83bfb10b62ae1f4aa78e096ce29eebcac0a3630256b70a5613ed00a389" => :el_capitan
-    sha256 "8321028e343f226c150e01e9a0890918b66bd68542533a77b29c024feef9a808" => :yosemite
+    sha256 "4101f0327fd835a0a7eedb6859938722c3e53b3dc2af9223ba97f0e6925558a7" => :high_sierra
+    sha256 "63837832b0ed0ea86643af3b578bf953de31b3ab8795b865d1fe759592c7f51a" => :sierra
+    sha256 "87021fd8083f62e8ac07f6292fca8bb610fe85f509621aee85f260a359341aea" => :el_capitan
   end
 
   keg_only :versioned_formula
@@ -27,6 +27,22 @@ class ErlangAT18 < Formula
   depends_on "fop" => :optional # enables building PDF docs
   depends_on :java => :optional
   depends_on "wxmac" => :recommended # for GUI apps like observer
+
+  # Check if this patch can be removed when OTP 18.3.5 is released.
+  # Erlang will crash on macOS 10.13 any time the crypto lib is used.
+  # The Erlang team has an open PR for the patch but it needs to be applied to
+  # older releases. See https://github.com/erlang/otp/pull/1501 and
+  # https://bugs.erlang.org/browse/ERL-439 for additional information.
+  patch do
+    url "https://raw.githubusercontent.com/Homebrew/formula-patches/774ad1f/erlang%4018/boring-ssl-high-sierra.patch"
+    sha256 "7cc1069a2d9418a545e12981c6d5c475e536f58207a1faf4b721cc33692657ac"
+  end
+
+  # Pointer comparison triggers error with Xcode 9
+  patch do
+    url "https://github.com/erlang/otp/commit/a64c4d806fa54848c35632114585ad82b98712e8.diff?full_index=1"
+    sha256 "3261400f8d7f0dcff3a52821daea3391ebfa01fd859f9f2d9cc5142138e26e15"
+  end
 
   resource "man" do
     url "https://www.erlang.org/download/otp_doc_man_18.3.tar.gz"
@@ -101,7 +117,7 @@ class ErlangAT18 < Formula
     end
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     Man pages can be found in:
       #{opt_lib}/erlang/man
     Access them with `erl -man`, or add this directory to MANPATH.

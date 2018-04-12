@@ -1,13 +1,13 @@
 class Exim < Formula
   desc "Complete replacement for sendmail"
   homepage "https://exim.org"
-  url "https://ftp.exim.org/pub/exim/exim4/exim-4.89.tar.bz2"
-  sha256 "912f2ee03c8dba06a3a4c0ee40522d367e1b65dc59e38dfcc1f5d9eecff51ab0"
+  url "https://ftp.exim.org/pub/exim/exim4/exim-4.90.1.tar.xz"
+  sha256 "5c98dfd12043be5751b88ef64d5363cd99284236eaeec6316b062a7628c2f726"
 
   bottle do
-    sha256 "b76c1dc01d5ff622c16ddbaee4405b6738bd0a4443fa162714994bc055224014" => :sierra
-    sha256 "d65075ea2095eeb918d4314493a634b35f330813425ee1a84b2bfdeadc346404" => :el_capitan
-    sha256 "eaaca1b7231700c5d7dd558c1a754c94c3643a3132ddedc415bd50382bbcb598" => :yosemite
+    sha256 "4e7766c4ac809c41d87d258c056aa706f4704acd5e28e15768ac1ae5b3b9673f" => :high_sierra
+    sha256 "809ae3690e6581365f97aca7222020eb2e4ebdc31b8f529ae3fb35a38f680046" => :sierra
+    sha256 "bf8f087f3e15750160b825c2dc5a93c82115ae68568938ef086fe7a18f13e726" => :el_capitan
   end
 
   deprecated_option "support-maildir" => "with-maildir"
@@ -41,6 +41,8 @@ class Exim < Formula
 
     bdb4 = Formula["berkeley-db@4"]
 
+    mv Dir["OS/unsupported/*Darwin*"], "OS"
+
     inreplace "OS/Makefile-Darwin" do |s|
       s.remove_make_var! %w[CC CFLAGS]
       # Add include and lib paths for BDB 4
@@ -59,7 +61,7 @@ class Exim < Formula
   end
 
   # Inspired by MacPorts startup script. Fixes restart issue due to missing setuid.
-  def startup_script; <<-EOS.undent
+  def startup_script; <<~EOS
     #!/bin/sh
     PID=#{var}/spool/exim/exim-daemon.pid
     case "$1" in
@@ -83,7 +85,7 @@ class Exim < Formula
     EOS
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     Start with:
       exim_ctl start
     Don't forget to run it as root to be able to bind port 25.

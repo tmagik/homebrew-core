@@ -1,17 +1,17 @@
 class Knot < Formula
   desc "High-performance authoritative-only DNS server"
   homepage "https://www.knot-dns.cz/"
-  url "https://secure.nic.cz/files/knot-dns/knot-2.5.2.tar.xz"
-  sha256 "286671a4ee35a5207b2e45fd0812962b481b1b543bf3d5df3a8c319c26e2f5e9"
+  url "https://secure.nic.cz/files/knot-dns/knot-2.6.5.tar.xz"
+  sha256 "33cd676706e2baeb37cf3879ccbc91a1e1cd1ee5d7a082adff4d1e753ce49d46"
 
   bottle do
-    sha256 "4f06e27a71ae3c5fe02d3096fdc5d7f70ab07323f25b82e46d0fbb0e5d9e1771" => :sierra
-    sha256 "f20936f3a3626817d752b831fe18746208f7d43507f716cb00a7f0813e790323" => :el_capitan
-    sha256 "4141dd77281e90b97cad16c6cbf714c8822e9b161dd050de4f0e4f74f87793fd" => :yosemite
+    sha256 "d972c47af7dd0af6f6b993679fdad536a5608880f1e6a1c8be75aa60488ab1f1" => :high_sierra
+    sha256 "a08a3a161f845c3c3fdde06c62b2edaca3ba32610b9abffb51e28c1559709b4a" => :sierra
+    sha256 "1d24871eb07b2b143d310c2753406f33d19a21c79a0f7bea6afc60dadb706fdc" => :el_capitan
   end
 
   head do
-    url "https://gitlab.labs.nic.cz/labs/knot.git"
+    url "https://gitlab.labs.nic.cz/knot/knot-dns.git"
 
     depends_on "automake" => :build
     depends_on "autoconf" => :build
@@ -58,7 +58,7 @@ class Knot < Formula
     (var/"knot").mkpath
   end
 
-  def knot_conf; <<-EOS.undent
+  def knot_conf; <<~EOS
     server:
       rundir: "#{var}/knot"
       listen: [ "0.0.0.0@53", "::@53" ]
@@ -78,7 +78,7 @@ class Knot < Formula
 
   plist_options :startup => true
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

@@ -1,8 +1,8 @@
 class Groovy < Formula
   desc "Java-based scripting language"
   homepage "http://www.groovy-lang.org"
-  url "https://dl.bintray.com/groovy/maven/apache-groovy-binary-2.4.11.zip"
-  sha256 "4479a3653c565b173fc0d0e5e514a06f1c7d6f93926cbe0c5d8d29e5e4a0347c"
+  url "https://dl.bintray.com/groovy/maven/apache-groovy-binary-2.4.14.zip"
+  sha256 "f9c846e21d9220bac464ffc00eae8f4146f4c26777b61f62e3123da95c6bc52a"
 
   bottle :unneeded
 
@@ -29,7 +29,7 @@ class Groovy < Formula
   end
 
   def caveats
-    <<-EOS.undent
+    <<~EOS
       You should set GROOVY_HOME:
         export GROOVY_HOME=#{opt_libexec}
     EOS

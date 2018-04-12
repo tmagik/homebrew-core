@@ -1,6 +1,6 @@
 class Mongrel2 < Formula
   desc "Application, language, and network architecture agnostic web server"
-  homepage "http://mongrel2.org/"
+  homepage "https://mongrel2.org/"
   head "https://github.com/mongrel2/mongrel2.git", :branch => "develop"
 
   stable do
@@ -9,13 +9,14 @@ class Mongrel2 < Formula
 
     # ensure unit tests work on 1.11.0. remove after next release
     patch do
-      url "https://github.com/mongrel2/mongrel2/commit/7cb8532e2ecc341d77885764b372a363fbc72eff.patch"
-      sha256 "46350471602726f6d0c1012f93e305dc2ca6fcdaa2187f1be3b6922c64ec7fdd"
+      url "https://github.com/mongrel2/mongrel2/commit/7cb8532e2ecc341d77885764b372a363fbc72eff.patch?full_index=1"
+      sha256 "fa7be14bf1df8ec3ab8ae164bde8eb703e9e2665645aa627baae2f08c072db9a"
     end
   end
 
   bottle do
     cellar :any
+    sha256 "67696f654ab1d878ac7c2a3fa254b0ee86c1d444578045997a971ca44189b2fe" => :high_sierra
     sha256 "293b0edc8bcc0b7e3a97748a6accbc5000916ed145fd467aeb809303438a207a" => :sierra
     sha256 "7a6880cbc814b084a3ac91e379b7a720438951e31a18119c232f976fded229c3" => :el_capitan
     sha256 "0b2926fe3d79ab934e95f0e5c067e8bb23b6900b99255482defee9388a0dee07" => :yosemite

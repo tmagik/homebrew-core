@@ -3,13 +3,13 @@ class Libgaiagraphics < Formula
   homepage "https://www.gaia-gis.it/fossil/libgaiagraphics/index"
   url "https://www.gaia-gis.it/gaia-sins/gaiagraphics-sources/libgaiagraphics-0.5.tar.gz"
   sha256 "ccab293319eef1e77d18c41ba75bc0b6328d0fc3c045bb1d1c4f9d403676ca1c"
-  revision 2
+  revision 4
 
   bottle do
     cellar :any
-    sha256 "9084ed46db17d60af7ad5f384e4e159efc3413d707a829b0942bf27c03fd56ad" => :sierra
-    sha256 "dbc0b3d570d96505d3a94bbc4ff4ebc1ac7978911158413a27d6f2b54f0dc338" => :el_capitan
-    sha256 "d50e034a248e53e0dcee6aa048ddad6a779e390e521eeb1a5e3f53b62244a275" => :yosemite
+    sha256 "0214b2e415ead8026fc796a6f743304188b4453877de09114d3d02ed14bdb13c" => :high_sierra
+    sha256 "e84cb82edf2b0a3926f2f6de212107256932643d89f188ddb67f71c08c4218b1" => :sierra
+    sha256 "b3419626a7acd62b6afc604769013b661d3bc57736cdf79a262c287432194693" => :el_capitan
   end
 
   depends_on "pkg-config" => :build

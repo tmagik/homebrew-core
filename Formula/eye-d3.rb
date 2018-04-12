@@ -1,29 +1,45 @@
 class EyeD3 < Formula
   desc "Work with ID3 metadata in .mp3 files"
   homepage "http://eyed3.nicfit.net/"
-  url "http://eyed3.nicfit.net/releases/eyeD3-0.7.8.tar.gz"
-  sha256 "06b956572b8d63c52db8f62447277a5647fc185b7afef9f2a918b4601db467db"
+  url "http://eyed3.nicfit.net/releases/eyeD3-0.8.5.tar.gz"
+  sha256 "f2bdaf1c7351b0d8fd8226a045360dfd493cd61065f910b411d96de8860eb90a"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "d30bae548e263335a40ad66134deb0b9ebd2fb64c063f046b3e5b7d15b8bce45" => :sierra
-    sha256 "acfb35d236229963feeed7e2ad301c96dbcc381d5320e4346b3da44cb35c7b6a" => :el_capitan
-    sha256 "a79293b1de717fa855e7adfbadb4570a52331f8ef6297f7f1b8a514edd1eea10" => :yosemite
-    sha256 "1ed297626268da26de4ca3b1f4e1a2bb6302b1dc7716271775070a6660eb6142" => :mavericks
-    sha256 "68c255648b6bca4542ee041122e96f276611cdc3785a4016c658c61d877d9419" => :mountain_lion
+    sha256 "4e4493fb6060245ce65054909bc5b64c7600c246e89924ec98dec1772dfa4aa1" => :high_sierra
+    sha256 "4e4493fb6060245ce65054909bc5b64c7600c246e89924ec98dec1772dfa4aa1" => :sierra
+    sha256 "636ba018c57d0cdd2dffe1d1219a63560bb4519f17ec1310138c2a4a479aac02" => :el_capitan
   end
 
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
+  depends_on "libmagic"
 
   # Looking for documentation? Please submit a PR to build some!
   # See https://github.com/Homebrew/homebrew/issues/32770 for previous attempt.
 
+  resource "pathlib" do
+    url "https://files.pythonhosted.org/packages/ac/aa/9b065a76b9af472437a0059f77e8f962fe350438b927cb80184c32f075eb/pathlib-1.0.1.tar.gz"
+    sha256 "6940718dfc3eff4258203ad5021090933e5c04707d5ca8cc9e73c94a7894ea9f"
+  end
+
+  resource "python-magic" do
+    url "https://files.pythonhosted.org/packages/84/30/80932401906eaf787f2e9bd86dc458f1d2e75b064b4c187341f29516945c/python-magic-0.4.15.tar.gz"
+    sha256 "f3765c0f582d2dfc72c15f3b5a82aecfae9498bd29ca840d72f37d7bd38bfcd5"
+  end
+
   def install
+    ENV.prepend_create_path "PYTHONPATH", libexec/"vendor/lib/python2.7/site-packages"
+    resources.each do |r|
+      r.stage do
+        system "python", *Language::Python.setup_install_args(libexec/"vendor")
+      end
+    end
+
     # Install in our prefix, not the first-in-the-path python site-packages dir.
     ENV.prepend_create_path "PYTHONPATH", libexec+"lib/python2.7/site-packages"
 
     system "python", "setup.py", "install", "--prefix=#{libexec}"
-    share.install "docs/plugins", "docs/api", "docs/cli.rst"
+    share.install "docs/plugins", "docs/cli.rst"
 
     bin.install Dir[libexec/"bin/*"]
     bin.env_script_all_files(libexec+"bin", :PYTHONPATH => ENV["PYTHONPATH"])

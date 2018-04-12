@@ -1,5 +1,5 @@
 class Joshua < Formula
-  desc "Statistical machine translation decoder."
+  desc "Statistical machine translation decoder"
   homepage "https://joshua.incubator.apache.org/"
   url "https://cs.jhu.edu/~post/files/joshua-6.0.5.tgz"
   sha256 "972116a74468389e89da018dd985f1ed1005b92401907881a14bdcc1be8bd98a"
@@ -8,6 +8,7 @@ class Joshua < Formula
   bottle do
     cellar :any_skip_relocation
     rebuild 1
+    sha256 "15cd2defc70734d455c6adda067193905e0debe97c21c551e364bb67a4e5157b" => :high_sierra
     sha256 "7b04fb7031b9f002a418eb7d674d2ceb05be0926c0a7d8abfea644be6d381df4" => :sierra
     sha256 "b649095ea4a944799fbc1ccd8425464b7d2711b0a149049b4d2d5e92d604c5ae" => :el_capitan
     sha256 "6ac9fb24f8b1bb70a32c72c8436b8ad43717cf83d65499cb011214061b6ce6ba" => :yosemite
@@ -22,7 +23,7 @@ class Joshua < Formula
   depends_on "ant" => :build
   depends_on "boost" => :build
   depends_on "md5sha1sum" => :build
-  depends_on :python => :build if MacOS.version <= :snow_leopard
+  depends_on "python@2" => :build
 
   resource "es-en-phrase-pack" do
     url "https://cs.jhu.edu/~post/language-packs/language-pack-es-en-phrase-2015-03-06.tgz"

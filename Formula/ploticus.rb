@@ -7,6 +7,7 @@ class Ploticus < Formula
   revision 1
 
   bottle do
+    sha256 "bfdaab8cdaf7c0c97e02caea8fa79e76e7ac85704d21591ced4a59914b4c5c26" => :high_sierra
     sha256 "06456d2606a86782cd75ee63f67e738e7ce33271902d3f4e7807d2061c0a5f4a" => :sierra
     sha256 "088f4ba0eea75ed4b401f94331b70dd64e23f02fa0d95731fbaccf6904c8cea5" => :el_capitan
     sha256 "b15be72d80abf16b348c625945de811bf1fb411b1cb329adc701bc04cfb41dd8" => :yosemite
@@ -27,7 +28,7 @@ class Ploticus < Formula
     pkgshare.install Dir["prefabs/*"]
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     Ploticus prefabs have been installed to #{opt_pkgshare}
   EOS
   end
@@ -35,7 +36,7 @@ class Ploticus < Formula
   test do
     assert_match "ploticus 2.", shell_output("#{bin}/ploticus -version 2>&1", 1)
 
-    (testpath/"test.in").write <<-EOS.undent
+    (testpath/"test.in").write <<~EOS
       #proc areadef
         rectangle: 1 1 4 2
         xrange: 0 5

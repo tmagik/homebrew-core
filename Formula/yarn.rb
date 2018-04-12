@@ -1,23 +1,26 @@
 class Yarn < Formula
   desc "JavaScript package manager"
   homepage "https://yarnpkg.com/"
-  url "https://yarnpkg.com/downloads/0.24.6/yarn-v0.24.6.tar.gz"
-  sha256 "c375ab86d4ca0b46addc5b462280bd42ddefb114ee0025d38044bb4610cd625d"
-  head "https://github.com/yarnpkg/yarn.git"
+  url "https://yarnpkg.com/downloads/1.5.1/yarn-v1.5.1.tar.gz"
+  sha256 "cd31657232cf48d57fdbff55f38bfa058d2fb4950450bd34af72dac796af4de1"
+  revision 1
 
   bottle :unneeded
 
-  depends_on "node"
+  depends_on "node" => :recommended
+
+  conflicts_with "hadoop", :because => "both install `yarn` binaries"
 
   def install
     libexec.install Dir["*"]
-    bin.install_symlink "#{libexec}/bin/yarn.js" => "yarn"
-    bin.install_symlink "#{libexec}/bin/yarn.js" => "yarnpkg"
+    (bin/"yarn").write_env_script "#{libexec}/bin/yarn.js", :PREFIX => HOMEBREW_PREFIX, :NPM_CONFIG_PYTHON => "/usr/bin/python"
+    (bin/"yarnpkg").write_env_script "#{libexec}/bin/yarn.js", :PREFIX => HOMEBREW_PREFIX, :NPM_CONFIG_PYTHON => "/usr/bin/python"
     inreplace "#{libexec}/package.json", '"installationMethod": "tar"', '"installationMethod": "homebrew"'
   end
 
   test do
     (testpath/"package.json").write('{"name": "test"}')
     system bin/"yarn", "add", "jquery"
+    system bin/"yarn", "add", "fsevents", "--build-from-source=true"
   end
 end

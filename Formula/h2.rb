@@ -1,13 +1,13 @@
 class H2 < Formula
   desc "Java SQL database"
   homepage "https://www.h2database.com/"
-  url "https://www.h2database.com/h2-2015-10-11.zip"
-  version "1.4.190"
-  sha256 "7881f308debe6d587219db3610b699af21d5e4b50ccb6fccac563382772a09c8"
+  url "https://www.h2database.com/h2-2018-03-18.zip"
+  version "1.4.197"
+  sha256 "a45e7824b4f54f5d9d65fb89f22e1e75ecadb15ea4dcf8c5d432b80af59ea759"
 
   bottle :unneeded
 
-  def script; <<-EOS.undent
+  def script; <<~EOS
     #!/bin/sh
     cd #{libexec} && bin/h2.sh "$@"
     EOS
@@ -34,7 +34,7 @@ class H2 < Formula
 
   plist_options :manual => "h2"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
@@ -57,5 +57,9 @@ class H2 < Formula
       </dict>
     </plist>
     EOS
+  end
+
+  test do
+    assert_match "Starts the H2 Console", shell_output("#{bin}/h2 -help")
   end
 end

@@ -3,13 +3,13 @@ class Wesnoth < Formula
   homepage "https://www.wesnoth.org/"
   url "https://downloads.sourceforge.net/project/wesnoth/wesnoth-1.12/wesnoth-1.12.6/wesnoth-1.12.6.tar.bz2"
   sha256 "a50f384cead15f68f31cfa1a311e76a12098428702cb674d3521eb169eb92e4e"
-  revision 2
+  revision 6
   head "https://github.com/wesnoth/wesnoth.git"
 
   bottle do
-    sha256 "0eab287604f183bff52439b413879a630ca8ce62833131540bc147294c8ad457" => :sierra
-    sha256 "bd9f859488d70e12dbcae79d2aa28250f1cc6311808eb2cb13a372992a0ee639" => :el_capitan
-    sha256 "9bc94966a6746592913681f2665c35e8bb1c3c90d9d061505d4cf9cbfb4e9e26" => :yosemite
+    sha256 "4eeeaab16db5b477de2b20c3f07e5961265f29ccdb99b6c58302581e96dd003f" => :high_sierra
+    sha256 "5840aaf3e87825a40953e036d2e85bcd4074e1b861e14687383f910ec71f1fe5" => :sierra
+    sha256 "42a37c80ce4cbbb492742e3a05cab8983ee94d6d9d3d3c3bf9cc7b8b5fd78f82" => :el_capitan
   end
 
   option "with-ccache", "Speeds recompilation, convenient for beta testers"
@@ -32,6 +32,9 @@ class Wesnoth < Formula
   depends_on "sdl_ttf"
 
   def install
+    mv "scons/gettext.py", "scons/gettext_tool.py"
+    inreplace "SConstruct", ", \"gettext\",", ", \"gettext_tool\","
+
     args = %W[prefix=#{prefix} docdir=#{doc} mandir=#{man} fifodir=#{var}/run/wesnothd gettextdir=#{Formula["gettext"].opt_prefix}]
     args << "OS_ENV=true"
     args << "install"

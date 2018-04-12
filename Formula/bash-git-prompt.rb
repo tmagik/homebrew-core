@@ -1,8 +1,8 @@
 class BashGitPrompt < Formula
   desc "Informative, fancy bash prompt for Git users"
   homepage "https://github.com/magicmonty/bash-git-prompt"
-  url "https://github.com/magicmonty/bash-git-prompt/archive/2.6.2.tar.gz"
-  sha256 "42ba16d96da0f5bcf577123ec7e819eea8f6893d123e485468b905be3e53bee8"
+  url "https://github.com/magicmonty/bash-git-prompt/archive/2.7.1.tar.gz"
+  sha256 "5e5fc6f5133b65760fede8050d4c3bc8edb8e78bc7ce26c16db442aa94b8a709"
   head "https://github.com/magicmonty/bash-git-prompt.git"
 
   bottle :unneeded
@@ -16,12 +16,17 @@ class BashGitPrompt < Formula
     doc.install "README.md"
   end
 
-  def caveats; <<-EOS.undent
-    You should add the following to your .bashrc (or equivalent):
-      if [ -f "#{HOMEBREW_PREFIX}/opt/bash-git-prompt/share/gitprompt.sh" ]; then
-        __GIT_PROMPT_DIR="#{HOMEBREW_PREFIX}/opt/bash-git-prompt/share"
-        source "#{HOMEBREW_PREFIX}/opt/bash-git-prompt/share/gitprompt.sh"
+  def caveats; <<~EOS
+    You should add the following to your .bashrc (or .bash_profile):
+      if [ -f "#{opt_share}/gitprompt.sh" ]; then
+        __GIT_PROMPT_DIR="#{opt_share}"
+        source "#{opt_share}/gitprompt.sh"
       fi
     EOS
+  end
+
+  test do
+    output = shell_output("/bin/sh #{share}/gitstatus.sh 2>&1")
+    assert_match "Not a git repository", output
   end
 end

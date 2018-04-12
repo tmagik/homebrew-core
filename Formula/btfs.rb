@@ -1,15 +1,16 @@
 class Btfs < Formula
   desc "BitTorrent filesystem based on FUSE"
   homepage "https://github.com/johang/btfs"
-  url "https://github.com/johang/btfs/archive/v2.13.tar.gz"
-  sha256 "494c3e16261e3c7535efa86493e09270dde29cd7121e97c29d226c239cbeabd6"
+  url "https://github.com/johang/btfs/archive/v2.18.tar.gz"
+  sha256 "bb9679045540554232eff303fc4f615d28eb4023461eae3f65f08f2427ec9ef2"
+  revision 1
   head "https://github.com/johang/btfs.git"
 
   bottle do
     cellar :any
-    sha256 "dcf77a38114495f29e64983a60cb3d0e62b0fa645cad60c32fb2357d1a4bf60e" => :sierra
-    sha256 "58e90041b8552a2cfc490066330e17839fd848a8fb7b011df4fc4b49fcab927c" => :el_capitan
-    sha256 "44eb8e7c5145aec2088c4edf88718b87886f04497dba22160d033e7d680385bf" => :yosemite
+    sha256 "8d6304dcbbbd2ca488aa930f12afe2b392452c496cc79337d677a9569c8f2ea6" => :high_sierra
+    sha256 "d196daadfbfe1670faa9ec72a2071e44cfa5484eca8d018a255cf7223bf56105" => :sierra
+    sha256 "53f2962e4a4bad2e1b73eb373cb325655d217e55836ea31ae6f4f56bbdbf4bde" => :el_capitan
   end
 
   depends_on "autoconf" => :build
@@ -19,6 +20,7 @@ class Btfs < Formula
   depends_on "libtorrent-rasterbar"
 
   def install
+    ENV.cxx11
     inreplace "configure.ac", "fuse >= 2.8.0", "fuse >= 2.7.3"
     system "autoreconf", "--force", "--install"
     system "./configure", "--disable-debug",

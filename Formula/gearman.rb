@@ -1,28 +1,25 @@
 class Gearman < Formula
   desc "Application framework to farm out work to other machines or processes"
   homepage "http://gearman.org/"
-  url "https://github.com/gearman/gearmand/releases/download/1.1.16/gearmand-1.1.16.tar.gz"
-  sha256 "d0207fa3004318af3c65d4ac8c9a1dddd547acf104fccd1280013a7f091da2c8"
+  url "https://github.com/gearman/gearmand/releases/download/1.1.18/gearmand-1.1.18.tar.gz"
+  sha256 "d789fa24996075a64c5af5fd2adef10b13f77d71f7d44edd68db482b349c962c"
 
   bottle do
-    sha256 "90236fe0c61400d6dd1be7240bdd0d7ac3bd69569aa9e024254e6c0eb6471872" => :sierra
-    sha256 "d0edc86b1b307dbe7f08d89670c4dc5d8f56d2ed10160f64622704bd938974b4" => :el_capitan
-    sha256 "b94d3876a9e730ac1230e460043bb58a5c5f69fe547aea68124e76006d10708a" => :yosemite
+    sha256 "ecabdc718b87f1c8772a86c5cdcbfb69c538891c842132ab2a88b92fb7ebe176" => :high_sierra
+    sha256 "1c1de51b9c2445c05df372a9e0f5c7d8595b4160df0515b96d014925e3e85ac8" => :sierra
+    sha256 "b2d1ba15ccdf0688decb8ecb0503ffa9fe507dccb5828de1007f130266ef98b1" => :el_capitan
   end
 
   option "with-mysql", "Compile with MySQL persistent queue enabled"
   option "with-postgresql", "Compile with Postgresql persistent queue enabled"
-
-  # https://github.com/Homebrew/homebrew/issues/33246
-  patch :DATA
 
   depends_on "pkg-config" => :build
   depends_on "sphinx-doc" => :build
   depends_on "boost"
   depends_on "libevent"
   depends_on "libpqxx" if build.with? "postgresql"
-  depends_on :mysql => :optional
-  depends_on :postgresql => :optional
+  depends_on "mysql" => :optional
+  depends_on "postgresql" => :optional
   depends_on "hiredis" => :optional
   depends_on "libmemcached" => :optional
   depends_on "openssl" => :optional
@@ -30,6 +27,10 @@ class Gearman < Formula
   depends_on "tokyo-cabinet" => :optional
 
   def install
+    # Work around "error: no member named 'signbit' in the global namespace"
+    # encountered when trying to detect boost regex in configure
+    ENV.delete("SDKROOT") if DevelopmentTools.clang_build_version >= 900
+
     # https://bugs.launchpad.net/gearmand/+bug/1368926
     Dir["tests/**/*.cc", "libtest/main.cc"].each do |test_file|
       next unless /std::unique_ptr/ =~ File.read(test_file)
@@ -80,7 +81,7 @@ class Gearman < Formula
 
   plist_options :manual => "gearmand -d"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
     "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -101,24 +102,3 @@ class Gearman < Formula
     assert_match /gearman\s*Error in usage/, shell_output("#{bin}/gearman --version 2>&1", 1)
   end
 end
-
-__END__
-diff --git a/libgearman/byteorder.cc b/libgearman/byteorder.cc
-index 674fed9..b2e2182 100644
---- a/libgearman/byteorder.cc
-+++ b/libgearman/byteorder.cc
-@@ -65,6 +65,8 @@ static inline uint64_t swap64(uint64_t in)
- }
- #endif
- 
-+#ifndef HAVE_HTONLL
-+
- uint64_t ntohll(uint64_t value)
- {
-   return swap64(value);
-@@ -74,3 +76,5 @@ uint64_t htonll(uint64_t value)
- {
-   return swap64(value);
- }
-+
-+#endif

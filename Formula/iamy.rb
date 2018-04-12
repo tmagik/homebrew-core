@@ -1,30 +1,29 @@
 class Iamy < Formula
   desc "AWS IAM import and export tool"
   homepage "https://github.com/99designs/iamy"
-  url "https://github.com/99designs/iamy/archive/v2.0.0.tar.gz"
-  sha256 "44906985ac2a7a0f4a703c4eb872e626770ffa1ea01a589279e75867a4348630"
+  url "https://github.com/99designs/iamy/archive/v2.1.1.tar.gz"
+  sha256 "c23e061ab0ebe8009e2db27fef95d733490a5a76a4f7d54bd1323ab8faf2441a"
   head "https://github.com/99designs/iamy.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "70502c9a9e56883b3fbb2d4b7b3c6eef670c797624bbe7de50812ec2adf6f263" => :sierra
-    sha256 "eab9f48a18661e6c016c01c822da39f9edf84c06b1a46fcd5ba5b07f138a309f" => :el_capitan
-    sha256 "2691c8fcf937d4fe3887204cdec9836cb9123e747223eb5a324b21cb19bdd303" => :yosemite
+    sha256 "65aec3b7fda4554e1ae2d68a1f1828b237767d9d1b03e1a4010147dec671d07f" => :high_sierra
+    sha256 "0032e8af26d5f19e127680b3c2a46edf8acfcdcc43705ec28c59c29b5cb7cf8e" => :sierra
+    sha256 "e423ebfa60cb94e4af9d2bbe396c10791201f5be000da123981dbbce8bfca5fe" => :el_capitan
+    sha256 "7711c9a181026bbb9f662fa04b08da34cff6a3bc7744b5e7546e47bf1615b1b0" => :yosemite
   end
 
-  depends_on "glide" => :build
   depends_on "go" => :build
   depends_on "awscli"
 
   def install
     ENV["GOPATH"] = buildpath
-    ENV["GLIDE_HOME"] = HOMEBREW_CACHE/"glide_home/#{name}"
     dir = buildpath/"src/github.com/99designs/iamy"
     dir.install buildpath.children
     cd dir do
-      system "glide", "install"
       system "go", "build", "-o", bin/"iamy", "-ldflags",
              "-X main.Version=v#{version}"
+      prefix.install_metafiles
     end
   end
 

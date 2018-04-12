@@ -1,15 +1,15 @@
 class Openttd < Formula
   desc "Simulation game based upon Transport Tycoon Deluxe"
   homepage "https://www.openttd.org/"
-  url "https://binaries.openttd.org/releases/1.7.1/openttd-1.7.1-source.tar.xz"
-  sha256 "61190952a98d494d3fd62e395dd6c359609914d0ba8fe80eaeb585b7d62a1b36"
+  url "https://binaries.openttd.org/releases/1.8.0/openttd-1.8.0-source.tar.xz"
+  sha256 "c2d32d9d736d27202a020027a3729ae763f5432ae6f424891e57a4095eeb087f"
 
   head "https://git.openttd.org/openttd/trunk.git"
 
   bottle do
-    sha256 "ee0a3491f25aa0fa7630964adefaeefaa64a59391a2dc9ec0c83d4e90763abc2" => :sierra
-    sha256 "2a795f3dc3823bb0752578c604f108da027bf2aa6d5a4fd9e057ae998c0de96b" => :el_capitan
-    sha256 "0bd2dcec82c063194393a9dc784d5db0ca5a6e659b7562ce02680379ce4a7265" => :yosemite
+    sha256 "e5d194e126ec516ca84a4f9187e8415953cf64e319dfe31dedd1bdaa2a4e2339" => :high_sierra
+    sha256 "5d74a4c682236213f06a7cdeae2f62f462d59f445a66719fe86e82a872ff112e" => :sierra
+    sha256 "b2b8d6cf06c840acbf425d4b89daf146541d46f19cd3aa7f09a622d7897b3a9f" => :el_capitan
   end
 
   depends_on "lzo"
@@ -43,7 +43,8 @@ class Openttd < Formula
     bin.write_exec_script "#{prefix}/OpenTTD.app/Contents/MacOS/openttd"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats
+    <<~EOS
       If you have access to the sound and graphics files from the original
       Transport Tycoon Deluxe, you can install them by following the
       instructions in section 4.1 of #{prefix}/readme.txt

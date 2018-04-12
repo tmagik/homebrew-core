@@ -1,15 +1,15 @@
 class Jsoncpp < Formula
   desc "Library for interacting with JSON"
   homepage "https://github.com/open-source-parsers/jsoncpp"
-  url "https://github.com/open-source-parsers/jsoncpp/archive/1.8.1.tar.gz"
-  sha256 "858db2faf348f89fdf1062bd3e79256772e897e7f17df73e0624edf004f2f9ac"
+  url "https://github.com/open-source-parsers/jsoncpp/archive/1.8.4.tar.gz"
+  sha256 "c49deac9e0933bcb7044f08516861a2d560988540b23de2ac1ad443b219afdb6"
   head "https://github.com/open-source-parsers/jsoncpp.git"
 
   bottle do
     cellar :any
-    sha256 "fef689f5e1d886e69225bd364bcd3e8bc156b437da6d7ef15ab3a57652587405" => :sierra
-    sha256 "fe22dfd17f24ea45a49724ec0f733f0e0d7fe0d80c6166cef8efcedc86778b7d" => :el_capitan
-    sha256 "aaec56b3a60c8ea4807a3d8fc6e6a7be463cd72bcb1a33520c2aa982eb0045a0" => :yosemite
+    sha256 "107e81382b6927dd4310a5accef1c2fb48ad616a8a8f838ba31d20d4ce855a2a" => :high_sierra
+    sha256 "9d15d02676d08bbcd0352f1aef7bba03206438aa50c5ed86358f45e9ef1534bf" => :sierra
+    sha256 "ea9882112cc77b4500803dfb5043c846de7dc9d584f007978d05863f6a8611cb" => :el_capitan
   end
 
   needs :cxx11
@@ -24,12 +24,13 @@ class Jsoncpp < Formula
                          "-DBUILD_SHARED_LIBS=ON",
                          "-DJSONCPP_WITH_CMAKE_PACKAGE=ON",
                          "-DJSONCPP_WITH_TESTS=OFF",
-                         "-DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF"
+                         "-DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF",
+                         "-DCCACHE_FOUND=CCACHE_FOUND-NOTFOUND"
     system "make", "install"
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <json/json.h>
       int main() {
         Json::Value root;

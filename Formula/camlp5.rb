@@ -1,15 +1,15 @@
 class Camlp5 < Formula
   desc "Preprocessor and pretty-printer for OCaml"
-  homepage "http://camlp5.gforge.inria.fr/"
-  url "https://github.com/camlp5/camlp5/archive/rel700.tar.gz"
-  version "7.00"
-  sha256 "0b252388e58f879c78c075b17fc8bf3714bc070d5914425bb3adfeefa9097cfd"
+  homepage "https://camlp5.github.io/"
+  url "https://github.com/camlp5/camlp5/archive/rel705.tar.gz"
+  version "7.05"
+  sha256 "ccc7afd2936c75cbee4aad58cd2ef8e7bf0dded556b91d76e4e462a27550ff12"
   head "https://gforge.inria.fr/anonscm/git/camlp5/camlp5.git"
 
   bottle do
-    sha256 "480bf967c02a550117ae945f321e0f8d7e27f79e560cdde9586b8f6369cd800e" => :sierra
-    sha256 "5928dd616876616688800fd64ecdbd87af154fe6b9bc03037007f30da35df004" => :el_capitan
-    sha256 "21ba483dffcf1adec6d71e2849477f71eb8144f1c7902543c5c1f6e0b3159061" => :yosemite
+    sha256 "155367db93088caaafa6b0f85900b41824d8938bf7ccad4435c3d86b758041d1" => :high_sierra
+    sha256 "bba5a5f9b70461cea57dd24dc04a219d6bce1f9c51634eb84a2b4028d335b019" => :sierra
+    sha256 "64380dceb3f1a68d984793d5e9b67e83c3e58687b81cf487def814398e9183d4" => :el_capitan
   end
 
   deprecated_option "strict" => "with-strict"

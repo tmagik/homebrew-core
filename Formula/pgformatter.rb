@@ -1,30 +1,24 @@
 class Pgformatter < Formula
   desc "PostgreSQL syntax beautifier"
   homepage "https://sqlformat.darold.net/"
-  url "https://github.com/darold/pgFormatter/archive/v2.0.tar.gz"
-  sha256 "ef2f7bc124a694c0384b6bda661582ad2dae7c25b289aba596a23fb17dd5f130"
+  url "https://github.com/darold/pgFormatter/archive/v3.0.tar.gz"
+  sha256 "8cf2452d0e4a6448e86b80e9a0dbc9252729544150f3141d14192e33bc86fedb"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "761c0bfee8e1a2e87f08a724cc608a87371021c3cc3e9d897a7df66a308d8654" => :sierra
-    sha256 "443714343ee9f2c7f4ae613e5c07869dc22e4297e72d77ec5c8b6f44efb9544b" => :el_capitan
-    sha256 "443714343ee9f2c7f4ae613e5c07869dc22e4297e72d77ec5c8b6f44efb9544b" => :yosemite
+    sha256 "c1f0fcb81b94ec4aa97a90a7110e793be409a9b44aea402989b5fbc61a133ce1" => :high_sierra
+    sha256 "c1f0fcb81b94ec4aa97a90a7110e793be409a9b44aea402989b5fbc61a133ce1" => :sierra
+    sha256 "c1f0fcb81b94ec4aa97a90a7110e793be409a9b44aea402989b5fbc61a133ce1" => :el_capitan
   end
 
   def install
-    # Fix path to Perl modules. Per default, the script expects to
-    # find them in a lib directory beneath it's own path.
-    inreplace "pg_format", "$FindBin::Bin/lib", libexec
-
     system "perl", "Makefile.PL", "DESTDIR=."
     system "make", "install"
 
-    bin.install "blib/script/pg_format"
-    libexec.install "blib/lib/pgFormatter"
-    man1.install "blib/man1/pg_format.1"
-    man3.install "blib/man3/pgFormatter::Beautify.3pm"
-    man3.install "blib/man3/pgFormatter::CGI.3pm"
-    man3.install "blib/man3/pgFormatter::CLI.3pm"
+    prefix.install (buildpath/"usr/local").children
+    (libexec/"lib").install "blib/lib/pgFormatter"
+    libexec.install bin/"pg_format"
+    bin.install_symlink libexec/"pg_format"
   end
 
   test do

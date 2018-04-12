@@ -1,16 +1,17 @@
 class Exiftool < Formula
   desc "Perl lib for reading and writing EXIF metadata"
-  homepage "http://www.sno.phy.queensu.ca/~phil/exiftool/index.html"
+  homepage "https://www.sno.phy.queensu.ca/~phil/exiftool/index.html"
   # Ensure release is tagged production before submitting.
-  # http://www.sno.phy.queensu.ca/~phil/exiftool/history.html
-  url "http://www.sno.phy.queensu.ca/~phil/exiftool/Image-ExifTool-10.53.tar.gz"
-  sha256 "77693e992f4b88b707cca55690d5216ef96f6c0deefa0bc716abb073e2a0ba30"
+  # https://www.sno.phy.queensu.ca/~phil/exiftool/history.html
+  url "https://www.sno.phy.queensu.ca/~phil/exiftool/Image-ExifTool-10.80.tar.gz"
+  mirror "https://downloads.sourceforge.net/project/exiftool/Image-ExifTool-10.80.tar.gz"
+  sha256 "bcf896600776d8ef39a867081b48426837ed5ee8ca19b53dd9d86a3179c93c93"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "451b7d3b4de25dc5c8758b748db4d472c89635ea85828013b0344f7d837e528f" => :sierra
-    sha256 "204b7d815f7830472639f73c8e0882c8689deeb0d3e7f15e6384d21bfdf739ed" => :el_capitan
-    sha256 "204b7d815f7830472639f73c8e0882c8689deeb0d3e7f15e6384d21bfdf739ed" => :yosemite
+    sha256 "c664e75f4e08ec9e73beadb888c49ac1cbaf306d539ffdc66558f56a5eee8ffe" => :high_sierra
+    sha256 "c664e75f4e08ec9e73beadb888c49ac1cbaf306d539ffdc66558f56a5eee8ffe" => :sierra
+    sha256 "c664e75f4e08ec9e73beadb888c49ac1cbaf306d539ffdc66558f56a5eee8ffe" => :el_capitan
   end
 
   def install
@@ -18,8 +19,12 @@ class Exiftool < Formula
     inreplace "exiftool", "$exeDir/lib", libexec/"lib"
 
     system "perl", "Makefile.PL"
+    system "make", "all"
     libexec.install "lib"
     bin.install "exiftool"
+    doc.install Dir["html/*"]
+    man1.install "blib/man1/exiftool.1"
+    man3.install Dir["blib/man3/*"]
   end
 
   test do

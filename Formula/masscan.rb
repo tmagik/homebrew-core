@@ -1,19 +1,24 @@
 class Masscan < Formula
   desc "TCP port scanner, scans entire Internet in under 5 minutes"
   homepage "https://github.com/robertdavidgraham/masscan/"
-  url "https://github.com/robertdavidgraham/masscan/archive/1.0.3.tar.gz"
-  sha256 "331edd529df1904bcbcfb43029ced7e2dafe1744841e74cd9fc9f440b8301085"
+  url "https://github.com/robertdavidgraham/masscan/archive/1.0.5.tar.gz"
+  sha256 "a0686929888674892f464014806444d26ded56838d45035221ff88ee9f6ead73"
   head "https://github.com/robertdavidgraham/masscan.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "d9f5af07a2e4f6f1849e86be73a8e6bca247f87f242921c3ed04421abf2a357d" => :sierra
-    sha256 "bb67f591ca801a8e070861f7888983aae0abde5ff74536013049d21b7659ad9a" => :el_capitan
-    sha256 "7ca9565d5ab497db0c1ce0963de6aa42259dcd7f87d54f52359cdba53deffd57" => :yosemite
-    sha256 "8c2afbee6a71b2e4280d8da97c1c30829477091d6fab7f43dcf8a6890bad520e" => :mavericks
+    sha256 "20a6281fb4adb9aec9fd7bddf8da30bc2ae8f5bec6daa5b468444916859017fd" => :high_sierra
+    sha256 "729b4ce06557da726edbf7e6e570ed1ff96ca3e0bc42d9399f9ed96aa48ef2a2" => :sierra
+    sha256 "9aa4359e82e1b467f24d7e813ee8919dbc5cf32a182fd6eafcadc015bcd97955" => :el_capitan
   end
 
   def install
+    # Fix `dyld: lazy symbol binding failed: Symbol not found: _clock_gettime`
+    # Reported 8 July 2017: https://github.com/robertdavidgraham/masscan/issues/284
+    if MacOS.version == :el_capitan && MacOS::Xcode.installed? && MacOS::Xcode.version >= "8.0"
+      inreplace "src/pixie-timer.c", "#elif defined(CLOCK_MONOTONIC)", "#elif defined(NOT_A_MACRO)"
+    end
+
     system "make"
     bin.install "bin/masscan"
   end

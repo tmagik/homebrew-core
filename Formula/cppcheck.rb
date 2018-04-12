@@ -1,14 +1,14 @@
 class Cppcheck < Formula
   desc "Static analysis of C and C++ code"
   homepage "https://sourceforge.net/projects/cppcheck/"
-  url "https://github.com/danmar/cppcheck/archive/1.79.tar.gz"
-  sha256 "9c222fb41452fa40020233ef3c314f8e43c01600f08d9a03d3584cd121a0c7e1"
+  url "https://github.com/danmar/cppcheck/archive/1.83.tar.gz"
+  sha256 "7d3656762beee8087e234a796c900c84b004ac241301106b6a2c01ef2beff095"
   head "https://github.com/danmar/cppcheck.git"
 
   bottle do
-    sha256 "e33980f04ef74c841f668dc4f0a7e21d2117839ae6e12eae1b81c69bef0066f7" => :sierra
-    sha256 "fa8cacf84b503fcdca099279d273839c7aa684a45a98d18379e86c487e2f26e1" => :el_capitan
-    sha256 "3596b3c82f459fd5ac032bb94a83ee016142f192b41568890e2d79a72ceebb8f" => :yosemite
+    sha256 "03c7cac9057f221e141c98b4c3430a913487172675fd716420539f681e349975" => :high_sierra
+    sha256 "e231ea045e58fcbd318a96dcfce65df81b15b78b7583328ecb0b7be2d653f421" => :sierra
+    sha256 "5526b65da29062085aae6b387dd34b653896248f3c81695f2898ad38f386dae9" => :el_capitan
   end
 
   option "without-rules", "Build without rules (no pcre dependency)"
@@ -60,7 +60,7 @@ class Cppcheck < Formula
   test do
     # Execution test with an input .cpp file
     test_cpp_file = testpath/"test.cpp"
-    test_cpp_file.write <<-EOS.undent
+    test_cpp_file.write <<~EOS
       #include <iostream>
       using namespace std;
 
@@ -88,7 +88,7 @@ class Cppcheck < Formula
 
     # Test the "out of bounds" check
     test_cpp_file_check = testpath/"testcheck.cpp"
-    test_cpp_file_check.write <<-EOS.undent
+    test_cpp_file_check.write <<~EOS
       int main()
       {
       char a[10];
@@ -109,7 +109,7 @@ class Cppcheck < Formula
     assert_parse_message = "Error: sampleaddon.py: failed: can't parse the #{name} dump."
 
     sample_addon_file = testpath/"sampleaddon.py"
-    sample_addon_file.write <<-EOS.undent
+    sample_addon_file.write <<~EOS
       #!/usr/bin/env python
       """A simple test addon for #{name}, prints function names and token count"""
       import sys
@@ -133,8 +133,8 @@ class Cppcheck < Formula
 
     system "#{bin}/cppcheck", "--dump", test_cpp_file
     test_cpp_file_dump = "#{test_cpp_file}.dump"
-    assert File.exist? test_cpp_file_dump
-    python_addon_output = shell_output "python #{sample_addon_file} #{test_cpp_file_dump}"
-    assert_match "#{expect_function_names}\n#{expect_token_count}", python_addon_output
+    assert_predicate testpath/test_cpp_file_dump, :exist?
+    output = shell_output("python #{sample_addon_file} #{test_cpp_file_dump}")
+    assert_match "#{expect_function_names}\n#{expect_token_count}", output
   end
 end

@@ -8,6 +8,7 @@ class Polipo < Formula
 
   bottle do
     rebuild 1
+    sha256 "a778da0bb114b5c5496be43cdb9ebce244d9ccb3faacda464e9621999e40ff21" => :high_sierra
     sha256 "d30101dd7753f59f84a8962f07772a1e18ec8007096b815c3cae117a59fbb2e0" => :sierra
     sha256 "54142753c1ad2f0bbb0b7d3acd62c12dd6f5e33f059f27432a739e01a351f1a7" => :el_capitan
     sha256 "ce6453203feafa737212242a0ea9d2faa118e5880775e115682901e59fad5891" => :yosemite
@@ -33,7 +34,7 @@ class Polipo < Formula
 
   plist_options :manual => "polipo"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

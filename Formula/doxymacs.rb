@@ -6,6 +6,7 @@ class Doxymacs < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "29a4865170b12a2194c238c35ec5e0902b8e637e378f9013b7aef64fa21eb0fc" => :high_sierra
     sha256 "2fd3dc59a8c0c8fdccf8195265d320aaa7b5d67e9a81b5a085f27cc287e7370e" => :sierra
     sha256 "fb892db831aed57dbdcb2d3a81d78bd05c5b689376d4b7f14bffc56826205ce9" => :el_capitan
     sha256 "09eb19921c2ecce5bb02b185c1040caef07d18706866006bdd5fa428bf6b8560" => :yosemite
@@ -19,10 +20,15 @@ class Doxymacs < Formula
     depends_on "automake" => :build
   end
 
-  depends_on :emacs => "20.7.1"
   depends_on "doxygen"
+  depends_on "emacs"
 
   def install
+    # Fix undefined symbols errors for _xmlCheckVersion and other symbols
+    if MacOS.version == :sierra || MacOS.version == :el_capitan
+      ENV["SDKROOT"] = MacOS.sdk_path
+    end
+
     # https://sourceforge.net/p/doxymacs/support-requests/5/
     ENV.append "CFLAGS", "-std=gnu89"
 
@@ -40,7 +46,7 @@ class Doxymacs < Formula
   end
 
   test do
-    (testpath/"test.el").write <<-EOS.undent
+    (testpath/"test.el").write <<~EOS
       (add-to-list 'load-path "#{elisp}")
       (load "doxymacs")
       (print doxymacs-version)

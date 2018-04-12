@@ -1,13 +1,14 @@
 class Pioneers < Formula
   desc "Settlers of Catan clone"
   homepage "https://pio.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/pio/Source/pioneers-15.3.tar.gz"
-  sha256 "69afa51b71646565536b571b0f89786d3a7616965265f196fd51656b51381a89"
+  url "https://downloads.sourceforge.net/project/pio/Source/pioneers-15.4.tar.gz"
+  sha256 "9a0d3198dc0ddf131d9e6d6e9992347fe2a2d99f508f1be1b30c5797210a2ddc"
+  revision 1
 
   bottle do
-    sha256 "ab5a8f58765f5121b134507c3c12e0f4f6c0bf26a5ccddb1ad07f3b8046831f0" => :sierra
-    sha256 "125fda4a203f876a2e58f46986e778989d7b8edfaed38069a6dea2d8f11ea4f7" => :el_capitan
-    sha256 "4dcd7c97726388e3175cfbf9bfe9aee17deb7d5894d7a864bdcf2b9295b7b0ed" => :yosemite
+    sha256 "1d0badeb96434bad76cba13bd4690e4ced3e2e30a0c96e1d0900d0937626b091" => :high_sierra
+    sha256 "892f74789cc3126fe7cc9fd26cfa0bd07004e6ebd18baa5e814de804722cb376" => :sierra
+    sha256 "eb4ab69456d6a37a9544a1b0c57ac2cae33029666899a3aae16bf9de60affcca" => :el_capitan
   end
 
   fails_with :clang do

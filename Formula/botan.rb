@@ -1,14 +1,14 @@
 class Botan < Formula
   desc "Cryptographic algorithms and formats library in C++"
   homepage "https://botan.randombit.net/"
-  url "https://botan.randombit.net/releases/Botan-2.1.0.tgz"
-  sha256 "460f2d7205aed113f898df4947b1f66ccf8d080eec7dac229ef0b754c9ad6294"
+  url "https://botan.randombit.net/releases/Botan-2.6.0.tgz"
+  sha256 "c1f261555bba702c73608dde7bd743ef2d6377a41a1c295915b25c5babaf5cc5"
   head "https://github.com/randombit/botan.git"
 
   bottle do
-    sha256 "b40addf39ec157733de0b941ddea7c2b91af994b18c28565ccf307d141d9a9b4" => :sierra
-    sha256 "5b3337a48e4ffb9d3134d776af7e265e9979903d7ba7a9507aca38708ed41918" => :el_capitan
-    sha256 "b5209d8069b0b3832be573a3109b63347cea6e8be90f01546cf0915755fd8c5b" => :yosemite
+    sha256 "5c173d12f563c782ea7f66b334b83202e5e07401ca11eb4b3f991f06b168a262" => :high_sierra
+    sha256 "81697f0f4796105afbe523422505180d8192576495e841e39f1fd645c0a39002" => :sierra
+    sha256 "0de1a4dbee4c5b0b0a50279ac288f3b0d9263739f7ea440d0db5402c843139d4" => :el_capitan
   end
 
   option "with-debug", "Enable debug build of Botan"
@@ -37,9 +37,7 @@ class Botan < Formula
     args << "--enable-debug" if build.with? "debug"
 
     system "./configure.py", *args
-    # A hack to force them use our CFLAGS. MACH_OPT is empty in the Makefile
-    # but used for each call to cc/ld.
-    system "make", "install", "MACH_OPT=#{ENV.cflags}"
+    system "make", "install"
   end
 
   test do

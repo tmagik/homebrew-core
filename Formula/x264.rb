@@ -2,41 +2,32 @@ class X264 < Formula
   desc "H.264/AVC encoder"
   homepage "https://www.videolan.org/developers/x264.html"
   # the latest commit on the stable branch
-  url "https://git.videolan.org/git/x264.git", :revision => "97eaef2ab82a46d13ea5e00270712d6475fbe42b"
-  version "r2748"
+  url "https://git.videolan.org/git/x264.git",
+      :revision => "e9a5903edf8ca59ef20e6f4894c196f135af735e"
+  version "r2854"
   head "https://git.videolan.org/git/x264.git"
 
   bottle do
     cellar :any
-    sha256 "e7b49d928421526258edb4021324a9c5bc6c9823e25c4f06070ffb4dbf9ce3c5" => :sierra
-    sha256 "59c336f951b9fc03a26574dc29da0ee6e6e45cbf4e3245de7529271c134f149c" => :el_capitan
-    sha256 "92ba46544181c3f7039fb62e6dd6e730e214dece3a3866f2a3bb8eb824701cbf" => :yosemite
+    rebuild 1
+    sha256 "f9217e7b29e737cc050f04183266a19c75fb01b1e9101818bad014a7cdf62f16" => :high_sierra
+    sha256 "c047a907ed59ffecfba24792f800c21a3226cadb6cb2155943711a373950a1eb" => :sierra
+    sha256 "04a9a0a821da861a283c92993426c1cdfe3cfd786898b7dac8bd9c477c5d02d7" => :el_capitan
   end
 
-  option "with-10-bit", "Build a 10-bit x264 (default: 8-bit)"
-  option "with-l-smash", "Build CLI with l-smash mp4 output"
-
-  depends_on "yasm" => :build
-  depends_on "l-smash" => :optional
-
-  deprecated_option "10-bit" => "with-10-bit"
+  depends_on "nasm" => :build
 
   def install
-    args = %W[
-      --prefix=#{prefix}
-      --enable-shared
-      --enable-static
-      --enable-strip
-    ]
-    args << "--disable-lsmash" if build.without? "l-smash"
-    args << "--bit-depth=10" if build.with? "10-bit"
-
-    system "./configure", *args
+    system "./configure", "--prefix=#{prefix}",
+                          "--disable-lsmash",
+                          "--enable-shared",
+                          "--enable-static",
+                          "--enable-strip"
     system "make", "install"
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <stdint.h>
       #include <x264.h>
 
@@ -49,7 +40,7 @@ class X264 < Formula
           return 0;
       }
     EOS
-    system ENV.cc, "-lx264", "test.c", "-o", "test"
+    system ENV.cc, "-L#{lib}", "-lx264", "test.c", "-o", "test"
     system "./test"
   end
 end

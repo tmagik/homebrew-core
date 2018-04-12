@@ -7,6 +7,7 @@ class Cereal < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "f7df56c0cb700d08a326948a052486c3899a0a38c0ede5af78b4d1d69a22fcf0" => :high_sierra
     sha256 "d0cf1bf42b9a95b861b96d456c528996e5918821b9f63e8d8dbf3bb44381378c" => :sierra
     sha256 "c4a716ed280100209d328085a3996c3116041bfaa78b9eeb837367de338efb95" => :el_capitan
     sha256 "c4a716ed280100209d328085a3996c3116041bfaa78b9eeb837367de338efb95" => :yosemite
@@ -24,7 +25,7 @@ class Cereal < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <cereal/types/unordered_map.hpp>
       #include <cereal/types/memory.hpp>
       #include <cereal/archives/binary.hpp>

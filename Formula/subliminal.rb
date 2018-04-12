@@ -9,13 +9,14 @@ class Subliminal < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "299a246633f54bea9959260d5e210086072525df57661f39188c55193ba064ef" => :high_sierra
     sha256 "4922e6a2534b5d0e532e7bac72e542631fce649b4adf1eafc6b54f3be8eb7d22" => :sierra
     sha256 "a5fbb77e9512eeb8e062e66bb58400f2e0a85e10a067e9715a0894aa401e21a8" => :el_capitan
     sha256 "93cb7e138aa5755bdd190e5d00b60de83187ad0b1876da9ebc22b9f4839d77d2" => :yosemite
     sha256 "3160c050cb0c9aca25632b20afa9344a9f8dfc645aea44b4f8288a3c00e20d31" => :mavericks
   end
 
-  depends_on :python if MacOS.version <= :snow_leopard
+  depends_on "python@2"
 
   resource "appdirs" do
     url "https://files.pythonhosted.org/packages/bd/66/0a7f48a0f3fb1d3a4072bceb5bbd78b1a6de4d801fb7135578e7c7b1f563/appdirs-1.4.0.tar.gz"
@@ -115,6 +116,6 @@ class Subliminal < Formula
     (testpath/".config").mkpath
     system bin/"subliminal", "download", "-l", "en",
                "The.Big.Bang.Theory.S05E18.HDTV.x264-LOL.mp4"
-    assert File.exist?("The.Big.Bang.Theory.S05E18.HDTV.x264-LOL.en.srt")
+    assert_predicate testpath/"The.Big.Bang.Theory.S05E18.HDTV.x264-LOL.en.srt", :exist?
   end
 end

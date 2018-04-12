@@ -6,6 +6,7 @@ class Bochs < Formula
   revision 1
 
   bottle do
+    sha256 "1acbd357ca0d7394d2ca6ac261a7cbecf4d42d73fac2f5a6e237e7b33a01e51d" => :high_sierra
     sha256 "8dd191ff5085b435ff26cd53026d8afada7fa9e18d84a985da2a6a9d6b179a64" => :sierra
     sha256 "395ce5d3047ee0b98c8eb2130a8661d319a0926c19e7ebf6b31fc01dee0e8edf" => :el_capitan
     sha256 "b32844f457ead67e1a656a1a6d05c0a67d56cc1b68d0ffb60f86d3c8ec0f50cf" => :yosemite
@@ -16,6 +17,15 @@ class Bochs < Formula
 
   depends_on "pkg-config" => :build
   depends_on "sdl2" => :recommended
+
+  # Fix pointer cast issue
+  # https://sourceforge.net/p/bochs/patches/537/
+  if DevelopmentTools.clang_build_version >= 900
+    patch do
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/e9b520dd4c/bochs/xcode9.patch"
+      sha256 "373c670083a3e96f4012cfe7356d8b3584e2f0d10196b4294d56670124f5e5e7"
+    end
+  end
 
   def install
     args = %W[
@@ -64,18 +74,18 @@ class Bochs < Formula
   test do
     require "open3"
 
-    (testpath/"bochsrc.txt").write <<-EOS.undent
-        panic: action=fatal
-        error: action=report
-        info: action=ignore
-        debug: action=ignore
-        display_library: nogui
-      EOS
+    (testpath/"bochsrc.txt").write <<~EOS
+      panic: action=fatal
+      error: action=report
+      info: action=ignore
+      debug: action=ignore
+      display_library: nogui
+    EOS
 
-    expected = <<-ERR.undent
-        Bochs is exiting with the following message:
-        \[BIOS  \] No bootable device\.
-      ERR
+    expected = <<~EOS
+      Bochs is exiting with the following message:
+      \[BIOS  \] No bootable device\.
+    EOS
 
     command = "#{bin}/bochs -qf bochsrc.txt"
     if build.without? "gdb-stub"

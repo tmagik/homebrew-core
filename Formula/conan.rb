@@ -3,24 +3,24 @@ class Conan < Formula
 
   desc "Distributed, open source, package manager for C/C++"
   homepage "https://github.com/conan-io/conan"
-  url "https://github.com/conan-io/conan/archive/0.24.0.tar.gz"
-  sha256 "039e3e9cbd18f3b58933107be5a23c4be92589bad78b15f466eec5a6a6a27844"
+  url "https://github.com/conan-io/conan/archive/1.2.3.tar.gz"
+  sha256 "12ea5aa2f6faf2484613129dec4c1ce4d0b3459d488160a4b00cb7f091650b05"
   head "https://github.com/conan-io/conan.git"
 
   bottle do
     cellar :any
-    sha256 "d36f154d64a9656c1486648d1dd7c7a48bda8d18d45ec5c765d38392765aea42" => :sierra
-    sha256 "ae481ed34cd3225e81840a464d54032dc9ca250d59e7538d06e24762dfc68a19" => :el_capitan
-    sha256 "2933376adf23ac1e6e5e54473a83a56033dfc4389bc7e436f59e2615e4b484db" => :yosemite
+    sha256 "d69c530a1317d92ae981e46f563bb5fabebfeb839fd48d5a82ce75ef5d1d3725" => :high_sierra
+    sha256 "5c28444d31bb384c337531b4f15fa7e56eab718189d4f91edfe2cbf0d9f961be" => :sierra
+    sha256 "f00810821fb336bab4ca61dbe8f7a801b3697c64862062b7d666eaf3bbd4cc6e" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
-  depends_on :python if MacOS.version <= :snow_leopard
   depends_on "libffi"
   depends_on "openssl"
+  depends_on "python"
 
   def install
-    venv = virtualenv_create(libexec)
+    venv = virtualenv_create(libexec, "python3")
     system libexec/"bin/pip", "install", "-v", "--no-binary", ":all:",
                               "--ignore-installed", buildpath
     system libexec/"bin/pip", "uninstall", "-y", name
@@ -28,7 +28,7 @@ class Conan < Formula
   end
 
   test do
-    system bin/"conan", "install", "zlib/1.2.8@lasote/stable", "--build"
-    assert_predicate testpath/".conan/data/zlib/1.2.8", :exist?
+    system bin/"conan", "install", "zlib/1.2.11@conan/stable", "--build"
+    assert_predicate testpath/".conan/data/zlib/1.2.11", :exist?
   end
 end

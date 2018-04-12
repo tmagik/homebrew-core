@@ -1,14 +1,14 @@
 class Wiredtiger < Formula
   desc "High performance NoSQL extensible platform for data management"
   homepage "http://www.wiredtiger.com"
-  url "https://github.com/wiredtiger/wiredtiger/releases/download/2.9.1/wiredtiger-2.9.1.tar.bz2"
-  sha256 "2995acab3422f1667b50e487106c6c88b8666d3cf239d8ecffa2dbffb17dfdcf"
+  url "https://github.com/wiredtiger/wiredtiger/releases/download/3.0.0/wiredtiger-3.0.0.tar.bz2"
+  sha256 "a6662ecedc824ed61895c34821a1f9adbf5d3cf04630fa3d3881cb2b9573a304"
 
   bottle do
     cellar :any
-    sha256 "da99b2e657972518071a86f4633b54f5e74ed6e34b8ad047e0c2f6abbdb8f7d1" => :sierra
-    sha256 "a75213abe8e436012bbf2a3830fdd941dc2987c1259a6c9ea1813392e8b8ffdf" => :el_capitan
-    sha256 "9d0ddaaf2a8c765723f820d676d54340e1ea90566ca4e74a1537ecc8216578d5" => :yosemite
+    sha256 "9b28c70a1c34b298767cfb0e39701639d268a29333cbff304621da049d03bcd4" => :high_sierra
+    sha256 "54973355aa846d8ff623d96b7890ca24abab9c777e8378afc8df5eda2f7135ff" => :sierra
+    sha256 "f515b54643c9a1282f5f317b925b67bcdd3e43436701b53cf760332a08b68ca1" => :el_capitan
   end
 
   depends_on "snappy"

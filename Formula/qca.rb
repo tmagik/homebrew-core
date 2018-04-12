@@ -1,7 +1,7 @@
 class Qca < Formula
   desc "Qt Cryptographic Architecture (QCA)"
   homepage "http://delta.affinix.com/qca/"
-  revision 1
+  revision 2
   head "https://anongit.kde.org/qca.git"
 
   stable do
@@ -10,35 +10,36 @@ class Qca < Formula
 
     # upstream fixes for macOS building (remove on 2.2.0 upgrade)
     patch do
-      url "https://github.com/KDE/qca/commit/7ba0ee591e0f50a7e7b532f9eb7e500e7da784fb.diff"
-      sha256 "31977c97ff07d562244211536fa51d0a155b5a13a865a4a231dbb5a15bf3bd61"
+      url "https://github.com/KDE/qca/commit/7ba0ee591e0f50a7e7b532f9eb7e500e7da784fb.diff?full_index=1"
+      sha256 "3f6c8a8bbd246556c690142c209a34973981be66e46fee991a456fb2e8b66d72"
     end
     patch do
-      url "https://github.com/KDE/qca/commit/b435c1b87b14ac2d2de9f83e586bfd6d8c2a755e.diff"
-      sha256 "9f53b78fcdb723522aeea406a44e2229d200f649f60f787911e4ddea8528e5f1"
+      url "https://github.com/KDE/qca/commit/b435c1b87b14ac2d2de9f83e586bfd6d8c2a755e.diff?full_index=1"
+      sha256 "9ea01ad6b21282ff62b18ac02588f7106b75056ab8379dff3fdfcff13a6c122f"
     end
     patch do
-      url "https://github.com/KDE/qca/commit/f4b2eb0ced5310f3c43398eb1f03e0c065e08a82.diff"
-      sha256 "4bcffdbdd4cbf216861290f10010da15ceae1bc2470e69c31930e3e59d57deb7"
+      url "https://github.com/KDE/qca/commit/f4b2eb0ced5310f3c43398eb1f03e0c065e08a82.diff?full_index=1"
+      sha256 "d6c27ebfd8fec5284e4a0a39faf62e44764be5baff08141bd7f4da6d0b9f438d"
     end
 
     # use major version for framework, instead of full version
     # see: https://github.com/KDE/qca/pull/3
     patch do
-      url "https://github.com/KDE/qca/pull/3.patch"
-      sha256 "4972c941df8eee0b974d3cf01211ebc9650c6fba8dca9be6b2567fdd86c25785"
+      url "https://github.com/KDE/qca/pull/3.patch?full_index=1"
+      sha256 "37281b8fefbbdab768d7abcc39fb1c1bf85159730c2a4de6e84f0bf318ebac2c"
     end
   end
 
   bottle do
-    sha256 "d906fecec28f2af312e2309398c43c9d5208ace0a24f65462d5c0ee6999acaa6" => :sierra
-    sha256 "7ef949fefdbddb7309cd3f687fa2ad2a4c02622b7ca92d7416494bd13d40eb4c" => :el_capitan
-    sha256 "d3a865bed9af87d7d54b87080cc973341385ced03dd5d257a9bc590e4d656c80" => :yosemite
+    rebuild 1
+    sha256 "7fca5c9a591a204813356e3314077a628cbbff1cb5e6669355a2e26cd92765aa" => :high_sierra
+    sha256 "8dd6479be1f5cacb740915646bf9dd2fb8103df38e9f75ecfbb507ed3a0b201e" => :sierra
+    sha256 "7790fd8de8b6ee98ca8d4f687894437137d774538c209a80a340f513a8fbc159" => :el_capitan
   end
 
   option "with-api-docs", "Build API documentation"
 
-  deprecated_option "with-gnupg" => "with-gpg2"
+  deprecated_option "with-gpg2" => "with-gnupg"
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
@@ -48,7 +49,7 @@ class Qca < Formula
   depends_on "openssl" # qca-ossl
   depends_on "botan" => :optional # qca-botan
   depends_on "libgcrypt" => :optional # qca-gcrypt
-  depends_on :gpg => [:optional, :run] # qca-gnupg
+  depends_on "gnupg" => :optional # qca-gnupg
   depends_on "nss" => :optional # qca-nss
   depends_on "pkcs11-helper" => :optional # qca-pkcs11
 
@@ -61,11 +62,12 @@ class Qca < Formula
     args = std_cmake_args
     args << "-DQT4_BUILD=OFF"
     args << "-DBUILD_TESTS=OFF"
+    args << "-DQCA_PLUGINS_INSTALL_DIR=#{lib}/qt5/plugins"
 
     # Plugins (qca-ossl, qca-cyrus-sasl, qca-logger, qca-softstore always built)
     args << "-DWITH_botan_PLUGIN=#{build.with?("botan") ? "YES" : "NO"}"
     args << "-DWITH_gcrypt_PLUGIN=#{build.with?("libgcrypt") ? "YES" : "NO"}"
-    args << "-DWITH_gnupg_PLUGIN=#{build.with?("gpg2") ? "YES" : "NO"}"
+    args << "-DWITH_gnupg_PLUGIN=#{build.with?("gnupg") ? "YES" : "NO"}"
     args << "-DWITH_nss_PLUGIN=#{build.with?("nss") ? "YES" : "NO"}"
     args << "-DWITH_pkcs11_PLUGIN=#{build.with?("pkcs11-helper") ? "YES" : "NO"}"
 

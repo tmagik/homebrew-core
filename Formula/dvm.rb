@@ -1,34 +1,20 @@
 class Dvm < Formula
   desc "Docker Version Manager"
   homepage "https://github.com/howtowhale/dvm"
-  url "https://github.com/howtowhale/dvm/archive/0.8.3.tar.gz"
-  sha256 "f0fa2f8fc4532568ae5e624f983ebb7b60dc19749a9b531ae2279833a4bbce4d"
+  url "https://github.com/howtowhale/dvm/archive/1.0.0.tar.gz"
+  sha256 "afcc921b6a301466c6a927730d15839db03686f45d8ccf92f7f2bfc06ef44698"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "db18f0bef6906ec06abc83d760a3a260f1457c5aadee7bf064c9b6adef16e5c2" => :sierra
-    sha256 "28d0fe4c0c01241bbdbd074480648f232fad3818bd929ae900a917ffbf9af493" => :el_capitan
-    sha256 "f0d0822caae95580d42407bb5b286ca9d5ebce3ea87e9e9f6a1dc377291bb86c" => :yosemite
+    sha256 "bebc1646eae582401909cb5f969eab722b9c43009adcf5dc6bb85f3f41cd9a00" => :high_sierra
+    sha256 "c04e23b281cef762eec3e3ded17c4b531890a0565670074938f1ffd00abb12de" => :sierra
+    sha256 "1f0c433836ebffcb3403fa47725e4f6c2b7f39cb6b445b7fee58cae9720206c3" => :el_capitan
   end
 
-  depends_on "glide" => :build
   depends_on "go" => :build
 
   def install
-    # `make` has to be deparallelized due to the following errors:
-    #   glide install
-    #   fatal: Not a git repository (or any of the parent directories): .git
-    #   CGO_ENABLED=0 go build ...
-    #   dvm-helper/dvm-helper.go:16:2: cannot find package "github.com/blang/semver"
-    #   make: *** [local] Error 1
-    # Reported 17 Feb 2017: https://github.com/howtowhale/dvm/issues/151
-    ENV.deparallelize
-
     ENV["GOPATH"] = buildpath
-    ENV["GLIDE_HOME"] = HOMEBREW_CACHE/"glide_home/#{name}"
-
-    # `depends_on "glide"` already has this covered
-    inreplace "Makefile", %r{^.*go get github.com/Masterminds/glide.*$\n}, ""
 
     (buildpath/"src/github.com/howtowhale/dvm").install buildpath.children
 
@@ -41,7 +27,7 @@ class Dvm < Formula
     end
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     dvm is a shell function, and must be sourced before it can be used.
     Add the following command to your bash profile:
         [ -f #{opt_prefix}/dvm.sh ] && . #{opt_prefix}/dvm.sh

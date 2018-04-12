@@ -1,25 +1,25 @@
 class Libchamplain < Formula
   desc "ClutterActor for displaying maps"
   homepage "https://wiki.gnome.org/Projects/libchamplain"
-  url "https://download.gnome.org/sources/libchamplain/0.12/libchamplain-0.12.15.tar.xz"
-  sha256 "54721a210bdef6d73c5192ed83542023117bf5d7441257e7a7a9f8c05550b874"
+  url "https://download.gnome.org/sources/libchamplain/0.12/libchamplain-0.12.16.tar.xz"
+  sha256 "4a7e31cf7889669aebf04631543af64435edd989685159b804911c6005db908d"
+  revision 1
 
   bottle do
-    sha256 "54f51ed7dc62f50be7e7db9a38c7566f8e2587e37e8aa8ee01eb76fa4ca1f02c" => :sierra
-    sha256 "c79e5e0c0c9e80a238bc7ec1abd827f7edb8d3be6a4940cd581a3ac769163f86" => :el_capitan
-    sha256 "87bd76fe481a410dd14dd56895c8cd4d75ca8158b63a2c30a06e20ff76e94f72" => :yosemite
+    sha256 "f6164d934f20edac3cce56807031c6398ab4135ac2d1de189fa507d53646d4fe" => :high_sierra
+    sha256 "4cd4422e4ea30fb60d77bee37e96d2a221cf78d5cfbb56c7bd4ddff503dd9e63" => :sierra
+    sha256 "77dc11f2f53f414fb94db5a48c60827eeda2d54f296a6608aface2d7d7adcba2" => :el_capitan
   end
 
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "clutter"
   depends_on "libsoup"
-  depends_on "gobject-introspection"
   depends_on "gtk+3"
   depends_on "clutter-gtk"
   depends_on "vala" => :optional
 
   def install
-    ENV.delete "SDKROOT"
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--disable-silent-rules",
@@ -28,7 +28,7 @@ class Libchamplain < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <champlain/champlain.h>
 
       int main(int argc, char *argv[]) {

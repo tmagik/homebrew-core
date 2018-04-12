@@ -1,15 +1,14 @@
 class Bigloo < Formula
   desc "Scheme implementation with object system, C, and Java interfaces"
   homepage "https://www-sop.inria.fr/indes/fp/Bigloo/"
-  url "ftp://ftp-sop.inria.fr/indes/fp/Bigloo/bigloo4.2c.tar.gz"
-  version "4.2c"
-  sha256 "0fb246bf474326b36d50dd8c986901984544c932b2423279cc17e9d7c10bd10b"
+  url "ftp://ftp-sop.inria.fr/indes/fp/Bigloo/bigloo4.3b.tar.gz"
+  version "4.3b"
+  sha256 "5c6c864ebc9bce6d6f768da912e3cd099256ebb08c38c69f3181f71a7d424b55"
 
   bottle do
-    sha256 "3c5014716d4497a30d4891b2d45bf731570889af9529b7a69acb5d75228b31e8" => :sierra
-    sha256 "4559f69e1f67193ac40d67540f1d05ca982a1866b0089d30c7c64ee5b263bd48" => :el_capitan
-    sha256 "892d8ee4a85c7468114aec41155a582c32ca670eab27a51f767fcb4b41b45e24" => :yosemite
-    sha256 "c885e9132385667245d8fa74032e01f7ba66e5f2cf626dc91822846087d1a3c6" => :mavericks
+    sha256 "1b6fce918e35cc37fb6e2c9d10f36b48866cdeaa577026114ff533efc72fb361" => :high_sierra
+    sha256 "5aef2cf4b59096ddc38cf12698543f18a68b784aa0b12beefb646334c3a89ef4" => :sierra
+    sha256 "41947394e3272672e20f2980e4bfbad317fcdaced331d9478322550cc8cd9024" => :el_capitan
   end
 
   option "with-jvm", "Enable JVM support"
@@ -23,7 +22,7 @@ class Bigloo < Formula
 
   fails_with :clang do
     build 500
-    cause <<-EOS.undent
+    cause <<~EOS
       objs/obj_u/Ieee/dtoa.c:262:79504: fatal error: parser
       recursion limit reached, program too complex
     EOS
@@ -52,6 +51,15 @@ class Bigloo < Formula
 
     system "./configure", *args
 
+    # bigloo seems to either miss installing these dependencies, or maybe
+    # do it out of order with where they're used.
+    cd "libunistring" do
+      system "make", "install"
+    end
+    cd "pcre" do
+      system "make", "install"
+    end
+
     system "make"
     system "make", "install"
 
@@ -61,7 +69,7 @@ class Bigloo < Formula
   end
 
   test do
-    program = <<-EOS.undent
+    program = <<~EOS
       (display "Hello World!")
       (newline)
       (exit)

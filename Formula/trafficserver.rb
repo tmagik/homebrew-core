@@ -1,14 +1,13 @@
 class Trafficserver < Formula
   desc "HTTP/1.1 compliant caching proxy server"
   homepage "https://trafficserver.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=trafficserver/trafficserver-7.0.0.tar.bz2"
-  mirror "https://archive.apache.org/dist/trafficserver/trafficserver-7.0.0.tar.bz2"
-  sha256 "5a7216d3c3862cd254e577bcfbd0d6820ad7a2eab588d5a820f02e2c2f23afab"
+  url "https://www.apache.org/dyn/closer.cgi?path=trafficserver/trafficserver-7.1.2.tar.bz2"
+  sha256 "413e7d5b2aee71c4403a00203d91b99544eecd1e36e47153240d24c0e4dad375"
 
   bottle do
-    sha256 "3906717223fdf1e502c07f7af4d7f7a3ec2492569494744783ccc34033d44cde" => :sierra
-    sha256 "43fd2b84c6a39fcc3f063afbd16f1aea5e47a2311e37c5f9a294b19e3885d0a4" => :el_capitan
-    sha256 "0c76643bbcbffc39d6a1c0d4b30f10a87596be00ba7aefbfa57c05e06afb5209" => :yosemite
+    sha256 "41b68679946aef5f3eb9f74508630bd6afe08e12982c486aa6a63237100f5fb8" => :high_sierra
+    sha256 "90c793d6859fca79b15582e17146f691717b3d5cae1ec42f1e2577104847fe59" => :sierra
+    sha256 "58d555566068fd8a14263063dd8d5d8eb7d33babe7739b02fdec52911059c2bb" => :el_capitan
   end
 
   head do
@@ -40,6 +39,7 @@ class Trafficserver < Formula
       --localstatedir=#{var}
       --sysconfdir=#{etc}/trafficserver
       --with-openssl=#{Formula["openssl"].opt_prefix}
+      --with-tcl=#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework
       --with-group=admin
       --disable-silent-rules
     ]
@@ -51,11 +51,6 @@ class Trafficserver < Formula
 
     # Fix wrong username in the generated startup script for bottles.
     inreplace "rc/trafficserver.in", "@pkgsysuser@", "$USER"
-    if build.with? "experimental-plugins"
-      # Disable mysql_remap plugin due to missing symbol compile error:
-      # https://issues.apache.org/jira/browse/TS-3490
-      inreplace "plugins/experimental/Makefile", " mysql_remap", ""
-    end
 
     inreplace "lib/perl/Makefile",
       "Makefile.PL INSTALLDIRS=$(INSTALLDIRS)",

@@ -7,12 +7,13 @@ class Zlib < Formula
 
   bottle do
     cellar :any
+    sha256 "30548658b43cf66979f2756680fbb32d3c19c967e478ceea22d07f536b22bbce" => :high_sierra
     sha256 "f822b4dbab4a15b889316b89248c7b4d15d6af9dc460bf209b9425b0accb7fa3" => :sierra
     sha256 "3f912f6f1ce6c586128ebde29756c883b89409e652ca7aa9a29a773c2d4d0915" => :el_capitan
     sha256 "5b969eb38b90a3e31869586df9d62e59d359212b16c6a270aee690dd67caa491" => :yosemite
   end
 
-  keg_only :provided_by_osx
+  keg_only :provided_by_macos
 
   # https://zlib.net/zlib_how.html
   resource "test_artifact" do
@@ -33,6 +34,6 @@ class Zlib < Formula
     touch "foo.txt"
     output = "./zpipe < foo.txt > foo.txt.z"
     system output
-    assert File.exist?("foo.txt.z")
+    assert_predicate testpath/"foo.txt.z", :exist?
   end
 end

@@ -6,6 +6,7 @@ class Tinysvm < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "62f0920fdf8f5b7f29cebacc1add1396daef668c67e3d10644d9d35d1b49afc5" => :high_sierra
     sha256 "a6ad14c984b337bee83372ac6a29ffe7c0491180a302cfcd8f53b1a3ee6816e1" => :sierra
     sha256 "2b84b75043ba1d97172e2756e3da870a8ec8e074167ab5402e7a4e1b4c923864" => :el_capitan
     sha256 "ea90446332244176d4ec3bc4ff0c6175810c3a39d942f225bb55c0fb6252858d" => :yosemite
@@ -34,24 +35,24 @@ class Tinysvm < Formula
   end
 
   test do
-    (testpath/"train.svmdata").write <<-EOS.undent
-    +1 201:1.2 3148:1.8 3983:1 4882:1
-    -1 874:0.3 3652:1.1 3963:1 6179:1
-    +1 1168:1.2 3318:1.2 3938:1.8 4481:1
-    +1 350:1 3082:1.5 3965:1 6122:0.2
-    -1 99:1 3057:1 3957:1 5838:0.3
+    (testpath/"train.svmdata").write <<~EOS
+      +1 201:1.2 3148:1.8 3983:1 4882:1
+      -1 874:0.3 3652:1.1 3963:1 6179:1
+      +1 1168:1.2 3318:1.2 3938:1.8 4481:1
+      +1 350:1 3082:1.5 3965:1 6122:0.2
+      -1 99:1 3057:1 3957:1 5838:0.3
     EOS
 
-    (testpath/"train.svrdata").write <<-EOS.undent
-    0.23 201:1.2 3148:1.8 3983:1 4882:1
-    0.33 874:0.3 3652:1.1 3963:1 6179:1
-    -0.12 1168:1.2 3318:1.2 3938:1.8 4481:1
+    (testpath/"train.svrdata").write <<~EOS
+      0.23 201:1.2 3148:1.8 3983:1 4882:1
+      0.33 874:0.3 3652:1.1 3963:1 6179:1
+      -0.12 1168:1.2 3318:1.2 3938:1.8 4481:1
     EOS
 
     system "#{bin}/svm_learn", "-t", "1", "-d", "2", "-c", "train.svmdata", "test"
     system "#{bin}/svm_classify", "-V", "train.svmdata", "test"
     system "#{bin}/svm_model", "test"
 
-    assert File.exist? "test"
+    assert_predicate testpath/"test", :exist?
   end
 end

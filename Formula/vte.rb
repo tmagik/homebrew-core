@@ -3,12 +3,12 @@ class Vte < Formula
   homepage "https://developer.gnome.org/vte/"
   url "https://download.gnome.org/sources/vte/0.28/vte-0.28.2.tar.xz"
   sha256 "86cf0b81aa023fa93ed415653d51c96767f20b2d7334c893caba71e42654b0ae"
+  revision 2
 
   bottle do
-    sha256 "8fd13c859c3bf8f22017e98ea05486af32760ec0925b599ed46a3f09bdcc9128" => :sierra
-    sha256 "2d4c27bd624e106946dc839ecab9eea7b0ffd51cf9df82b2bb50673e25f3cb35" => :el_capitan
-    sha256 "bcde7d6b80b907ab67d76429618c1402e194c45dd6082d45f20a12af5c13bb0f" => :yosemite
-    sha256 "773d6ee5399c52d6c2d69061ec2bd7dd74c0138e4eaa307ddae863810efa1640" => :mavericks
+    sha256 "39b6a674facccd03a24f040ae3a6b7d3426280332e0a2908355a89a9d35d7a38" => :high_sierra
+    sha256 "41ba9567a2cfa0fa8838d0331fba21aa620362677d90eca4446922bc4ef0382e" => :sierra
+    sha256 "f57ca7c969e677208d1df618243a7fc453ae49660d114de05365467b51d97adc" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -18,7 +18,7 @@ class Vte < Formula
   depends_on "gtk+"
   depends_on "pygobject"
   depends_on "pygtk"
-  depends_on :python
+  depends_on "python@2"
 
   def install
     args = %W[
@@ -37,7 +37,7 @@ class Vte < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <vte/vte.h>
 
       int main(int argc, char *argv[]) {

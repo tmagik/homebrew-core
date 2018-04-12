@@ -1,8 +1,8 @@
 class Vnu < Formula
   desc "Nu Markup Checker: command-line and server HTML validator"
   homepage "https://validator.github.io/validator/"
-  url "https://github.com/validator/validator/releases/download/17.3.0/vnu.jar_17.3.0.zip"
-  sha256 "12d9baab16c08daa142a50ad368f3906e1aa460dc993a7f2124f003366c590aa"
+  url "https://github.com/validator/validator/releases/download/18.3.0/vnu.jar_18.3.0.zip"
+  sha256 "9f8bcdc94b5496b9fcb8c01e20fd22684a7dcbbae48804aeb027f17315fb3f8d"
   version_scheme 1
 
   bottle :unneeded
@@ -15,7 +15,7 @@ class Vnu < Formula
   end
 
   test do
-    (testpath/"index.html").write <<-EOS.undent
+    (testpath/"index.html").write <<~EOS
       <!DOCTYPE html>
       <html>
       <head>

@@ -6,6 +6,7 @@ class Ne < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "ebf14e2778e53688a4c1c0051187b79994e9374fc599332b20b0b362d6517c49" => :high_sierra
     sha256 "1aee5fa253900a888bfa27d92a3b0e262a01acf03da2987285064c916105a388" => :sierra
     sha256 "7bdd3016890a03f6bc006d924cf2373a97b3915bf8d7ddc1a6bb81741085ecff" => :el_capitan
     sha256 "00d0ed886fa94db6b33f26dd304f468c79748379ac95c49a96141594fa0b333a" => :yosemite
@@ -22,17 +23,17 @@ class Ne < Formula
     ENV["TERM"] = "xterm"
     document = testpath/"test.txt"
     macros = testpath/"macros"
-    document.write <<-EOS.undent
+    document.write <<~EOS
       This is a test document.
     EOS
-    macros.write <<-EOS.undent
+    macros.write <<~EOS
       GotoLine 2
       InsertString line 2
       InsertLine
       Exit
     EOS
     system "script", "-q", "/dev/null", bin/"ne", "--macro", macros, document
-    assert_equal <<-EOS.undent, document.read
+    assert_equal <<~EOS, document.read
       This is a test document.
       line 2
     EOS

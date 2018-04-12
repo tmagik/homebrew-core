@@ -2,20 +2,19 @@ class Dbus < Formula
   # releases: even (1.10.x) = stable, odd (1.11.x) = development
   desc "Message bus system, providing inter-application communication"
   homepage "https://wiki.freedesktop.org/www/Software/dbus"
-  url "https://dbus.freedesktop.org/releases/dbus/dbus-1.10.18.tar.gz"
-  mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/d/dbus/dbus_1.10.18.orig.tar.gz"
-  sha256 "6049ddd5f3f3e2618f615f1faeda0a115104423a7996b7aa73e2f36e38cc514a"
+  url "https://dbus.freedesktop.org/releases/dbus/dbus-1.12.4.tar.gz"
+  mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/d/dbus/dbus_1.12.4.orig.tar.gz"
+  sha256 "f9756b68ec68065ae2dafcf1191ee40b4cb06e9534a01f6a74d5a4d7894221c7"
 
   bottle do
-    sha256 "c672d4e42d6a46ad7e390290ff30b74a4806276fed73d56a1d0d4742295b283d" => :sierra
-    sha256 "da642beef8f40cefddb3eaf119558494af7d8032b9a23660154954ee6033fe21" => :el_capitan
-    sha256 "a7c6e506cd93f4b530137ce17842d711927ea161e16b998419c648fd102fe48a" => :yosemite
+    sha256 "9bc82ed6545a7a91f8980db8cacb00b012ba4d1fc4886be2030eb4fc2b966e0e" => :high_sierra
+    sha256 "189218fb3f274f4088599133f438b2a4c578b9df61e7562ccbde366dbb09dd30" => :sierra
+    sha256 "a01bf4fa6922dd4e5188429a1cf2a3fe615924288284e63a9d9d4179cf9c9747" => :el_capitan
   end
 
   devel do
-    url "https://dbus.freedesktop.org/releases/dbus/dbus-1.11.12.tar.gz"
-    mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/d/dbus/dbus_1.11.12.orig.tar.gz"
-    sha256 "ac12df14a0fd0a9ecb56d02e2988cd313b91116d048aaaf53786ad6ccea9906d"
+    url "https://dbus.freedesktop.org/releases/dbus/dbus-1.13.2.tar.gz"
+    sha256 "945deb349a7e2999184827c17351c1bf93c6395b9c3ade0c91cad42cb93435b1"
   end
 
   head do
@@ -40,6 +39,10 @@ class Dbus < Formula
     # Fix the TMPDIR to one D-Bus doesn't reject due to odd symbols
     ENV["TMPDIR"] = "/tmp"
 
+    # macOS doesn't include a pkg-config file for expat
+    ENV["EXPAT_CFLAGS"] = "-I#{MacOS.sdk_path}/usr/include"
+    ENV["EXPAT_LIBS"] = "-lexpat"
+
     ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog"
 
     system "./autogen.sh", "--no-configure" if build.head?
@@ -53,8 +56,6 @@ class Dbus < Formula
                           "--with-launchd-agent-dir=#{prefix}",
                           "--without-x",
                           "--disable-tests"
-    system "make"
-    ENV.deparallelize
     system "make", "install"
   end
 

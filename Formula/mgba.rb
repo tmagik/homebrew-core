@@ -5,117 +5,55 @@ class Mgba < Formula
   head "https://github.com/mgba-emu/mgba.git"
 
   stable do
-    url "https://github.com/mgba-emu/mgba/archive/0.5.2.tar.gz"
-    sha256 "3d9fda762e6e0dd26ffbd3cbaa5365dc7ca7ed324cee5c65b7c85eaa3c37c4f3"
+    url "https://github.com/mgba-emu/mgba/archive/0.6.1.tar.gz"
+    sha256 "7c78feb0aa12930b993ca1b220d282ed178e306621559e48bb168623030eb876"
 
-    # Remove for > 0.5.2
-    # Upstream commit from 18 Jan 2017 "Feature: Support ImageMagick 7"
-    # https://github.com/mgba-emu/mgba/commit/2e3daaedc208824c9b8a54480bd614160cdda9e7
-    # Can't use the commit itself as a patch since it doesn't apply cleanly
-    patch :DATA
+    # Remove for > 0.6.1
+    # Fix "MemoryModel.cpp:102:15: error: no viable overloaded '='"
+    # Upstream commit from 11 Dec 2017 "Qt: Fix build with Qt 5.10"
+    patch do
+      url "https://github.com/mgba-emu/mgba/commit/e31373560.patch?full_index=1"
+      sha256 "5311b19dea0848772bdd00b354f9fca741b2bfd2cf65eab8a8c556e6fb748b8e"
+    end
   end
 
   bottle do
     cellar :any
-    sha256 "dd6308c5e3b5004c9b55df9bcfd5f1c5c3e3aa0050e769fcc58d81be1e0491fb" => :sierra
-    sha256 "7ec13b00acd5c566c67e85f5b1749aebfc2d5eff418d9cf6da9f9a499b1be359" => :el_capitan
-    sha256 "3eb36eff19b505da7b3f0744d1f118a8c292ddd14cbbf27d51d4c51b4d879087" => :yosemite
+    sha256 "225961abcc72b538b35be18e5348a5af0c0f6fe46b0daef9b581594b26a6b0d0" => :high_sierra
+    sha256 "79d5e25543474d0715a369cfbe862f1c8d79b79c260a7cecdba2f38f6031f42d" => :sierra
+    sha256 "9b7ad131ba17d492c53af30d996aeaac3814acd810aa5f3f9a73bfe098727ca4" => :el_capitan
   end
-
-  deprecated_option "with-qt5" => "with-qt"
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
-  depends_on "ffmpeg" => :recommended
-  depends_on "imagemagick" => :recommended
-  depends_on "libepoxy" => :recommended
-  depends_on "libpng" => :recommended
-  depends_on "libzip" => :recommended
-  depends_on "qt" => :recommended
+  depends_on "ffmpeg"
+  depends_on "imagemagick"
+  depends_on "libepoxy"
+  depends_on "libpng"
+  depends_on "libzip"
+  depends_on "qt"
   depends_on "sdl2"
 
   def install
-    inreplace "src/platform/qt/CMakeLists.txt" do |s|
-      # Avoid framework installation via tools/deploy-macosx.py
-      s.gsub! /(add_custom_command\(TARGET \${BINARY_NAME}-qt)/, '#\1'
-      # Install .app bundle into prefix, not prefix/Applications
-      s.gsub! "Applications", "."
+    # Fix "error: 'future<void>' is unavailable: introduced in macOS 10.8"
+    # Reported 11 Dec 2017 https://github.com/mgba-emu/mgba/issues/944
+    if MacOS.version <= :el_capitan
+      ENV["MACOSX_DEPLOYMENT_TARGET"] = MacOS.version
     end
 
-    cmake_args = []
-    cmake_args << "-DUSE_EPOXY=OFF"  if build.without? "libepoxy"
-    cmake_args << "-DUSE_MAGICK=OFF" if build.without? "imagemagick"
-    cmake_args << "-DUSE_FFMPEG=OFF" if build.without? "ffmpeg"
-    cmake_args << "-DUSE_PNG=OFF"    if build.without? "libpng"
-    cmake_args << "-DUSE_LIBZIP=OFF" if build.without? "libzip"
-    cmake_args << "-DBUILD_QT=OFF"   if build.without? "qt"
+    # Install .app bundle into prefix, not prefix/Applications
+    inreplace "src/platform/qt/CMakeLists.txt", "Applications", "."
 
-    system "cmake", ".", *cmake_args, *std_cmake_args
+    system "cmake", ".", *std_cmake_args
     system "make", "install"
-    if build.with? "qt"
-      # Replace SDL frontend binary with a script for running Qt frontend
-      # -DBUILD_SDL=OFF would be easier, but disable joystick support in Qt frontend
-      rm "#{bin}/mgba"
-      bin.write_exec_script "#{prefix}/mGBA.app/Contents/MacOS/mGBA"
-    end
+
+    # Replace SDL frontend binary with a script for running Qt frontend
+    # -DBUILD_SDL=OFF would be easier, but disable joystick support in Qt frontend
+    rm bin/"mgba"
+    bin.write_exec_script "#{prefix}/mGBA.app/Contents/MacOS/mGBA"
   end
 
   test do
     system "#{bin}/mGBA", "-h"
   end
 end
-
-__END__
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3812082..6be1599 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -322,6 +322,7 @@ if(HAVE_UMASK)
- endif()
-
- # Feature dependencies
-+set(FEATURE_DEFINES)
- set(FEATURES)
- if(CMAKE_SYSTEM_NAME MATCHES .*BSD)
-	set(LIBEDIT_LIBRARIES -ledit)
-@@ -431,11 +432,16 @@ if(USE_MAGICK)
-	list(APPEND FEATURE_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/feature/imagemagick/imagemagick-gif-encoder.c")
-	list(APPEND DEPENDENCY_LIB ${MAGICKWAND_LIBRARIES})
-	string(REGEX MATCH "^[0-9]+\\.[0-9]+" MAGICKWAND_VERSION_PARTIAL ${MagickWand_VERSION})
-+	string(REGEX MATCH "^[0-9]+" MAGICKWAND_VERSION_MAJOR ${MagickWand_VERSION})
-	if(${MAGICKWAND_VERSION_PARTIAL} EQUAL "6.7")
-		set(MAGICKWAND_DEB_VERSION "5")
-+	elseif(${MagickWand_VERSION} EQUAL "6.9.7")
-+		set(MAGICKWAND_DEB_VERSION "-6.q16-3")
-	else()
-		set(MAGICKWAND_DEB_VERSION "-6.q16-2")
-	endif()
-+	list(APPEND FEATURE_DEFINES MAGICKWAND_VERSION_MAJOR=${MAGICKWAND_VERSION_MAJOR})
-+
-	set(CPACK_DEBIAN_PACKAGE_DEPENDS "${CPACK_DEBIAN_PACKAGE_DEPENDS},libmagickwand${MAGICKWAND_DEB_VERSION}")
- endif()
-
-@@ -595,7 +601,6 @@ if(USE_DEBUGGERS)
-	list(APPEND FEATURES DEBUGGERS)
- endif()
-
--set(FEATURE_DEFINES)
- foreach(FEATURE IN LISTS FEATURES)
-	list(APPEND FEATURE_DEFINES "USE_${FEATURE}")
- endforeach()
-diff --git a/src/feature/imagemagick/imagemagick-gif-encoder.h b/src/feature/imagemagick/imagemagick-gif-encoder.h
-index 13505e6..842cad9 100644
---- a/src/feature/imagemagick/imagemagick-gif-encoder.h
-+++ b/src/feature/imagemagick/imagemagick-gif-encoder.h
-@@ -15,7 +15,11 @@ CXX_GUARD_START
- #define MAGICKCORE_HDRI_ENABLE 0
- #define MAGICKCORE_QUANTUM_DEPTH 8
-
-+#if MAGICKWAND_VERSION_MAJOR >= 7
-+#include <MagickWand/MagickWand.h>
-+#else
- #include <wand/MagickWand.h>
-+#endif
-
- struct ImageMagickGIFEncoder {
-	struct mAVStream d;

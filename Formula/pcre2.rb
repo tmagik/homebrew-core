@@ -1,27 +1,17 @@
 class Pcre2 < Formula
   desc "Perl compatible regular expressions library with a new API"
-  homepage "http://www.pcre.org/"
-  revision 1
+  homepage "https://www.pcre.org/"
+  url "https://ftp.pcre.org/pub/pcre/pcre2-10.30.tar.bz2"
+  sha256 "90bd41c605d30e3745771eb81928d779f158081a51b2f314bbcc1f73de5773db"
 
   head "svn://vcs.exim.org/pcre2/code/trunk"
 
-  stable do
-    url "https://ftp.pcre.org/pub/pcre/pcre2-10.23.tar.bz2"
-    mirror "https://www.mirrorservice.org/sites/ftp.exim.org/pub/pcre/pcre2-10.23.tar.bz2"
-    sha256 "dfc79b918771f02d33968bd34a749ad7487fa1014aeb787fad29dd392b78c56e"
-
-    # Fix for CVE-2017-8786.
-    patch :p2 do
-      url "https://vcs.pcre.org/pcre2/code/trunk/src/pcre2test.c?r1=692&r2=697&view=patch"
-      sha256 "15041ad515e9daa513cb1b2c75c355000dc220864c1367fda3c1c47b9194ed43"
-    end
-  end
-
   bottle do
     cellar :any
-    sha256 "bd1eb3a2de0b1d85639e615d338068a184b9c84f391fa350bf659dc989fc2a68" => :sierra
-    sha256 "647a5f5c91b00532f8387e74fe84f1312050c1c45fe086a1658ed8c13db871f7" => :el_capitan
-    sha256 "f1339759a9603b4e1f821c94e3687406fc7169fc55d943d0e97bfe643d07c236" => :yosemite
+    sha256 "018f7eba7db9d2807e624b8c3e243d369714a6eb84f498917c4f4988a0fa19b0" => :high_sierra
+    sha256 "1ff0a7fa5c45bebb4c3ea138a5cea73a83a7663ed9bcf2636bb9177af6dee9e9" => :sierra
+    sha256 "15b40ba0f293ebea4a0108db7436a301523bac14e16997d20acd778e94bb3545" => :el_capitan
+    sha256 "0ec2d3f9b5e01424bf13a06a4e55894ed708eee2015fa43ce0755953c5afd885" => :yosemite
   end
 
   def install
@@ -33,7 +23,6 @@ class Pcre2 < Formula
                           "--enable-pcre2grep-libbz2",
                           "--enable-jit"
     system "make"
-    system "make", "check"
     system "make", "install"
   end
 

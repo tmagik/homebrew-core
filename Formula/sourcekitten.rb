@@ -2,18 +2,18 @@ class Sourcekitten < Formula
   desc "Framework and command-line tool for interacting with SourceKit"
   homepage "https://github.com/jpsim/SourceKitten"
   url "https://github.com/jpsim/SourceKitten.git",
-      :tag => "0.17.6",
-      :revision => "91d9d5b20876da2afcbf34664bccc0bfd26088c7"
+      :tag => "0.20.0",
+      :revision => "b6b10419ee439167ba6f7bd928ad30754ff5eb5d"
   head "https://github.com/jpsim/SourceKitten.git"
 
   bottle do
-    cellar :any
-    sha256 "d41ac05bc696cd9544b4f8e23453e19b569d5362f69ed6f08f419092e9f0b3e4" => :sierra
-    sha256 "7d7fa5bc6ab00608e1462e19f9d803ffce382bff8f6617733c5dd88bf951d076" => :el_capitan
+    cellar :any_skip_relocation
+    sha256 "18dd6b4cf0ba1bf41858a1ba55cfdc4f289aa4dee04afa4e77b8f7cac36a235a" => :high_sierra
+    sha256 "6eca1a63058245ca3fd29e42cf93f0c50271d3d363a7a2578afc27d306131938" => :sierra
   end
 
-  depends_on :xcode => ["6.0", :run]
-  depends_on :xcode => ["8.0", :build]
+  depends_on :xcode => "6.0"
+  depends_on :xcode => ["9.0", :build]
 
   def install
     system "make", "prefix_install", "PREFIX=#{prefix}", "TEMPORARY_FOLDER=#{buildpath}/SourceKitten.dst"

@@ -1,18 +1,18 @@
 class OpenalSoft < Formula
   desc "Implementation of the OpenAL 3D audio API"
   homepage "http://kcat.strangesoft.net/openal.html"
-  url "http://kcat.strangesoft.net/openal-releases/openal-soft-1.18.0.tar.bz2"
-  sha256 "4433b1391c61a7ca36d82c946c8f0ffe410569d6437e4ce72b3547aaf966ecde"
+  url "http://kcat.strangesoft.net/openal-releases/openal-soft-1.18.2.tar.bz2"
+  sha256 "9f8ac1e27fba15a59758a13f0c7f6540a0605b6c3a691def9d420570506d7e82"
   head "http://repo.or.cz/openal-soft.git"
 
   bottle do
     cellar :any
-    sha256 "b9738e2a954a3556e8b757793960a8319a9d7ace8542e0f4dea34f8a74b4600f" => :sierra
-    sha256 "8738d5184ab0af02e2f63b363572365f9174876fadd93196f6bca0a0625b2b08" => :el_capitan
-    sha256 "5eaff28134246e2286996d2bd0f9f25951a157aa2332486df3adf9e092ccb39c" => :yosemite
+    sha256 "e166ede768b1bdef14b5ae85043e05b34ac6c53e57bb6f73b4fc4b0954f8aab4" => :high_sierra
+    sha256 "24dd59b5106fb9d6884b20aaf0c79691c7d0eda8e13ba5b943ba5bc49a794787" => :sierra
+    sha256 "a7946da113c242708cf9aa80c12cc2beedf555fd6a9aed5e7656a983a80e1df4" => :el_capitan
   end
 
-  keg_only :provided_by_osx, "macOS provides OpenAL.framework"
+  keg_only :provided_by_macos, "macOS provides OpenAL.framework"
 
   depends_on "pkg-config" => :build
   depends_on "cmake" => :build
@@ -38,7 +38,7 @@ class OpenalSoft < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include "AL/al.h"
       #include "AL/alc.h"
       int main() {

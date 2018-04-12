@@ -16,8 +16,6 @@ class Mahout < Formula
 
   def install
     if build.head?
-      ENV.java_cache
-
       chmod 755, "./bin"
       system "mvn", "-DskipTests", "clean", "install"
     end
@@ -38,7 +36,7 @@ class Mahout < Formula
   end
 
   test do
-    (testpath/"test.csv").write <<-EOS.undent
+    (testpath/"test.csv").write <<~EOS
       "x","y"
       0.1234567,0.101201201
     EOS

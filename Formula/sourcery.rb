@@ -1,56 +1,27 @@
 class Sourcery < Formula
-  desc "Meta-programming for Swift, stop writing boilerplate code."
+  desc "Meta-programming for Swift, stop writing boilerplate code"
   homepage "https://github.com/krzysztofzablocki/Sourcery"
-  url "https://github.com/krzysztofzablocki/Sourcery/archive/0.7.2.tar.gz"
-  sha256 "bc5be164ecd5287c4e63615c13b772b6bd56b7fc0e12a8000cd3cd00010beb8e"
+  url "https://github.com/krzysztofzablocki/Sourcery/archive/0.11.2.tar.gz"
+  sha256 "0be23addc7ae986158cbef263393539f9e07f67969a1d51b82aec78cb7d0d21a"
   head "https://github.com/krzysztofzablocki/Sourcery.git"
 
   bottle do
-    cellar :any
-    sha256 "742d933c599d255699efa4a10e4f58f63c784f08db681c0eb0c3d28056601d33" => :sierra
+    cellar :any_skip_relocation
+    sha256 "7a9b2c78ce0029175aebcd204dea5f68506328cf9223168b04b7e2bd6df70edf" => :high_sierra
+    sha256 "08040bff659f7a1cdd8deb115c3a0996413c443f133917d223eb3f7356c7b8ad" => :sierra
   end
 
-  depends_on :xcode => ["6.0", :run]
+  depends_on :xcode => "6.0"
   depends_on :xcode => ["8.3", :build]
 
   def install
-    ENV.delete("CC")
-    ENV["SDKROOT"] = MacOS.sdk_path
-    system "swift", "build", "-c", "release", "-Xswiftc", "-static-stdlib"
+    system "swift", "build", "--disable-sandbox", "-c", "release", "-Xswiftc",
+           "-static-stdlib"
     bin.install ".build/release/sourcery"
     lib.install Dir[".build/release/*.dylib"]
   end
 
   test do
-    # Tests are temporarily disabled because of sandbox issues,
-    # as Sourcery tries to write to ~/Library/Caches/Sourcery
-    # See https://github.com/krzysztofzablocki/Sourcery/pull/133
-    #
-    # Remove this test once the PR has been merged and been tagged with a release
     assert_match version.to_s, shell_output("#{bin}/sourcery --version").chomp
-
-    # Re-enable these tests when the issue has been closed
-    #
-    # (testpath/"Test.swift").write <<-TEST_SWIFT
-    # enum One { }
-    # enum Two { }
-    # TEST_SWIFT
-    #
-    # (testpath/"Test.stencil").write <<-TEST_STENCIL
-    # // Found {{ types.all.count }} Types
-    # // {% for type in types.all %}{{ type.name }}, {% endfor %}
-    # TEST_STENCIL
-
-    # system "#{bin}/sourcery", testpath/"Test.swift", testpath/"Test.stencil", testpath/"Generated.swift"
-
-    # expected = <<-GENERATED_SWIFT
-    # // Generated using Sourcery 0.5.3 - https://github.com/krzysztofzablocki/Sourcery
-    # // DO NOT EDIT
-    #
-    #
-    # // Found 2 Types
-    # // One, Two,
-    # GENERATED_SWIFT
-    # assert_match expected, (testpath/"Generated.swift").read, "sourcery generation failed"
   end
 end

@@ -1,13 +1,14 @@
 class Yash < Formula
   desc "Yet another shell: a POSIX-compliant command-line shell"
   homepage "https://yash.osdn.jp/"
-  url "http://dl.osdn.jp/yash/66984/yash-2.44.tar.xz"
-  sha256 "f1352b49195a3879284e3ab60af4b30d3a87d696c838b246e2068ccbdfcf2e66"
+  # Canonical: https://osdn.net/dl/yash/yash-*
+  url "https://dotsrc.dl.osdn.net/osdn/yash/69353/yash-2.47.tar.xz"
+  sha256 "931f2e7451d8b1eca2a98caeef7eda0527d96376f9f2c9bec90bc5938e39992e"
 
   bottle do
-    sha256 "da1943d53ced363a3670017129947a4ba996ec82604112788ad7f02830612663" => :sierra
-    sha256 "6c212b53de2e7dfc29a5c84be0242553f96c3873f5926b5168ce9cf374479c91" => :el_capitan
-    sha256 "547509067bd7e0d2c0cc6e6156b3d2abbd9fb1d67cc106538d2443fbcbd872a5" => :yosemite
+    sha256 "8ceb88372ff9dbf2461994e646b7743c3fb927115fbd540fdd8a163a9c929916" => :high_sierra
+    sha256 "3b13c76147e4835eeff1b1794eb534deedaf6e787d3871a233f8dd34b9003fe9" => :sierra
+    sha256 "9fc6669b72248884e4274f695b9188745e5ae8fac359862373efa9a6f98b7469" => :el_capitan
   end
 
   depends_on "gettext"

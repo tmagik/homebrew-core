@@ -1,15 +1,14 @@
 class Suil < Formula
   desc "Lightweight C library for loading and wrapping LV2 plugin UIs"
   homepage "https://drobilla.net/software/suil/"
-  url "https://download.drobilla.net/suil-0.8.2.tar.bz2"
-  sha256 "787608c1e5b1f5051137dbf77c671266088583515af152b77b45e9c3a36f6ae8"
+  url "https://download.drobilla.net/suil-0.10.0.tar.bz2"
+  sha256 "9895c531f80c7e89a2b4b47de589d73b70bf48db0b0cfe56e5d54237ea4b8848"
+  revision 1
 
   bottle do
-    rebuild 1
-    sha256 "3b7b1944db83edb792e26ebbd610cb5310357e2f24983ab7dd8be0c0c7dd4aeb" => :sierra
-    sha256 "30069bffb5c8f3903f4888135c3d1939f1329a19fda93b3bc8bf244827413995" => :el_capitan
-    sha256 "30c20891f724dfe103704e1b3c4e17b068a152fb3098560462a156fba29474c7" => :yosemite
-    sha256 "0f82a7cf59da98e7dfbdf437ee22c412eb5e52a821acba2f92b65de4ea7a5fe6" => :mavericks
+    sha256 "836f6d8ad66cca4de66cd78c45205829627ee370b5485c0ef878bc9473d24ba6" => :high_sierra
+    sha256 "babe1c998fd93f29b86a767e01ad1518b95e74e17769b517c092ed4cbc0878bf" => :sierra
+    sha256 "639934ea8fd85b8968cf33838be1f399b7479e844fef972d4fca0ba2ab8a4bf4" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -23,7 +22,7 @@ class Suil < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <suil/suil.h>
 
       int main()

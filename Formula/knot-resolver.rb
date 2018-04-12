@@ -1,14 +1,14 @@
 class KnotResolver < Formula
   desc "Minimalistic, caching, DNSSEC-validating DNS resolver"
   homepage "https://www.knot-resolver.cz"
-  url "https://secure.nic.cz/files/knot-resolver/knot-resolver-1.3.1.tar.xz"
-  sha256 "cc9631fe1a92628e81e74b324a7f70c0b29840d426de05d7d045fdf85ab01117"
-  head "https://gitlab.labs.nic.cz/knot/resolver.git"
+  url "https://secure.nic.cz/files/knot-resolver/knot-resolver-2.2.0.tar.xz"
+  sha256 "7bb7f0cd8bbb1d99706d56ed119bdffce094628479438896f3740644efe614fa"
+  head "https://gitlab.labs.nic.cz/knot/knot-resolver.git"
 
   bottle do
-    sha256 "97e664c3320bec41300452e56cb4b4d43fab1635ad305262e62b574f23cef3d7" => :sierra
-    sha256 "d2d21f98367b41a08f1bfb9ae97775d0fd985d0a4a531a5b6afa3092a05569a9" => :el_capitan
-    sha256 "3940ef3918847dff72ebf31416c8a450251fb90404657e6a6c4b5d8bd4bd23fb" => :yosemite
+    sha256 "40337be8133f97ee475b948cbd212303b80272028376306394c6acf51c184628" => :high_sierra
+    sha256 "fdd84fa8b9f8577caaa550ffaf99520830ee6d87d09000e079d4928ea777648f" => :sierra
+    sha256 "7d60cb3dd48dd2a75a72c35351e5aef91e1b40f04ccfc842b6fc643f8c16fae9" => :el_capitan
   end
 
   option "without-nettle", "Compile without DNS cookies support"
@@ -27,20 +27,28 @@ class KnotResolver < Formula
   depends_on "libmemcached" => :optional
 
   def install
-    %w[all check lib-install daemon-install modules-install].each do |target|
-      system "make", target, "PREFIX=#{prefix}"
+    # Since we don't run `make install` or `make etc-install`, we need to
+    # install root.hints manually before running `make check`.
+    cp "etc/root.hints", buildpath
+    (etc/"kresd").install "root.hints"
+
+    %w[all lib-install daemon-install client-install modules-install
+       check].each do |target|
+      system "make", target, "PREFIX=#{prefix}", "ETCDIR=#{etc}/kresd"
     end
 
     cp "etc/config.personal", "config"
     inreplace "config", /^\s*user\(/, "-- user("
     (etc/"kresd").install "config"
 
+    (etc/"kresd").install "etc/root.hints"
+
     (buildpath/"root.keys").write(root_keys)
     (var/"kresd").install "root.keys"
   end
 
   # DNSSEC root anchor published by IANA (https://www.iana.org/dnssec/files)
-  def root_keys; <<-EOS.undent
+  def root_keys; <<~EOS
     . IN DS 19036 8 2 49aac11d7b6f6446702e54a1607371607a1a41855200fd2ce1cdde32f24e8fb5
     . IN DS 20326 8 2 e06d44b80b8f1d39a95c0b0d7c65d08458e880409bbc683457104237c7f8ec8d
     EOS
@@ -48,7 +56,7 @@ class KnotResolver < Formula
 
   plist_options :startup => true
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

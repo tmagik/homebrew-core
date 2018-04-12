@@ -4,49 +4,40 @@ class Kibana < Formula
   desc "Analytics and search dashboard for Elasticsearch"
   homepage "https://www.elastic.co/products/kibana"
   url "https://github.com/elastic/kibana.git",
-      :tag => "v5.4.2",
-      :revision => "5aaf7ebf6cd3398b2ba6076d4e4e7e070e19a5a3"
+      :tag => "v6.2.3",
+      :revision => "2582ab6060209a9fc6a67275fc52ce08ae74c957"
   head "https://github.com/elastic/kibana.git"
 
   bottle do
-    sha256 "a75da0f16938158115a33fdbf174455a3222e678f777fb4f0816a0d228240c5f" => :sierra
-    sha256 "0647928b4dbc647dfa3d77d8595772c5a38c4fa90354075d5361964e95bed251" => :el_capitan
-    sha256 "554603e55678449e7fc3bfb170deed2b04d5b5f5ec383b7920373697f28ba0ee" => :yosemite
+    sha256 "90472f248ca2441e301be5ec4d66aabff4cf15834df94cd3b2c8f6f05a7f1e5d" => :high_sierra
+    sha256 "71ec08d61380f51b2bba0340e40a4334cfb22f97c858390b3bcdcc9fbdf35fe7" => :sierra
+    sha256 "1c2717d539ac5f2f42d906376ba5e3464b4b13ba1114887a67ac0633da336c7c" => :el_capitan
   end
 
   resource "node" do
-    url "https://nodejs.org/dist/v6.10.2/node-v6.10.2.tar.xz"
-    sha256 "80aa11333da99813973a99646e2113c6be5b63f665c0731ed14ecb94cbe846b6"
+    url "https://github.com/nodejs/node.git",
+        :tag => "v6.12.2",
+        :revision => "381f5ec383dbb164cf3edd1a9de1811cf1cfdc65"
   end
 
   def install
     resource("node").stage do
       system "./configure", "--prefix=#{libexec}/node"
-      system "make", "test"
       system "make", "install"
     end
 
     # do not build packages for other platforms
-    platforms = Set.new(["darwin-x64", "linux-x64", "windows-x64"])
-    if MacOS.prefer_64_bit?
-      platform = "darwin-x64"
-    else
-      raise "Installing Kibana via Homebrew is only supported on macOS x86_64"
-    end
-    platforms.delete(platform)
-    sub = platforms.to_a.join("|")
-    inreplace buildpath/"tasks/config/platforms.js", /('(#{sub})',?(?!;))/, "// \\1"
+    inreplace buildpath/"tasks/config/platforms.js", /('(linux-x64|windows-x64)',?(?!;))/, "// \\1"
 
     # trick the build into thinking we've already downloaded the Node.js binary
-    mkdir_p buildpath/".node_binaries/#{resource("node").version}/#{platform}"
+    mkdir_p buildpath/".node_binaries/#{resource("node").version}/darwin-x64"
 
     # set npm env and fix cache edge case (https://github.com/Homebrew/brew/pull/37#issuecomment-208840366)
     ENV.prepend_path "PATH", prefix/"libexec/node/bin"
-    Pathname.new("#{ENV["HOME"]}/.npmrc").write Language::Node.npm_cache_config
-    system "npm", "install", "--verbose"
+    system "npm", "install", "-ddd", "--build-from-source", "--#{Language::Node.npm_cache_config}"
     system "npm", "run", "build", "--", "--release", "--skip-os-packages", "--skip-archives"
 
-    prefix.install Dir["build/kibana-#{version}-#{platform.sub("x64", "x86_64")}/{bin,config,node_modules,optimize,package.json,src,ui_framework,webpackShims}"]
+    prefix.install Dir["build/kibana-#{version}-darwin-x86_64/{bin,config,node_modules,optimize,package.json,src,ui_framework,webpackShims}"]
 
     inreplace "#{bin}/kibana", %r{/node/bin/node}, "/libexec/node/bin/node"
     inreplace "#{bin}/kibana-plugin", %r{/node/bin/node}, "/libexec/node/bin/node"
@@ -64,7 +55,7 @@ class Kibana < Formula
     (prefix/"plugins").mkdir
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     Config: #{etc}/kibana/
     If you wish to preserve your plugins upon upgrade, make a copy of
     #{opt_prefix}/plugins before upgrading, and copy it into the
@@ -74,7 +65,7 @@ class Kibana < Formula
 
   plist_options :manual => "kibana"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
     "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

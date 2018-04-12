@@ -2,15 +2,15 @@ class Caf < Formula
   # Renamed from libccpa
   desc "Implementation of the Actor Model for C++"
   homepage "https://actor-framework.org/"
-  url "https://github.com/actor-framework/actor-framework/archive/0.15.3.tar.gz"
-  sha256 "894939cd18e2908bbe0591a090af1c245f958e7416d60edb2482a5d2d8f92b9d"
-  head "https://github.com/actor-framework/actor-framework.git", :branch => "develop"
+  url "https://github.com/actor-framework/actor-framework/archive/0.15.7.tar.gz"
+  sha256 "e9fcd46c4e8737b68e320ff653c05e70002967e24fa604f182ede301510f2247"
+  head "https://github.com/actor-framework/actor-framework.git"
 
   bottle do
     cellar :any
-    sha256 "3d37cda483852d0d09f79b494b3f59e48f75ffc0db8a39eeb3e04fd89be8bd74" => :sierra
-    sha256 "a84492d56c70e3309967b10eb9665fa40f52f51e116e4843e27bc1145cb4f1b7" => :el_capitan
-    sha256 "52069bed928350b67e80b866c1c9c984202918c5864e7f48fd76c8700b00ffac" => :yosemite
+    sha256 "71128b4493b340e1ecaa35bfce84693b1a52a4235332fcbf0d4ef41f6ff546e6" => :high_sierra
+    sha256 "508fde1a3b54beb20decc4a845eb1bac4afd983e8b64c8661dcc80751e9db697" => :sierra
+    sha256 "bd5335016196542d3db596218f9f0669b5392e3c0fc38d1913e9f0a07341c1e9" => :el_capitan
   end
 
   needs :cxx11
@@ -33,7 +33,7 @@ class Caf < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS.undent
+    (testpath/"test.cpp").write <<~EOS
       #include <iostream>
       #include <caf/all.hpp>
       using namespace caf;

@@ -7,6 +7,7 @@ class Libvbucket < Formula
   bottle do
     cellar :any
     rebuild 1
+    sha256 "bce41a629d7cf6504a1d5fa518d31cc46fcc93b8c82187167d4ab9306f2d593d" => :high_sierra
     sha256 "69c96d5758926202939b79930d82da27bd65d50e0ef19d844ac705cacd99ba58" => :sierra
     sha256 "cc3333f73161a96deb410ae0b8185a74e0c2a5bc8e62018929b17efe6ef732b8" => :el_capitan
     sha256 "dd69ae3261c461b15bd29e435ab95496441dfde4535cb7d6925527cdfa8c64dd" => :yosemite
@@ -30,7 +31,7 @@ class Libvbucket < Formula
       "vBucketMap" => [[0, 1, 2], [1, 2, 0], [2, 1, -1], [1, 2, 0]],
     )
 
-    expected = <<-EOS.undent
+    expected = <<~EOS
       key: hello master: server1:11211 vBucketId: 0 couchApiBase: (null) replicas: server2:11210 server3:11211
       key: world master: server2:11210 vBucketId: 3 couchApiBase: (null) replicas: server3:11211 server1:11211
       EOS

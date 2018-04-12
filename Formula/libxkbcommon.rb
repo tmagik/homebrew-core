@@ -1,13 +1,13 @@
 class Libxkbcommon < Formula
   desc "Keyboard handling library"
   homepage "https://xkbcommon.org/"
-  url "https://xkbcommon.org/download/libxkbcommon-0.7.1.tar.xz"
-  sha256 "ba59305d2e19e47c27ea065c2e0df96ebac6a3c6e97e28ae5620073b6084e68b"
+  url "https://xkbcommon.org/download/libxkbcommon-0.8.0.tar.xz"
+  sha256 "e829265db04e0aebfb0591b6dc3377b64599558167846c3f5ee5c5e53641fe6d"
 
   bottle do
-    sha256 "f315b5f0587687bfe2a859fc2440980820031a8d984c0b707f468f886953ab0c" => :sierra
-    sha256 "b28c61c01bf2b30c2d9250ef4ba8650d3a4040802e2184f1c3673ba717f09ea0" => :el_capitan
-    sha256 "87d2bf3128550c3fd80f8d91908c888aa8c19361a189c59a9478af925668710b" => :yosemite
+    sha256 "7428e9599baa3dfca4a9c181c4d3a2ab934f37987aaad270c8a6fc3921da2c41" => :high_sierra
+    sha256 "62e85d6d91d4f603d0ab2796904f07a754a782f6a0f23f424810a08b5deff347" => :sierra
+    sha256 "32ee1c478aa17d7120d86370fd619de9b9ac39671d45d77a7a31ac550b0453d4" => :el_capitan
   end
 
   head do
@@ -24,15 +24,6 @@ class Libxkbcommon < Formula
 
   def install
     system "./autogen.sh" if build.head?
-    inreplace "configure" do |s|
-      s.gsub! "-version-script $output_objdir/$libname.ver", ""
-      s.gsub! "$wl-version-script", ""
-    end
-    inreplace %w[Makefile.in Makefile.am] do |s|
-      s.gsub! "-Wl,--version-script=${srcdir}/xkbcommon.map", ""
-      s.gsub! "-Wl,--version-script=${srcdir}/xkbcommon-x11.map", ""
-    end
-
     system "./configure", "--disable-dependency-tracking",
                           "--disable-silent-rules",
                           "--prefix=#{prefix}"
@@ -40,14 +31,14 @@ class Libxkbcommon < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
-    #include <stdlib.h>
-    #include <xkbcommon/xkbcommon.h>
-    int main() {
-      return (xkb_context_new(XKB_CONTEXT_NO_FLAGS) == NULL)
-        ? EXIT_FAILURE
-        : EXIT_SUCCESS;
-    }
+    (testpath/"test.c").write <<~EOS
+      #include <stdlib.h>
+      #include <xkbcommon/xkbcommon.h>
+      int main() {
+        return (xkb_context_new(XKB_CONTEXT_NO_FLAGS) == NULL)
+          ? EXIT_FAILURE
+          : EXIT_SUCCESS;
+      }
     EOS
     system ENV.cc, "test.c", "-I#{include}", "-L#{lib}", "-lxkbcommon",
                    "-o", "test"

@@ -1,15 +1,14 @@
 class Libinfinity < Formula
   desc "GObject-based C implementation of the Infinote protocol"
   homepage "https://gobby.github.io"
-  url "http://releases.0x539.de/libinfinity/libinfinity-0.6.6.tar.gz"
-  sha256 "3df9397b52d61392cbe98084aada9b7362a34811ef21baa0db87fdfd754f92cc"
+  url "http://releases.0x539.de/libinfinity/libinfinity-0.6.8.tar.gz"
+  sha256 "0c4e7e0e5cb6ad5df4dbe19568de37b100a13e61475cf9d4e0f2a68fcdd2d45b"
   revision 1
 
   bottle do
-    sha256 "41aa8345422458ad73c954071fc093b4c81f4be7839beef9a06499065e17b117" => :sierra
-    sha256 "43aed53c6130683c7a2cbc75f72f640ac4a8890f0a4d0d5324802722fb9e595a" => :el_capitan
-    sha256 "f8814b4172c821d45b26edd01fd19ead1e1e3c54b53ebb199b851761dbd9c429" => :yosemite
-    sha256 "a657d5cb68e8dec8efee285e1dc1bb69e9d7753593c49876aaffe2825a136b91" => :mavericks
+    sha256 "5a82262c8519af2c73c3ee69c9632031cc6e7cc6bc52c2eef5defe74025b7a24" => :high_sierra
+    sha256 "d9791b732d6a5c1bbba29941cfc8e0847c92bacebc43cdf9aef26799e8bada8f" => :sierra
+    sha256 "ad024ec7122272de003ebfee98ffa2c0518d40061dbf7631627e720ef27ad4e9" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -32,7 +31,7 @@ class Libinfinity < Formula
   end
 
   test do
-    (testpath/"test.c").write <<-EOS.undent
+    (testpath/"test.c").write <<~EOS
       #include <libinfinity/common/inf-init.h>
 
       int main(int argc, char *argv[]) {

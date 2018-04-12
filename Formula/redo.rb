@@ -7,6 +7,7 @@ class Redo < Formula
   bottle do
     cellar :any_skip_relocation
     rebuild 1
+    sha256 "73245e29a910908beebc16fb2b9ac64f7b6839b5656904a9abd96ec68796c86a" => :high_sierra
     sha256 "81834b6558862943db1789472cc50393dfece52dcc4b4d1720fd85c11a615217" => :sierra
     sha256 "ffb1132c1c7327971b89c6a6bfd7abe267f08c0790dc66816c09052c93a28ebb" => :el_capitan
     sha256 "70523de82822fa0cb289197dbbd228a6105781e80fd89dc1ea594637eccad6a1" => :yosemite
@@ -21,5 +22,9 @@ class Redo < Formula
     system "./redo", "install"
     rm share/"doc/redo/README.md" # lets not have two copies
     man1.install resource("docs")
+  end
+
+  test do
+    system "#{bin}/redo", "--version"
   end
 end

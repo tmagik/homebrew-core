@@ -1,14 +1,14 @@
 class Freeipmi < Formula
   desc "In-band and out-of-band IPMI (v1.5/2.0) software"
   homepage "https://www.gnu.org/software/freeipmi/"
-  url "https://ftp.gnu.org/gnu/freeipmi/freeipmi-1.5.5.tar.gz"
-  mirror "https://ftpmirror.gnu.org/freeipmi/freeipmi-1.5.5.tar.gz"
-  sha256 "ae20b98d145b6316c4231903a64a96954bdd718e74fc4e6cec2cd0b63edcff53"
+  url "https://ftp.gnu.org/gnu/freeipmi/freeipmi-1.6.1.tar.gz"
+  mirror "https://ftpmirror.gnu.org/freeipmi/freeipmi-1.6.1.tar.gz"
+  sha256 "a2550e08e1f2d681efe770162125ac899022a6acf96256e5b7404eabb90db549"
 
   bottle do
-    sha256 "2599fe01dd1194c6c79de17b80904e894ba6f86f11ef5f3525750a9d3bfaddf9" => :sierra
-    sha256 "86f106bd02c86df03d9495b4c4a2dffa625ad0e6ac6da960302fd58d0a03fb73" => :el_capitan
-    sha256 "aa6c2ea002a1950e92bc54209100e4784b191f393e761c5773fb724bc9705eb2" => :yosemite
+    sha256 "f3d7dc8e36966d926168eac8a090c2c8072b2bea4d1175ee352c2747166a63cf" => :high_sierra
+    sha256 "87783a9f0ec06d3eb6f7538c9c5e35f0c89654c95dbfcace5f432143e497f987" => :sierra
+    sha256 "f7647ccef7ba495d020d1a6bd8a07d8b0433419bd6136e048a834af8b9d08241" => :el_capitan
   end
 
   depends_on "argp-standalone"
@@ -16,8 +16,8 @@ class Freeipmi < Formula
 
   def install
     inreplace "man/Makefile.in",
-      "$(CPP) -nostdinc -w -C -P -I$(top_srcdir)/man $@.pre  $@",
-      "$(CPP) -nostdinc -w -C -P -I$(top_srcdir)/man $@.pre > $@"
+      "$(CPP_FOR_BUILD) -nostdinc -w -C -P -I$(top_srcdir)/man $@.pre $@",
+      "$(CPP_FOR_BUILD) -nostdinc -w -C -P -I$(top_srcdir)/man $@.pre > $@"
 
     system "./configure", "--prefix=#{prefix}"
     system "make", "install"

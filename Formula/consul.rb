@@ -2,55 +2,45 @@ class Consul < Formula
   desc "Tool for service discovery, monitoring and configuration"
   homepage "https://www.consul.io"
   url "https://github.com/hashicorp/consul.git",
-      :tag => "v0.8.4",
-      :revision => "f4360770d8e7b852e2d05835b583d20799e58133"
+      :tag => "v1.0.6",
+      :revision => "9a494b5fb9c86180a5702e29c485df1507a47198"
 
   head "https://github.com/hashicorp/consul.git",
        :shallow => false
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "39eb37b0201fea5f5b08ebf503886873907bda308da0941e83d80aefcc93220b" => :sierra
-    sha256 "4fd6bc7c9449ebc555710f5c167e8d7bfa6d4e9054ec57938f7c484310ddc91f" => :el_capitan
-    sha256 "f93e4db2ee0798311adeaf76075f31183269a8be398440f90fe70a6c8e26254e" => :yosemite
+    rebuild 1
+    sha256 "426227ee114e91f2560c141722d7b31a148b507a7617485ff1482f8b30f386c3" => :high_sierra
+    sha256 "3154593fd96aa3efd6f2f0c9ca2aa8d1e13685e106a8cebdb5ea55a14e46662c" => :sierra
+    sha256 "aa9f709a5d4a1042584b2f332848e30a62f3e909123fdbfdc6feac033d230ef0" => :el_capitan
   end
-
-  option "with-web-ui", "Installs the consul web ui"
 
   depends_on "go" => :build
-
-  resource "web-ui" do
-    url "https://releases.hashicorp.com/consul/0.8.4/consul_0.8.4_web_ui.zip"
-    sha256 "7a49924a872205002b2bf72af8c82d5560d4a7f4a58b2f65ee284dd254ebd063"
-  end
+  depends_on "gox" => :build
 
   def install
+    # Avoid running `go get`
+    inreplace "GNUmakefile", "go get -u -v $(GOTOOLS)", ""
+
+    ENV["XC_OS"] = "darwin"
+    ENV["XC_ARCH"] = MacOS.prefer_64_bit? ? "amd64" : "386"
+    ENV["GOPATH"] = buildpath
     contents = Dir["{*,.git,.gitignore}"]
-    gopath = buildpath/"gopath"
-    (gopath/"src/github.com/hashicorp/consul").install contents
+    (buildpath/"src/github.com/hashicorp/consul").install contents
 
-    ENV["GOPATH"] = gopath
-    ENV.prepend_create_path "PATH", gopath/"bin"
+    (buildpath/"bin").mkpath
 
-    cd gopath/"src/github.com/hashicorp/consul" do
+    cd "src/github.com/hashicorp/consul" do
       system "make"
       bin.install "bin/consul"
-      zsh_completion.install "contrib/zsh-completion/_consul"
+      prefix.install_metafiles
     end
-
-    # install web-ui to package share folder.
-    (pkgshare/"web-ui").install resource("web-ui") if build.with? "web-ui"
-  end
-
-  def caveats; <<-EOS.undent
-    If consul was built with --with-web-ui, you can activate the UI by running
-    consul with `-ui-dir #{pkgshare}/web-ui`.
-    EOS
   end
 
   plist_options :manual => "consul agent -dev -advertise 127.0.0.1"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
@@ -85,10 +75,9 @@ class Consul < Formula
 
   test do
     fork do
-      exec "#{bin}/consul", "agent", "-data-dir", ".", "-server", "-bootstrap"
+      exec "#{bin}/consul", "agent", "-data-dir", "."
     end
-    sleep 30
-    system "#{bin}/consul", "info"
+    sleep 3
     system "#{bin}/consul", "leave"
   end
 end

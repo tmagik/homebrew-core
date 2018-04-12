@@ -1,55 +1,43 @@
 class RubyAT22 < Formula
   desc "Powerful, clean, object-oriented scripting language"
   homepage "https://www.ruby-lang.org/"
-  url "https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.7.tar.bz2"
-  sha256 "80486c5991783185afeceeb315060a3dafc3889a2912e145b1a8457d7b005c5b"
+  url "https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.10.tar.xz"
+  sha256 "bf77bcb7e6666ccae8d0882ea12b05f382f963f0a9a5285a328760c06a9ab650"
 
   bottle do
-    sha256 "16992fc572462b4377210411cecc78970f49ede5dc57f53441b7ca3dd0919434" => :sierra
-    sha256 "b89885d74d9c8e599d53dc5954825bd37295f36636c9335c71f7c027455ac72a" => :el_capitan
-    sha256 "11e7ec0193000bbd77f35837bbf2b2d4f706bf5c748dbdac3115433d857512bf" => :yosemite
+    sha256 "b31c95511243da91d1049e32fbe660447f9a6920369fff9f1fc9c854f14f7f20" => :high_sierra
+    sha256 "3391108f892cbe37ca39b5ac4e79a31eaaee321d7001f0380f8c7282b737a22b" => :sierra
+    sha256 "394e22d1904fb9f59a3b34a8a4ac71608c0c3f24b73d58dbaa3fa4f4e65785ad" => :el_capitan
   end
 
   keg_only :versioned_formula
 
-  option "with-suffix", "Suffix commands with '22'"
-  option "with-doc", "Install documentation"
-  option "with-tcltk", "Install with Tcl/Tk support"
-
   depends_on "pkg-config" => :build
-  depends_on "readline" => :recommended
-  depends_on "gdbm" => :optional
-  depends_on "gmp" => :optional
-  depends_on "libffi" => :optional
   depends_on "libyaml"
   depends_on "openssl"
-  depends_on :x11 if build.with? "tcltk"
+  depends_on "readline"
+
+  def api_version
+    "2.2.0"
+  end
+
+  def rubygems_bindir
+    HOMEBREW_PREFIX/"lib/ruby/gems/#{api_version}/bin"
+  end
 
   def install
+    paths = %w[libyaml openssl readline].map { |f| Formula[f].opt_prefix }
     args = %W[
       --prefix=#{prefix}
       --enable-shared
       --disable-silent-rules
       --with-sitedir=#{HOMEBREW_PREFIX}/lib/ruby/site_ruby
       --with-vendordir=#{HOMEBREW_PREFIX}/lib/ruby/vendor_ruby
+      --with-opt-dir=#{paths.join(":")}
+      --with-out-ext=tk
+      --without-gmp
     ]
-
-    args << "--program-suffix=#{program_suffix}" if build.with? "suffix"
-    args << "--with-out-ext=tk" if build.without? "tcltk"
-    args << "--disable-install-doc" if build.without? "doc"
     args << "--disable-dtrace" unless MacOS::CLT.installed?
-    args << "--without-gmp" if build.without? "gmp"
-
-    paths = [
-      Formula["libyaml"].opt_prefix,
-      Formula["openssl"].opt_prefix,
-    ]
-
-    %w[readline gdbm gmp libffi].each do |dep|
-      paths << Formula[dep].opt_prefix if build.with? dep
-    end
-
-    args << "--with-opt-dir=#{paths.join(":")}"
 
     system "./configure", *args
 
@@ -74,35 +62,29 @@ class RubyAT22 < Formula
   end
 
   def post_install
+    # Since Gem ships Bundle we want to provide that full/expected installation
+    # but to do so we need to handle the case where someone has previously
+    # installed bundle manually via `gem install`.
+    rm_f %W[
+      #{rubygems_bindir}/bundle
+      #{rubygems_bindir}/bundler
+    ]
+    rm_rf Dir[HOMEBREW_PREFIX/"lib/ruby/gems/#{api_version}/gems/bundler-*"]
+    rubygems_bindir.install_symlink Dir[libexec/"gembin/*"]
+
     # Customize rubygems to look/install in the global gem directory
     # instead of in the Cellar, making gems last across reinstalls
-    config_file = lib/"ruby/#{abi_version}/rubygems/defaults/operating_system.rb"
+    config_file = lib/"ruby/#{api_version}/rubygems/defaults/operating_system.rb"
     config_file.unlink if config_file.exist?
     config_file.write rubygems_config
 
     # Create the sitedir and vendordir that were skipped during install
-    ruby="#{bin}/ruby#{program_suffix}"
     %w[sitearchdir vendorarchdir].each do |dir|
-      mkdir_p `#{ruby} -rrbconfig -e 'print RbConfig::CONFIG["#{dir}"]'`
+      mkdir_p `#{bin}/ruby -rrbconfig -e 'print RbConfig::CONFIG["#{dir}"]'`
     end
-
-    # Create the version-specific bindir used by rubygems
-    mkdir_p rubygems_bindir
   end
 
-  def abi_version
-    "2.2.0"
-  end
-
-  def program_suffix
-    build.with?("suffix") ? "22" : ""
-  end
-
-  def rubygems_bindir
-    "#{HOMEBREW_PREFIX}/lib/ruby/gems/#{abi_version}/bin"
-  end
-
-  def rubygems_config; <<-EOS.undent
+  def rubygems_config; <<~EOS
     module Gem
       class << self
         alias :old_default_dir :default_dir
@@ -117,7 +99,7 @@ class RubyAT22 < Formula
           "lib",
           "ruby",
           "gems",
-          "#{abi_version}"
+          "#{api_version}"
         ]
 
         @default_dir ||= File.join(*path)
@@ -161,13 +143,13 @@ class RubyAT22 < Formula
       end
 
       def self.ruby
-        "#{opt_bin}/ruby#{program_suffix}"
+        "#{opt_bin}/ruby"
       end
     end
     EOS
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     By default, binaries installed by gem will be placed into:
       #{rubygems_bindir}
 
@@ -176,8 +158,9 @@ class RubyAT22 < Formula
   end
 
   test do
-    hello_text = shell_output("#{bin}/ruby#{program_suffix} -e 'puts :hello'")
+    hello_text = shell_output("#{bin}/ruby -e 'puts :hello'")
     assert_equal "hello\n", hello_text
-    system "#{bin}/gem#{program_suffix}", "list", "--local"
+    ENV["GEM_HOME"] = testpath
+    system "#{bin}/gem", "install", "json"
   end
 end

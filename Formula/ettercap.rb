@@ -11,12 +11,13 @@ class Ettercap < Formula
 
     # Fixes CVE-2017-6430.
     patch do
-      url "https://github.com/Ettercap/ettercap/commit/4ad7f85d.patch"
-      sha256 "a53322b8f103d92e3947b947083e548a92e05c0c2814ee870ec21a31eb0035c3"
+      url "https://github.com/Ettercap/ettercap/commit/4ad7f85dc01202e363659aa473c99470b3f4e1f4.patch?full_index=1"
+      sha256 "13be172067e133f64a31b14de434acea261ac795d493897d085958192ac1cdd4"
     end
   end
 
   bottle do
+    sha256 "798d0963ad9188e73850d3a4d88fa67ec597a6b0ba9fc6fc70436918cb16c6d3" => :high_sierra
     sha256 "f85423bcf1ce3e7ce82ad5e715b41ea3caeee57a3d09831bf571c9b962e2c5a0" => :sierra
     sha256 "098a75f317b974e46155b1c03661478606a9e83ea95aba948063eb0987fab703" => :el_capitan
     sha256 "5d9ce456cf6d6cab416fdae7c935501ab607020a94bd73cdfa41536f6751dbf1" => :yosemite

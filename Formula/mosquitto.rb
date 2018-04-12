@@ -1,13 +1,14 @@
 class Mosquitto < Formula
   desc "Message broker implementing the MQTT protocol"
   homepage "https://mosquitto.org/"
-  url "https://mosquitto.org/files/source/mosquitto-1.4.12.tar.gz"
-  sha256 "b12e2353f92cb76882ce7b7bddfea022b461b38cbe6e7fb7c969d0daeb379cf7"
+  url "https://mosquitto.org/files/source/mosquitto-1.4.14.tar.gz"
+  sha256 "156b1fa731d12baad4b8b22f7b6a8af50ba881fc711b81e9919ec103cf2942d1"
+  revision 2
 
   bottle do
-    sha256 "73461d3e6eb0f4c0807f9c60de4e3bea4933b1371cecaf1f9c1ff9b2b223f8ca" => :sierra
-    sha256 "6de19142f46f4732d49c4fd3abfbeeefc7c4f0c2e5e087b8a182604e2da6788d" => :el_capitan
-    sha256 "aac7e391c200465aa7783d9b65db27e79f686db6d5dd9e22e13859204f26cff9" => :yosemite
+    sha256 "db6cc90bff7409aa2d287a9e090458fc5ffd2ef882c6d38efee28bfe9bc43bae" => :high_sierra
+    sha256 "88a6fd908f71fdf46ed19f0baa7154759751227c92234afe30ba27bf218db653" => :sierra
+    sha256 "d3195ebbcd82c77b56a0e65c1752ae803d5593d2a39b665e0524c853a0520878" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
@@ -28,7 +29,7 @@ class Mosquitto < Formula
     (var/"mosquitto").mkpath
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     mosquitto has been installed with a default configuration file.
     You can make changes to the configuration by editing:
         #{etc}/mosquitto/mosquitto.conf
@@ -37,7 +38,7 @@ class Mosquitto < Formula
 
   plist_options :manual => "mosquitto -c #{HOMEBREW_PREFIX}/etc/mosquitto/mosquitto.conf"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

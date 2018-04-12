@@ -1,13 +1,13 @@
 class Udunits < Formula
   desc "Unidata unit conversion library"
   homepage "https://www.unidata.ucar.edu/software/udunits/"
-  url "ftp://ftp.unidata.ucar.edu/pub/udunits/udunits-2.2.24.tar.gz"
-  sha256 "20bac512f2656f056385429a0e44902fdf02fc7fe01c14d56f3c724336177f95"
+  url "ftp://ftp.unidata.ucar.edu/pub/udunits/udunits-2.2.26.tar.gz"
+  sha256 "368f4869c9c7d50d2920fa8c58654124e9ed0d8d2a8c714a9d7fdadc08c7356d"
 
   bottle do
-    sha256 "c6fa4a694e7abbf431d52a76f24bba3035cfb3c0e6a2eadea7dd54d9612e9f82" => :sierra
-    sha256 "1cb69fbe3d62af625c6289bd8759c41e349764cd33a60a4c867b8c02a9be8c38" => :el_capitan
-    sha256 "40a4532a90e265dcbe85bfda55c6d797581cd7f02e91a660e1c14e03a5642ef2" => :yosemite
+    sha256 "9bb90283343d3490d247eda07024cbdfa68b1dbc5255d2697c73ed2e73a29799" => :high_sierra
+    sha256 "754d3116eb032cc012c164b0a5edea7432f6e6a4b2853a9b7153e560dfb9075a" => :sierra
+    sha256 "5fbd4d1d36e471bc71720b61a1d4a76b363e115fc71b74208fc5284883087bda" => :el_capitan
   end
 
   option "with-html-docs", "Installs html documentation"

@@ -2,18 +2,18 @@ class KubernetesCli < Formula
   desc "Kubernetes command-line interface"
   homepage "https://kubernetes.io/"
   url "https://github.com/kubernetes/kubernetes.git",
-      :tag => "v1.6.6",
-      :revision => "7fa1c1756d8bc963f1a389f4a6937dc71f08ada2"
+      :tag => "v1.10.0",
+      :revision => "fc32d2f3698e36b93322a3465f63a14e9f0eaead"
   head "https://github.com/kubernetes/kubernetes.git"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "fdcdc3f168288a0a0289c518a811cfe544e19d3ceba1f61fd5cc86ebd259a31b" => :sierra
-    sha256 "8dc6e6eb12fa3ec5d4cd6148c2f425ad453d98ce05be79e3853b49fca61584ce" => :el_capitan
-    sha256 "0f6d79b7e5cac303959f38dc786388e78aa7a3cfbd9c5f8d79c03705b3f19ad0" => :yosemite
+    sha256 "ef0eae7ae4f6c157138fd53aa89c8ea5fecd8875809c406c7db21285140d5cc1" => :high_sierra
+    sha256 "4f5e5e49d09e8c58ab52b5954e4de5a3a8e2fd1551a42093b1b9494f01f0c770" => :sierra
+    sha256 "35c7fdcff5127a4fa597e22ed7a0655e4e471f2e6c7b628b7eb3da47f0306a71" => :el_capitan
   end
 
-  depends_on "go" => :build
+  # kubernetes-cli will not support go1.10 until version 1.11.x
+  depends_on "go@1.9" => :build
 
   def install
     ENV["GOPATH"] = buildpath
@@ -36,7 +36,14 @@ class KubernetesCli < Formula
 
       # Install zsh completion
       output = Utils.popen_read("#{bin}/kubectl completion zsh")
-      (zsh_completion/"kubectl").write output
+      (zsh_completion/"_kubectl").write output
+
+      prefix.install_metafiles
+
+      # Install man pages
+      # Leave this step for the end as this dirties the git tree
+      system "hack/generate-docs.sh"
+      man1.install Dir["docs/man/man1/*.1"]
     end
   end
 

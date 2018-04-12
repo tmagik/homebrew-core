@@ -1,9 +1,9 @@
 class Chromedriver < Formula
   desc "Tool for automated testing of webapps across many browsers"
   homepage "https://sites.google.com/a/chromium.org/chromedriver/"
-  url "https://chromedriver.storage.googleapis.com/2.30/chromedriver_mac64.zip"
-  version "2.30"
-  sha256 "63a6333a7e7ad8300868e04345c786ea114c13c26508cda98259a21421a09126"
+  url "https://chromedriver.storage.googleapis.com/2.37/chromedriver_mac64.zip"
+  version "2.37"
+  sha256 "a1c4699cf12d51a5284971ba5ca2d8e354e422acd5151c920c5105339f4a5d29"
 
   bottle :unneeded
 
@@ -13,7 +13,7 @@ class Chromedriver < Formula
 
   plist_options :manual => "chromedriver"
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
@@ -45,6 +45,6 @@ class Chromedriver < Formula
     end
     sleep 5
     Process.kill("TERM", driver)
-    File.exist? testpath/"cd.log"
+    assert_predicate testpath/"cd.log", :exist?
   end
 end
