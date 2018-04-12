@@ -3,22 +3,27 @@ class Z3 < Formula
   homepage "https://github.com/Z3Prover/z3"
   url "https://github.com/Z3Prover/z3/archive/z3-4.6.0.tar.gz"
   sha256 "511da31d1f985cf0c79b2de05bda4e057371ba519769d1546ff71e1304fe53c9"
+  revision 1
   head "https://github.com/Z3Prover/z3.git"
 
   bottle do
     cellar :any
-    sha256 "b8e7d05e007f45e7ac1d1962279db7f32043306441a984715842957e242683db" => :high_sierra
-    sha256 "a0fcd87fa76072a7f8a6fb663c5d2589e8e1395e8c11acfb26150a7867aa6076" => :sierra
-    sha256 "bc1f47e9c9c1bff59983a17e00b00ab6724de6c182147cbecd6115fea377fda8" => :el_capitan
+    sha256 "c2493989f46145689553af054cf41a7c21995fcdb5f84ab5992e2f3cc73f6e65" => :high_sierra
+    sha256 "356863daa6b6701579e1840b5c069fe021a013e2cdef293e91e8984867c87804" => :sierra
+    sha256 "c351bed3d338b1eff6801956915d22b86f8b00fb056b1048c8c88983aa724748" => :el_capitan
   end
 
-  option "without-python", "Build without python 2 support"
-  depends_on "python" => :recommended if MacOS.version <= :snow_leopard
-  depends_on "python3" => :optional
+  option "without-python@2", "Build without python 2 support"
+
+  deprecated_option "with-python3" => "with-python"
+  deprecated_option "without-python" => "without-python@2"
+
+  depends_on "python@2" => :recommended
+  depends_on "python" => :optional
 
   def install
-    if build.without?("python3") && build.without?("python")
-      odie "z3: --with-python3 must be specified when using --without-python"
+    if build.without?("python") && build.without?("python@2")
+      odie "z3: --with-python must be specified when using --without-python@2"
     end
 
     Language::Python.each_python(build) do |python, version|

@@ -1,13 +1,13 @@
 class PerconaXtrabackup < Formula
   desc "Open source hot backup tool for InnoDB and XtraDB databases"
   homepage "https://www.percona.com/software/mysql-database/percona-xtrabackup"
-  url "https://www.percona.com/downloads/XtraBackup/Percona-XtraBackup-2.4.8/source/tarball/percona-xtrabackup-2.4.8.tar.gz"
-  sha256 "66a9cb73ce03c8a0b125998d464190288cb400cc6c22a766798ed4b24cceab91"
+  url "https://www.percona.com/downloads/XtraBackup/Percona-XtraBackup-2.4.10/source/tarball/percona-xtrabackup-2.4.10.tar.gz"
+  sha256 "30a122fc3f6678484a118ae7095880393765a00af1f34fcb6cc3f96b66f07f45"
 
   bottle do
-    sha256 "6f0220b37e6f98774fa56f2caa84288a4a75fd148397426583f18104aafe1afe" => :sierra
-    sha256 "ad9ade2be884a20935abe3339102bd790ef2629b99da1da8cf33a375a4fab8d0" => :el_capitan
-    sha256 "516832c2921f915955e07cf4833b58e90ee2dad822a5594688a969de347ba5fb" => :yosemite
+    sha256 "cb72c3a73e3ae5c7bb6e792b938a3a2f6a46548cfc297e2be328815aff13b5a4" => :high_sierra
+    sha256 "404795f3f2d5e965abc02b0c0cbb4a9beaa057343c182fc5220f1fee664182e8" => :sierra
+    sha256 "3d973e16cd11550df895d2a9c42e93c883fdceb0edb20d6493fbeb3961e0121b" => :el_capitan
   end
 
   option "without-docs", "Build without man pages (which requires python-sphinx)"
@@ -21,9 +21,9 @@ class PerconaXtrabackup < Formula
   depends_on "openssl"
 
   resource "DBD::mysql" do
-    url "https://cpan.metacpan.org/authors/id/M/MI/MICHIELB/DBD-mysql-4.043.tar.gz"
-    mirror "http://search.cpan.org/CPAN/authors/id/M/MI/MICHIELB/DBD-mysql-4.043.tar.gz"
-    sha256 "629f865e8317f52602b2f2efd2b688002903d2e4bbcba5427cb6188b043d6f99"
+    url "https://cpan.metacpan.org/authors/id/C/CA/CAPTTOFU/DBD-mysql-4.046.tar.gz"
+    mirror "http://search.cpan.org/CPAN/authors/id/C/CA/CAPTTOFU/DBD-mysql-4.046.tar.gz"
+    sha256 "6165652ec959d05b97f5413fa3dff014b78a44cf6de21ae87283b28378daf1f7"
   end
 
   resource "boost" do
@@ -43,7 +43,7 @@ class PerconaXtrabackup < Formula
         -DINSTALL_MANDIR=share/man
       ]
 
-      # OSX has this value empty by default.
+      # macOS has this value empty by default.
       # See https://bugs.python.org/issue18378#msg215215
       ENV["LC_ALL"] = "en_US.UTF-8"
     else

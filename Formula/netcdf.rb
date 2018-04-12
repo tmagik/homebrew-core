@@ -1,15 +1,14 @@
 class Netcdf < Formula
   desc "Libraries and data formats for array-oriented scientific data"
   homepage "https://www.unidata.ucar.edu/software/netcdf"
-  url "ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-4.5.0.tar.gz"
-  mirror "https://www.gfd-dennou.org/library/netcdf/unidata-mirror/netcdf-4.5.0.tar.gz"
-  sha256 "cbe70049cf1643c4ad7453f86510811436c9580cb7a1684ada2f32b95b00ca79"
-  revision 1
+  url "https://www.unidata.ucar.edu/downloads/netcdf/ftp/netcdf-4.6.1.tar.gz"
+  mirror "https://www.gfd-dennou.org/library/netcdf/unidata-mirror/netcdf-4.6.1.tar.gz"
+  sha256 "89c7957458740b763ae828c345240b8a1d29c2c1fed0f065f99b73181b0b2642"
 
   bottle do
-    sha256 "4b1886b98b4cd88b7f711bd1efe6209b50fad76bb0e6c9bd4ac6650d82affaae" => :high_sierra
-    sha256 "6da69abe6efb7a172f464d217842a47eb1d9822fc04e648324af15c133bcb5f1" => :sierra
-    sha256 "5575096b430815802452f442e3beea0759b949a804a81182ce796307d955a438" => :el_capitan
+    sha256 "0ab18b0e0cb8e0e389573de7b712da2195ab70457d857a308b21183b943771bf" => :high_sierra
+    sha256 "edb5de2eae06ecbc8fda68165596e7d86b6bbe3428b01f75b933cf61003c9bfe" => :sierra
+    sha256 "600a7793a3e2a425f89ec51b36acd480841116f6b43fde4594a1f187aa2027bb" => :el_capitan
   end
 
   depends_on "cmake" => :build
@@ -28,7 +27,7 @@ class Netcdf < Formula
   end
 
   resource "fortran" do
-    url "ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-fortran-4.4.4.tar.gz"
+    url "https://www.unidata.ucar.edu/downloads/netcdf/ftp/netcdf-fortran-4.4.4.tar.gz"
     mirror "https://www.gfd-dennou.org/arch/netcdf/unidata-mirror/netcdf-fortran-4.4.4.tar.gz"
     sha256 "b2d395175f8d283e68c8be516e231a96b191ade67ad0caafaf7fa01b1e6b5d75"
   end

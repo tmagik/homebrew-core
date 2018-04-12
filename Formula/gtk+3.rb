@@ -1,27 +1,25 @@
 class Gtkx3 < Formula
   desc "Toolkit for creating graphical user interfaces"
   homepage "https://gtk.org/"
-  url "https://download.gnome.org/sources/gtk+/3.22/gtk+-3.22.26.tar.xz"
-  sha256 "61eef0d320e541976e2dfe445729f12b5ade53050ee9de6184235cb60cd4b967"
+  url "https://download.gnome.org/sources/gtk+/3.22/gtk+-3.22.29.tar.xz"
+  sha256 "a07d64b939fcc034a066b7723fdf9b24e92c9cfb6a8497593f3471fe56fbbbf8"
+  revision 1
 
   bottle do
-    sha256 "2c3dc61e844ad559a517579285babab8ea01ca4e6346f4688360e89a0d27a15c" => :high_sierra
-    sha256 "b95e13c01b37aa3ed7ed41bc95a25a70525151e549c003e22d5d5a4f76890b77" => :sierra
-    sha256 "fc654db7a0c82221301c7334c540edda503087f866af5bdcc173a0e5576b7014" => :el_capitan
+    sha256 "df5a277b6d3290b74b4dfe18875a93fe0fdfe8f2f39ab05e628541bc2b77c669" => :high_sierra
+    sha256 "9f57c2b90165cba58f3270778ea4b7e309a2ac351f5254795f1abffb6d991a61" => :sierra
+    sha256 "8d750ce74e69a4700559ea5dd6f70def53a4b1ee6b7abc75f155e011eed55b65" => :el_capitan
   end
 
-  option "with-quartz-relocation", "Build with quartz relocation support"
-
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "gdk-pixbuf"
   depends_on "atk"
-  depends_on "gobject-introspection"
   depends_on "libepoxy"
   depends_on "pango"
   depends_on "glib"
   depends_on "hicolor-icon-theme"
   depends_on "gsettings-desktop-schemas" => :recommended
-  depends_on "jasper" => :optional
 
   def install
     args = %W[
@@ -34,8 +32,6 @@ class Gtkx3 < Formula
       --enable-quartz-backend
       --disable-x11-backend
     ]
-
-    args << "--enable-quartz-relocation" if build.with?("quartz-relocation")
 
     system "./configure", *args
     # necessary to avoid gtk-update-icon-cache not being found during make install

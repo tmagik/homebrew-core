@@ -1,14 +1,14 @@
 class GstPluginsBase < Formula
   desc "GStreamer plugins (well-supported, basic set)"
   homepage "https://gstreamer.freedesktop.org/"
-  url "https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.12.4.tar.xz"
-  sha256 "4c306b03df0212f1b8903784e29bb3493319ba19ebebf13b0c56a17870292282"
+  url "https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.14.0.tar.xz"
+  sha256 "7e904660ff56e02b036cf7fdfb77a50a540828ca9d2614d69ba931772e5b6940"
   revision 1
 
   bottle do
-    sha256 "5f595223e492a2b66ea22915de47eb95479e3ee9d2428fff3117a49f0d5199ed" => :high_sierra
-    sha256 "c310d86d1776dc4e06581fa4c79b7bc74744220a232f772dc2946da970466790" => :sierra
-    sha256 "b354e7294fe96a2f0f4a55ff8b5a20c39b5a3263e1719860b56b3ffce21bb14f" => :el_capitan
+    sha256 "0a82c40cf5b175045cf16a08f53e7ef0eee5ea11c4c1b27bc3d0a210b2de0919" => :high_sierra
+    sha256 "a7b042843228bc8524ae462214283daa56b2ff9145959d64272698b8db52df34" => :sierra
+    sha256 "5c43f575a15843ef1432c9fe59cecea79376619f5abd6edf9da6e18594c89192" => :el_capitan
   end
 
   head do
@@ -19,6 +19,7 @@ class GstPluginsBase < Formula
     depends_on "libtool" => :build
   end
 
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "gstreamer"
@@ -26,7 +27,6 @@ class GstPluginsBase < Formula
   # The set of optional dependencies is based on the intersection of
   # https://cgit.freedesktop.org/gstreamer/gst-plugins-base/tree/REQUIREMENTS
   # and Homebrew formulae
-  depends_on "gobject-introspection"
   depends_on "orc" => :recommended
   depends_on "libogg" => :optional
   depends_on "opus" => :optional

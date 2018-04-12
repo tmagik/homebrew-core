@@ -1,14 +1,14 @@
 class Miniupnpc < Formula
   desc "UPnP IGD client library and daemon"
   homepage "https://miniupnp.tuxfamily.org"
-  url "https://miniupnp.tuxfamily.org/files/download.php?file=miniupnpc-2.0.20171212.tar.gz"
-  sha256 "cef135ae46c12358a485e809619c01145238aceb10e6e8e2946ae40c4dbe477d"
+  url "https://miniupnp.tuxfamily.org/files/download.php?file=miniupnpc-2.0.20180410.tar.gz"
+  sha256 "0e4c6d6ebc8b75eb636df7d3f3370c98713545acc3694b5ae40daa2502487a23"
 
   bottle do
     cellar :any
-    sha256 "3de29a59503819d36e95f14bb1bb769791392012ea41b82ca6addd5a8792df4f" => :high_sierra
-    sha256 "eb4f9b951de3486a934a1cd63774bbf95f09040403914f211b056353741d6837" => :sierra
-    sha256 "06cda8bdcbd17cc5d1e15e0c4a6b0a2fd2a7708f94908cbca87616926b42b87a" => :el_capitan
+    sha256 "1c0b7e56919ce59d6ef76e7804df53ef7b5923a6f67ec78a653e671b9478c532" => :high_sierra
+    sha256 "835144ebca86307b1bb99e21440af2a7322eaa1add8d1035af5d795ea0fe509d" => :sierra
+    sha256 "6d07c2529e80fdb4d3459be841ae533ec19e45aed8093f49dbd069ce3156c6b0" => :el_capitan
   end
 
   def install

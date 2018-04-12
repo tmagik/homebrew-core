@@ -1,14 +1,14 @@
 class Armadillo < Formula
   desc "C++ linear algebra library"
   homepage "https://arma.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/arma/armadillo-8.300.3.tar.xz"
-  sha256 "493653bccbfcb65234ed569b765771c3d947d614091ef857927d41ac542a97b5"
+  url "https://downloads.sourceforge.net/project/arma/armadillo-8.400.0.tar.xz"
+  sha256 "5cb6bc2f457a9d6a0758cfb15c418d48289909daccd79d0e428452029285dd9b"
 
   bottle do
     cellar :any
-    sha256 "cf5e7953a2ec691c9747b511c1c658b24f9f3c90aa8cfc63ca0c5d81cd7f6368" => :high_sierra
-    sha256 "fdde39a1ef6eb6389faf365ac690e51e158d50f009ff11576b3ff605be91492d" => :sierra
-    sha256 "7d5147718a0c37178bd06534b61ff2074057c6c8e401908e5a26c3aa412a8aa9" => :el_capitan
+    sha256 "b13a2137e0c2710da670b0b98bb474a0fd179d2a40d9052a34d04e4ac914f9ce" => :high_sierra
+    sha256 "f7203ff4d62b266f55f5e7d7fda1b0a1e8d961b8ac992636304a2c88b90e7239" => :sierra
+    sha256 "ea2732442d9a46cb14e73c530155868d353fd9b2c8e01da75bcfcf7b121884b7" => :el_capitan
   end
 
   depends_on "cmake" => :build
@@ -23,7 +23,7 @@ class Armadillo < Formula
   end
 
   test do
-    (testpath/"test.cpp").write <<-EOS
+    (testpath/"test.cpp").write <<~EOS
       #include <iostream>
       #include <armadillo>
 

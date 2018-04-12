@@ -3,44 +3,46 @@ class Scala < Formula
   homepage "https://www.scala-lang.org/"
 
   stable do
-    url "https://downloads.lightbend.com/scala/2.12.4/scala-2.12.4.tgz"
-    mirror "https://downloads.typesafe.com/scala/2.12.4/scala-2.12.4.tgz"
-    mirror "https://www.scala-lang.org/files/archive/scala-2.12.4.tgz"
-    sha256 "9554a0ca31aa8701863e881281b1772370a87e993ce785bb24505f2431292a21"
+    url "https://downloads.lightbend.com/scala/2.12.5/scala-2.12.5.tgz"
+    mirror "https://downloads.typesafe.com/scala/2.12.5/scala-2.12.5.tgz"
+    mirror "https://www.scala-lang.org/files/archive/scala-2.12.5.tgz"
+    sha256 "b261ffe9a495b12e9dda2ed37331e579547e4d1b8b5810161b6c3b39ac806aa1"
 
     depends_on :java => "1.8+"
 
     resource "docs" do
-      url "https://downloads.lightbend.com/scala/2.12.4/scala-docs-2.12.4.txz"
-      mirror "https://www.scala-lang.org/files/archive/scala-docs-2.12.4.txz"
-      sha256 "477892c8bb7df996166a767037cc16feb67ec9810273fd47bf43fa1eee0597a8"
+      url "https://downloads.lightbend.com/scala/2.12.5/scala-docs-2.12.5.txz"
+      mirror "https://www.scala-lang.org/files/archive/scala-docs-2.12.5.txz"
+      sha256 "f820810c01fb06d7ea1900b62491124916dfff3f64b1e74956c3ad4ebbe52fcc"
     end
 
     resource "src" do
-      url "https://github.com/scala/scala/archive/v2.12.4.tar.gz"
-      sha256 "9d1eaf570f95204a8894ab941070354b1672904a903ae3d1b45df201ddd1ed7d"
+      url "https://github.com/scala/scala/archive/v2.12.5.tar.gz"
+      sha256 "eb39d9353965ce04f482b37aae35caecb3c5b18c1162409f8ff31cbac181a788"
     end
   end
 
   devel do
-    version "2.13.0-M2"
-    url "https://downloads.lightbend.com/scala/2.13.0-M2/scala-2.13.0-M2.tgz"
-    mirror "https://www.scala-lang.org/files/archive/scala-2.13.0-M2.tgz"
-    mirror "https://downloads.typesafe.com/scala/2.13.0-M2/scala-2.13.0-M2.tgz"
-    sha256 "3b83c4165d6be1854078ace552dd424acca6ddf718a908f103c206847802e808"
+    url "https://downloads.lightbend.com/scala/2.13.0-M3/scala-2.13.0-M3.tgz"
+    mirror "https://www.scala-lang.org/files/archive/scala-2.13.0-M3.tgz"
+    mirror "https://downloads.typesafe.com/scala/2.13.0-M3/scala-2.13.0-M3.tgz"
+    version "2.13.0-M3"
+    sha256 "089a00b17edda24891c2920c2e7346a964fc13a1916ca0418bb6591da636396e"
 
     depends_on :java => "1.8+"
 
     resource "docs" do
-      url "https://downloads.lightbend.com/scala/2.13.0-M2/scala-docs-2.13.0-M2.txz"
-      mirror "https://www.scala-lang.org/files/archive/scala-docs-2.13.0-M2.txz"
-      mirror "https://downloads.typesafe.com/scala/2.13.0-M2/scala-docs-2.13.0-M2.txz"
-      sha256 "add2e7d495aedeab0825b8214eb5782c0ab3fa4b65d2e763203d830364e9bbdc"
+      url "https://downloads.lightbend.com/scala/2.13.0-M3/scala-docs-2.13.0-M3.txz"
+      mirror "https://www.scala-lang.org/files/archive/scala-docs-2.13.0-M3.txz"
+      mirror "https://downloads.typesafe.com/scala/2.13.0-M3/scala-docs-2.13.0-M3.txz"
+      version "2.13.0-M3"
+      sha256 "c600cf90b3fd799ed7249377dac29c2ddab5041b95d263c9c95c15fc3756c6e6"
     end
 
     resource "src" do
-      url "https://github.com/scala/scala/archive/v2.13.0-M2.tar.gz"
-      sha256 "2a5f1b4c1fa5551e36965d0eb001d349cf1a217c1962e780cd3ae7a90e0e996a"
+      url "https://github.com/scala/scala/archive/v2.13.0-M3.tar.gz"
+      version "2.13.0-M3"
+      sha256 "93bc002ac51b02d3f41916d74c2e3c1543d3f092a95117ef50e909fc79e122e8"
     end
   end
 

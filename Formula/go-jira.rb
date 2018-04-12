@@ -1,14 +1,14 @@
 class GoJira < Formula
   desc "Simple jira command-line client in Go"
   homepage "https://github.com/Netflix-Skunkworks/go-jira"
-  url "https://github.com/Netflix-Skunkworks/go-jira/archive/v1.0.14.tar.gz"
-  sha256 "34cb45af19985474b8d9079c1f551f4892bfbe64073a5a8f89333ca3603e4639"
+  url "https://github.com/Netflix-Skunkworks/go-jira/archive/v1.0.16.tar.gz"
+  sha256 "40cb52174a4a5104278152337845907b61501c52e5ed203b4e8cf7a1ebf9ba49"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "146cdcca1cfcf0c950fea209100769aa9832bee22c924cb21f8da1e13433b1f1" => :high_sierra
-    sha256 "f5710f28a79317fcbe98eb3bb6674e78d957811e4517266b09dd3375915dc03f" => :sierra
-    sha256 "3c97af966b4ef4dd2ef1df1f7982120785ecc2ab5b3b58148b2913a0de7e5ad1" => :el_capitan
+    sha256 "222f4cebde8b610bf11e95296560a638e63c10f4d98e62e8d97db1eeea4a6bd1" => :high_sierra
+    sha256 "7d7ae92cfd19ad9232d4d925ba9981e00ea38fc47c84274a5371d970355a1079" => :sierra
+    sha256 "bd66cb22f874fbb7fd1e8fdfbc3c0515e94b36638dc7a5a69a0629b4864e21bb" => :el_capitan
   end
 
   depends_on "go" => :build
@@ -33,7 +33,6 @@ class GoJira < Formula
     expected_templates = %w[comment components create edit issuetypes list view worklog debug]
 
     assert_equal([], expected_templates - files)
-    debug = open(template_dir + "debug")
-    assert_equal("{{ . | toJson}}\n", debug.read)
+    assert_equal("{{ . | toJson}}\n", IO.read("#{template_dir}/debug"))
   end
 end

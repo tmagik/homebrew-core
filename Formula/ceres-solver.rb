@@ -1,19 +1,18 @@
 class CeresSolver < Formula
   desc "C++ library for large-scale optimization"
   homepage "http://ceres-solver.org/"
-  url "http://ceres-solver.org/ceres-solver-1.13.0.tar.gz"
-  sha256 "1df490a197634d3aab0a65687decd362912869c85a61090ff66f073c967a7dcd"
-  revision 4
+  url "http://ceres-solver.org/ceres-solver-1.14.0.tar.gz"
+  sha256 "4744005fc3b902fed886ea418df70690caa8e2ff6b5a90f3dd88a3d291ef8e8e"
   head "https://ceres-solver.googlesource.com/ceres-solver.git"
 
   bottle do
     cellar :any
-    sha256 "f6df97e01cf7ca228bd8c64fcd301b822146670a615e0a3b47876209cf0bb251" => :high_sierra
-    sha256 "fdfbceefc7aea2f89ff72ee1ff6229535a12881997a68aca4f6b983b1c3662f9" => :sierra
-    sha256 "14835cb26577c3385d5f75d37295d758e82c039b954c0aa38c7cf0bb99cc1215" => :el_capitan
+    sha256 "57b5eae9c2ef9234d359cbf97fc47a3068b0a1e46eb83777e9814192d91e711a" => :high_sierra
+    sha256 "9e3b53ba2aa1b27a5cc7d134d6d707882bb82f2072751774afce73d90ea16e9c" => :sierra
+    sha256 "ca6e39f97b1a41ddb3ba7d1135b389825ab68daaf3763fefa7887b59a23317f6" => :el_capitan
   end
 
-  depends_on "cmake" => :run
+  depends_on "cmake"
   depends_on "eigen"
   depends_on "gflags"
   depends_on "glog"

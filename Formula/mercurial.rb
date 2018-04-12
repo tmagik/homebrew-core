@@ -3,19 +3,20 @@
 class Mercurial < Formula
   desc "Scalable distributed version control system"
   homepage "https://mercurial-scm.org/"
-  url "https://mercurial-scm.org/release/mercurial-4.4.2.tar.gz"
-  sha256 "dc2f72caccd6b760226753d48c2f4e8889fe176a6b23ef50775caac55ce28b85"
-  revision 1
+  url "https://mercurial-scm.org/release/mercurial-4.5.3.tar.gz"
+  sha256 "9c4cb257ef1e59e9aba693cc285a6136f7bb4e8300f598ff50ff8b6fc77808fc"
 
   bottle do
-    sha256 "aa8701f010da5025791330887f22f5e6b8a68312dc286bf935af535ef958989f" => :high_sierra
-    sha256 "dabea6811809e3ddc437249373aea7cb1839e02cd8bb7c1a1e7d9cac4890831b" => :sierra
-    sha256 "0312245445bb2f0a5cee0607fbbcce4ccc1040d9a087ff67918da2c145f8827e" => :el_capitan
+    sha256 "bfa7214141279e0221d81c03d2558ac3e0013bcdeb62e353b3fa65389e635950" => :high_sierra
+    sha256 "df975ebf08b4a7b8e6b0e3b6b0cbfa9bf2b2489e8eaeb480729c4b8668f457c2" => :sierra
+    sha256 "0d10b8609d08895a4042f93158a0169145413adfe4855bbb62a22a1716b0a3d7" => :el_capitan
   end
 
-  depends_on "python"
+  depends_on "python@2"
 
   def install
+    ENV.prepend_path "PATH", Formula["python@2"].opt_libexec/"bin"
+
     system "make", "PREFIX=#{prefix}", "install-bin"
 
     # Install chg (see https://www.mercurial-scm.org/wiki/CHg)

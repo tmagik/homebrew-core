@@ -1,20 +1,21 @@
 class Tbb < Formula
   desc "Rich and complete approach to parallelism in C++"
   homepage "https://www.threadingbuildingblocks.org/"
-  url "https://github.com/01org/tbb/archive/2018_U2.tar.gz"
-  version "2018_U2"
-  sha256 "78bb9bae474736d213342f01fe1a6d00c6939d5c75b367e2e43e7bf29a6d8eca"
+  url "https://github.com/01org/tbb/archive/2018_U3.tar.gz"
+  version "2018_U3"
+  sha256 "23793c8645480148e9559df96b386b780f92194c80120acce79fcdaae0d81f45"
+  revision 1
 
   bottle do
-    sha256 "ac31698064d5177e6d72f8f57a8b359b523b4f1cc824d16bdc1ef9c6ed654361" => :high_sierra
-    sha256 "1f200261fcf061bb022503be5cf5e6a69b5c359c64ea475a0ff7698035909d9e" => :sierra
-    sha256 "1b3f01c4baee65f4c321023646cf03ef5cae1aa7dd2ba8b1bfa069bda19c4777" => :el_capitan
+    sha256 "8cbd67c35cacf110d90157d970845b881ae80be2d1c2f5c6498e83dd7c47c620" => :high_sierra
+    sha256 "3a12b35651d80de3db0c34d68d6f9e55d4cdf4315060d0deb2a9c1475edad177" => :sierra
+    sha256 "263e771e491b8b012e82d8f9072df83bf5cdf30d395ed07ca8490532c34abc3c" => :el_capitan
   end
 
   # requires malloc features first introduced in Lion
   # https://github.com/Homebrew/homebrew/issues/32274
   depends_on :macos => :lion
-  depends_on "python" if MacOS.version <= :snow_leopard
+  depends_on "python@2"
   depends_on "swig" => :build
 
   def install

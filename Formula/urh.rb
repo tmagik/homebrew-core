@@ -1,39 +1,40 @@
 class Urh < Formula
   desc "Universal Radio Hacker"
   homepage "https://github.com/jopohl/urh"
-  url "https://files.pythonhosted.org/packages/0a/f7/6a6d5666c01a4d7817198b8051b1215b0e2f03c19f7dff06a0a773bb07c1/urh-1.9.1.tar.gz"
-  sha256 "78b09c44eaa1a175cc25677a916c6390f896f1b78adcc7528991651655182fca"
-  revision 1
+  url "https://files.pythonhosted.org/packages/76/14/f5a44ea32d473f9432c05087b5cab4c77882a18da48c2d258474d0fe7c63/urh-2.0.0.tar.gz"
+  sha256 "b52b6d85a2f5af1fc87603365d6572dd1b68f396b281f7059fe32415f8ea03dd"
+  revision 2
   head "https://github.com/jopohl/urh.git"
 
   bottle do
-    sha256 "802c848f3ae14c1be982c25b56a6dac4638e969fc63964ea05985e6408ba6436" => :high_sierra
-    sha256 "e241715a32d3ae730f0e5bf0803e5e4f9f3f22b00c749ba210066421cf21ec49" => :sierra
-    sha256 "df252b13893993e0b2992ecc013b521b3fb34e9613384d95ad98f17227792c64" => :el_capitan
+    sha256 "a74135ac416c46a23ec7e1734ebbb9ef21420e4b0a78dc82fec96710a4ca058c" => :high_sierra
+    sha256 "ef6181af8760e1a4216e1e36bc17222459f9cfe60dee1c3a4ef4a6e6a07b13af" => :sierra
+    sha256 "67e8c523afb36c18abf688c3de5c3ee2d2c9a81cfd0c5fcf2993a466c86ab1b0" => :el_capitan
   end
 
   option "with-hackrf", "Build with libhackrf support"
 
   depends_on "pkg-config" => :build
 
-  depends_on "python3"
+  depends_on "python"
   depends_on "pyqt"
+  depends_on "zeromq"
 
   depends_on "hackrf" => :optional
 
   resource "numpy" do
-    url "https://files.pythonhosted.org/packages/bf/2d/005e45738ab07a26e621c9c12dc97381f372e06678adf7dc3356a69b5960/numpy-1.13.3.zip"
-    sha256 "36ee86d5adbabc4fa2643a073f93d5504bdfed37a149a3a49f4dde259f35a750"
+    url "https://files.pythonhosted.org/packages/a3/99/74aa456fc740a7e8f733af4e8302d8e61e123367ec660cd89c53a3cd4d70/numpy-1.14.1.zip"
+    sha256 "fa0944650d5d3fb95869eaacd8eedbd2d83610c85e271bd9d3495ffa9bc4dc9c"
   end
 
   resource "psutil" do
-    url "https://files.pythonhosted.org/packages/54/24/aa854703715fa161110daa001afce75d21d1840e9ab5eb28708d6a5058b0/psutil-5.4.2.tar.gz"
-    sha256 "00a1f9ff8d1e035fba7bfdd6977fa8ea7937afdb4477339e5df3dba78194fe11"
+    url "https://files.pythonhosted.org/packages/e2/e1/600326635f97fee89bf8426fef14c5c29f4849c79f68fd79f433d8c1bd96/psutil-5.4.3.tar.gz"
+    sha256 "e2467e9312c2fa191687b89ff4bc2ad8843be4af6fb4dc95a7cc5f7d7a327b18"
   end
 
   resource "pyzmq" do
-    url "https://files.pythonhosted.org/packages/1e/f9/d0675409c11d11e549e3da000901cfaabd848da117390ee00030e14bfdb6/pyzmq-16.0.3.tar.gz"
-    sha256 "8a883824147523c0fe76d247dd58994c1c28ef07f1cc5dde595a4fd1c28f2580"
+    url "https://files.pythonhosted.org/packages/9f/f6/85a33a25128a4a812c3482547e3d458eebdb19ee0b4699f9199cdb2ad731/pyzmq-17.0.0.tar.gz"
+    sha256 "0145ae59139b41f65e047a3a9ed11bbc36e37d5e96c64382fcdff911c4d8c3f0"
   end
 
   def install

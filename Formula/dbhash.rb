@@ -1,15 +1,15 @@
 class Dbhash < Formula
   desc "Computes the SHA1 hash of schema and content of a SQLite database"
   homepage "https://www.sqlite.org/dbhash.html"
-  url "https://www.sqlite.org/2017/sqlite-src-3210000.zip"
-  version "3.21.0"
-  sha256 "8681a34e059b30605f611ac85168ca54edbade50c71468b5882f5abbcd66b94e"
+  url "https://sqlite.org/2018/sqlite-src-3230000.zip"
+  version "3.23.0"
+  sha256 "22422e1d34ecc21af5d374c328c540a3a6e32d7d6cf3c57be8b51b523b98d633"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "db96d6ab7752f0b0452d3973d0b6ac45bba1ea511db51e59df20bb7bef851eb7" => :high_sierra
-    sha256 "36f7f808de9d1eb08231b68db17a2948b78876d4212031906db7a38359695d2a" => :sierra
-    sha256 "578b82fbbb3bf80ebee8c5795e8754c6df451c23a273bda6732179b2f30cf71d" => :el_capitan
+    sha256 "88d5985464a966c18488043902d35b75b5a863c451669c50d66fe4af6b426d94" => :high_sierra
+    sha256 "739f4d154ce2cfffbf7bf3a96c28a340d497993d1ad3652089ced2449cd76b70" => :sierra
+    sha256 "202cd2a412656828938384c20e9a77f4cd87b54de1b36862562f04cdc8d0a717" => :el_capitan
   end
 
   def install

@@ -1,28 +1,35 @@
 class Notmuch < Formula
   desc "Thread-based email index, search, and tagging"
   homepage "https://notmuchmail.org"
-  url "https://notmuchmail.org/releases/notmuch-0.26.tar.gz"
-  sha256 "d3e894ed2ad9d721a442663f07a6f2a241dc98be7cc4af681f16edf88e0d76df"
+  url "https://notmuchmail.org/releases/notmuch-0.26.1.tar.gz"
+  sha256 "d3f7e44f4dd0a75150b73e41737c4923ba94ea2947b9fe585f0aab591bb4a837"
   head "git://notmuchmail.org/git/notmuch"
 
   bottle do
     cellar :any
-    sha256 "4a4c6981dbc9cc1061f30a9e571c729372edc52d235ac3682b6711ff19b2c136" => :high_sierra
-    sha256 "ec47c28caf199263d0c11301b42a29ce2326c3201a12ac20c687412db2c39555" => :sierra
-    sha256 "9fd854188d76d174dbd6d19eea001923403c908f33e11aff98cf135f58eb69a2" => :el_capitan
+    rebuild 1
+    sha256 "1a319af5dd3a42454ccc1bc77a08beb6e1479efc444e741b34346aafdd677297" => :high_sierra
+    sha256 "11155f61ad9941f98e0703a0f51a9b48bfeb567369cf0b4a0c0236f4331a934c" => :sierra
+    sha256 "920c47a612a5a400c54b14eee7d86aa3c4c4c04eb1da8291cc04de221ea92d1e" => :el_capitan
   end
 
-  option "without-python", "Build without python support"
+  option "without-python@2", "Build without python2 support"
 
-  depends_on "pkg-config" => :build
+  deprecated_option "with-python3" => "with-python"
+  deprecated_option "without-python" => "without-python@2"
+
+  depends_on "doxygen" => :build
   depends_on "libgpg-error" => :build
+  depends_on "pkg-config" => :build
+  depends_on "sphinx-doc" => :build
   depends_on "glib"
   depends_on "gmime"
   depends_on "talloc"
   depends_on "xapian"
   depends_on "zlib"
+  depends_on "python@2" => :recommended
   depends_on "emacs" => :optional
-  depends_on "python3" => :optional
+  depends_on "python" => :optional
   depends_on "ruby" => :optional
 
   # Fix SIP issue with python bindings
@@ -31,7 +38,12 @@ class Notmuch < Formula
   patch :DATA
 
   def install
-    args = %W[--prefix=#{prefix}]
+    # configure runs `python -m sphinx.writers.manpage` to detect if
+    # `sphinx-build` will work
+    ENV.prepend_path "PYTHONPATH", Formula["sphinx-doc"].opt_libexec/"vendor/lib/python2.7/site-packages"
+    ENV.prepend_path "PYTHONPATH", Formula["sphinx-doc"].opt_libexec/"lib/python2.7/site-packages"
+
+    args = %W[--prefix=#{prefix} --mandir=#{man}]
 
     if build.with? "emacs"
       ENV.deparallelize # Emacs and parallel builds aren't friends

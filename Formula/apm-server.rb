@@ -1,22 +1,23 @@
 class ApmServer < Formula
   desc "Server for shipping APM metrics to Elasticsearch"
   homepage "https://www.elastic.co/"
-  url "https://github.com/elastic/apm-server/archive/v6.1.2.tar.gz"
-  sha256 "ee9560291b5d22a1ee5f0e5071f94ea3feaed0b41082fe02bf7906500712c7c4"
+  url "https://github.com/elastic/apm-server/archive/v6.2.3.tar.gz"
+  sha256 "04186e8b3138e878352cf5f1350756caf8e973f510896687aff9560945c7a873"
   head "https://github.com/elastic/apm-server.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "39d4fc899dc447aacd30d15f2395a41881c4a7e14f84c35c9d6f918a7a54fe4d" => :high_sierra
-    sha256 "991e184ed54f3ee3dd9897dde52c7512bceaed33f778bbbd6de0d9aa0ecbc637" => :sierra
-    sha256 "1f0094a8cef9cdf4731acee599378276e0074163dd237e01f1c27520e59de771" => :el_capitan
+    sha256 "eef6b08abe500506da842acd3cd0dc2b9efc241f0d9ab8e4219f24852520f989" => :high_sierra
+    sha256 "a22163b63538cd7b8d763eaa3447fdecefb32c6d52d368d16acaa74048962402" => :sierra
+    sha256 "542a2ee5b87727b51c1887b2f8430bc27a21c4fa314e2b9fd919b2d1a10751ff" => :el_capitan
   end
 
   depends_on "go" => :build
+  depends_on "python@2" => :build
 
   resource "virtualenv" do
-    url "https://files.pythonhosted.org/packages/d4/0c/9840c08189e030873387a73b90ada981885010dd9aea134d6de30cd24cb8/virtualenv-15.1.0.tar.gz"
-    sha256 "02f8102c2436bb03b3ee6dede1919d1dac8a427541652e5ec95171ec8adbc93a"
+    url "https://files.pythonhosted.org/packages/b1/72/2d70c5a1de409ceb3a27ff2ec007ecdd5cc52239e7c74990e32af57affe9/virtualenv-15.2.0.tar.gz"
+    sha256 "1d7e241b431e7afce47e77f8843a276f652699d1fa4f93b9d8ce0076fd7b0b54"
   end
 
   def install
@@ -100,7 +101,7 @@ class ApmServer < Formula
 
     begin
       system "curl", "-H", "Content-Type: application/json", "-XPOST", "localhost:#{port}/v1/transactions", "-d",
-             '{"app":{"name":"app1","agent":{"name":"python","version":"1.0"}},' \
+             '{"service":{"name":"app1","agent":{"name":"python","version":"1.0"}},' \
              '"transactions":[{"id":"945254c5-67a5-417e-8a4e-aa29efcbfb79","name":"GET /api/types","type":"request","duration":32.592981,"timestamp":"2017-05-09T15:04:05.999999Z"}]}'
       sleep 1
       s = (testpath/"apm-server/apm-server").read

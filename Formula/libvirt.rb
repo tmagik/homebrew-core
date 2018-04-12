@@ -1,14 +1,14 @@
 class Libvirt < Formula
   desc "C virtualization API"
   homepage "https://www.libvirt.org"
-  url "https://libvirt.org/sources/libvirt-3.10.0.tar.xz"
-  sha256 "dff109cae2cc915b3ed5ba7e460502b85eb9a5058cda4f356d7bb7b1e3196b0e"
+  url "https://libvirt.org/sources/libvirt-4.2.0.tar.xz"
+  sha256 "3a98ea4417811a24d2cf7be776c102919ae6376d28820b153686b018cb8f015b"
   head "https://github.com/libvirt/libvirt.git"
 
   bottle do
-    sha256 "89152559aeaff8bc9668fa77ec1794584ef164f29afdeee62ecba8c89890b875" => :high_sierra
-    sha256 "7f0b2d82ed8b29ae09c51551fcc5c0139a47bf36b01e4d72f1f57c5336ee3e34" => :sierra
-    sha256 "942ce94e3b3c4a55fe13e4423fea5270cb1b9e84787b28237f15226bac987bee" => :el_capitan
+    sha256 "a44a8b431671d2ce47273a8d67a43ce27edf0f5b469aa73fd73651793f1c9336" => :high_sierra
+    sha256 "77054b65b8d524028118325c7bc1d551ab50aa2c3ecc27b9a7190e0e6b93e4b5" => :sierra
+    sha256 "cf61068a5ad8a85656b92c1c7d72466f23b31df472398a1b9b1b803a0a32fabf" => :el_capitan
   end
 
   option "without-libvirtd", "Build only the virsh client and development libraries"

@@ -2,20 +2,20 @@ class Duplicity < Formula
   include Language::Python::Virtualenv
 
   desc "Bandwidth-efficient encrypted backup"
-  homepage "http://www.nongnu.org/duplicity/"
-  url "https://launchpad.net/duplicity/0.7-series/0.7.16/+download/duplicity-0.7.16.tar.gz"
-  sha256 "a8f5e1e77dcc5e03a7d206086b8ef89fa574c59de582ed15db5987c40b842718"
+  homepage "https://launchpad.net/duplicity"
+  url "https://launchpad.net/duplicity/0.7-series/0.7.17/+download/duplicity-0.7.17.tar.gz"
+  sha256 "3724c5f1f839e584e49154ee0ff137e6f3450eedbd7f3886f31d2093001cb04a"
 
   bottle do
     cellar :any
-    sha256 "9396e8167e1c1f5dfc82c50ebf36a93cad3e55212dbebed9dc6f77029cda0c2f" => :high_sierra
-    sha256 "b9e920d9c39b366895a0b4e14bdf227762e67dc5e543a2f8bcbc80ba94ee1b9a" => :sierra
-    sha256 "d133968690a26b1505453048c3721a7040feab4a8a2ba6d3c135a7a5642b0385" => :el_capitan
+    sha256 "ea12102d4633dc67a171a19e397974dbd2c81fbac4fefc0e24328ec7d4003a2d" => :high_sierra
+    sha256 "03287f93389cc2c36859d856b9905835d80374876227cc8d4956638a92436862" => :sierra
+    sha256 "d87a8bb6f95c5206aacef311443ee49bb0aed0752ce5b2a6408641f3f06bd38f" => :el_capitan
   end
 
-  depends_on "python" if MacOS.version <= :snow_leopard
+  depends_on "python@2"
   depends_on "librsync"
-  depends_on "openssl@1.1"
+  depends_on "openssl"
   depends_on "par2" => :optional
   depends_on "gnupg"
 

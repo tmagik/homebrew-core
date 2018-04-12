@@ -1,16 +1,14 @@
-require "language/go"
-
 class MongodbAT34 < Formula
   desc "High-performance, schema-free, document-oriented database"
   homepage "https://www.mongodb.org/"
 
-  url "https://fastdl.mongodb.org/src/mongodb-src-r3.4.10.tar.gz"
-  sha256 "443800ca4f52fa613b29052f5f76abc0ccc477451b55f3665b61819f28ace2f3"
+  url "https://fastdl.mongodb.org/src/mongodb-src-r3.4.14.tar.gz"
+  sha256 "bbed7821560cc3c9e3215708e34243e20d490891b08a39f216188398ede9d790"
 
   bottle do
-    sha256 "9a35ae695c73c1a07dda1ba6ab694734fa774b408a3117c0907ccb7efa710372" => :high_sierra
-    sha256 "1f1ebf5abfa9136a5dccc38494537463b56dd22a7b8e0be2a4316e05adbc3894" => :sierra
-    sha256 "6740c055e5d1d19a99e09840b85dad5443386f02d3fb63c7a7f71a12934ce76c" => :el_capitan
+    sha256 "a3a784e75234eb5651a4b1bf3a4cef4ad7f4df70f75d6ab827930d31c9b1d2f6" => :high_sierra
+    sha256 "13b9f0745052a6a1aef4f624c810c05c16817e966ae564a9bc7b0cb55ff4e3d4" => :sierra
+    sha256 "83c48d38953e20c8838b5b3471d9f93dccae76328e2b2a8e25002c8f3ade582a" => :el_capitan
   end
 
   keg_only :versioned_formula
@@ -24,13 +22,6 @@ class MongodbAT34 < Formula
   depends_on "scons" => :build
   depends_on "openssl" => :recommended
 
-  go_resource "github.com/mongodb/mongo-tools" do
-    url "https://github.com/mongodb/mongo-tools.git",
-        :tag => "r3.4.10",
-        :revision => "4f093ae71cdb4c6a6e9de7cd1dc67ea4405f0013",
-        :shallow => false
-  end
-
   needs :cxx11
 
   def install
@@ -42,9 +33,13 @@ class MongodbAT34 < Formula
 
     # New Go tools have their own build script but the server scons "install" target is still
     # responsible for installing them.
-    Language::Go.stage_deps resources, buildpath/"src"
 
-    cd "src/github.com/mongodb/mongo-tools" do
+    cd "src/mongo/gotools" do
+      inreplace "build.sh" do |s|
+        s.gsub! "$(git describe)", version.to_s
+        s.gsub! "$(git rev-parse HEAD)", "homebrew"
+      end
+
       args = %w[]
 
       if build.with? "openssl"
@@ -58,8 +53,7 @@ class MongodbAT34 < Formula
       system "./build.sh", *args
     end
 
-    mkdir "src/mongo-tools"
-    cp Dir["src/github.com/mongodb/mongo-tools/bin/*"], "src/mongo-tools/"
+    (buildpath/"src/mongo-tools").install Dir["src/mongo/gotools/bin/*"]
 
     args = %W[
       --prefix=#{prefix}

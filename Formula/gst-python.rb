@@ -1,31 +1,34 @@
 class GstPython < Formula
   desc "Python overrides for gobject-introspection-based pygst bindings"
   homepage "https://gstreamer.freedesktop.org/modules/gst-python.html"
-  url "https://gstreamer.freedesktop.org/src/gst-python/gst-python-1.12.4.tar.xz"
-  sha256 "20ce6af6615c9a440c1928c31259a78226516d06bf1a65f888c6d109826fa3ea"
+  url "https://gstreamer.freedesktop.org/src/gst-python/gst-python-1.14.0.tar.xz"
+  sha256 "e0b98111150aa3fcdeb6e228cd770995fbdaa8586fc02ec9b3273d4ae83399e6"
+  revision 2
 
   bottle do
-    sha256 "37c0332ed18ee5d58d9db56ff22c19fb0e3cd8739c09c871794f693e0f8b5e7e" => :high_sierra
-    sha256 "6598a869b0f5c14ec998d76765bce824770a277fa2a347a3cfff7057239e7145" => :sierra
-    sha256 "bfc462ac51775a104b04521ed05aa12ddbd1dd9636c44d1172b80c2f0098b023" => :el_capitan
+    sha256 "9544d0be8252c0199884f7a327710bf891369ffe5ab153493f92623bcad5a870" => :high_sierra
+    sha256 "b0adaefeaadac19768117c34698d7ce676296820505cfdee83d4d0cc02e4ce10" => :sierra
+    sha256 "97edb68319984a8383a4c68ae617aa275f9bc3268c321742c13eb62eac163f88" => :el_capitan
   end
 
-  option "without-python", "Build without python 2 support"
+  option "without-python", "Build without python 3 support"
+  option "with-python@2", "Build with python 2 support"
 
-  depends_on "python3" => :optional
   depends_on "gst-plugins-base"
+  depends_on "python@2" => :optional
+  depends_on "python" => :recommended
 
   depends_on "pygobject3" if build.with? "python"
-  depends_on "pygobject3" => "with-python3" if build.with? "python3"
+  depends_on "pygobject3" => "with-python@2" if build.with? "python@2"
 
   link_overwrite "lib/python2.7/site-packages/gi/overrides"
 
   def install
-    if build.with?("python") && build.with?("python3")
+    if build.with?("python") && build.with?("python@2")
       # Upstream does not support having both Python2 and Python3 versions
       # of the plugin installed because apparently you can load only one
       # per process, so GStreamer does not know which to load.
-      odie "Options --with-python and --with-python3 are mutually exclusive."
+      odie "You must pass both --without-python and --with-python@2 for python 2 support"
     end
 
     Language::Python.each_python(build) do |python, version|

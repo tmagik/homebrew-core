@@ -1,14 +1,15 @@
 class Global < Formula
   desc "Source code tag system"
   homepage "https://www.gnu.org/software/global/"
-  url "https://ftp.gnu.org/gnu/global/global-6.6.1.tar.gz"
-  mirror "https://ftpmirror.gnu.org/global/global-6.6.1.tar.gz"
-  sha256 "943dc440382d82454786bfd92b86946961cb2196039eceffd7eb551ac83759e4"
+  url "https://ftp.gnu.org/gnu/global/global-6.6.2.tar.gz"
+  mirror "https://ftpmirror.gnu.org/global/global-6.6.2.tar.gz"
+  sha256 "43c64711301c2caf40dc56d7b91dd03d2b882a31fa31812bf20de0c8fb2e717f"
+  revision 1
 
   bottle do
-    sha256 "bf6a553cc7d82aa76cf90ec93113cd3e9d225e40d71da8f65a8245d890fc4424" => :high_sierra
-    sha256 "c9e90b8827b78a1dd70e989a831d2e41b84bdc1ddf024b6948aba446427c754c" => :sierra
-    sha256 "36b7a41122055d50b97314437bce0c1356bc4bcaa88aa0bf9a9d7a4a8b636dc3" => :el_capitan
+    sha256 "edda8dcf4e58e9fde59fa4aa144581b73f61c1bf4ff2357c2bb8d5c4814eaf56" => :high_sierra
+    sha256 "e16018befb94709f6bbdca2e7c6b1e2314b6aa9bd0d0ff98070a63a0d0be6bf8" => :sierra
+    sha256 "b7369855f9cbc9f4443e4f0ff2e180fc3dcf9f16579165b189c848d04c75820c" => :el_capitan
   end
 
   head do
@@ -79,7 +80,7 @@ class Global < Formula
       void cfunc (void) {int cvar = c2func(); }")
     EOS
     if build.with?("pygments") || build.with?("ctags")
-      (testpath/"test.py").write <<-EOS
+      (testpath/"test.py").write <<~EOS
         def py2func ():
              return 0
         def pyfunc ():

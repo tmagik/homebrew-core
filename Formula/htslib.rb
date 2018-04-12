@@ -1,15 +1,14 @@
 class Htslib < Formula
   desc "C library for high-throughput sequencing data formats"
-  homepage "http://www.htslib.org/"
-  url "https://github.com/samtools/htslib/releases/download/1.6/htslib-1.6.tar.bz2"
-  sha256 "9588be8be0c2390a87b7952d644e7a88bead2991b3468371347965f2e0504ccb"
-  revision 1
+  homepage "https://www.htslib.org/"
+  url "https://github.com/samtools/htslib/releases/download/1.8/htslib-1.8.tar.bz2"
+  sha256 "c0ef1eec954a98cc708e9f99f6037db85db45670b52b6ab37abcc89b6c057ca1"
 
   bottle do
     cellar :any
-    sha256 "15c9481d899d77e7d7eeb5c2d2cac09930fef9b28409ec9ea3ab57ec9cc70e87" => :high_sierra
-    sha256 "35a9e6c69ed762ee9d5ba2966a484f3a13557dbf23ef897fee6ba7d6f9db5659" => :sierra
-    sha256 "5fe4d1a962dd98c9c0497fa88da33f493fdec868a25e531def7c5506424571d0" => :el_capitan
+    sha256 "9bbd0f83d2f5e7ea2d9889bfabb6f47aba7ea5d9dfb9070f0566bd7bba9e4f32" => :high_sierra
+    sha256 "5ec146ac61a5e7cff8c8f71f3a4ddf64871d4dd3dcfd043e4b5630292abe39fa" => :sierra
+    sha256 "b122c09b37bf213d9eca36ae852011af1c56210d755dc44103ca11882b4a9b7d" => :el_capitan
   end
 
   depends_on "xz"

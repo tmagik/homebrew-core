@@ -3,25 +3,28 @@ class Protobuf < Formula
   homepage "https://github.com/google/protobuf/"
   url "https://github.com/google/protobuf/archive/v3.5.1.tar.gz"
   sha256 "826425182ee43990731217b917c5c3ea7190cfda141af4869e6d4ad9085a740f"
+  revision 1
   head "https://github.com/google/protobuf.git"
 
   bottle do
-    sha256 "1220bdfc9fea448df265b0d6dc957301cfb6e7f750fbcf7cb285e959fe0bde74" => :high_sierra
-    sha256 "fdb2cce4d549df62f359c42cc070ed2dbd948ae2bde878ab39f0504796df215b" => :sierra
-    sha256 "0f4ba8bf3fe29b96637dc653cfa7e031aee79dd6f9b9b929307fd45f31a5afc5" => :el_capitan
+    sha256 "89d3e4a62799951c2a908f102ed305691f0fd0141b27c4337ef9bfe64840d8a9" => :high_sierra
+    sha256 "917abbf787422c4702b3104f5f6fb77f48dae573284f5aa7a9a2ef53793e5834" => :sierra
+    sha256 "5a0956aa0639b5943bee597942e7c0ab1439f2db6e322423a72a5ad68e28af82" => :el_capitan
   end
 
   # this will double the build time approximately if enabled
   option "with-test", "Run build-time check"
-  option "without-python", "Build without python support"
+  option "without-python@2", "Build without python2 support"
 
   deprecated_option "with-check" => "with-test"
+  deprecated_option "without-python" => "with-python@2"
+  deprecated_option "with-python3" => "with-python"
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build
-  depends_on "python" => :recommended if MacOS.version <= :snow_leopard
-  depends_on "python3" => :optional
+  depends_on "python@2" => :recommended
+  depends_on "python" => :optional
 
   resource "six" do
     url "https://files.pythonhosted.org/packages/16/d8/bc6316cf98419719bd59c91742194c111b6f2e85abac88e496adefaf7afe/six-1.11.0.tar.gz"
@@ -93,7 +96,7 @@ class Protobuf < Formula
     EOS
     (testpath/"test.proto").write testdata
     system bin/"protoc", "test.proto", "--cpp_out=."
-    system "python", "-c", "import google.protobuf" if build.with? "python"
-    system "python3", "-c", "import google.protobuf" if build.with? "python3"
+    system "python2.7", "-c", "import google.protobuf" if build.with? "python@2"
+    system "python3", "-c", "import google.protobuf" if build.with? "python"
   end
 end

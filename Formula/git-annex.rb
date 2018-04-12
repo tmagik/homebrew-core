@@ -5,20 +5,20 @@ class GitAnnex < Formula
 
   desc "Manage files with git without checking in file contents"
   homepage "https://git-annex.branchable.com/"
-  url "https://hackage.haskell.org/package/git-annex-6.20180112/git-annex-6.20180112.tar.gz"
-  sha256 "bc37e98f99f6afd06f50fddc4cf42ebcb4002a7daf4a78a5724aec0f013ac218"
+  url "https://hackage.haskell.org/package/git-annex-6.20180409/git-annex-6.20180409.tar.gz"
+  sha256 "0c2df62effeb1a3e7b06cc1e3fd19378d0ad25f03795963f1b530cd207f49c15"
   head "git://git-annex.branchable.com/"
 
   bottle do
-    sha256 "d4b3382e1e5943066772b19511b9677dc77fb9f7e7fad969939db866e5d2e102" => :high_sierra
-    sha256 "ad1d3d71360d69cde1bf0173a51ff0f5772b1cebb1ac9978b59e45648f3f5618" => :sierra
-    sha256 "5cb4c93f79d13fff0acdbbec17d8475a6cf7c5a115d0a7f2f7e45af1ec75cc6f" => :el_capitan
+    sha256 "8a8fafff869464e739e3c8bcb5be94e2354b4c0d0a2f9a0e8fbbae2cec0b19a3" => :high_sierra
+    sha256 "e90bf7bff2181dfefba94c05042b4b15a77b1aa0c4b3144d2436c80f68675b74" => :sierra
+    sha256 "636a7583cc884b75c74f870806872f4c233cf70bb30ca064d476b39d307bf260" => :el_capitan
   end
 
   option "with-git-union-merge", "Build the git-union-merge tool"
 
   depends_on "cabal-install" => :build
-  depends_on "ghc" => :build
+  depends_on "ghc@8.2" => :build
   depends_on "pkg-config" => :build
   depends_on "gsasl"
   depends_on "libmagic"
@@ -26,7 +26,9 @@ class GitAnnex < Formula
   depends_on "xdot" => :recommended
 
   def install
-    install_cabal_package :using => ["alex", "happy", "c2hs"],
+    # Reported 28 Feb 2018 to aws upstream https://github.com/aristidb/aws/issues/244
+    install_cabal_package "--constraint", "http-conduit<2.3",
+                          :using => ["alex", "happy", "c2hs"],
                           :flags => ["s3", "webapp"] do
       # this can be made the default behavior again once git-union-merge builds properly when bottling
       if build.with? "git-union-merge"

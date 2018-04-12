@@ -2,19 +2,18 @@ class Gcc < Formula
   desc "GNU compiler collection"
   homepage "https://gcc.gnu.org/"
   revision 1
-
   head "svn://gcc.gnu.org/svn/gcc/trunk"
 
   stable do
-    url "https://ftp.gnu.org/gnu/gcc/gcc-7.2.0/gcc-7.2.0.tar.xz"
-    mirror "https://ftpmirror.gnu.org/gcc/gcc-7.2.0/gcc-7.2.0.tar.xz"
-    sha256 "1cf7adf8ff4b5aa49041c8734bbcf1ad18cc4c94d0029aae0f4e48841088479a"
+    url "https://ftp.gnu.org/gnu/gcc/gcc-7.3.0/gcc-7.3.0.tar.xz"
+    mirror "https://ftpmirror.gnu.org/gcc/gcc-7.3.0/gcc-7.3.0.tar.xz"
+    sha256 "832ca6ae04636adbb430e865a1451adf6979ab44ca1c8374f61fba65645ce15c"
   end
 
   bottle do
-    sha256 "7961743f198120b68dac549268a380485e28e23347f72bddfc5dafab405a532c" => :high_sierra
-    sha256 "946d376af4da1e6db59cae92f85ad44fac19f5c259a0b9121a3ad3ac2578db1b" => :sierra
-    sha256 "0a25dd61dc7b1521262b3769b723cc66d6cf61105113545eea673a55041b2447" => :el_capitan
+    sha256 "e28abdcd4b1eca7b8bdfc76779e8d6343eb11d8fc4e9c523f03c3c1c887aac2a" => :high_sierra
+    sha256 "eef4c6b68313e913b3c71329575699e960a384044b12a76fd880a500fb8dbf1c" => :sierra
+    sha256 "a2a77d7caeda7cb6dcacebc2f5113f7a8a3579a146b3a9b539f060409198bba1" => :el_capitan
   end
 
   option "with-jit", "Build just-in-time compiler"
@@ -47,21 +46,16 @@ class Gcc < Formula
   # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64089
   # https://github.com/Homebrew/homebrew-core/issues/1872#issuecomment-225625332
   # https://github.com/Homebrew/homebrew-core/issues/1872#issuecomment-225626490
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/e9e0ee09389a54cc4c8fe1c24ebca3cd765ed0ba/gcc/6.1.0-jit.patch"
-    sha256 "863957f90a934ee8f89707980473769cff47ca0663c3906992da6afb242fb220"
-  end
-
-  # Use -headerpad_max_install_names in the build,
-  # otherwise lto1 load commands cannot be edited on El Capitan
-  if MacOS.version == :el_capitan
+  # Now fixed on GCC trunk for GCC 8, may backported to other branches
+  unless build.head?
     patch do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/32cf103/gcc/7.1.0-headerpad.patch"
-      sha256 "dd884134e49ae552b51085116e437eafa63460b57ce84252bfe7a69df8401640"
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/e9e0ee09389a54cc4c8fe1c24ebca3cd765ed0ba/gcc/6.1.0-jit.patch"
+      sha256 "863957f90a934ee8f89707980473769cff47ca0663c3906992da6afb242fb220"
     end
   end
 
   # Fix parallel build on APFS filesystem
+  # Remove for 7.4.0 and later
   # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81797
   if MacOS.version >= :high_sierra
     patch do
@@ -118,7 +112,15 @@ class Gcc < Formula
       end
 
       system "../configure", *args
-      system "make"
+
+      make_args = []
+      # Use -headerpad_max_install_names in the build,
+      # otherwise lto1 load commands cannot be edited on El Capitan
+      if MacOS.version == :el_capitan
+        make_args << "BOOT_LDFLAGS=-Wl,-headerpad_max_install_names"
+      end
+
+      system "make", *make_args
       system "make", "install"
 
       bin.install_symlink bin/"gfortran-#{version_suffix}" => "gfortran"

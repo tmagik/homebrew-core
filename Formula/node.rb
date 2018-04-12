@@ -1,14 +1,14 @@
 class Node < Formula
   desc "Platform built on V8 to build network applications"
   homepage "https://nodejs.org/"
-  url "https://nodejs.org/dist/v9.4.0/node-v9.4.0.tar.xz"
-  sha256 "7503e1f0f81288ff6e56009c0f399c0b5ebfe6f446734c5beb2d45393b21b20c"
+  url "https://nodejs.org/dist/v9.11.1/node-v9.11.1.tar.xz"
+  sha256 "23dc3d133924f5c7453c479d5eceb3b6af932415cb67d99798c313573d9b9d4c"
   head "https://github.com/nodejs/node.git"
 
   bottle do
-    sha256 "85d0f5b7dc76cda0779083054c8eb701f28512f24b05904360c1b2c135a5e1a4" => :high_sierra
-    sha256 "417a29cc04f42aa957c48f2ed071962c5f0679854c35c356b9a03bec8f645023" => :sierra
-    sha256 "a65d63a83338d6d862b255f99c5c1c986b5081c34cd2c6b94b199c3c7b6cdfd8" => :el_capitan
+    sha256 "a4c2d90a60930aa6e2cff330a81d8cec3636cdd9fc002ce79da30540499052d2" => :high_sierra
+    sha256 "0aae3fdf9ac8d330b536671ac4e9b20cc88f1eeeee6f8432e64e141c3b472af0" => :sierra
+    sha256 "f6af24d8ed4594db47b3c9ed4c525c524a7798101c4b2ad122164516e1a6ef7f" => :el_capitan
   end
 
   option "with-debug", "Build with debugger hooks"
@@ -19,7 +19,7 @@ class Node < Formula
 
   deprecated_option "enable-debug" => "with-debug"
 
-  depends_on "python" => :build if MacOS.version <= :snow_leopard
+  depends_on "python@2" => :build
   depends_on "pkg-config" => :build
   depends_on "icu4c" => :recommended
   depends_on "openssl" => :optional
@@ -100,9 +100,7 @@ class Node < Formula
       cp Dir[libexec/"lib/node_modules/npm/man/#{man}/{npm,package.json,npx}*"], HOMEBREW_PREFIX/"share/man/#{man}"
     end
 
-    npm_root = node_modules/"npm"
-    npmrc = npm_root/"npmrc"
-    npmrc.atomic_write("prefix = #{HOMEBREW_PREFIX}\n")
+    (node_modules/"npm/npmrc").atomic_write("prefix = #{HOMEBREW_PREFIX}\n")
   end
 
   def caveats

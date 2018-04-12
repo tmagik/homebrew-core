@@ -5,14 +5,14 @@ class Pandoc < Formula
 
   desc "Swiss-army knife of markup format conversion"
   homepage "https://pandoc.org/"
-  url "https://hackage.haskell.org/package/pandoc-2.1/pandoc-2.1.tar.gz"
-  sha256 "c2bbfacb3a15716353b63fd719e0041985b56499f40323d5c9ce9c81165a4aa4"
+  url "https://hackage.haskell.org/package/pandoc-2.1.3/pandoc-2.1.3.tar.gz"
+  sha256 "4e0e9a891293f71a0d1309bbc5736e27601761888d9785ee19d8a4649b047008"
   head "https://github.com/jgm/pandoc.git"
 
   bottle do
-    sha256 "e307fb584287e2022b53d0d4b59d0e9dff88177a8004c33fa77e97e945b5a506" => :high_sierra
-    sha256 "0387e959bed5529a2ba830497eff8bdc10a3b3e8254b7884a55f2cff3dc1715d" => :sierra
-    sha256 "4cd8cd2538c1f0ad176642fb3d65af30709acdef3190514529ac4097e84715a7" => :el_capitan
+    sha256 "3ecb5b28f384bd99a5d6d36bc26b385f2253fc78ae4ae3ba51c1dba45602563f" => :high_sierra
+    sha256 "24b9663a1262cecacae23c409b08147f4eb846915271a37f4d4ad9ecc102c6d7" => :sierra
+    sha256 "06fe015a2c8c43a667e4e796135241eaa2984a012044d2934cac30465b95887b" => :el_capitan
   end
 
   depends_on "cabal-install" => :build

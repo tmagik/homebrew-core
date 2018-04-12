@@ -1,16 +1,15 @@
 class Fabio < Formula
   desc "Zero-conf load balancing HTTP(S) router"
   homepage "https://github.com/fabiolb/fabio"
-  url "https://github.com/fabiolb/fabio/archive/v1.5.6.tar.gz"
-  sha256 "178764c8cba2298370166984a13f630a938c51ed8e627e24426538d7af2f3f3e"
+  url "https://github.com/fabiolb/fabio/archive/v1.5.8.tar.gz"
+  sha256 "3771bb92f5542d48b90b13407cc6c0c1aa9bed2c169daa34921a2aa75c4be22f"
   head "https://github.com/fabiolb/fabio.git"
-  revision 1
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "066b27c7f2cb285cd864632817cf614ea4c07a9f69c6bcb61034013189056a64" => :high_sierra
-    sha256 "cd911cd0490c4f5bf4a4241bfd61d783c6317ffe1972131e3b4cd0b769f78aff" => :sierra
-    sha256 "6c4581af8078e11eec3a1832729d45b77bab9fd8a14f18c323b7b131022eeea6" => :el_capitan
+    sha256 "e3992e6f1134682772d9b97348927ce1db4474da75945e2aec39a1ce0cc5ed79" => :high_sierra
+    sha256 "e6a469390fbad94d412e9ac1622c28d750aa190b2dec00c0137b061943dde2ad" => :sierra
+    sha256 "f660aaed1a2a7c164238feae3008555873c9b50baec9a9d0613a0c0f3a489a6a" => :el_capitan
   end
 
   depends_on "go" => :build
@@ -34,16 +33,12 @@ class Fabio < Formula
     FABIO_DEFAULT_PORT = 9999
     LOCALHOST_IP = "127.0.0.1".freeze
 
-    def port_open?(ip, port, seconds = 1)
+    def port_open?(ip_address, port, seconds = 1)
       Timeout.timeout(seconds) do
-        begin
-          TCPSocket.new(ip, port).close
-          true
-        rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
-          false
-        end
+        TCPSocket.new(ip_address, port).close
       end
-    rescue Timeout::Error
+      true
+    rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH, Timeout::Error
       false
     end
 

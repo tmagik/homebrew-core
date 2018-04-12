@@ -1,14 +1,15 @@
 class Bitcoin < Formula
   desc "Decentralized, peer to peer payment network"
   homepage "https://bitcoin.org/"
-  url "https://bitcoin.org/bin/bitcoin-core-0.15.1/bitcoin-0.15.1.tar.gz"
-  sha256 "34de2dbe058c1f8b6464494468ebe2ff0422614203d292da1c6458d6f87342b4"
+  url "https://bitcoin.org/bin/bitcoin-core-0.16.0/bitcoin-0.16.0.tar.gz"
+  sha256 "8cbec0397d932cab7297a8c23c918392f6eebd410646b4b954787de9f4a3ee40"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "e0900bda0b5cca8dfefabda7e0cd41fedc4736e63a796e5ea0652936d8c22f38" => :high_sierra
-    sha256 "7c8f5d953c3de4dc48f3928a29ab2fc405ab0d459d1b4038af6060f5382d835e" => :sierra
-    sha256 "9b41218716c3b58491793303e5a877f5b83ed0051257d6970341e087536e428e" => :el_capitan
+    sha256 "bbd86f38b84ca18e6470ae36145f660730271805e5923e1ea3a0a1f3f86ae097" => :high_sierra
+    sha256 "e084aebac07bce3442149a090214ca15374018ec968fdfcb76138faca3d0aad2" => :sierra
+    sha256 "e5c77b15e1e379df159ad6718f05385ac51e483ca40ded58036de4656d58109b" => :el_capitan
   end
 
   head do
@@ -25,6 +26,7 @@ class Bitcoin < Formula
   depends_on "libevent"
   depends_on "miniupnpc"
   depends_on "openssl"
+  depends_on "zeromq"
 
   needs :cxx11
 
@@ -40,6 +42,7 @@ class Bitcoin < Formula
                           "--with-boost-libdir=#{Formula["boost"].opt_lib}",
                           "--prefix=#{prefix}"
     system "make", "install"
+    pkgshare.install "share/rpcauth"
   end
 
   plist_options :manual => "bitcoind"

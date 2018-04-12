@@ -3,15 +3,18 @@ class Vtk < Formula
   homepage "https://www.vtk.org/"
   url "https://www.vtk.org/files/release/8.1/VTK-8.1.0.tar.gz"
   sha256 "6e269f07b64fb13774f5925161fb4e1f379f4e6a0131c8408c555f6b58ef3cb7"
+  revision 1
   head "https://github.com/Kitware/VTK.git"
 
   bottle do
-    sha256 "bd0c1cacabb157928251455e38dff513fb9ea68865ddef7c623e91cb20722713" => :high_sierra
-    sha256 "a4eb2f81607d7c9ab1643cbf8b07607cb2b3ac62033c875f3488c642103cdc06" => :sierra
-    sha256 "9e8ab70c3e26b72de63bda9bead81582876c2b2830ff1bf9f2808dc9c2960b7c" => :el_capitan
+    sha256 "491015b614d28cd9b9a60fc7150553451bdb58dbc9df870e26672360d8636db6" => :high_sierra
+    sha256 "f4f05ff2088b6ab12b8eb40c685e9cb1f3f375ae16d84c269783cedd786e3250" => :sierra
+    sha256 "7c874c41cebc5b6d318e30b2ae072a2de5496def96273af90dbabc06f486d009" => :el_capitan
   end
 
-  option "without-python", "Build without python2 support"
+  option "without-python@2", "Build without python2 support"
+
+  deprecated_option "without-python" => "without-python@2"
 
   depends_on "cmake" => :build
   depends_on "boost"
@@ -21,8 +24,8 @@ class Vtk < Formula
   depends_on "libpng"
   depends_on "libtiff"
   depends_on "netcdf"
-  depends_on "python" => :recommended if MacOS.version <= :snow_leopard
-  depends_on "python3" => :optional
+  depends_on "python@2" => :recommended
+  depends_on "python" => :optional
   depends_on "qt" => :optional
   depends_on "pyqt" if build.with? "qt"
 
@@ -58,12 +61,12 @@ class Vtk < Formula
     end
 
     mkdir "build" do
-      if build.with?("python3") && build.with?("python")
+      if build.with?("python") && build.with?("python@2")
         # VTK Does not support building both python 2 and 3 versions
         odie "VTK: Does not support building both python 2 and 3 wrappers"
-      elsif build.with?("python") || build.with?("python3")
-        python_executable = `which python`.strip if build.with? "python"
-        python_executable = `which python3`.strip if build.with? "python3"
+      elsif build.with?("python") || build.with?("python@2")
+        python_executable = `which python3`.strip if build.with? "python"
+        python_executable = `which python2.7`.strip if build.with? "python@2"
 
         python_prefix = `#{python_executable} -c 'import sys;print(sys.prefix)'`.chomp
         python_include = `#{python_executable} -c 'from distutils import sysconfig;print(sysconfig.get_python_inc(True))'`.chomp
@@ -111,7 +114,7 @@ class Vtk < Formula
     vtk_include = Dir[opt_include/"vtk-*"].first
     major, minor = vtk_include.match(/.*-(.*)$/)[1].split(".")
 
-    (testpath/"version.cpp").write <<-EOS
+    (testpath/"version.cpp").write <<~EOS
       #include <vtkVersion.h>
       #include <assert.h>
       int main(int, char *[]) {

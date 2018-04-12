@@ -2,15 +2,14 @@ class Braid < Formula
   desc "Simple tool to help track vendor branches in a Git repository"
   homepage "https://cristibalan.github.io/braid/"
   url "https://github.com/cristibalan/braid.git",
-      :tag => "v1.0.22",
-      :revision => "3339d2cce298bec80152223ef782f2ad45e881ec"
-  revision 1
+      :tag => "v1.1.2",
+      :revision => "4a7eea721fd9c841e305b19ebd6e8c7006c52f53"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "e1461328846b46a5b9d838cf4df45ee7a81c28e0179fceb1f07d5bd22c4aed6a" => :high_sierra
-    sha256 "40af75008526d06a3e8c68b1005a2eaac1f87181bf4121dd9c1b5c3b7ff0d3ea" => :sierra
-    sha256 "f0f510eabce23bf2267c01531c50596ac523b61087c739170415335aa0dacbf1" => :el_capitan
+    sha256 "164bd10a44ce5e3c10f443dbb392e991f5e4512532f1a6c95e986a86376a3b00" => :high_sierra
+    sha256 "26751a08ef6692049c7b8d5218b579f40e4e137ae208d9e802a0c26803afd6f7" => :sierra
+    sha256 "1d5bf33cf4116008494a62b741d4d01c6c406d68a56617d1f217606a6d87024d" => :el_capitan
   end
 
   depends_on "ruby" if MacOS.version <= :sierra

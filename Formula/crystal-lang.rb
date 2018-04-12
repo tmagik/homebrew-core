@@ -4,8 +4,8 @@ class CrystalLang < Formula
   revision 1
 
   stable do
-    url "https://github.com/crystal-lang/crystal/archive/0.24.1.tar.gz"
-    sha256 "4999a4d2a9ffc7bfbea8351b97057c3a135c2091cbd518e5c22ea7f5392b67d8"
+    url "https://github.com/crystal-lang/crystal/archive/0.24.2.tar.gz"
+    sha256 "de50a455a509f4f80025eb8773818859ad6664a79f5f0fafecdd87ff5ccef6d0"
 
     resource "shards" do
       url "https://github.com/crystal-lang/shards/archive/v0.7.2.tar.gz"
@@ -14,9 +14,9 @@ class CrystalLang < Formula
   end
 
   bottle do
-    sha256 "fd9e9c2cd01b52a27b85421bd00c2d11fb27bb24b16498d409b1abd666d17ef6" => :high_sierra
-    sha256 "6b76c04f8f6f036b3f3bf4909f73590d6e13251fca1e6a0f3941abc2fbe07686" => :sierra
-    sha256 "c01126afd64bcd1c59e9a6595f2aa4befdcd235a320f87a0dacc3db3813dbfe6" => :el_capitan
+    sha256 "dee28ba7dd3e928736b6cac675e18baad1e6124cd70153aed3438399e85566cf" => :high_sierra
+    sha256 "202fd9729a13992f855507ec85cf18850b286f694161872f846b18ee2a1eaef9" => :sierra
+    sha256 "4d972d8e22dd8d1679ea910e50d3efc5e19350f0554837c25f8daed857da78dd" => :el_capitan
   end
 
   head do
@@ -34,15 +34,15 @@ class CrystalLang < Formula
   depends_on "libatomic_ops" => :build # for building bdw-gc
   depends_on "libevent"
   depends_on "bdw-gc"
-  depends_on "llvm"
+  depends_on "llvm@5"
   depends_on "pcre"
   depends_on "gmp" # std uses it but it's not linked
   depends_on "libyaml" if build.with? "shards"
 
   resource "boot" do
-    url "https://github.com/crystal-lang/crystal/releases/download/0.23.1/crystal-0.23.1-3-darwin-x86_64.tar.gz"
-    version "0.23.1"
-    sha256 "d3f964ebfc5cd48fad73ab2484ea2a00268812276293dd0f7e9c7d184c8aad8a"
+    url "https://github.com/crystal-lang/crystal/releases/download/v0.24.1/crystal-0.24.1-2-darwin-x86_64.tar.gz"
+    version "0.24.1"
+    sha256 "2be256462f4388cd3bb14b1378ef94d668ab9d870944454e828b4145155428a0"
   end
 
   def install

@@ -1,14 +1,14 @@
 class Freeciv < Formula
   desc "Free and Open Source empire-building strategy game"
   homepage "https://freeciv.wikia.com/"
-  url "https://downloads.sourceforge.net/project/freeciv/Freeciv%202.5/2.5.9/freeciv-2.5.9.tar.bz2"
-  sha256 "b83c73585ae80898b27379984f936591b51422c9caccb94880fa16030c975928"
+  url "https://downloads.sourceforge.net/project/freeciv/Freeciv%202.5/2.5.11/freeciv-2.5.11.tar.bz2"
+  sha256 "4c9c526952fe977cb4b302b8ccf75798fd066c6dde670f72f677fe4964259aad"
+  revision 1
 
   bottle do
-    sha256 "ecdb5648100114a60080b3420e876fd8d164f08077a58d858f900b5454a613a9" => :high_sierra
-    sha256 "be3dcbdc6072c9c5c374340c96b21659c012adaf85901096424889936c23e7fe" => :sierra
-    sha256 "c8a9e03991705f4edc0c8214cb2bcde05dbc1c5ca83b716db266e3a48c2f6e30" => :el_capitan
-    sha256 "1148d9d5c8893eda436a3fc619a355a89be56b885b0fb75e1ab59d3c250c5477" => :yosemite
+    sha256 "b054ce3c05e877006cf79b4c99cd2b63dfc8ce0f68c9d70c2f3ab2d874d6722e" => :high_sierra
+    sha256 "5c2378c9054dee7927d0e14970a95c58aa9919e7ae0d525057f99439ab524539" => :sierra
+    sha256 "1d3e7934bc8cdd6448251cdde65b8e29a53c1923a952ce2cc5fc04418170ddc3" => :el_capitan
   end
 
   head do

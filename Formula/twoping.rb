@@ -3,17 +3,17 @@ class Twoping < Formula
   homepage "https://www.finnie.org/software/2ping/"
   url "https://www.finnie.org/software/2ping/2ping-4.1.tar.gz"
   sha256 "85331ae57f445bc8895ba4e61da4c7300b67fde55642f5e42ea02f2daf07b1ed"
-  revision 1
+  revision 2
   head "https://github.com/rfinnie/2ping.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "64c857b87b42065d49000873ad3f4df386001779a52966910f19463bc7a12fc9" => :high_sierra
-    sha256 "64c857b87b42065d49000873ad3f4df386001779a52966910f19463bc7a12fc9" => :sierra
-    sha256 "64c857b87b42065d49000873ad3f4df386001779a52966910f19463bc7a12fc9" => :el_capitan
+    sha256 "4d46b724a7d8a1b317b418c23dc0fdaaa4a790dd053c087277a1d643d6d60ddf" => :high_sierra
+    sha256 "4d46b724a7d8a1b317b418c23dc0fdaaa4a790dd053c087277a1d643d6d60ddf" => :sierra
+    sha256 "4d46b724a7d8a1b317b418c23dc0fdaaa4a790dd053c087277a1d643d6d60ddf" => :el_capitan
   end
 
-  depends_on "python3"
+  depends_on "python"
 
   def install
     pyver = Language::Python.major_minor_version "python3"

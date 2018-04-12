@@ -1,38 +1,60 @@
 class Filebeat < Formula
   desc "File harvester to ship log files to Elasticsearch or Logstash"
   homepage "https://www.elastic.co/products/beats/filebeat"
-  url "https://github.com/elastic/beats/archive/v6.1.2.tar.gz"
-  sha256 "e673b4f03bc73807d23083b8d6a5f45f5a8b3fa3a6709f89881a2debb10a8d2f"
+  url "https://github.com/elastic/beats/archive/v6.2.3.tar.gz"
+  sha256 "4ab58a55e61bd3ad31a597e5b02602b52d306d8ee1e4d4d8ff7662e2b554130e"
   head "https://github.com/elastic/beats.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "6fea66c5cb80a778d9bb17ccbda41387d75f47e049cdf051d3a4f6221bd52bf0" => :high_sierra
-    sha256 "6a5bd637332e80d767344b46c693d58099ca421ee6a1b527bdee04620d0306b6" => :sierra
-    sha256 "1372b519d67a930e320e1d85143f563fac9b2e65168ce98171efd11a3f05c486" => :el_capitan
+    sha256 "a88f922d472232e9e0fbdc69c1b83456addb984bc58694dfcd977c5e2d422224" => :high_sierra
+    sha256 "d442d43bc195cf00200746bc53e04c45d7cf85107b8abb48289aaa7c3afcf54e" => :sierra
+    sha256 "c4df39ac1d5ce0bc16845146418581854af467b0fabee160659f634f8df3e482" => :el_capitan
   end
 
   depends_on "go" => :build
+  depends_on "python@2" => :build
+
+  resource "virtualenv" do
+    url "https://files.pythonhosted.org/packages/b1/72/2d70c5a1de409ceb3a27ff2ec007ecdd5cc52239e7c74990e32af57affe9/virtualenv-15.2.0.tar.gz"
+    sha256 "1d7e241b431e7afce47e77f8843a276f652699d1fa4f93b9d8ce0076fd7b0b54"
+  end
 
   def install
-    gopath = buildpath/"gopath"
-    (gopath/"src/github.com/elastic/beats").install Dir["{*,.git,.gitignore}"]
+    ENV["GOPATH"] = buildpath
+    (buildpath/"src/github.com/elastic/beats").install Dir["{*,.git,.gitignore}"]
 
-    ENV["GOPATH"] = gopath
+    ENV.prepend_create_path "PYTHONPATH", buildpath/"vendor/lib/python2.7/site-packages"
 
-    cd gopath/"src/github.com/elastic/beats/filebeat" do
-      system "make"
-      system "make", "modules"
-      libexec.install "filebeat"
-      (prefix/"module").install Dir["_meta/module.generated/*"]
-      (etc/"filebeat").install Dir["filebeat.*"]
+    resource("virtualenv").stage do
+      system "python", *Language::Python.setup_install_args(buildpath/"vendor")
     end
 
-    prefix.install_metafiles gopath/"src/github.com/elastic/beats"
+    ENV.prepend_path "PATH", buildpath/"vendor/bin"
+
+    cd "src/github.com/elastic/beats/filebeat" do
+      system "make"
+      # prevent downloading binary wheels during python setup
+      system "make", "PIP_INSTALL_COMMANDS=--no-binary :all", "python-env"
+      system "make", "DEV_OS=darwin", "update"
+      system "make", "modules"
+
+      (etc/"filebeat").install Dir["filebeat.*", "fields.yml", "modules.d"]
+      (etc/"filebeat"/"module").install Dir["_meta/module.generated/*"]
+      (libexec/"bin").install "filebeat"
+      prefix.install "_meta/kibana"
+    end
+
+    prefix.install_metafiles buildpath/"src/github.com/elastic/beats"
 
     (bin/"filebeat").write <<~EOS
       #!/bin/sh
-      exec #{libexec}/filebeat -path.config #{etc}/filebeat -path.home #{prefix} -path.logs #{var}/log/filebeat -path.data #{var}/filebeat $@
+      exec #{libexec}/bin/filebeat \
+        --path.config #{etc}/filebeat \
+        --path.data #{var}/lib/filebeat \
+        --path.home #{prefix} \
+        --path.logs #{var}/log/filebeat \
+        "$@"
     EOS
   end
 

@@ -1,14 +1,13 @@
 class Pdnsrec < Formula
   desc "Non-authoritative/recursing DNS server"
   homepage "https://www.powerdns.com/recursor.html"
-  url "https://downloads.powerdns.com/releases/pdns-recursor-4.1.0.tar.bz2"
-  sha256 "880b9d4cc57e2b11cae5bff9b20571fb3466f4385c010d06764296fef44f60a3"
-  revision 1
+  url "https://downloads.powerdns.com/releases/pdns-recursor-4.1.2.tar.bz2"
+  sha256 "db4652f171c41bcd4345d6ad094b85a4d546caab72fd02fe523c73a8ce44ed76"
 
   bottle do
-    sha256 "11bdc4f5fefc37ec4aa50b0689262034a63a9ad26663116fcbbc1d43475bd029" => :high_sierra
-    sha256 "63f61ff6e6066090b6341133c6acf256fc139117710181394ff21daad3b2c80c" => :sierra
-    sha256 "01c68fe54ea7c000a0356bb862475d7dfd431ea13ba795b59a1e2aace82a5158" => :el_capitan
+    sha256 "5efee3e6ea8fde8c92baa0f2d400d3044c3032bc4dd1cac7d4d7c5d808d8e419" => :high_sierra
+    sha256 "bb55dff8a5cd5151144bfb7c112d4e4b4c8843193b844e620eaa1408246d81f8" => :sierra
+    sha256 "4404cbb99cd7a2b3fbd7b7c78a2d32462be5cad1b5cfe95c35b2b1a57e1febfe" => :el_capitan
   end
 
   depends_on "pkg-config" => :build

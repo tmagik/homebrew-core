@@ -1,14 +1,14 @@
 class OpenSceneGraph < Formula
   desc "3D graphics toolkit"
   homepage "https://github.com/openscenegraph/OpenSceneGraph"
-  url "https://github.com/openscenegraph/OpenSceneGraph/archive/OpenSceneGraph-3.5.9.tar.gz"
-  sha256 "e18bd54d7046ea73525941244ef4f77b38b2a90bdf21d81468ac3874c41e9448"
+  url "https://github.com/openscenegraph/OpenSceneGraph/archive/OpenSceneGraph-3.6.0.tar.gz"
+  sha256 "6f57134ea74a39f1c7b24c285e6278cf906c47f6c681573b86d12173a466efed"
   head "https://github.com/openscenegraph/OpenSceneGraph.git"
 
   bottle do
-    sha256 "e29e28e5812042f63f2225549191b00306ca1f428538d2150453bd69789c97aa" => :high_sierra
-    sha256 "90b2999887964f4392d2467fab2ee178e372d9b85ee969d3da428a5a116375bd" => :sierra
-    sha256 "51ae8250fb6131a510c052969e6e4834bb5b69ec40b85b184b575595453be2cd" => :el_capitan
+    sha256 "1c347539e968f1920c78b8570e1ff32ed60e741c02adbd6a9d5cfa5834e413a5" => :high_sierra
+    sha256 "e65d17f485dbfeca6c4709712b4ac197f70bcc78766ca78381b633be551d76e0" => :sierra
+    sha256 "665ffa5bb902daee0b54b97d68a104b763fc02ed04299c6eb71065daa66a4145" => :el_capitan
   end
 
   option "with-docs", "Build the documentation with Doxygen and Graphviz"
@@ -46,12 +46,18 @@ class OpenSceneGraph < Formula
       ENV["SDKROOT"] = MacOS.sdk_path
     end
 
-    # Turning off FFMPEG takes this change or a dozen "-DFFMPEG_" variables
-    if build.without? "ffmpeg"
-      inreplace "CMakeLists.txt", "FIND_PACKAGE(FFmpeg)", "#FIND_PACKAGE(FFmpeg)"
-    end
-
     args = std_cmake_args
+    # Disable opportunistic linkage
+    args << "-DCMAKE_DISABLE_FIND_PACKAGE_GDAL=ON" if build.without? "gdal"
+    args << "-DCMAKE_DISABLE_FIND_PACKAGE_Jasper=ON" if build.without? "jasper"
+    args << "-DCMAKE_DISABLE_FIND_PACKAGE_OpenEXR=ON" if build.without? "openexr"
+    args << "-DCMAKE_DISABLE_FIND_PACKAGE_DCMTK=ON" if build.without? "dcmtk"
+    args << "-DCMAKE_DISABLE_FIND_PACKAGE_RSVG=ON" if build.without? "librsvg"
+    args << "-DCMAKE_DISABLE_FIND_PACKAGE_COLLADA=ON" if build.without? "collada-dom"
+    args << "-DCMAKE_DISABLE_FIND_PACKAGE_FFmpeg=ON" if build.without? "ffmpeg"
+    args << "-DCMAKE_DISABLE_FIND_PACKAGE_cairo=ON"
+    args << "-DCMAKE_DISABLE_FIND_PACKAGE_TIFF=ON"
+
     args << "-DBUILD_DOCUMENTATION=" + (build.with?("docs") ? "ON" : "OFF")
     args << "-DCMAKE_CXX_FLAGS=-Wno-error=narrowing" # or: -Wno-c++11-narrowing
 

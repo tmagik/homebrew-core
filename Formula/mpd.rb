@@ -1,13 +1,27 @@
 class Mpd < Formula
   desc "Music Player Daemon"
   homepage "https://www.musicpd.org/"
-  url "https://www.musicpd.org/download/mpd/0.20/mpd-0.20.15.tar.xz"
-  sha256 "c69c4f67e665380ea3bbde6cff8958edc85f7cd40e7918ae5ce0a2184ca9eb40"
+  revision 1
+
+  stable do
+    url "https://www.musicpd.org/download/mpd/0.20/mpd-0.20.18.tar.xz"
+    sha256 "6a582dc2ae90b94ff3853f9ffd7d80b2c2b5fe2e2c35cb1da0b36f3f3dfad434"
+
+    # Remove for > 0.20.18
+    # Fix missing user-provided default constructor with old clang
+    # Upstream commit from 24 Feb 2018 "net/Init: work around -Werror=unused-variable"
+    if MacOS.version <= :el_capitan
+      patch do
+        url "https://github.com/MusicPlayerDaemon/MPD/commit/418f71ec0.patch?full_index=1"
+        sha256 "c059916176841f52d0f5a377b7c6dd19d012dc833a83fad55d4b2b31d41a6c8f"
+      end
+    end
+  end
 
   bottle do
-    sha256 "fe1b8a4e05c0eb884392977a92e2b60711deaebdbdc30dcf79245d338195d398" => :high_sierra
-    sha256 "e77ac62afe771d9f4c206e9938a9cbb5a3099a318b45cd20d79354d1439b554f" => :sierra
-    sha256 "c01a81a89ccc5d8e205177b40213eeb48f9a5ab953ee2013415fb410aabd7a00" => :el_capitan
+    sha256 "2df2abc02059332578ff7139451bf4bc27a4ca65da637780b91f0d6a2d741f73" => :high_sierra
+    sha256 "c8767688009084bf848efd226081ae0b5b80773d0512058707056ddfc29077ce" => :sierra
+    sha256 "56f964034fde44336da897f2d3ace5746c954f24c0e7f719ddfc825d186f2eaa" => :el_capitan
   end
 
   head do

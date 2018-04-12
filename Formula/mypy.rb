@@ -2,28 +2,27 @@ class Mypy < Formula
   desc "Experimental optional static type checker for Python"
   homepage "http://www.mypy-lang.org/"
   url "https://github.com/python/mypy.git",
-      :tag => "v0.560",
-      :revision => "51e044c4ecf2a52fc6c41ee63019723e0d3061e1"
-  revision 1
+      :tag => "v0.580",
+      :revision => "f38596dc3f078ac6705c08632a3043d8e3c9c1d5"
   head "https://github.com/python/mypy.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "546f5d3a40a951697a73933dd65fc3892dca6564563c8d0146f277d73466f45f" => :high_sierra
-    sha256 "32ead559cb3cf15d1b697c21d69cd964f2c7976b35ae6098cef1076da3164991" => :sierra
-    sha256 "830dabd5d2501739775cc4d7fbe00610167680391b6861d8db520b3569065d8b" => :el_capitan
+    sha256 "9b69cb0b45fcf7e21f31af35984f6b68cea1a0fb0a83093d3b8ad60edc6d1923" => :high_sierra
+    sha256 "9f9d3d159393bfc690cc524507ca6f058609569d2e25e70740fdce3aff8aff9c" => :sierra
+    sha256 "db2544a558fd5ac6afb0483439f3faeff8240810911d4e0df71b526299708fd6" => :el_capitan
   end
 
   option "without-sphinx-doc", "Don't build documentation"
 
   deprecated_option "without-docs" => "without-sphinx-doc"
 
-  depends_on "python3"
+  depends_on "python"
   depends_on "sphinx-doc" => [:build, :recommended]
 
   resource "psutil" do
-    url "https://files.pythonhosted.org/packages/54/24/aa854703715fa161110daa001afce75d21d1840e9ab5eb28708d6a5058b0/psutil-5.4.2.tar.gz"
-    sha256 "00a1f9ff8d1e035fba7bfdd6977fa8ea7937afdb4477339e5df3dba78194fe11"
+    url "https://files.pythonhosted.org/packages/e2/e1/600326635f97fee89bf8426fef14c5c29f4849c79f68fd79f433d8c1bd96/psutil-5.4.3.tar.gz"
+    sha256 "e2467e9312c2fa191687b89ff4bc2ad8843be4af6fb4dc95a7cc5f7d7a327b18"
   end
 
   resource "sphinx_rtd_theme" do

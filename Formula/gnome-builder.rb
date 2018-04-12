@@ -3,14 +3,17 @@ class GnomeBuilder < Formula
   homepage "https://wiki.gnome.org/Apps/Builder"
   url "https://download.gnome.org/sources/gnome-builder/3.24/gnome-builder-3.24.2.tar.xz"
   sha256 "84843a9f4af2e1ee1ebfac44441a2affa2d409df9066e7d11bf1d232ae0c535a"
-  revision 5
+  revision 8
 
   bottle do
-    sha256 "11cd6ef17936e5cb9f7acc11d2ba8d1b441722b2cb871389001a51e87d0ee084" => :high_sierra
-    sha256 "2aa5d57a1f79f0f834545a848b36dd3294a673b7e68a47a42983e68e1ded7663" => :sierra
-    sha256 "f711d35258d5dd969bd3dbc4213a91f86a4a21eed1b6ecb5dc19128ab0d51e44" => :el_capitan
+    sha256 "5dae501a05c149c8e33c4e439935b0683a10f82b59ca2fcaef67069dfd342162" => :high_sierra
+    sha256 "b062c8251f55aa62a601c6dfd18cf53e6ba0e4af2f99cfd74053bb17653efe86" => :sierra
+    sha256 "cc0889d2e8f59b5dbe66b67ab1d4a8bbac12403617e9a264e0426f076ed5fbad" => :el_capitan
   end
 
+  deprecated_option "with-python3" => "with-python"
+
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "intltool" => :build
   depends_on "itstool" => :build
@@ -28,12 +31,13 @@ class GnomeBuilder < Formula
   depends_on "libsoup"
   depends_on "gspell"
   depends_on "enchant"
+  depends_on "libxml2"
   depends_on "gjs" => :recommended
   depends_on "vala" => :recommended
   depends_on "ctags" => :recommended
   depends_on "meson" => :recommended
-  depends_on "python3" => :optional
-  depends_on "pygobject3" if build.with? "python3"
+  depends_on "python" => :optional
+  depends_on "pygobject3" if build.with? "python"
 
   needs :cxx11
 

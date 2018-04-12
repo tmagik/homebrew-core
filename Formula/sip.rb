@@ -1,27 +1,23 @@
 class Sip < Formula
   desc "Tool to create Python bindings for C and C++ libraries"
   homepage "https://www.riverbankcomputing.com/software/sip/intro"
-  url "https://downloads.sourceforge.net/project/pyqt/sip/sip-4.19.6/sip-4.19.6.tar.gz"
-  sha256 "9dda27ae181bea782ebc8768d29f22f85ab6e5128ee3ab21f491febad707925a"
-  revision 3
-
+  url "https://dl.bintray.com/homebrew/mirror/sip-4.19.8.tar.gz"
+  mirror "https://downloads.sourceforge.net/project/pyqt/sip/sip-4.19.8/sip-4.19.8.tar.gz"
+  sha256 "7eaf7a2ea7d4d38a56dd6d2506574464bddf7cf284c960801679942377c297bc"
+  revision 2
   head "https://www.riverbankcomputing.com/hg/sip", :using => :hg
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "85b259396e22ed2e3604c22a03d0d60b44b772ff626c37557495275cc84f856f" => :high_sierra
-    sha256 "a3f9a91906a112b5a3201bbf4931a13c7bd0f26d27801f097a00a327c9fd3965" => :sierra
-    sha256 "1b0349afb8ffe5548d738598ef35af7ca559d8f70af104e79dfde786f2a3202f" => :el_capitan
+    sha256 "5fa53b1d6b6e0d011b8aab0720b56e072863ed547df49366f7cf09354fadb74d" => :high_sierra
+    sha256 "1b3ddc306a393f11c967cfcd2404ab7d57bcff6a6824d74ae310e0b4eb703ac3" => :sierra
+    sha256 "f345b350a591cac87e21e8c932097d2f93ab63ffa3a46359d27c64b06ad61914" => :el_capitan
   end
 
   depends_on "python" => :recommended
-  depends_on "python3" => :recommended
+  depends_on "python@2" => :recommended
 
   def install
-    if build.without?("python3") && build.without?("python")
-      odie "sip: --with-python3 must be specified when using --without-python"
-    end
-
     ENV.prepend_path "PATH", Formula["python"].opt_libexec/"bin"
 
     if build.head?

@@ -1,24 +1,24 @@
 class DarkskyWeather < Formula
   desc "Command-line weather from the darksky.net API"
-  homepage "https://github.com/jessfraz/weather"
-  url "https://github.com/jessfraz/weather/archive/v0.12.0.tar.gz"
-  sha256 "f98ad64a23a40e9e6305a93ea8824b99e0dd2d85effb91e102e9b26285adfa9e"
+  homepage "https://github.com/genuinetools/weather"
+  url "https://github.com/genuinetools/weather/archive/v0.15.0.tar.gz"
+  sha256 "3320fd482dbda0a24c444216566c840bb9ec98e353287db427608d111ccf46e8"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "a36aa65cfc31428bb373d607314259930ff86c4110307ab29b7912809c710091" => :high_sierra
-    sha256 "be28f9457ca527cb2e1bf92d00c0aad7297c0319d9e4a67a9270bbc3f845809e" => :sierra
-    sha256 "34f4367d8b866424d6ce86368a9e4c72dc7fcd3f6fdf5c0fd76dd234260c2437" => :el_capitan
+    sha256 "46e049d61c74e6c48628891f673ce423c3804aab701970a2a57e1c9388215b07" => :high_sierra
+    sha256 "540bed62bdf4b2d62492aa1599d18d5ce11d19114c8101fe994b713bd75a0854" => :sierra
+    sha256 "84edfbcabc9a4feb3e433cdbef16fd64cb800b9f7cb95cbb77a59018aafb9a82" => :el_capitan
   end
 
   depends_on "go" => :build
 
   def install
     ENV["GOPATH"] = buildpath
-    (buildpath/"src/github.com/jessfraz/weather").install buildpath.children
+    (buildpath/"src/github.com/genuinetools/weather").install buildpath.children
 
-    cd "src/github.com/jessfraz/weather" do
-      project = "github.com/jessfraz/weather"
+    cd "src/github.com/genuinetools/weather" do
+      project = "github.com/genuinetools/weather"
       ldflags = ["-X #{project}/version.GITCOMMIT=homebrew",
                  "-X #{project}/version.VERSION=v#{version}"]
       system "go", "build", "-o", bin/"weather", "-ldflags", ldflags.join(" ")

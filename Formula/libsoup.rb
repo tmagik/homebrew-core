@@ -1,21 +1,21 @@
 class Libsoup < Formula
   desc "HTTP client/server library for GNOME"
   homepage "https://live.gnome.org/LibSoup"
-  url "https://download.gnome.org/sources/libsoup/2.60/libsoup-2.60.3.tar.xz"
-  sha256 "1b0dc762f23abe4e0d29b77370e539fd35f31d8e8e0318d6ddccff395be68a22"
+  url "https://download.gnome.org/sources/libsoup/2.62/libsoup-2.62.1.tar.xz"
+  sha256 "f037ddac2e0f9b1c842a0060fa6119bea1d3b349a2c901283c961247e45883d7"
 
   bottle do
-    sha256 "9324d895eeed906f4685c4a0ec4e34505c1928f3a7b0c70f25ba30588372dbbe" => :high_sierra
-    sha256 "b801fadef26e8a135850d367b7c06267d1fc871ca60f81e31b0354ed50c128d8" => :sierra
-    sha256 "611d2867125b1c7d7d4d24c8c2c7fb2300c593b2af3a0d195a50b3aacd73a81b" => :el_capitan
+    sha256 "181dfea9c06ecf949f92ef1b0fc3605fefd2a4a370df7e0cd41f39d561d81571" => :high_sierra
+    sha256 "3a6652330dd89a70a0bfb69b26116d9dbe5c1bc75fbd4cc9fdd03c1761487534" => :sierra
+    sha256 "d39d7013a6153b7b8e3d425509e30d3637881bab45521b8cbe24415ced2e88d5" => :el_capitan
   end
 
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "intltool" => :build
+  depends_on "python" => :build
   depends_on "glib-networking"
   depends_on "gnutls"
-  depends_on "sqlite"
-  depends_on "gobject-introspection"
   depends_on "vala"
 
   def install

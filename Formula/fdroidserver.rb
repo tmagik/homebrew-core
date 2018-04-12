@@ -3,27 +3,27 @@ class Fdroidserver < Formula
 
   desc "Create and manage Android app repositories for F-Droid"
   homepage "https://f-droid.org"
-  url "https://files.pythonhosted.org/packages/85/c1/0aa30a82716685610aed583decdbc991df95e5ee81d827855c45a99eb597/fdroidserver-1.0.0.tar.gz"
-  sha256 "e760524f392e6122d9b938f8811aad087b062fb00140967073574eabc15b1972"
+  url "https://files.pythonhosted.org/packages/fd/dd/f9daf09e7503ac105e47cc4d2663ae6edf3d1be6b39b565c040af2814e99/fdroidserver-1.0.3.tar.gz"
+  sha256 "ab79584c1b69f63331d834528b3fe08668226a3ade146d5bd7c88eb703c04618"
 
   bottle do
     cellar :any
-    sha256 "f08f03af9f30d95729c1e98983135cd902155a84a971555156d7a214f71f24dd" => :high_sierra
-    sha256 "919cd07695be9e6781596a149159e02544c1350c9bf6e137a38c70a6ee22002b" => :sierra
-    sha256 "264c96ecc7a88bf9bdb420c80bb2e611c0f958078887f258114c464bf234f451" => :el_capitan
+    sha256 "fb12950e5062ad63f7bfbb12f499f60ef9b43bf2fdfcc550124b4cd706eecd52" => :high_sierra
+    sha256 "f46a30bc74956f0f7fd5f4d94e4bc81e5677b12082facdb95afcfc9ab85b550f" => :sierra
+    sha256 "34ff26a332756b663319ff15291f0bcec78d63ba5bb768cdda2006ba5f1af09d" => :el_capitan
   end
 
   depends_on "freetype"
   depends_on "jpeg"
   depends_on "libtiff"
   depends_on "openssl"
-  depends_on "python3"
+  depends_on "python"
   depends_on "s3cmd"
   depends_on "webp"
 
   resource "apache-libcloud" do
-    url "https://files.pythonhosted.org/packages/1d/a9/3de9cf302166aec7d1ee140a417e0717eca10a69c89bcbe5a243fb8f956c/apache-libcloud-2.2.1.tar.gz"
-    sha256 "d065d9da8ba192badad3a98c2f6c3ef9dabba45d1318638b9c1bac83f6c3e7a9"
+    url "https://files.pythonhosted.org/packages/2a/b9/dbc5ef54d9b5fd5759a483b5cb7404e470ce4dbe7c944416df346cde8ff5/apache-libcloud-2.3.0.tar.gz"
+    sha256 "0e2eee3802163bd0605975ed1e284cafc23203919bfa80c0cc5d3cd2543aaf97"
   end
 
   resource "args" do
@@ -42,13 +42,13 @@ class Fdroidserver < Formula
   end
 
   resource "certifi" do
-    url "https://files.pythonhosted.org/packages/23/3f/8be01c50ed24a4bd6b8da799839066ce0288f66f5e11f0367323467f0cbc/certifi-2017.11.5.tar.gz"
-    sha256 "5ec74291ca1136b40f0379e1128ff80e866597e4e2c1e755739a913bbc3613c0"
+    url "https://files.pythonhosted.org/packages/15/d4/2f888fc463d516ff7bf2379a4e9a552fef7f22a94147655d9b1097108248/certifi-2018.1.18.tar.gz"
+    sha256 "edbc3f203427eef571f79a7692bb160a2b0f7ccaa31953e99bd17e307cf63f7d"
   end
 
   resource "cffi" do
-    url "https://files.pythonhosted.org/packages/c9/70/89b68b6600d479034276fed316e14b9107d50a62f5627da37fafe083fde3/cffi-1.11.2.tar.gz"
-    sha256 "ab87dd91c0c4073758d07334c1e5f712ce8fe48f007b86f8238773963ee700a6"
+    url "https://files.pythonhosted.org/packages/e7/a7/4cd50e57cc6f436f1cc3a7e8fa700ff9b8b4d471620629074913e3735fb2/cffi-1.11.5.tar.gz"
+    sha256 "e90f17980e6ab0f3c2f3730e56d1fe9bcba1891eeea58966e89d352492cc74f4"
   end
 
   resource "chardet" do
@@ -62,8 +62,8 @@ class Fdroidserver < Formula
   end
 
   resource "cryptography" do
-    url "https://files.pythonhosted.org/packages/78/c5/7188f15a92413096c93053d5304718e1f6ba88b818357d05d19250ebff85/cryptography-2.1.4.tar.gz"
-    sha256 "e4d967371c5b6b2e67855066471d844c5d52d210c36c28d49a8507b96e2c5291"
+    url "https://files.pythonhosted.org/packages/fd/2c/a9e42f90bda9ebadf4790ed699e44edd630614f1590eb42e11de64a0b9c1/cryptography-2.2.1.tar.gz"
+    sha256 "dddad9d322a3f0867009ff9f25477b8f7c0bdbedf143704b384c9472f11cb2d3"
   end
 
   resource "docker-py" do
@@ -72,8 +72,8 @@ class Fdroidserver < Formula
   end
 
   resource "docker-pycreds" do
-    url "https://files.pythonhosted.org/packages/95/2e/3c99b8707a397153bc78870eb140c580628d7897276960da25d8a83c4719/docker-pycreds-0.2.1.tar.gz"
-    sha256 "93833a2cf280b7d8abbe1b8121530413250c6cd4ffed2c1cf085f335262f7348"
+    url "https://files.pythonhosted.org/packages/db/73/42d4c698e70633d99f7f7c4c87c6de45ead5ad7b36dcfccd998fd1556ac9/docker-pycreds-0.2.2.tar.gz"
+    sha256 "c7ab85de2894baff6ee8f15160cbbfa2fd3a04e56f0372c5793d24060687b299"
   end
 
   resource "gitdb2" do
@@ -92,18 +92,18 @@ class Fdroidserver < Formula
   end
 
   resource "mwclient" do
-    url "https://files.pythonhosted.org/packages/cd/38/beaf985032b42a0b0c8f9028b469c4dcb0bd7bfab62707ec27af7e890e84/mwclient-0.8.6.tar.gz"
-    sha256 "08f917b995b331b937ed8c7e297406e3c8d33b80234679ee7fbfeeafd7570a8e"
+    url "https://files.pythonhosted.org/packages/63/05/ddf7d1b0d3a1dc9ee650dcaef7ddfbb980b4d2f0c41128c5f9e6fed5e8e2/mwclient-0.8.7.tar.gz"
+    sha256 "3bdaaa48fda6386b190651e49484a549bd0c48b97573dbda34a8b7c4c80430ed"
   end
 
   resource "oauthlib" do
-    url "https://files.pythonhosted.org/packages/a5/8a/212e9b47fb54be109f3ff0684165bb38c51117f34e175c379fce5c7df754/oauthlib-2.0.6.tar.gz"
-    sha256 "ce57b501e906ff4f614e71c36a3ab9eacbb96d35c24d1970d2539bbc3ec70ce1"
+    url "https://files.pythonhosted.org/packages/47/b9/66278631430fe688b2e6c84df16619f1d1e27c9c6ebca28371f7c6fbb346/oauthlib-2.0.7.tar.gz"
+    sha256 "909665297635fa11fe9914c146d875f2ed41c8c2d78e21a529dd71c0ba756508"
   end
 
   resource "paramiko" do
-    url "https://files.pythonhosted.org/packages/c8/de/791773d6a4b23327c7475ae3d7ada0d07fa147bf77fb6f561a4a7d8afd11/paramiko-2.4.0.tar.gz"
-    sha256 "486f637f0a33a4792e0e567be37426c287efaa8c4c4a45e3216f9ce7fd70b1fc"
+    url "https://files.pythonhosted.org/packages/29/65/83181630befb17cd1370a6abb9a87957947a43c2332216e5975353f61d64/paramiko-2.4.1.tar.gz"
+    sha256 "33e36775a6c71790ba7692a73f948b329cf9295a72b0102144b031114bd2a4f3"
   end
 
   resource "Pillow" do
@@ -142,8 +142,8 @@ class Fdroidserver < Formula
   end
 
   resource "qrcode" do
-    url "https://files.pythonhosted.org/packages/87/16/99038537dc58c87b136779c0e06d46887ff5104eb8c64989aac1ec8cba81/qrcode-5.3.tar.gz"
-    sha256 "4115ccee832620df16b659d4653568331015c718a754855caf5930805d76924e"
+    url "https://files.pythonhosted.org/packages/8d/b6/beed3d50e1047a2aa6437d3a653e5f31feb7f4de8bc054299dc205682e41/qrcode-6.0.tar.gz"
+    sha256 "037b0db4c93f44586e37f84c3da3f763874fcac85b2974a69a98e399ac78e1bf"
   end
 
   resource "requests" do
@@ -157,8 +157,8 @@ class Fdroidserver < Formula
   end
 
   resource "ruamel.yaml" do
-    url "https://files.pythonhosted.org/packages/8f/39/77c555d68d317457a10a30f4a92ae4a315a4ee0e05e9af7c0ac5c301df10/ruamel.yaml-0.15.35.tar.gz"
-    sha256 "8dc74821e4bb6b21fb1ab35964e159391d99ee44981d07d57bf96e2395f3ef75"
+    url "https://files.pythonhosted.org/packages/c1/ad/9557a78f1b61951623c56225e05dacdd81f80519f13fc39a926a5793edfa/ruamel.yaml-0.15.37.tar.gz"
+    sha256 "509842d96fb194f79b57483b76429f8956d8f7ade3cb49d1e5aeb5c5e9ef4918"
   end
 
   resource "six" do
@@ -177,8 +177,8 @@ class Fdroidserver < Formula
   end
 
   resource "websocket-client" do
-    url "https://files.pythonhosted.org/packages/83/91/162f2c76729633d1dc36b09746895c7766bc183bba94cb4d2ec398676060/websocket_client-0.46.0.tar.gz"
-    sha256 "933f6bbf08b381f2adbca9e93d7e7958ba212b42c73acb310b18f0fbe74f3738"
+    url "https://files.pythonhosted.org/packages/c9/bb/8d3dd9063cfe0cd5d03fe6a1f74ddd948f384e9c1eff0eb978f3976a7d27/websocket_client-0.47.0.tar.gz"
+    sha256 "a453dc4dfa6e0db3d8fd7738a308a88effe6240c59f3226eb93e8f020c216149"
   end
 
   def install
@@ -238,7 +238,7 @@ class Fdroidserver < Formula
         f << ".\n"
       end
 
-      system "#{bin}/fdroid", "checkupdates", "--verbose"
+      system "#{bin}/fdroid", "checkupdates", "--verbose", "--allow-dirty"
       system "#{bin}/fdroid", "lint", "--verbose"
       system "#{bin}/fdroid", "rewritemeta", "fake", "--verbose"
       system "#{bin}/fdroid", "scanner", "--verbose"

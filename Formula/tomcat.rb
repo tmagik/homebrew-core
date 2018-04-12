@@ -1,38 +1,19 @@
 class Tomcat < Formula
   desc "Implementation of Java Servlet and JavaServer Pages"
   homepage "https://tomcat.apache.org/"
-
-  stable do
-    url "https://www.apache.org/dyn/closer.cgi?path=tomcat/tomcat-8/v8.5.24/bin/apache-tomcat-8.5.24.tar.gz"
-    mirror "https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.24/bin/apache-tomcat-8.5.24.tar.gz"
-    sha256 "b2cd21075a4c2a3bc04d2595a1a81ad79d6a36774c28608e04cb73ef76da3458"
-
-    depends_on :java => "1.7+"
-
-    resource "fulldocs" do
-      url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-8/v8.5.24/bin/apache-tomcat-8.5.24-fulldocs.tar.gz"
-      mirror "https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.24/bin/apache-tomcat-8.5.24-fulldocs.tar.gz"
-      sha256 "5c0d971c5fb4c9efd62aa00bac06ef22e77d42cc406d22527c8d95ebe3c1fd06"
-    end
-  end
-
-  devel do
-    url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-9/v9.0.2/bin/apache-tomcat-9.0.2.tar.gz"
-    mirror "https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.2/bin/apache-tomcat-9.0.2.tar.gz"
-    sha256 "689844c8f373bd7db6a0c5ce7414b825d500bf64300273656dba8b05e29f5e29"
-
-    depends_on :java => "1.8+"
-
-    resource "fulldocs" do
-      url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-9/v9.0.2/bin/apache-tomcat-9.0.2-fulldocs.tar.gz"
-      mirror "https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.2/bin/apache-tomcat-9.0.2-fulldocs.tar.gz"
-      sha256 "50062ec50751b5684513fb2d926731d4da77d98c947174780bb531949b1be48a"
-    end
-  end
+  url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-9/v9.0.7/bin/apache-tomcat-9.0.7.tar.gz"
+  sha256 "2fdac002c29e219f69f75dfc433471998634e400cc84b155e483bb2b457b8e48"
 
   bottle :unneeded
 
   option "with-fulldocs", "Install full documentation locally"
+
+  depends_on :java => "1.8+"
+
+  resource "fulldocs" do
+    url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-9/v9.0.7/bin/apache-tomcat-9.0.7-fulldocs.tar.gz"
+    sha256 "97d73425c711346dbd9bb3ddde7f230fbea005bdac11281bad6b896c551d8777"
+  end
 
   def install
     # Remove Windows scripts

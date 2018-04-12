@@ -1,26 +1,18 @@
 class Mariadb < Formula
   desc "Drop-in replacement for MySQL"
   homepage "https://mariadb.org/"
-  url "https://downloads.mariadb.org/f/mariadb-10.2.12/source/mariadb-10.2.12.tar.gz"
-  sha256 "2ab22d7fbacfabc30fe18f71a8afb173250074502d889457e3cde2e203d341ec"
+  url "https://downloads.mariadb.org/f/mariadb-10.2.14/source/mariadb-10.2.14.tar.gz"
+  sha256 "3443ec2d6e8af1eba49d097f6b2f6741c8d94b75abf19b8dd5753608f0703f7e"
 
   bottle do
-    sha256 "c03353edcdc591307a78cee85e045e716be7f36d833e89fdec3d974a8cf0abb9" => :high_sierra
-    sha256 "ec4dcb42daa3bcaf4def1768f0385a343621e175908ac913e0e238b6584f4c91" => :sierra
-    sha256 "a072ff975ddcae52760fc2ede46b4f8940cf53201dadc16dc58a2a44d02edee7" => :el_capitan
+    sha256 "21f061bc09ec9a870d32665026d9b8d118d60931fefa1a4b56e66bd99f7b507d" => :high_sierra
+    sha256 "55abe7bc4a21f35e7d9daea7414c13375f719f7d388bf5b0a67f6383cce0a60f" => :sierra
+    sha256 "06157e5ae3203c9263fc99f6edc428922439cd8a632fc67dca8d0cb06a12e74f" => :el_capitan
   end
 
   devel do
-    url "https://downloads.mariadb.org/f/mariadb-10.3.3/source/mariadb-10.3.3.tar.gz"
-    sha256 "ad80edacbf3cb39fbeb3a022803362e0da78dadb4aae611a126a7c8cd2c0c24b"
-
-    # compilation fix
-    # https://jira.mariadb.org/browse/MDEV-14753
-    # https://github.com/MariaDB/server/pull/524
-    patch do
-      url "https://github.com/MariaDB/server/commit/dd6686462b0fa3f4d71a65c4b26cb02b65a07fec.patch?full_index=1"
-      sha256 "c6dabcb2af28b7c2d35123bf8a7217fd99c6068d2d78f933ca60630ae4e1a5a2"
-    end
+    url "https://downloads.mariadb.org/f/mariadb-10.3.5/source/mariadb-10.3.5.tar.gz"
+    sha256 "cbb81f5f7e25c822db6683bbb43b3aad328622fa86da81c1ddeee8005523b203"
   end
 
   option "with-test", "Keep test when installing"

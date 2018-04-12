@@ -5,7 +5,7 @@ class Agda < Formula
 
   desc "Dependently typed functional programming language"
   homepage "http://wiki.portal.chalmers.se/agda/"
-  revision 1
+  revision 3
 
   stable do
     url "https://hackage.haskell.org/package/Agda-2.5.3/Agda-2.5.3.tar.gz"
@@ -13,14 +13,14 @@ class Agda < Formula
 
     resource "stdlib" do
       url "https://github.com/agda/agda-stdlib.git",
-          :revision => "477ba28360133b1f5c45ce1b4e6b4efd467af331"
+          :revision => "c06437e4ebb5365d502fb0a79775e5c591ab8ae5" # v0.15
     end
   end
 
   bottle do
-    sha256 "af5bd54a1f52386c3c8c9926f42ed72976e43f0e8f8bfc98dc6632083a79fafb" => :high_sierra
-    sha256 "65302e2ebe392a254221235dc09cde7d2ae9f827b1ad57ac0756662305777d53" => :sierra
-    sha256 "07e1f6b0ebd27aa81757575907d14b2ad9d9398f7e78eeed257397597a30c84f" => :el_capitan
+    sha256 "6506de625f9f04509c0e36b2b5659764c511d96a6c321f3f49d5034f09630ba4" => :high_sierra
+    sha256 "6f901334a92e1f22593bb9bf058f981b71359153bb922017364626e7d7f0ce5a" => :sierra
+    sha256 "dfb13015d80bee654406a639a907f004c422aa87c102fc6db2cddf48c460615f" => :el_capitan
   end
 
   head do
@@ -31,17 +31,18 @@ class Agda < Formula
     end
   end
 
-  deprecated_option "without-malonzo" => "without-ghc"
+  deprecated_option "without-ghc" => "without-ghc@8.2"
+  deprecated_option "without-malonzo" => "without-ghc@8.2"
 
   option "without-stdlib", "Don't install the Agda standard library"
-  option "without-ghc", "Disable the GHC backend"
+  option "without-ghc@8.2", "Disable the GHC backend"
 
-  depends_on "ghc" => :recommended
-  if build.with? "ghc"
-    depends_on "cabal-install"
+  depends_on "ghc@8.2" => :recommended
+  if build.with? "ghc@8.2"
+    depends_on "cabal-install" => [:build, :test]
   else
-    depends_on "ghc" => :build
     depends_on "cabal-install" => :build
+    depends_on "ghc@8.2" => :build
   end
 
   depends_on "emacs" => :recommended
@@ -166,7 +167,8 @@ class Agda < Formula
     system bin/"agda", "--js", simpletest
 
     # test the GHC backend
-    if build.with? "ghc"
+    if build.with? "ghc@8.2"
+      ENV.prepend_path "PATH", Formula["ghc@8.2"].opt_bin
       cabal_sandbox do
         cabal_install "text", "ieee754"
         dbpath = Dir["#{testpath}/.cabal-sandbox/*-packages.conf.d"].first

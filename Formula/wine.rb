@@ -3,49 +3,18 @@
 #  - https://wiki.winehq.org/Gecko
 #  - https://wiki.winehq.org/Mono
 # with `GECKO_VERSION` and `MONO_VERSION`, as in:
-#    https://source.winehq.org/git/wine.git/blob/refs/tags/wine-2.0.3:/dlls/appwiz.cpl/addons.c
+#    https://source.winehq.org/git/wine.git/blob/refs/tags/wine-3.0:/dlls/appwiz.cpl/addons.c
 class Wine < Formula
   desc "Run Windows applications without a copy of Microsoft Windows"
   homepage "https://www.winehq.org/"
+  revision 1
 
   stable do
-    url "https://dl.winehq.org/wine/source/2.0/wine-2.0.4.tar.xz"
-    mirror "https://downloads.sourceforge.net/project/wine/Source/wine-2.0.4.tar.xz"
-    sha256 "b5e07b350edd34e4fb2615edb143f832a208a939fc9937a819181eecaf32985a"
+    url "https://dl.winehq.org/wine/source/3.0/wine-3.0.tar.xz"
+    mirror "https://downloads.sourceforge.net/project/wine/Source/wine-3.0.tar.xz"
+    sha256 "346a050aca5cd0d9978a655af11c30e68c201a58aea0c70d5e4c4f1b63c2fbec"
 
-    # Patch to fix texture compression issues. Still relevant on 2.0.
-    # https://bugs.winehq.org/show_bug.cgi?id=14939
-    patch do
-      url "https://bugs.winehq.org/attachment.cgi?id=52384"
-      sha256 "30766403f5064a115f61de8cacba1defddffe2dd898b59557956400470adc699"
-    end
-
-    # Patch to fix screen-flickering issues. Still relevant on 2.0.
-    # https://bugs.winehq.org/show_bug.cgi?id=34166
-    patch do
-      url "https://bugs.winehq.org/attachment.cgi?id=55968"
-      sha256 "1b5086798ce6dc959b3cbb8f343ee236ae06c7910e4bbae7d9fde3f162f03a79"
-    end
-
-    resource "mono" do
-      url "https://dl.winehq.org/wine/wine-mono/4.6.4/wine-mono-4.6.4.msi", :using => :nounzip
-      sha256 "91b7d58177b9a9355edf007dab94535471aebdddae12734ceb4a219d2ecc4152"
-    end
-  end
-
-  bottle do
-    rebuild 1
-    sha256 "d32c83da4c46d72d5db50812c19eceddab044b1fcd49eb30b227e04735d2eff3" => :high_sierra
-    sha256 "f124ea70d354507bc3b480c3f91c1ed9501ee7b51e5848aba1349391dda67fd9" => :sierra
-    sha256 "8964c6bf52cf4dfbc0a1560d7f1693a5e53ff6137e424e5e87c181eb6a8b975a" => :el_capitan
-  end
-
-  devel do
-    url "https://dl.winehq.org/wine/source/3.0/wine-3.0-rc6.tar.xz"
-    mirror "https://downloads.sourceforge.net/project/wine/Source/wine-3.0-rc6.tar.xz"
-    sha256 "5ebdab6382cef4876913e55a3f92607848013d4a449de8918d0c36ad148fdcbb"
-
-    # Patch to fix screen-flickering issues. Still relevant on 2.14.
+    # Patch to fix screen-flickering issues. Still relevant on 3.0.
     # https://bugs.winehq.org/show_bug.cgi?id=34166
     patch do
       url "https://raw.githubusercontent.com/Homebrew/formula-patches/74c2566/wine/2.14.patch"
@@ -58,6 +27,12 @@ class Wine < Formula
     end
   end
 
+  bottle do
+    sha256 "bf84c0a02b7d7b4fc8814891f5542c0e35c30c922e0d2bcf4af168a1f34e36e4" => :high_sierra
+    sha256 "cceea27c906e9e5e7916281a57c36872c943802e998fede387fa7ccbc9d297ac" => :sierra
+    sha256 "309e0b2978bb79ea627caba23d7f3bbb0cb54d3a6b08836b2cde387a743dae50" => :el_capitan
+  end
+
   head do
     url "https://source.winehq.org/git/wine.git"
 
@@ -67,14 +42,7 @@ class Wine < Formula
     end
   end
 
-  if MacOS.version >= :el_capitan
-    option "without-win64", "Build without 64-bit support"
-    depends_on :xcode => ["8.0", :build] if build.with? "win64"
-  end
-
-  # Wine will build both the Mac and the X11 driver by default, and you can switch
-  # between them. But if you really want to build without X11, you can.
-  depends_on :x11 => :recommended
+  depends_on :macos => :el_capitan
   depends_on "pkg-config" => :build
   depends_on "cmake" => :build
   depends_on "makedepend" => :build
@@ -90,9 +58,9 @@ class Wine < Formula
   end
 
   resource "openssl" do
-    url "https://www.openssl.org/source/openssl-1.0.2n.tar.gz"
-    mirror "https://dl.bintray.com/homebrew/mirror/openssl-1.0.2n.tar.gz"
-    sha256 "370babb75f278c39e0c50e8c4e7493bc0f18db6867478341a832a982fd15a8fe"
+    url "https://www.openssl.org/source/openssl-1.0.2o.tar.gz"
+    mirror "https://dl.bintray.com/homebrew/mirror/openssl-1.0.2o.tar.gz"
+    sha256 "ec3f5c9714ba0fd45cb4e087301eb1336c317e0d20b575a125050470e8089e4d"
   end
 
   resource "libtool" do
@@ -102,13 +70,13 @@ class Wine < Formula
   end
 
   resource "jpeg" do
-    url "http://www.ijg.org/files/jpegsrc.v9b.tar.gz"
-    mirror "https://mirrors.kernel.org/debian/pool/main/libj/libjpeg9/libjpeg9_9b.orig.tar.gz"
-    sha256 "240fd398da741669bf3c90366f58452ea59041cacc741a489b99f2f6a0bad052"
+    url "http://www.ijg.org/files/jpegsrc.v9c.tar.gz"
+    mirror "https://fossies.org/linux/misc/jpegsrc.v9c.tar.gz"
+    sha256 "650250979303a649e21f87b5ccd02672af1ea6954b911342ea491f351ceb7122"
   end
 
   resource "libtiff" do
-    url "http://download.osgeo.org/libtiff/tiff-4.0.9.tar.gz"
+    url "https://download.osgeo.org/libtiff/tiff-4.0.9.tar.gz"
     mirror "https://fossies.org/linux/misc/tiff-4.0.9.tar.gz"
     sha256 "6e7bdeec2c310734e734d19aae3a71ebe37a4d842e0e23dbb1b8921c0026cfcd"
   end
@@ -132,9 +100,9 @@ class Wine < Formula
   end
 
   resource "libusb" do
-    url "https://github.com/libusb/libusb/releases/download/v1.0.21/libusb-1.0.21.tar.bz2"
-    mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/libu/libusb-1.0/libusb-1.0_1.0.21.orig.tar.bz2"
-    sha256 "7dce9cce9a81194b7065ee912bcd55eeffebab694ea403ffb91b67db66b1824b"
+    url "https://github.com/libusb/libusb/releases/download/v1.0.22/libusb-1.0.22.tar.bz2"
+    mirror "https://downloads.sourceforge.net/project/libusb/libusb-1.0/libusb-1.0.22/libusb-1.0.22.tar.bz2"
+    sha256 "75aeb9d59a4fdb800d329a545c2e6799f732362193b465ea198f2aa275518157"
   end
 
   resource "webp" do
@@ -173,9 +141,9 @@ class Wine < Formula
   end
 
   resource "mpg123" do
-    url "https://downloads.sourceforge.net/project/mpg123/mpg123/1.25.8/mpg123-1.25.8.tar.bz2"
-    mirror "https://www.mpg123.de/download/mpg123-1.25.8.tar.bz2"
-    sha256 "79da51efae011814491f07c95cb5e46de0476aca7a0bf240ba61cfc27af8499b"
+    url "https://downloads.sourceforge.net/project/mpg123/mpg123/1.25.10/mpg123-1.25.10.tar.bz2"
+    mirror "https://www.mpg123.de/download/mpg123-1.25.10.tar.bz2"
+    sha256 "6c1337aee2e4bf993299851c70b7db11faec785303cfca3a5c3eb5f329ba7023"
   end
 
   fails_with :clang do
@@ -453,24 +421,20 @@ class Wine < Formula
       ENV["ac_cv_lib_soname_#{dep}"] = (libexec/"lib/lib#{dep}.dylib").realpath
     end
 
-    if build.with? "win64"
-      args64 = ["--prefix=#{prefix}"] + depflags
-      args64 << "--enable-win64"
-      args64 << "--without-x" if build.without? "x11"
-
-      mkdir "wine-64-build" do
-        system "../configure", *args64
-        system "make", "install"
-      end
+    mkdir "wine-64-build" do
+      system "../configure", "--prefix=#{prefix}",
+                             "--enable-win64",
+                             "--without-x",
+                             *depflags
+      system "make", "install"
     end
-
-    args = ["--prefix=#{prefix}"] + depflags
-    args << "--with-wine64=../wine-64-build" if build.with? "win64"
-    args << "--without-x" if build.without? "x11"
 
     mkdir "wine-32-build" do
       ENV.m32
-      system "../configure", *args
+      system "../configure", "--prefix=#{prefix}",
+                             "--with-wine64=../wine-64-build",
+                             "--without-x",
+                             *depflags
       system "make", "install"
     end
     (pkgshare/"gecko").install resource("gecko-x86")
@@ -478,24 +442,10 @@ class Wine < Formula
     (pkgshare/"mono").install resource("mono")
   end
 
-  def caveats
-    s = <<~EOS
-      You may want to get winetricks:
-        brew install winetricks
+  def caveats; <<~EOS
+    You may also want winetricks:
+      brew install winetricks
     EOS
-
-    if build.with? "x11"
-      s += <<~EOS
-
-        By default Wine uses a native Mac driver. To switch to the X11 driver, use
-        regedit to set the "graphics" key under "HKCU\/Software\/Wine\/Drivers" to
-        "x11" (or use winetricks).
-
-        For best results with X11, install the latest version of XQuartz:
-          https://www.xquartz.org/
-      EOS
-    end
-    s
   end
 
   def post_install
@@ -510,8 +460,6 @@ class Wine < Formula
 
   test do
     assert_equal shell_output("hostname").chomp, shell_output("#{bin}/wine hostname.exe 2>/dev/null").chomp
-    if build.with? "win64"
-      assert_equal shell_output("hostname").chomp, shell_output("#{bin}/wine64 hostname.exe 2>/dev/null").chomp
-    end
+    assert_equal shell_output("hostname").chomp, shell_output("#{bin}/wine64 hostname.exe 2>/dev/null").chomp
   end
 end

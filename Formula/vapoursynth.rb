@@ -3,14 +3,15 @@ class Vapoursynth < Formula
 
   desc "Video processing framework with simplicity in mind"
   homepage "http://www.vapoursynth.com"
-  url "https://github.com/vapoursynth/vapoursynth/archive/R42.1.tar.gz"
-  sha256 "2da653c3956d6e61b2232975ebad7e060c717ad09b08d09694e4bb4eab64f8a7"
+  url "https://github.com/vapoursynth/vapoursynth/archive/R43.tar.gz"
+  sha256 "5c80d583f6891f4f5840edf09bc207c2e71653786b07606fdb4a164fd67470c2"
+  revision 1
   head "https://github.com/vapoursynth/vapoursynth.git"
 
   bottle do
-    sha256 "12c12030adeff25ce2ac59e2d5b531ae6759bd27f2b44d39b8ae0fb1d73bdcaa" => :high_sierra
-    sha256 "2d850df6fea69c4c121b89dc13e7223199e55db4e8dba6b52359f0c4af382a91" => :sierra
-    sha256 "c7886f8f63f687d9b400df11134d2c34414619b68e113721b2ea56c4ddd79bab" => :el_capitan
+    sha256 "296cd57f8aea8cbf97fe1325fa879ccd8c0c5e011cfaddd32111bee5efaa9fa8" => :high_sierra
+    sha256 "a89dcb8ca4f715707df722378e829d2bac07e93b156dbb64a48c8f3be1297efe" => :sierra
+    sha256 "299e2ccec5ba1bf5275543df569ba8b84507fbe7bb384fa948a4bf0762d97d53" => :el_capitan
   end
 
   depends_on "autoconf" => :build
@@ -21,7 +22,7 @@ class Vapoursynth < Formula
 
   depends_on "libass"
   depends_on :macos => :el_capitan # due to zimg dependency
-  depends_on "python3"
+  depends_on "python"
   depends_on "tesseract"
   depends_on "zimg"
 

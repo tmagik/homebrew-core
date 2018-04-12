@@ -1,16 +1,16 @@
 class Binaryen < Formula
   desc "Compiler infrastructure and toolchain library for WebAssembly"
   homepage "http://webassembly.org/"
-  url "https://github.com/WebAssembly/binaryen/archive/version_41.tar.gz"
-  sha256 "0df53401c8cd77c796e7dbff35d409412261b18b11407fd6c5861a07570b134e"
+  url "https://github.com/WebAssembly/binaryen/archive/version_45.tar.gz"
+  sha256 "7c2e05edeba44ead365f27ce0164d35d2212577fca0964a4f695402ece6e283b"
 
   head "https://github.com/WebAssembly/binaryen.git"
 
   bottle do
     cellar :any
-    sha256 "bfb396ca5a16dd7562a945daf51b9d7bfb063514b3149a156191a5c76c53f718" => :high_sierra
-    sha256 "226aad7f6641eed9f3792e33dc325802b092ad0a44952159704be651a2207179" => :sierra
-    sha256 "03e8b4ecc1b5afddef5db88fe0522d8017f6f579cbaf171493de8b51ea00c56a" => :el_capitan
+    sha256 "46a11f33fd8c4ab6cac74b4bf97277148badd07c77ebfd1f0c5adebd597a16de" => :high_sierra
+    sha256 "2e7ca7ab2aa5c05cff50125c0f9bcca5100f38557895c09b87a2274d4eedec37" => :sierra
+    sha256 "3837313e2d56eba5626c9e99d5d54eba0ec117fdc02293aac16906033cbd71dc" => :el_capitan
   end
 
   depends_on "cmake" => :build

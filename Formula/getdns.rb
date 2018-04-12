@@ -1,14 +1,13 @@
 class Getdns < Formula
   desc "Modern asynchronous DNS API"
   homepage "https://getdnsapi.net"
-  url "https://getdnsapi.net/releases/getdns-1-3-0/getdns-1.3.0.tar.gz"
-  mirror "https://dl.bintray.com/homebrew/mirror/getdns-1.3.0.tar.gz"
-  sha256 "920fa2e07c72fd0e5854db1820fa777108009fc5cb702f9aa5155ef58b12adb1"
+  url "https://getdnsapi.net/releases/getdns-1-4-1/getdns-1.4.1.tar.gz"
+  sha256 "245233dc780f615b6ab1472f2b9cdcd957a451a736f3036717d0da466ab1c51e"
 
   bottle do
-    sha256 "7ef98cccdd128c7439cf1eaa3f8b8895f20929294e75b4befe11a22f72053229" => :high_sierra
-    sha256 "201634e1c75bf23341a40a7257938a64a9e6e60f73f95c50c58ba6c0ea169260" => :sierra
-    sha256 "ccf408be4445a351135af532b40da0e36f2daaff574eb90e2aa74effaea7b144" => :el_capitan
+    sha256 "d80644beb47575554da2473d294956859e8ff96b45f38d0f23a4b49c64d7a1ff" => :high_sierra
+    sha256 "9483906284202975572bdf52a8556de1bf25be69ad36edd703528692a487c342" => :sierra
+    sha256 "5dfc428706294f5f608749170520feb4d6b87bdeb362800e8fea50314a4a2a2c" => :el_capitan
   end
 
   head do
@@ -45,6 +44,7 @@ class Getdns < Formula
 
     system "./configure", "--prefix=#{prefix}", *args
     system "make"
+    ENV.deparallelize
     system "make", "install"
   end
 

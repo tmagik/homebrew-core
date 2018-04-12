@@ -1,13 +1,13 @@
 class Ccache < Formula
   desc "Object-file caching compiler wrapper"
   homepage "https://ccache.samba.org/"
-  url "https://www.samba.org/ftp/ccache/ccache-3.3.5.tar.xz"
-  sha256 "190576a6e938760ec8113523e6fd380141117303e90766cc4802e770422b30c6"
+  url "https://www.samba.org/ftp/ccache/ccache-3.4.2.tar.xz"
+  sha256 "18a8b14367d63d3d37fb6c33cba60e1b7fcd7a63d608df97c9771ae0d234fee2"
 
   bottle do
-    sha256 "33f6008e8ab11fc2ba1e1c4ffde0054bf48329123608ce3b09930018364253c7" => :high_sierra
-    sha256 "4a4dea2313e2b53b7c0d6d14aed20e7ae1e205b20e1f76df90f1b3ac153dde8c" => :sierra
-    sha256 "7a49542ab14a0b512786ddb87d0efbdb654db96a42bf3b88208a6affa0951c3e" => :el_capitan
+    sha256 "279961566bd797e5673c959161079c155044bb9091585890ece18d9ce557de45" => :high_sierra
+    sha256 "9d9fd55841f1967739949493c453260243a49d2e78af2ac3d1f24c878096c254" => :sierra
+    sha256 "02fabd715abe67071a46f6fda9f531455bc0d357202b025516c8655349bb614a" => :el_capitan
   end
 
   head do
@@ -23,7 +23,7 @@ class Ccache < Formula
     ENV["XML_CATALOG_FILES"] = etc/"xml/catalog" if build.head?
 
     system "./autogen.sh" if build.head?
-    system "./configure", "--prefix=#{prefix}", "--mandir=#{man}", "--with-bundled-zlib"
+    system "./configure", "--prefix=#{prefix}", "--mandir=#{man}"
     system "make"
     system "make", "install"
 

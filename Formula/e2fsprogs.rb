@@ -1,15 +1,15 @@
 class E2fsprogs < Formula
   desc "Utilities for the ext2, ext3, and ext4 file systems"
   homepage "https://e2fsprogs.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v1.43.8/e2fsprogs-1.43.8.tar.gz"
-  sha256 "3f32f481f408b7f248acf00ea3e423c348d2a17ff51ed0dfa892d171551ec3de"
+  url "https://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v1.44.1/e2fsprogs-1.44.1.tar.gz"
+  sha256 "a5a8068dfe105050d8c63d67515a0ae5fff3f37232f725e0aa72b389eeb6c1e6"
 
   head "https://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git"
 
   bottle do
-    sha256 "8c1125d7019a699d729d9d8ad291d6a4c6f7f5d17478524624c0712a982900c9" => :high_sierra
-    sha256 "9cedd40f0ee2a99581660e1896773dd39481986b5ca26c859443877eb40fd599" => :sierra
-    sha256 "73a5a2a59adc18a53bb39fbde3f6efd34adf6b4289a5447afdd12d09af9b35ab" => :el_capitan
+    sha256 "efb60f33aeebde065e3af6874bcabc10aa406cf07b592121d51315216457b6a3" => :high_sierra
+    sha256 "112e0b076519130ab8b48cde0659574d85573f6c0682d4d2f75034aad9bb479e" => :sierra
+    sha256 "095ad2a91bd6de38a4faa73cf27b00dce06ff611a9011c40db1b2b627e6720eb" => :el_capitan
   end
 
   keg_only "this installs several executables which shadow macOS system commands"

@@ -1,14 +1,14 @@
 class GetFlashVideos < Formula
   desc "Download or play videos from various Flash-based websites"
   homepage "https://github.com/monsieurvideo/get-flash-videos"
-  url "https://github.com/monsieurvideo/get-flash-videos/archive/1.25.97.tar.gz"
-  sha256 "1b25f0863e91a3d4435c255975c7d4f222fb94aabec288310ecc9f71fe4cbd5a"
+  url "https://github.com/monsieurvideo/get-flash-videos/archive/1.25.99.01.tar.gz"
+  sha256 "a9f8e0f8060e5b8ee004f56f76a094868d06b82023a128f566af45a9b8831277"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "4102c72a9c56d9d3a3e4a8d2b956076882179e7fd21d8c30009799d3b9d7adce" => :high_sierra
-    sha256 "3723a25f3565722b8fe96e42a33a10323aae5c8a25729556330c3f7ae0ab9507" => :sierra
-    sha256 "f2af279e5bc044c04e841cdfd8d2b8ec05161d5c11948c7194d644140fbd6cdd" => :el_capitan
+    sha256 "312a51a897b97b9fe7da368f78cb9ed1e5f608a57112ab420e4a340cef4612ff" => :high_sierra
+    sha256 "7322c7e644599cca4a7bfaf884e89ded3f4e6c263d96489519867d015ad3fe61" => :sierra
+    sha256 "40dfa1285e739e055c667b3fba1e07c85f7e294e782b6f9037939392d3c3e69c" => :el_capitan
   end
 
   depends_on "rtmpdump"
@@ -19,8 +19,8 @@ class GetFlashVideos < Formula
   end
 
   resource "LWP::Protocol" do
-    url "https://cpan.metacpan.org/authors/id/E/ET/ETHER/libwww-perl-6.31.tar.gz"
-    sha256 "525d5386d39d1c1d7da8a0e9dd0cbab95cba2a4bfcfd9b83b257f49be4eecae3"
+    url "https://cpan.metacpan.org/authors/id/O/OA/OALDERS/libwww-perl-6.33.tar.gz"
+    sha256 "97417386f11f007ae129fe155b82fd8969473ce396a971a664c8ae6850c69b99"
   end
 
   resource "Tie::IxHash" do
@@ -29,8 +29,8 @@ class GetFlashVideos < Formula
   end
 
   resource "WWW::Mechanize" do
-    url "https://cpan.metacpan.org/authors/id/O/OA/OALDERS/WWW-Mechanize-1.86.tar.gz"
-    sha256 "0e5468b89afeff096fb6d9b91a9a58418746c89445fb01adb5caa25ecf32d469"
+    url "https://cpan.metacpan.org/authors/id/O/OA/OALDERS/WWW-Mechanize-1.87.tar.gz"
+    sha256 "819342a55cdaaf742e8511ecf72c7764b71789f4d1ef0eb6f4b4db4361f3b9cf"
   end
 
   resource "Term::ProgressBar" do

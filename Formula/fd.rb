@@ -1,14 +1,14 @@
 class Fd < Formula
   desc "Simple, fast and user-friendly alternative to find"
   homepage "https://github.com/sharkdp/fd"
-  url "https://github.com/sharkdp/fd/archive/v6.2.0.tar.gz"
-  sha256 "ca9c3995456fcb6f28aafea7d2b6c7ccddef1e98e3f4963aaee4d041ceba0a1d"
+  url "https://github.com/sharkdp/fd/archive/v7.0.0.tar.gz"
+  sha256 "93cc5a7c9199dc650f51a491e4ed4512262eeaeae5847722e6886763b41e2896"
   head "https://github.com/sharkdp/fd.git"
 
   bottle do
-    sha256 "d8771562cbde7d51c5a745f897b384abb9087dd68f999cffb2a10dc7dcaa0787" => :high_sierra
-    sha256 "71c86d05bfaacec16a24422015b86fbea1c0fe208a223b61fa9563b3ae902826" => :sierra
-    sha256 "b136dc7c318a598414b04e5814ca36a40b43105a2de82eed182849b42fb034e9" => :el_capitan
+    sha256 "2644d73cbba8a1dd1520f6c2a2628c9c7417dbc58f39fac6936ae290dcea4774" => :high_sierra
+    sha256 "e71f013de3825b3fe467304af14e50e3a3712b76628978628896b2ecdc6a5625" => :sierra
+    sha256 "f5363d8f9a41dfbefe1368abb7baadf9d0cc5dc0294676af3ef531a9eced33a0" => :el_capitan
   end
 
   depends_on "rust" => :build

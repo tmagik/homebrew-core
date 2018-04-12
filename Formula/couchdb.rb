@@ -3,12 +3,12 @@ class Couchdb < Formula
   homepage "https://couchdb.apache.org/"
   url "https://www.apache.org/dyn/closer.cgi?path=/couchdb/source/1.7.1/apache-couchdb-1.7.1.tar.gz"
   sha256 "91200aa6fbc6fa5e2f3d78ef40e39d8c1ec7c83ea1c2cd730d270658735b2cad"
-  revision 3
+  revision 5
 
   bottle do
-    sha256 "6215cd6abbf100a301579ef95d1c94a90c3c2bc84484a91edb0c88bb9b1ae626" => :high_sierra
-    sha256 "dc124a774e54ae8368fb6ef46817d5d0c3d6a3997d9029c250ad186f9bbd681d" => :sierra
-    sha256 "f3c634cb5313a11d485dea76f5326b4c04ac9b9b43a0fb909c3b1008ff3d711e" => :el_capitan
+    sha256 "9c557e15ee0b340330d014c93df0c4a1cf784b89ef3e3d8370c9a46e15d368b7" => :high_sierra
+    sha256 "afd477886aa6831e5b3407727134d2560e27405cc6ca6e0431a90fcb6360d26d" => :sierra
+    sha256 "5c4d68980434f501b71dc9578b68ded4adfbf0756f5b0a6df8b7addd2770e1b0" => :el_capitan
   end
 
   head do
@@ -85,10 +85,10 @@ class Couchdb < Formula
       geocouch_plist.chmod 0644
       inreplace geocouch_plist, "<string>org.apache.couchdb</string>", \
         "<string>geocouch</string>"
-      inreplace geocouch_plist, "<key>HOME</key>", <<-EOS.lstrip.chop
+      inreplace geocouch_plist, "<key>HOME</key>", <<~EOS.lstrip.chop
         <key>ERL_FLAGS</key>
-        <string>-pa #{linked_geocouch_share}/ebin</string>
-        <key>HOME</key>
+              <string>-pa #{linked_geocouch_share}/ebin</string>
+              <key>HOME</key>
       EOS
       inreplace geocouch_plist, "%bindir%/%couchdb_command_name%", \
         HOMEBREW_PREFIX/"bin/couchdb"

@@ -1,16 +1,14 @@
-require "language/go"
-
 class PerconaServerMongodb < Formula
   desc "Drop-in MongoDB replacement"
   homepage "https://www.percona.com"
-  url "https://www.percona.com/downloads/percona-server-mongodb-3.4/percona-server-mongodb-3.4.9-2.9/source/tarball/percona-server-mongodb-3.4.9-2.9.tar.gz"
-  version "3.4.9-2.9"
-  sha256 "489675e6568dfcdc842d12872e552f0cd1ea5b2db2b6fe5d6548216c494778ba"
+  url "https://www.percona.com/downloads/percona-server-mongodb-3.4/percona-server-mongodb-3.4.13-2.11/source/tarball/percona-server-mongodb-3.4.13-2.11.tar.gz"
+  version "3.4.13-2.11"
+  sha256 "fab82121f6e9cce1058d15ef3650813038cc4e1b768a1c0cd6bdf3bec40e8f45"
 
   bottle do
-    sha256 "e5ccf64c9a283e50a6302f75a3752c561bbbe855d4ee7749379b1b9a5c57d41a" => :high_sierra
-    sha256 "ab38604e27bf3eb5a5fac8ed6357981455d367fe852bacd11d1f1ce7e4ac17d2" => :sierra
-    sha256 "90744840454940fef1add8a06d2cc80ebee995fefcf78c36714c0d2d7ea99a5c" => :el_capitan
+    sha256 "b7c49e1664e9cb20380884e6338f75d7f3dd6766df1d82eed210b51ff66644a2" => :high_sierra
+    sha256 "4e517c014c1ccdd85b2791a72a5320a47fdc6bdfae7a8a2f4bba8056ba4f0990" => :sierra
+    sha256 "82c944d1b91d8dddbfa7586976295a97db947f1de151c832ef486fcdeac8c8ea" => :el_capitan
   end
 
   option "with-boost", "Compile using installed boost, not the version shipped with this formula"
@@ -25,13 +23,6 @@ class PerconaServerMongodb < Formula
   conflicts_with "mongodb",
     :because => "percona-server-mongodb and mongodb install the same binaries."
 
-  go_resource "github.com/mongodb/mongo-tools" do
-    url "https://github.com/mongodb/mongo-tools.git",
-        :tag => "r3.4.9",
-        :revision => "4f093ae71cdb4c6a6e9de7cd1dc67ea4405f0013",
-        :shallow => false
-  end
-
   needs :cxx11
 
   def install
@@ -40,9 +31,13 @@ class PerconaServerMongodb < Formula
 
     # New Go tools have their own build script but the server scons "install" target is still
     # responsible for installing them.
-    Language::Go.stage_deps resources, buildpath/"src"
 
-    cd "src/github.com/mongodb/mongo-tools" do
+    cd "src/mongo/gotools" do
+      inreplace "build.sh" do |s|
+        s.gsub! "$(git describe)", version.to_s.split("-")[0]
+        s.gsub! "$(git rev-parse HEAD)", "homebrew"
+      end
+
       args = %w[]
 
       if build.with? "openssl"
@@ -56,7 +51,7 @@ class PerconaServerMongodb < Formula
       system "./build.sh", *args
     end
 
-    (buildpath/"src/mongo-tools").install Dir["src/github.com/mongodb/mongo-tools/bin/*"]
+    (buildpath/"src/mongo-tools").install Dir["src/mongo/gotools/bin/*"]
 
     args = %W[
       --prefix=#{prefix}

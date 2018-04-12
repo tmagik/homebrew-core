@@ -1,15 +1,15 @@
 class FaasCli < Formula
   desc "CLI for templating and/or deploying FaaS functions"
-  homepage "http://docs.get-faas.com/"
+  homepage "https://docs.get-faas.com/"
   url "https://github.com/openfaas/faas-cli.git",
-      :tag => "0.5.1",
-      :revision => "d1d38e9b2d5600a3485442b75641bf73b566313b"
+      :tag => "0.6.5",
+      :revision => "ae7390005a2fe13873f2cb6fcfa2d830dad4a40b"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "fb551bfa0db0374198b07387b6ecbe1278ae12c6012cbb2389da687f343824e6" => :high_sierra
-    sha256 "d3cd94acd089f7ab4a2d301363841bffbd34d7338b7912e187420ea1551f5503" => :sierra
-    sha256 "39218f56765ec45c8288807b97d2fe4c78106d4159abca5d4d8f5958a400ded1" => :el_capitan
+    sha256 "a154159a560783ff216042b2d983b663a23d669f3f47667bce5f8c8cc5fa9ded" => :high_sierra
+    sha256 "a44aab7969ba9d134f3bc6a3b46907c39d7e813a18176c121af06d0e0d670741" => :sierra
+    sha256 "be299e9eb0d2233f0d9f5c68a540223a6bee9ce82547abf2bd5a903ae13c575e" => :el_capitan
   end
 
   depends_on "go" => :build
@@ -23,7 +23,7 @@ class FaasCli < Formula
       project = "github.com/openfaas/faas-cli"
       commit = Utils.popen_read("git", "rev-parse", "HEAD").chomp
       system "go", "build", "-ldflags",
-             "-s -w -X #{project}/version.GitCommit=#{commit}", "-a",
+             "-s -w -X #{project}/version.GitCommit=#{commit} -X #{project}/version.Version=#{version}", "-a",
              "-installsuffix", "cgo", "-o", bin/"faas-cli"
       bin.install_symlink "faas-cli" => "faas"
       pkgshare.install "template"
@@ -64,33 +64,34 @@ class FaasCli < Formula
 
     expected = <<~EOS
       Deploying: dummy_function.
-      Removing old function.
-      Deployed.
-      URL: http://localhost:#{port}/function/dummy_function
+      Function dummy_function already exists, attempting rolling-update.
 
-      200 OK
+      Deployed. 200 OK.
+      URL: http://localhost:#{port}/function/dummy_function
     EOS
 
     begin
       cp_r pkgshare/"template", testpath
 
       output = shell_output("#{bin}/faas-cli deploy -yaml test.yml")
-      assert_equal expected, output
+      assert_equal expected, output.chomp
 
       rm_rf "template"
 
       output = shell_output("#{bin}/faas-cli deploy -yaml test.yml 2>&1", 1)
-      assert_match "Stat ./template/python/template.yml", output
+      assert_match "stat ./template/python/template.yml", output
 
       assert_match "ruby", shell_output("#{bin}/faas-cli template pull 2>&1")
       assert_match "node", shell_output("#{bin}/faas-cli new --list")
 
       output = shell_output("#{bin}/faas-cli deploy -yaml test.yml")
-      assert_equal expected, output
+      assert_equal expected, output.chomp
 
       stable_resource = stable.instance_variable_get(:@resource)
       commit = stable_resource.instance_variable_get(:@specs)[:revision]
-      assert_match commit, shell_output("#{bin}/faas-cli version")
+      faas_cli_version = shell_output("#{bin}/faas-cli version")
+      assert_match /\s#{commit}$/, faas_cli_version
+      assert_match /\s#{version}$/, faas_cli_version
     ensure
       Process.kill("TERM", pid)
       Process.wait(pid)

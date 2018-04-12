@@ -2,14 +2,14 @@ class Docker < Formula
   desc "Pack, ship and run any application as a lightweight container"
   homepage "https://www.docker.com/"
   url "https://github.com/docker/docker-ce.git",
-      :tag => "v18.01.0-ce",
-      :revision => "03596f51b120095326d2004d676e97228a21014d"
+      :tag => "v18.04.0-ce",
+      :revision => "3d479c0af67cb9ea43a9cfc1bf2ef097e06a3470"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "14f9b28fa7d6f78aa1399f2d4d0482ea40e8b4d0559a339bebae5390953443cf" => :high_sierra
-    sha256 "38d22a382f1283234f72f70bea0ee27127f54a89328c8f4675b8d4de44aeddc2" => :sierra
-    sha256 "9a8db66ccf65f4720f1e961d974f9e588597616b7dec971dc606bc52a4756a74" => :el_capitan
+    sha256 "cbadfb1426927ab3643a03aaa36c9d2f9557532d1242c66a49196d56b4347110" => :high_sierra
+    sha256 "3a891a58beaf58cfd426c8b28de28d40641f7c99d24f3122d423be238a6da4ac" => :sierra
+    sha256 "1f854142829a3d1f60871e50d49145e0b90b80832bc64cb000e2f2f5a488988d" => :el_capitan
   end
 
   option "with-experimental", "Enable experimental features"
@@ -18,7 +18,7 @@ class Docker < Formula
   depends_on "go" => :build
 
   if build.with? "experimental"
-    depends_on "libtool" => :run
+    depends_on "libtool"
     depends_on "yubico-piv-tool" => :recommended
   end
 

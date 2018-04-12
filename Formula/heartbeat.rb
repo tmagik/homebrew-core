@@ -1,39 +1,57 @@
 class Heartbeat < Formula
   desc "Lightweight Shipper for Uptime Monitoring"
   homepage "https://www.elastic.co/products/beats/heartbeat"
-  url "https://github.com/elastic/beats/archive/v6.1.2.tar.gz"
-  sha256 "e673b4f03bc73807d23083b8d6a5f45f5a8b3fa3a6709f89881a2debb10a8d2f"
+  url "https://github.com/elastic/beats/archive/v6.2.3.tar.gz"
+  sha256 "4ab58a55e61bd3ad31a597e5b02602b52d306d8ee1e4d4d8ff7662e2b554130e"
   head "https://github.com/elastic/beats.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "324e4f97037fa6a0667ac0dfb3558679e7e1c3f1732d4b55fcc56a950ebf12ef" => :high_sierra
-    sha256 "dd917eaf740bc697b143b0db72a47d976466c16d9fb5cc91eb38b3d038576bda" => :sierra
-    sha256 "506a5a6594c6efa93a363c1f17144c63bc4112368e379a0155ef5a4af1c3fc76" => :el_capitan
+    sha256 "76c5316ff95fe31029b43ae3e1026c32550c2de51d88487f90a4499d8c2497d2" => :high_sierra
+    sha256 "a15cfcdbb07cd1b5ef8b283a4693dc7e78aa8b09fa4d821694f190de04ae9ac8" => :sierra
+    sha256 "4d482f8eae7c15a84bacbf46c8a65e92ece6290bff41aaba15dd2fb8ba60a092" => :el_capitan
   end
 
   depends_on "go" => :build
+  depends_on "python@2" => :build
+
+  resource "virtualenv" do
+    url "https://files.pythonhosted.org/packages/b1/72/2d70c5a1de409ceb3a27ff2ec007ecdd5cc52239e7c74990e32af57affe9/virtualenv-15.2.0.tar.gz"
+    sha256 "1d7e241b431e7afce47e77f8843a276f652699d1fa4f93b9d8ce0076fd7b0b54"
+  end
 
   def install
     ENV["GOPATH"] = buildpath
     (buildpath/"src/github.com/elastic/beats").install buildpath.children
 
+    ENV.prepend_create_path "PYTHONPATH", buildpath/"vendor/lib/python2.7/site-packages"
+
+    resource("virtualenv").stage do
+      system "python", *Language::Python.setup_install_args(buildpath/"vendor")
+    end
+
+    ENV.prepend_path "PATH", buildpath/"vendor/bin"
+
     cd "src/github.com/elastic/beats/heartbeat" do
       system "make"
-      (libexec/"bin").install "heartbeat"
-      libexec.install "_meta/kibana"
+      # prevent downloading binary wheels during python setup
+      system "make", "PIP_INSTALL_COMMANDS=--no-binary :all", "python-env"
+      system "make", "DEV_OS=darwin", "update"
 
-      (etc/"heartbeat").install Dir["heartbeat*.{json,yml}"]
-      prefix.install_metafiles
+      (etc/"heartbeat").install Dir["heartbeat.*", "fields.yml"]
+      (libexec/"bin").install "heartbeat"
+      prefix.install "_meta/kibana"
     end
+
+    prefix.install_metafiles buildpath/"src/github.com/elastic/beats"
 
     (bin/"heartbeat").write <<~EOS
       #!/bin/sh
-        exec #{libexec}/bin/heartbeat \
-        -path.config #{etc}/heartbeat \
-        -path.home #{libexec} \
-        -path.logs #{var}/log/heartbeat \
-        -path.data #{var}/lib/heartbeat \
+      exec #{libexec}/bin/heartbeat \
+        --path.config #{etc}/heartbeat \
+        --path.data #{var}/lib/heartbeat \
+        --path.home #{prefix} \
+        --path.logs #{var}/log/heartbeat \
         "$@"
     EOS
   end

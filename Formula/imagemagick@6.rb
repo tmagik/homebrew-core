@@ -4,14 +4,15 @@ class ImagemagickAT6 < Formula
   # Please always keep the Homebrew mirror as the primary URL as the
   # ImageMagick site removes tarballs regularly which means we get issues
   # unnecessarily and older versions of the formula are broken.
-  url "https://dl.bintray.com/homebrew/mirror/imagemagick%406-6.9.9-31.tar.xz"
-  mirror "https://www.imagemagick.org/download/ImageMagick-6.9.9-31.tar.xz"
-  sha256 "b487091382271106ed8172a320604761d8234b8f954b2b37ed61025d436b551e"
+  url "https://dl.bintray.com/homebrew/mirror/imagemagick%406-6.9.9-40.tar.xz"
+  mirror "https://www.imagemagick.org/download/ImageMagick-6.9.9-40.tar.xz"
+  sha256 "62f25d46bfbcffe00b84e167994d593868a9a47d4defc489a429cae1d6aab9f7"
+  head "https://github.com/imagemagick/imagemagick.git", :branch => "ImageMagick-6"
 
   bottle do
-    sha256 "060b912575258a4c9352d4d31212157ae433938a9150c73f9cebc809efda4e7a" => :high_sierra
-    sha256 "7321ba1aa323506af98de9215307699fd79a98407e6883ecc950c9c25aa5090d" => :sierra
-    sha256 "9c4fc0bdf3d12bf7bded5641d6a1c18c2752ed791f8b30d0eed614eb07eb1054" => :el_capitan
+    sha256 "a0ea6ba13cb82131017aee322487b59d71d315c31a2f55d842aea9b198b1cfdc" => :high_sierra
+    sha256 "fda6bad0f0e7cfa63764743f626e8e20634488d2b44fc06f7a503b2b27ed0289" => :sierra
+    sha256 "e493b873826f2f82cc35f869618c096e477b9fdc7e84ce659c5d9aa8e925323f" => :el_capitan
   end
 
   keg_only :versioned_formula
@@ -19,7 +20,7 @@ class ImagemagickAT6 < Formula
   option "with-fftw", "Compile with FFTW support"
   option "with-hdri", "Compile with HDRI support"
   option "with-opencl", "Compile with OpenCL support"
-  option "with-gcc", "Compile with OpenMP support"
+  option "with-openmp", "Compile with OpenMP support"
   option "with-perl", "Compile with PerlMagick"
   option "without-magick-plus-plus", "disable build/install of Magick++"
   option "without-modules", "Disable support for dynamically loadable modules"
@@ -27,11 +28,11 @@ class ImagemagickAT6 < Formula
   option "with-zero-configuration", "Disables depending on XML configuration files"
 
   deprecated_option "enable-hdri" => "with-hdri"
+  deprecated_option "with-gcc" => "with-openmp"
   deprecated_option "with-jp2" => "with-openjpeg"
-  deprecated_option "with-openmp" => "with-gcc"
 
   depends_on "pkg-config" => :build
-  depends_on "libtool" => :run
+  depends_on "libtool"
   depends_on "xz"
 
   depends_on "jpeg" => :recommended
@@ -40,7 +41,6 @@ class ImagemagickAT6 < Formula
   depends_on "freetype" => :recommended
 
   depends_on "fontconfig" => :optional
-  depends_on "gcc" => :optional
   depends_on "little-cms" => :optional
   depends_on "little-cms2" => :optional
   depends_on "libwmf" => :optional
@@ -53,6 +53,11 @@ class ImagemagickAT6 < Formula
   depends_on "fftw" => :optional
   depends_on "pango" => :optional
   depends_on "perl" => :optional
+
+  if build.with? "openmp"
+    depends_on "gcc"
+    fails_with :clang
+  end
 
   skip_clean :la
 
@@ -109,6 +114,7 @@ class ImagemagickAT6 < Formula
     args << "--with-fontconfig=yes" if build.with? "fontconfig"
     args << "--with-freetype=yes" if build.with? "freetype"
     args << "--enable-zero-configuration" if build.with? "zero-configuration"
+    args << "--without-wmf" if build.without? "libwmf"
 
     # versioned stuff in main tree is pointless for us
     inreplace "configure", "${PACKAGE_NAME}-${PACKAGE_VERSION}", "${PACKAGE_NAME}"

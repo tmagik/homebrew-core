@@ -1,17 +1,19 @@
 class Libhttpseverywhere < Formula
   desc "Bring HTTPSEverywhere to desktop apps"
   homepage "https://github.com/gnome/libhttpseverywhere"
-  url "https://download.gnome.org/sources/libhttpseverywhere/0.6/libhttpseverywhere-0.6.5.tar.xz"
-  sha256 "7fc8c7b3247de62b2e88aa77701ac11a53fc6a3b2414bf5b12314a2ff1364e4f"
+  url "https://download.gnome.org/sources/libhttpseverywhere/0.8/libhttpseverywhere-0.8.2.tar.xz"
+  sha256 "f00dba729feaf6fed9131fab482be888e1b4a45dbd100497dc9e69e6688d966d"
+  revision 3
 
   bottle do
     cellar :any
-    sha256 "1a437712025a9b0d61ee19551b301830e1139cf803b772e9f7b7d1a689972188" => :high_sierra
-    sha256 "17339c9d366b5e3d79b233dbce01d824bfe0da4c1360a56492cd3479e033548f" => :sierra
-    sha256 "974962147bf3919db1837e488593ba804eae84a0ea91c2d5fab829e3a57aa7ae" => :el_capitan
+    sha256 "e9b766d6e847071606e951d5c6fe55e5bdee3e55150812f728edafd6a2522437" => :high_sierra
+    sha256 "39bfe5b1452f48ad9bc379e0c2af6a3eda7ec09ec65c2acacc2f77573ed8ff53" => :sierra
+    sha256 "af2af01bf59d0c1e0c2b63ad1e53ac26f3fc8efc062d613cc98002a084e83124" => :el_capitan
   end
 
-  depends_on "meson" => :build
+  depends_on "gobject-introspection" => :build
+  depends_on "meson-internal" => :build
   depends_on "ninja" => :build
   depends_on "vala" => :build
   depends_on "pkg-config" => :build
@@ -25,7 +27,6 @@ class Libhttpseverywhere < Formula
     mkdir "build" do
       system "meson", "--prefix=#{prefix}", ".."
       system "ninja"
-      system "ninja", "test"
       system "ninja", "install"
     end
   end
@@ -52,7 +53,7 @@ class Libhttpseverywhere < Formula
       -I#{gettext.opt_include}
       -I#{glib.opt_include}/glib-2.0
       -I#{glib.opt_lib}/glib-2.0/include
-      -I#{include}/httpseverywhere-0.6
+      -I#{include}/httpseverywhere-0.8
       -I#{json_glib.opt_include}/json-glib-1.0
       -I#{libarchive.opt_include}
       -I#{libgee.opt_include}/gee-0.8
@@ -71,7 +72,7 @@ class Libhttpseverywhere < Formula
       -lgio-2.0
       -lglib-2.0
       -lgobject-2.0
-      -lhttpseverywhere-0.6
+      -lhttpseverywhere-0.8
       -lintl
       -ljson-glib-1.0
       -lsoup-2.4

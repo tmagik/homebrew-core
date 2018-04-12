@@ -1,16 +1,16 @@
 class Re2 < Formula
   desc "Alternative to backtracking PCRE-style regular expression engines"
   homepage "https://github.com/google/re2"
-  url "https://github.com/google/re2/archive/2018-01-01.tar.gz"
-  version "20180101"
-  sha256 "b99a940699cff9ffd633fbb0286792e4b3995816212c3dedae817f0ae24317c2"
+  url "https://github.com/google/re2/archive/2018-04-01.tar.gz"
+  version "20180401"
+  sha256 "2f945446b71336e7f5a2bcace1abcf0b23fbba368266c6a1be33de3de3b3c912"
   head "https://github.com/google/re2.git"
 
   bottle do
     cellar :any
-    sha256 "2509709630617e1bbd2af7be7f0596ea7eb9195e953c172d2149ed96b301fabf" => :high_sierra
-    sha256 "c9658429a42fbe1581790c8d2c2619a9eabe3211344316589fb0187e99601e09" => :sierra
-    sha256 "33e23a2b0f14ad42032c0c17ee5093b231cb8fb8c7f4314ea89c8be393f24bc4" => :el_capitan
+    sha256 "848dab9a0f20ad568a7811091bd3012d9c4088c1a19766f7efd13c2339091eaa" => :high_sierra
+    sha256 "361d751e54a0ce71402d22d1c8eb1b12ead32576b08eef26dc3ead14c0a82296" => :sierra
+    sha256 "b9a173228752cec85ae8e29276c6cc05c850ca4551a9b474a2c26fd4aa5f93e1" => :el_capitan
   end
 
   needs :cxx11

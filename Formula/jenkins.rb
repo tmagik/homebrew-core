@@ -1,8 +1,8 @@
 class Jenkins < Formula
   desc "Extendable open source continuous integration server"
   homepage "https://jenkins.io/"
-  url "http://mirrors.jenkins.io/war/2.102/jenkins.war"
-  sha256 "df57d15616cc18fbf20a43d8dae8ccdec9a6881e514c56f8530a47a7187c1e35"
+  url "http://mirrors.jenkins.io/war/2.115/jenkins.war"
+  sha256 "289b1e7fc627d2b5d859c849a5d82e57162a65c07017cf8f6ee00de8f2e9690e"
 
   head do
     url "https://github.com/jenkinsci/jenkins.git"
@@ -20,8 +20,8 @@ class Jenkins < Formula
       system "jar", "xvf", "jenkins.war"
     end
     libexec.install Dir["**/jenkins.war", "**/jenkins-cli.jar"]
-    bin.write_jar_script libexec/"jenkins.war", "jenkins"
-    bin.write_jar_script libexec/"jenkins-cli.jar", "jenkins-cli"
+    bin.write_jar_script libexec/"jenkins.war", "jenkins", :java_version => "1.8"
+    bin.write_jar_script libexec/"jenkins-cli.jar", "jenkins-cli", :java_version => "1.8"
   end
 
   def caveats; <<~EOS

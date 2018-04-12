@@ -1,17 +1,15 @@
 class Root < Formula
   desc "Object oriented framework for large scale data analysis"
   homepage "https://root.cern.ch"
-  url "https://root.cern.ch/download/root_v6.12.04.source.tar.gz"
-  version "6.12.04"
-  sha256 "f438f2ae6e25496fa81df525935fb0bf2a403855d95c40b3e0f3a3e1e861a085"
-  revision 1
-
+  url "https://root.cern.ch/download/root_v6.12.06.source.tar.gz"
+  version "6.12.06"
+  sha256 "aedcfd2257806e425b9f61b483e25ba600eb0ea606e21262eafaa9dc745aa794"
   head "http://root.cern.ch/git/root.git"
 
   bottle do
-    sha256 "d4955129369da03358bdc3e6ea0767cfc150b0cd116f0c034cb1256f7e77bc62" => :high_sierra
-    sha256 "a46826ce377196223ffda513b18ea6ebca13980fb21efa5b8d78c198d51dfb07" => :sierra
-    sha256 "745de6cc7d93fc83e3609a3dbfc21a98c520a29d5961cf15e17374080ab83c49" => :el_capitan
+    sha256 "26c632e4a43db19c05cb4680feb9769d07d167e2df8faaa60b218b6784d134c4" => :high_sierra
+    sha256 "7a4b7823f8a2af91ebe3cc42ef96a4d6766fff7a0928c2b853bd00297eb1efa7" => :sierra
+    sha256 "0d60e875c6b6a135ca98ead7436ca3cf8a073e2a2c5fe5aef64867d24da52ce5" => :el_capitan
   end
 
   depends_on "cmake" => :build
@@ -24,7 +22,7 @@ class Root < Formula
   depends_on "xrootd"
   depends_on "xz" # For LZMA.
   depends_on "python" => :recommended
-  depends_on "python3" => :optional
+  depends_on "python@2" => :optional
 
   needs :cxx11
 
@@ -57,14 +55,14 @@ class Root < Formula
       -Dxrootd=ON
     ]
 
-    if build.with?("python3") && build.with?("python")
+    if build.with?("python") && build.with?("python@2")
       odie "Root: Does not support building both python 2 and 3 wrappers"
-    elsif build.with?("python") || build.with?("python3")
-      if build.with? "python"
-        ENV.prepend_path "PATH", Formula["python"].opt_libexec/"bin"
+    elsif build.with?("python") || build.with?("python@2")
+      if build.with? "python@2"
+        ENV.prepend_path "PATH", Formula["python@2"].opt_libexec/"bin"
         python_executable = Utils.popen_read("which python").strip
         python_version = Language::Python.major_minor_version("python")
-      elsif build.with? "python3"
+      elsif build.with? "python"
         python_executable = Utils.popen_read("which python3").strip
         python_version = Language::Python.major_minor_version("python3")
       end
@@ -138,7 +136,7 @@ class Root < Formula
 
     if build.with? "python"
       ENV["PYTHONPATH"] = lib/"root"
-      system "python2", "-c", "import ROOT"
+      system "python3", "-c", "import ROOT"
     end
   end
 end

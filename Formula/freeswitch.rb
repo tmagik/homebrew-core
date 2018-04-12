@@ -2,15 +2,14 @@ class Freeswitch < Formula
   desc "Telephony platform to route various communication protocols"
   homepage "https://freeswitch.org"
   url "https://freeswitch.org/stash/scm/fs/freeswitch.git",
-      :tag => "v1.6.19",
-      :revision => "7a77e0bb2ca875cb977b1e698a1783e575d96563"
-  revision 1
+      :tag => "v1.6.20",
+      :revision => "987c9b9a2a2e389becf4f390feb9eb14c77e2371"
   head "https://freeswitch.org/stash/scm/fs/freeswitch.git"
 
   bottle do
-    sha256 "b45d6f3737a6d33c8d8594966afafa9b3ebe937ea4eb919e4afde98ab8f92339" => :high_sierra
-    sha256 "c20c98656a0bab405eed511ebfcf443d521a1412c1d703f9210934501439aa15" => :sierra
-    sha256 "908b6e3c2a9113a28b3f127be420e95d2d0ce731e908cb97529c996f6131cfa0" => :el_capitan
+    sha256 "a44ff9765d3a79e6caf363f94c144ee62139320b274f70c56000d839dec618ad" => :high_sierra
+    sha256 "52aa9f65dbcff17203256154422092c74195c795f50cb10b4c7182e4dcc1361b" => :sierra
+    sha256 "f2d73136027050dc82f3ce4d9e6f131f07a6cf15fba1d2b02c2012eacd1cb525" => :el_capitan
   end
 
   option "without-moh", "Do not install music-on-hold"
@@ -24,8 +23,6 @@ class Freeswitch < Formula
   depends_on "pkg-config" => :build
   depends_on "apr-util" => :build
   depends_on "yasm" => :build
-
-  depends_on "curl"
   depends_on "jpeg"
   depends_on "openssl"
   depends_on "pcre"
@@ -145,6 +142,8 @@ class Freeswitch < Formula
   #------------------------ End sound file resources --------------------------
 
   def install
+    ENV["ac_cv_lib_lzma_lzma_code"] = "no" # prevent opportunistic linkage to xz
+
     # avoid a dependency on ldns to prevent OpenSSL version conflicts
     inreplace "build/modules.conf.in", "applications/mod_enum",
                                        "#applications/mod_enum"

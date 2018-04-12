@@ -1,14 +1,14 @@
 class Asdf < Formula
   desc "Extendable version manager with support for Ruby, Node.js, Erlang & more"
   homepage "https://github.com/asdf-vm"
-  url "https://github.com/asdf-vm/asdf/archive/v0.4.1.tar.gz"
-  sha256 "09f75fa8afa4efc043af2d90b8b1e3f0f3387cbe9ade42b5c043dee96ae23ef9"
+  url "https://github.com/asdf-vm/asdf/archive/v0.4.3.tar.gz"
+  sha256 "5b8b84721ff58fc857ddb01561b616f9a8cad18b4f0df3b4c44e1f7afc31eedf"
 
   bottle :unneeded
 
-  depends_on "autoconf" => :run
-  depends_on "automake" => :run
-  depends_on "libtool" => :run
+  depends_on "autoconf"
+  depends_on "automake"
+  depends_on "libtool"
   depends_on "coreutils"
   depends_on "libyaml"
   depends_on "openssl"

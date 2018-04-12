@@ -3,19 +3,19 @@ class Saltstack < Formula
 
   desc "Dynamic infrastructure communication bus"
   homepage "http://www.saltstack.org"
-  url "https://files.pythonhosted.org/packages/9e/0d/46336f0b60ba51bbecf91ad401b90f691683fd37b7a18e421198406a7c19/salt-2017.7.2.tar.gz"
-  sha256 "ff3bc7de5abf01b8acbd144db5811b00867179b2353f5c6f7f19241e2eff2840"
+  url "https://files.pythonhosted.org/packages/11/52/29a7b924e495f22764603aa095ab41b2c4a952a4b57ad5689dd863e575ff/salt-2018.3.0.tar.gz"
+  sha256 "a0a45d22fdf6961542a419b7e09568a3118e2b019ffe7bab9dee5aeb55b56b31"
   head "https://github.com/saltstack/salt.git", :branch => "develop", :shallow => false
 
   bottle do
     cellar :any
-    sha256 "dc69669084be3113449c7d7480242a2e4df8d6a9d07745668bbde5ca96d5d43e" => :high_sierra
-    sha256 "1d0d12e82af43f70b6db895cb98f9624261d9e2d65afd9a7e5d191053f3a5680" => :sierra
-    sha256 "6890b60bf11f52e1e64c512c6c9fa44ee9e777d4dba2ea32f5a6a0591a18f779" => :el_capitan
+    sha256 "5ac25cd67791a8613a605d47729a946f455edafc1c855696cf5bbf735c011ac4" => :high_sierra
+    sha256 "773bbb93ab3277520782d9734f3e1f55da6f6d578977522667ce1aa8ee0c994a" => :sierra
+    sha256 "00b60a61a7af6eb2b9e4cd2aab748fe65ad8103e61f84682fac542246a6ee043" => :el_capitan
   end
 
   depends_on "swig" => :build
-  depends_on "python" if MacOS.version <= :snow_leopard
+  depends_on "python@2"
   depends_on "zeromq"
   depends_on "libgit2"
   depends_on "libyaml"
@@ -25,13 +25,13 @@ class Saltstack < Formula
   # pygit2 must be the same version as libgit2 - mismatched versions are incompatible
 
   resource "Jinja2" do
-    url "https://files.pythonhosted.org/packages/90/61/f820ff0076a2599dd39406dcb858ecb239438c02ce706c8e91131ab9c7f1/Jinja2-2.9.6.tar.gz"
-    sha256 "ddaa01a212cd6d641401cb01b605f4a4d9f37bfc93043d7f760ec70fb99ff9ff"
+    url "https://files.pythonhosted.org/packages/56/e6/332789f295cf22308386cf5bbd1f4e00ed11484299c5d7383378cf48ba47/Jinja2-2.10.tar.gz"
+    sha256 "f84be1bb0040caca4cea721fcbbbbd61f9be9464ca236387158b0feea01914a4"
   end
 
   resource "M2Crypto" do
-    url "https://files.pythonhosted.org/packages/01/bd/a41491718f9e2bebab015c42b5be7071c6695acfa301e3fc0480bfd6a15b/M2Crypto-0.27.0.tar.gz"
-    sha256 "82317459d653322d6b37f122ce916dc91ddcd9d1b814847497ac796c4549dd68"
+    url "https://files.pythonhosted.org/packages/18/6f/bc49d68bae9171b2897d8de073369984a5f085111526ace6301fc3c1567f/M2Crypto-0.29.0.tar.gz"
+    sha256 "a0fea2c5ab913e42864d1ccbaee5878c23886368b606e923609fda4ce37d26c0"
   end
 
   resource "MarkupSafe" do
@@ -50,8 +50,13 @@ class Saltstack < Formula
   end
 
   resource "certifi" do
-    url "https://files.pythonhosted.org/packages/20/d0/3f7a84b0c5b89e94abbd073a5f00c7176089f526edb056686751d5064cbd/certifi-2017.7.27.1.tar.gz"
-    sha256 "40523d2efb60523e113b44602298f0960e900388cf3bb6043f645cf57ea9e3f5"
+    url "https://files.pythonhosted.org/packages/15/d4/2f888fc463d516ff7bf2379a4e9a552fef7f22a94147655d9b1097108248/certifi-2018.1.18.tar.gz"
+    sha256 "edbc3f203427eef571f79a7692bb160a2b0f7ccaa31953e99bd17e307cf63f7d"
+  end
+
+  resource "cffi" do
+    url "https://files.pythonhosted.org/packages/e7/a7/4cd50e57cc6f436f1cc3a7e8fa700ff9b8b4d471620629074913e3735fb2/cffi-1.11.5.tar.gz"
+    sha256 "e90f17980e6ab0f3c2f3730e56d1fe9bcba1891eeea58966e89d352492cc74f4"
   end
 
   resource "chardet" do
@@ -60,8 +65,8 @@ class Saltstack < Formula
   end
 
   resource "futures" do
-    url "https://files.pythonhosted.org/packages/cc/26/b61e3a4eb50653e8a7339d84eeaa46d1e93b92951978873c220ae64d0733/futures-3.1.1.tar.gz"
-    sha256 "51ecb45f0add83c806c68e4b06106f90db260585b25ef2abfcda0bd95c0132fd"
+    url "https://files.pythonhosted.org/packages/1f/9e/7b2ff7e965fc654592269f2906ade1c7d705f1bf25b7d469fa153f7d19eb/futures-3.2.0.tar.gz"
+    sha256 "9ec02aa7d674acb8618afb127e27fde7fc68994c0437ad759fa094a574adb265"
   end
 
   resource "idna" do
@@ -70,8 +75,13 @@ class Saltstack < Formula
   end
 
   resource "msgpack-python" do
-    url "https://files.pythonhosted.org/packages/21/27/8a1d82041c7a2a51fcc73675875a5f9ea06c2663e02fcfeb708be1d081a0/msgpack-python-0.4.8.tar.gz"
-    sha256 "1a2b19df0f03519ec7f19f826afb935b202d8979b0856c6fb3dc28955799f886"
+    url "https://files.pythonhosted.org/packages/8a/20/6eca772d1a5830336f84aca1d8198e5a3f4715cd1c7fc36d3cc7f7185091/msgpack-python-0.5.6.tar.gz"
+    sha256 "378cc8a6d3545b532dfd149da715abae4fda2a3adb6d74e525d0d5e51f46909b"
+  end
+
+  resource "pycparser" do
+    url "https://files.pythonhosted.org/packages/8c/2d/aad7f16146f4197a11f8e91fb81df177adcc2073d36a17b1491fd09df6ed/pycparser-2.18.tar.gz"
+    sha256 "99a8ca03e29851d96616ad0404b4aad7d9ee16f25c9f9708a11faf2810f7b226"
   end
 
   resource "pycrypto" do
@@ -80,13 +90,13 @@ class Saltstack < Formula
   end
 
   resource "pygit2" do
-    url "https://files.pythonhosted.org/packages/84/fa/867aec49165bd119b215d997e4d1211875e398d956b26888cd47070145a7/pygit2-0.26.0.tar.gz"
-    sha256 "a7f06d61f25ab644c39e0e9bd4846a6cc4af81ae27f889473e6f0e9511226cb1"
+    url "https://files.pythonhosted.org/packages/3b/0d/c11844421c7c3b9cb84c5503185bbb5ba780144fd64f5adde572bcdcdd8a/pygit2-0.27.0.tar.gz"
+    sha256 "6febce4aea72f12ed5a1e7529b91119f21d93cb2ccb3f834eea26af76cc9a4cb"
   end
 
   resource "pyzmq" do
-    url "https://files.pythonhosted.org/packages/af/37/8e0bf3800823bc247c36715a52e924e8f8fd5d1432f04b44b8cd7a5d7e55/pyzmq-16.0.2.tar.gz"
-    sha256 "0322543fff5ab6f87d11a8a099c4c07dd8a1719040084b6ce9162bcdf5c45c9d"
+    url "https://files.pythonhosted.org/packages/9f/f6/85a33a25128a4a812c3482547e3d458eebdb19ee0b4699f9199cdb2ad731/pyzmq-17.0.0.tar.gz"
+    sha256 "0145ae59139b41f65e047a3a9ed11bbc36e37d5e96c64382fcdff911c4d8c3f0"
   end
 
   resource "requests" do
@@ -105,8 +115,13 @@ class Saltstack < Formula
   end
 
   resource "tornado" do
-    url "https://files.pythonhosted.org/packages/fa/14/52e2072197dd0e63589e875ebf5984c91a027121262aa08f71a49b958359/tornado-4.5.2.tar.gz"
-    sha256 "1fb8e494cd46c674d86fac5885a3ff87b0e283937a47d74eb3c02a48c9e89ad0"
+    url "https://files.pythonhosted.org/packages/e3/7b/e29ab3d51c8df66922fea216e2bddfcb6430fb29620e5165b16a216e0d3c/tornado-4.5.3.tar.gz"
+    sha256 "6d14e47eab0e15799cf3cdcc86b0b98279da68522caace2bd7ce644287685f0a"
+  end
+
+  resource "typing" do
+    url "https://files.pythonhosted.org/packages/ec/cc/28444132a25c113149cec54618abc909596f0b272a74c55bab9593f8876c/typing-3.6.4.tar.gz"
+    sha256 "d400a9344254803a2368533e4533a4200d21eb7b6b729c173bc38201a74db3f2"
   end
 
   resource "urllib3" do
@@ -115,26 +130,7 @@ class Saltstack < Formula
   end
 
   def install
-    venv = virtualenv_create(libexec)
-
-    res = resources.map(&:name).to_set - ["M2Crypto"]
-
-    res.each do |r|
-      venv.pip_install resource(r)
-    end
-
-    resource("M2Crypto").stage do
-      inreplace "setup.py" do |s|
-        s.gsub! "self.openssl = '/usr'",
-                "self.openssl = '#{Formula["openssl"].opt_prefix}'"
-        s.gsub! "platform.system() == \"Linux\"",
-                "platform.system() == \"Darwin\" or \\0"
-      end
-      venv.pip_install Pathname.pwd
-    end
-
-    venv.pip_install_and_link buildpath
-
+    virtualenv_install_with_resources
     prefix.install libexec/"share" # man pages
     (etc/"saltstack").install (buildpath/"conf").children # sample config files
   end

@@ -1,34 +1,35 @@
 class Libgweather < Formula
   desc "GNOME library for weather, locations and timezones"
   homepage "https://wiki.gnome.org/Projects/LibGWeather"
-  url "https://download.gnome.org/sources/libgweather/3.26/libgweather-3.26.1.tar.xz"
-  sha256 "fca78470b345bce948e0333cab0a7c52c32562fc4a75de37061248a64e8fc4b8"
+  url "https://download.gnome.org/sources/libgweather/3.28/libgweather-3.28.1.tar.xz"
+  sha256 "157a8388532a751b36befff424b11ed913b2c43689b62cd2060f6847eb730be3"
 
   bottle do
-    sha256 "07ccd0c7376e8b3df7f535d8a2a38bfa4912442957c787099d87cb7fbbc3140e" => :high_sierra
-    sha256 "f70cfbb5fe2c7c26d74af33487f6a259069449e3d65f1e52c37fbcb4f3af1763" => :sierra
-    sha256 "136de1236c9cec9d180e90bfcdc07778e07609737c48417eb50e0d8a6a36a130" => :el_capitan
+    sha256 "b96a79ab676438c7e657c17e0fbaacae2e3db041fc66254aae58dadf32b11d70" => :high_sierra
+    sha256 "9655e4d9cba44c13e48fa5b661c0c5a121d266ce002e8bcdf32c3c5f30d20b71" => :sierra
+    sha256 "9e5e4cd5ae1384d401cde7b3ec8b098b914230fdc3bbd584b382cd5fda0c181e" => :el_capitan
   end
 
+  depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
-  depends_on "intltool" => :build
+  depends_on "meson-internal" => :build
+  depends_on "ninja" => :build
+  depends_on "python" => :build
   depends_on "gtk+3"
   depends_on "geocode-glib"
   depends_on "libsoup"
-  depends_on "gobject-introspection"
   depends_on "vala" => :optional
 
   def install
-    # ensures that the vala files remain within the keg
-    inreplace "libgweather/Makefile.in",
-              "VAPIGEN_VAPIDIR = @VAPIGEN_VAPIDIR@",
-              "VAPIGEN_VAPIDIR = @datadir@/vala/vapi"
+    ENV.refurbish_args
+    ENV["DESTDIR"] = ""
+    inreplace "meson/meson_post_install.py", "if not os.environ.get('DESTDIR'):", "if 'DESTDIR' not in os.environ:"
 
-    system "./configure", "--disable-dependency-tracking",
-                          "--disable-silent-rules",
-                          "--prefix=#{prefix}",
-                          "--disable-schemas-compile"
-    system "make", "install"
+    mkdir "build" do
+      system "meson", "--prefix=#{prefix}", ".."
+      system "ninja"
+      system "ninja", "install"
+    end
   end
 
   def post_install

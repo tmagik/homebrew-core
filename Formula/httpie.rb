@@ -5,17 +5,17 @@ class Httpie < Formula
   homepage "https://httpie.org/"
   url "https://files.pythonhosted.org/packages/28/93/4ebf2de4bc74bd517a27a600b2b23a5254a20f28e6e36fc876fd98f7a51b/httpie-0.9.9.tar.gz"
   sha256 "f1202e6fa60367e2265284a53f35bfa5917119592c2ab08277efc7fffd744fcb"
-  revision 1
+  revision 3
   head "https://github.com/jkbrzt/httpie.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "01e9abd00651c18fce7eaf9b771342f32b476041a0745f951a318d0653bce18b" => :high_sierra
-    sha256 "2172c38aab5947eb2f8fdb65778f0bd103e7393062bed15660b6eb3321dd881d" => :sierra
-    sha256 "24747f7be600fba469ae613ee4ed322d209e77054a6b2d53168dde92eec246b9" => :el_capitan
+    sha256 "994377256e27f89cfae446690dc711dcfd4463db87d984079a5e1552482483e1" => :high_sierra
+    sha256 "8a55919e7395e5469d7b846dfa80db631955cfe51b02b037400620812c110e3e" => :sierra
+    sha256 "935591fe18d118794fa22c824acfcc796f4df395afae9ffa1add54f278ec11de" => :el_capitan
   end
 
-  depends_on "python3"
+  depends_on "python"
 
   resource "Pygments" do
     url "https://files.pythonhosted.org/packages/b8/67/ab177979be1c81bc99c8d0592ef22d547e70bb4c6815c383286ed5dec504/Pygments-2.1.3.tar.gz"

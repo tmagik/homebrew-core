@@ -1,16 +1,16 @@
 class Vala < Formula
   desc "Compiler for the GObject type system"
   homepage "https://live.gnome.org/Vala"
-  url "https://download.gnome.org/sources/vala/0.38/vala-0.38.4.tar.xz"
-  sha256 "2cb33a63bd17737e72f5f4f9ca4109f398500ee1f17a01ff4ef94139b07ae5e9"
+  url "https://download.gnome.org/sources/vala/0.40/vala-0.40.3.tar.xz"
+  sha256 "6d4f1f0b2edaa0d4aa96f72735a9845e6b1acf80a0a2ae494b5d43e07833119e"
 
   bottle do
-    sha256 "e38a9bed5ecdbcaa8037ad5f5f94426a3631825dde79c6c4ca7dd6b2834b9044" => :high_sierra
-    sha256 "9c90aeb93d320f87ce8fd7284928c061e596b234112b210ae8966d5888c6877f" => :sierra
-    sha256 "e58858915ba78a2917a1e2488a56e9cc8ea79e7a034ee6a8649a086d0697de95" => :el_capitan
+    sha256 "e7e393ad7135aaae4a0fedea2d63fae295d03576e72c5ab391aa76f47ed67c23" => :high_sierra
+    sha256 "ad064e8fe52934e6d343ba9713cb70966f7f34f370cd365c0c0b82472f4ef690" => :sierra
+    sha256 "e8072336c19758441d1ba46ba01198d818ff776cda4c45c92082a543808cc1e7" => :el_capitan
   end
 
-  depends_on "pkg-config" => :run
+  depends_on "pkg-config"
   depends_on "gettext"
   depends_on "glib"
   depends_on "graphviz"
@@ -26,7 +26,7 @@ class Vala < Formula
   test do
     test_string = "Hello Homebrew\n"
     path = testpath/"hello.vala"
-    path.write <<-EOS
+    path.write <<~EOS
       void main () {
         print ("#{test_string}");
       }

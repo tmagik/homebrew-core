@@ -1,21 +1,34 @@
 class Gifski < Formula
   desc "Highest-quality GIF encoder based on pngquant"
   homepage "https://gif.ski/"
-  url "https://github.com/ImageOptim/gifski/archive/0.7.1.tar.gz"
-  sha256 "c67bbecd7802c0b91e5177edcc39b3492e9fcbd1eee4392c044697bc0f78a409"
+  url "https://github.com/ImageOptim/gifski/archive/0.8.2.tar.gz"
+  sha256 "d7bf1b6515c273b822c94fc78e6d10fbc45d444a04bc3487fe3e799d6aa836e0"
 
   bottle do
-    sha256 "cb2cb660f3f081945d28e359a2ed12b935ff6cf8bc95f535f2e5413cb1567174" => :high_sierra
-    sha256 "9946cabfbc933615bc5129cf4b9bb9cedabf4b25762224a974bc2b221464d5d0" => :sierra
-    sha256 "68964d76f8a2e59ca0a2379db20b6ab38bc127293e2369bedb4e1279541087da" => :el_capitan
+    sha256 "48f7b226aad64ed09df2ba12aef1c5eb4d50bdd2892338205050a9508b4b441d" => :high_sierra
+    sha256 "bd9d8fa459ecd0be1163d188f2dce0df132a2a6a1df11c718e74c746c8da34c0" => :sierra
+    sha256 "8451f3f386963c5a48e48ae62028c8c954c9c91395ac2b47dcf51e87380b987b" => :el_capitan
   end
+
+  option "with-openmp", "Enable OpenMP multithreading"
 
   depends_on "pkg-config" => :build
   depends_on "rust" => :build
   depends_on "ffmpeg"
+  depends_on "gcc" if build.with? "openmp"
+
+  fails_with :clang if build.with? "openmp"
 
   def install
-    system "cargo", "build", "--release", "--features=video"
+    args = ["--release"]
+
+    if build.with? "openmp"
+      args << "--features=video,openmp"
+    else
+      args << "--features=video"
+    end
+
+    system "cargo", "build", *args
     bin.install "target/release/gifski"
   end
 

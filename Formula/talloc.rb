@@ -1,14 +1,14 @@
 class Talloc < Formula
   desc "Hierarchical, reference-counted memory pool with destructors"
   homepage "https://talloc.samba.org/"
-  url "https://www.samba.org/ftp/talloc/talloc-2.1.11.tar.gz"
-  sha256 "639eb35556a0af999123c4d883e79be05ff9f00ab4f9e4ac2e5775f9c5eeeed3"
+  url "https://www.samba.org/ftp/talloc/talloc-2.1.13.tar.gz"
+  sha256 "84f399dbf0ad97006a2b4953ea99452d033faac15aabfddd4ba61734764c6047"
 
   bottle do
     cellar :any
-    sha256 "01743fa004981e73f9c7ace8625ae5975ede8f4fe2bab218e09b002876d63e62" => :high_sierra
-    sha256 "3cde9259d92be99440227670fe1c295d3651f92a1daad6d8fe30038823311274" => :sierra
-    sha256 "ceefd04e6ce90d617b7968e1ea0dc0bf5f81c84c70b1bc003f92de62976701cb" => :el_capitan
+    sha256 "89badf631b95b7d4f447da5c6d7ca93949df26ecdf0ba57f965314f70d3aeaa3" => :high_sierra
+    sha256 "68d41383b977d79d569e740a06480f0419a840d06fd108df1198a8f14521f85c" => :sierra
+    sha256 "50b9fc4ccf02a98b2d44b0b34781e89f9160c9b37e3d9a8a133ead93a8b3839d" => :el_capitan
   end
 
   def install

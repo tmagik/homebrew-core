@@ -16,13 +16,13 @@ end
 class Monetdb < Formula
   desc "Column-store database"
   homepage "https://www.monetdb.org/"
-  url "https://www.monetdb.org/downloads/sources/Jul2017-SP3/MonetDB-11.27.11.tar.xz"
-  sha256 "473b2ea245d8fe006aabe5b2ea3924ade0283f46cfd2edf6fce6aa786c191d0b"
+  url "https://www.monetdb.org/downloads/sources/Mar2018/MonetDB-11.29.3.tar.xz"
+  sha256 "bf7c2d110add2ab3ce49db5c86cb3c415b20ebb736358f70f5e2ba33b4dd27c0"
 
   bottle do
-    sha256 "b8c38e0b053c589f448b86f7bcc4ba2b22cc4ee6cc759806104b2a45b7d669e7" => :high_sierra
-    sha256 "a04f389b14877abe7905df45df092d0069318af75a885c7154c1b85b2428a0a2" => :sierra
-    sha256 "67185b1d204514a4cb67692ada2bb2ca1bb00fe25021101e52929fe57333e492" => :el_capitan
+    sha256 "524334a54122d87d29e15f15da8620d804ee6a791396a8da698cc378fe8db10a" => :high_sierra
+    sha256 "b0c68409cc0783fcf83fd84496556a3a6c80bbe4bb1414f687cd10c3eddd85da" => :sierra
+    sha256 "c17635a041cf7fdf5458ed70f4cf8b10f53fe1a5ccf2109d5c8e262b978eab16" => :el_capitan
   end
 
   head do
@@ -51,7 +51,6 @@ class Monetdb < Formula
   depends_on "geos" => :optional # Build the GEOM module
   depends_on "gsl" => :optional
   depends_on "cfitsio" => :optional
-  depends_on "homebrew/php/libsphinxclient" => :optional
 
   def install
     ENV["M4DIRS"] = "#{Formula["gettext"].opt_share}/aclocal" if build.head?

@@ -3,18 +3,18 @@ class DockerCompose < Formula
 
   desc "Isolated development environments using Docker"
   homepage "https://docs.docker.com/compose/"
-  url "https://github.com/docker/compose/archive/1.18.0.tar.gz"
-  sha256 "4265c18d7223c149342a252ce6f060934b373a1498c667b4d57b923aaeea4090"
+  url "https://github.com/docker/compose/archive/1.21.0.tar.gz"
+  sha256 "75c954d27f43e6e50f3710f4157abad264d6744f8b96c9edd25569d356b8f596"
   head "https://github.com/docker/compose.git"
 
   bottle do
     cellar :any
-    sha256 "188d42e482ef48a78e07a3f5203531a4de54e1d8830516da40ab4b82e545aa00" => :high_sierra
-    sha256 "62d50dd9e964cd4ac9b1a3606c0d4799bce3740e5c4b733c895c8067abad6d8b" => :sierra
-    sha256 "736076c271216a80200400d4f629a3ddbb319d92249ba5dfef9969766ba81079" => :el_capitan
+    sha256 "a595da066db4c676a27fcaa9ec7753dff08bbfb3eb22e17c2b0fb221e6490980" => :high_sierra
+    sha256 "1d96beb225934f29c36e798f0a59d85ae7bd7e8b076b3281bd81a6ede45c7c81" => :sierra
+    sha256 "5bfa8e9f58f77cf7e812cfdb8ed8c5af251d42d0e7faa2cbf9d99df6476d40ad" => :el_capitan
   end
 
-  depends_on "python" if MacOS.version <= :snow_leopard
+  depends_on "python@2"
   depends_on "libyaml"
 
   # It's possible that the user wants to manually install Docker and Machine,

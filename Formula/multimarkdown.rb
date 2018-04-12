@@ -1,15 +1,15 @@
 class Multimarkdown < Formula
   desc "Turn marked-up plain text into well-formatted documents"
   homepage "https://fletcher.github.io/MultiMarkdown-6/"
-  url "https://github.com/fletcher/MultiMarkdown-6/archive/6.2.3.tar.gz"
-  sha256 "639c25ce0285f6e8ff119ef9c6416609a1f8ed0da7847e69245ec01d80262c4f"
+  url "https://github.com/fletcher/MultiMarkdown-6/archive/6.3.2.tar.gz"
+  sha256 "2b02c2b42a216128ee1596c93840c6e097155aa1c854578535dcf4a0c09b2ff9"
   head "https://github.com/fletcher/MultiMarkdown-6.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "35e966adf5a362b9c56968f716cfbffb85ae20aed2e9e42c9ad41b8677fdc841" => :high_sierra
-    sha256 "d9569efcba9b2038fb8ddac568b464cdc724ceeffa7f35855a34d1a1535b0aca" => :sierra
-    sha256 "c6087305b183bc7b29d8334b7e9df67be7078874f566c3748df79d10dbdd241f" => :el_capitan
+    sha256 "7b1f221bb7b67fd1f41461062abceb6367b80bdc8eebc9aeebda0329d34941f5" => :high_sierra
+    sha256 "2338a2018abbe28d753e8c4c293b1002259c480a24f8ccea26660b846d7358ba" => :sierra
+    sha256 "aa2f1ca29b6bb27482329344ead21e774b8a73785e1a9173ae3ccbf70e200b8d" => :el_capitan
   end
 
   depends_on "cmake" => :build

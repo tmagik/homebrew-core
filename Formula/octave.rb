@@ -1,15 +1,15 @@
 class Octave < Formula
   desc "High-level interpreted language for numerical computing"
   homepage "https://www.gnu.org/software/octave/index.html"
-  url "https://ftp.gnu.org/gnu/octave/octave-4.2.1.tar.gz"
-  mirror "https://ftpmirror.gnu.org/octave/octave-4.2.1.tar.gz"
-  sha256 "80c28f6398576b50faca0e602defb9598d6f7308b0903724442c2a35a605333b"
-  revision 10
+  url "https://ftp.gnu.org/gnu/octave/octave-4.2.2.tar.gz"
+  mirror "https://ftpmirror.gnu.org/octave/octave-4.2.2.tar.gz"
+  sha256 "77b84395d8e7728a1ab223058fe5e92dc38c03bc13f7358e6533aab36f76726e"
+  revision 1
 
   bottle do
-    sha256 "537cbe85e870be04ddad35f23f007c05d02a7ec5fa6083328d4269253b298ef2" => :high_sierra
-    sha256 "0498fa3d43532cedffb642a9128e97bff172f3a2ea8ef810bdabc9c0f1c8760c" => :sierra
-    sha256 "5d500a371ea9198edc4230de9909c0483f1bb5b8806f011856379981ef756e7d" => :el_capitan
+    sha256 "2b9a58f068571831811df59450af5eb8112a2d697b48912fefcb8b9a392c2f56" => :high_sierra
+    sha256 "f8b700bc410e71fe6cac07dbabe2140c12a6cbbe28787004d4b452c677c617f4" => :sierra
+    sha256 "cf7821b99fff1562be01978ee37f9f33fec448e22cd501e4bd7ab0b3ac447884" => :el_capitan
   end
 
   head do
@@ -41,7 +41,7 @@ class Octave < Formula
   depends_on "graphicsmagick"
   depends_on "hdf5"
   depends_on "libsndfile"
-  depends_on "libtool" => :run
+  depends_on "libtool"
   depends_on "pcre"
   depends_on "portaudio"
   depends_on "pstoedit"
@@ -56,17 +56,6 @@ class Octave < Formula
   cxxstdlib_check :skip
 
   def install
-    if build.stable?
-      # Remove for > 4.2.1
-      # Remove inline keyword on file_stat destructor which breaks macOS
-      # compilation (bug #50234).
-      # Upstream commit from 24 Feb 2017 https://hg.savannah.gnu.org/hgweb/octave/rev/a6e4157694ef
-      inreplace "liboctave/system/file-stat.cc",
-        "inline file_stat::~file_stat () { }", "file_stat::~file_stat () { }"
-      inreplace "scripts/java/module.mk",
-        "-source 1.3 -target 1.3", "" # necessary for java >1.8
-    end
-
     # Default configuration passes all linker flags to mkoctfile, to be
     # inserted into every oct/mex build. This is unnecessary and can cause
     # cause linking problems.
@@ -78,6 +67,9 @@ class Octave < Formula
       "#if ! defined (__APPLE__) && ! defined (__MACH__)", "#if 1" # treat mac's java like others
     inreplace "configure.ac",
       "-framework JavaVM", "" # remove framework JavaVM as it requires Java 1.6 after build
+
+    inreplace "scripts/java/module.mk",
+      "-source 1.3 -target 1.3", "" # necessary for Java >1.8
 
     args = %W[
       --prefix=#{prefix}
@@ -99,9 +91,21 @@ class Octave < Formula
 
     args << "--disable-java" if build.without? "java"
 
-    system "./bootstrap" if build.head?
+    if build.head?
+      system "./bootstrap"
+    else
+      system "autoreconf", "-fiv"
+    end
+
     system "./configure", *args
     system "make", "all"
+
+    # Avoid revision bumps whenever fftw's or gcc's Cellar paths change
+    inreplace "src/mkoctfile.cc" do |s|
+      s.gsub! Formula["fftw"].prefix.realpath, Formula["fftw"].opt_prefix
+      s.gsub! Formula["gcc"].prefix.realpath, Formula["gcc"].opt_prefix
+    end
+
     system "make", "install"
   end
 

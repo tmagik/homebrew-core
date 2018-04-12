@@ -1,14 +1,15 @@
 class Chapel < Formula
   desc "Emerging programming language designed for parallel computing"
-  homepage "http://chapel.cray.com/"
-  url "https://github.com/chapel-lang/chapel/releases/download/1.16.0/chapel-1.16.0.tar.gz"
-  sha256 "5748431119d17c8a864162194797679ca3772eb2ee251eee4369afc2ed024b95"
+  homepage "https://chapel-lang.org/"
+  url "https://github.com/chapel-lang/chapel/releases/download/1.17.0/chapel-1.17.0.tar.gz"
+  sha256 "7620b780cf2a2bd3b26022957c3712983519a422a793614426aed6d9d8bf9fab"
+  revision 1
   head "https://github.com/chapel-lang/chapel.git"
 
   bottle do
-    sha256 "aef33e77ac7a768aa247a0197e807b826bd4ab6477e86fb8842fc30e66d513ac" => :high_sierra
-    sha256 "8865b2220f717d719e9d7ead254dc85ac90b912d121cffe1b32bde5f19f7e374" => :sierra
-    sha256 "76c77426a0eb19f236a318428dcae598ae718a71380969795d151c06542c96f9" => :el_capitan
+    sha256 "c6e13af8b2ad7eab4f306a6a72220320c192c1eb031d8cb13ad908e576e161f7" => :high_sierra
+    sha256 "83fbf6e7fc929c3534f792eaa0fa1ff7e1eea9c7c735488196a106247a0ba013" => :sierra
+    sha256 "821baa3760ace44d3cf06d13af0b20e3471bba0c62a5deda3ec4d7c14b4c5123" => :el_capitan
   end
 
   def install
@@ -20,8 +21,6 @@ class Chapel < Formula
     # https://github.com/Homebrew/legacy-homebrew/pull/35166
     cd libexec do
       system "make"
-      system "make", "chpldoc"
-      system "make", "test-venv"
       system "make", "cleanall"
     end
 

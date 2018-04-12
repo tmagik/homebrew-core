@@ -1,13 +1,13 @@
 class Verilator < Formula
   desc "Verilog simulator"
   homepage "https://www.veripool.org/wiki/verilator"
-  url "https://www.veripool.org/ftp/verilator-3.918.tgz"
-  sha256 "377057a2d6ff577e54cacfead6e6ece53decd6cddfd50ec27cd45b93a599685c"
+  url "https://www.veripool.org/ftp/verilator-3.922.tgz"
+  sha256 "8fba8da6d4fc0044180a1d75ea671b11a5c7757683dadfbca38bd7c143433beb"
 
   bottle do
-    sha256 "a7045ca8a5e19a660636aa0b52c8d5f3333799a068353314570f4d952eace01b" => :high_sierra
-    sha256 "edb227b38ec501c4188cfe809133115f299a6425230e9328a26ad28efb47673d" => :sierra
-    sha256 "443be0517c89747bbc8dc56fdd2f2fbf837b44f4b9ddf01c68ce99be7f51acda" => :el_capitan
+    sha256 "5cf38077dfed94e44ecf909edcaf0fcf6d271ac57ffc81b485f213b07b9e960f" => :high_sierra
+    sha256 "c3afd25d8d253a9c2ad6faa6178e17ed3b04317a8cc12e5ef1a0c715e671b024" => :sierra
+    sha256 "ed552e3268d2160cc5f1210cf9ddcc225ad6ef9a7ef3ee999b98ee65a8b57613" => :el_capitan
   end
 
   head do

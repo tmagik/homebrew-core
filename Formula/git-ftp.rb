@@ -3,23 +3,23 @@ class GitFtp < Formula
   homepage "https://git-ftp.github.io/"
   url "https://github.com/git-ftp/git-ftp/archive/1.4.0.tar.gz"
   sha256 "080e9385a9470d70a5a2a569c6e7db814902ffed873a77bec9d0084bcbc3e054"
-  revision 3
+  revision 6
   head "https://github.com/git-ftp/git-ftp.git", :branch => "develop"
 
   bottle do
     cellar :any
-    sha256 "1b204b572ece0c781babed606ed137e25b5d1ed37988ca6f6a1c9c9ef4d7343a" => :high_sierra
-    sha256 "62c93c15a1979e23eba20dd8a265b428c043f2a9d4c0c47370ff943b01b8a433" => :sierra
-    sha256 "98d5acff82c7a3bff144f2d3110b8c9538390afc31562357a5118d068b059f33" => :el_capitan
+    sha256 "89d545d5215ce51748b7fc256626a2944030b6d60360cbeb32dea99a148eca22" => :high_sierra
+    sha256 "d6b2b2590cb153007dcb36e0e13968f23ba81553cf51c9687d4283d3ce5a32b6" => :sierra
+    sha256 "d6499eb2817bd56eb0b482b47969d02092016235c613f57c775dc6202b9bd123" => :el_capitan
   end
 
   depends_on "pandoc" => :build
   depends_on "libssh2"
 
   resource "curl" do
-    url "https://curl.haxx.se/download/curl-7.57.0.tar.bz2"
-    mirror "https://curl.askapache.com/download/curl-7.57.0.tar.bz2"
-    sha256 "c92fe31a348eae079121b73884065e600c533493eb50f1f6cee9c48a3f454826"
+    url "https://curl.haxx.se/download/curl-7.59.0.tar.bz2"
+    mirror "https://curl.askapache.com/download/curl-7.59.0.tar.bz2"
+    sha256 "b5920ffd6a8c95585fb95070e0ced38322790cb335c39d0dab852d12e157b5a0"
   end
 
   def install
@@ -28,14 +28,15 @@ class GitFtp < Formula
                             "--disable-dependency-tracking",
                             "--disable-silent-rules",
                             "--prefix=#{libexec}",
+                            "--disable-ares",
                             "--with-darwinssl",
+                            "--with-libssh2",
+                            "--without-brotli",
                             "--without-ca-bundle",
                             "--without-ca-path",
-                            "--with-libssh2",
-                            "--without-libmetalink",
                             "--without-gssapi",
-                            "--without-librtmp",
-                            "--disable-ares"
+                            "--without-libmetalink",
+                            "--without-librtmp"
       system "make", "install"
     end
 

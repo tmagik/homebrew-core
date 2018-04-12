@@ -1,6 +1,6 @@
 class Openblas < Formula
   desc "Optimized BLAS library"
-  homepage "http://www.openblas.net/"
+  homepage "https://www.openblas.net/"
   url "https://github.com/xianyi/OpenBLAS/archive/v0.2.20.tar.gz"
   sha256 "5ef38b15d9c652985774869efd548b8e3e972e1e99475c673b25537ed7bcf394"
   revision 1
@@ -13,7 +13,7 @@ class Openblas < Formula
     sha256 "6aa065aea2afd4573b8d20ac24ae8fec6fd6bf71562e33c6d25c397b3cea8187" => :el_capitan
   end
 
-  keg_only :provided_by_osx,
+  keg_only :provided_by_macos,
            "macOS provides BLAS and LAPACK in the Accelerate framework"
 
   option "with-openmp", "Enable parallel computations with OpenMP"

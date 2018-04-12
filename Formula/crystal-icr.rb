@@ -3,11 +3,12 @@ class CrystalIcr < Formula
   homepage "https://github.com/crystal-community/icr"
   url "https://github.com/crystal-community/icr/archive/v0.5.0.tar.gz"
   sha256 "f2b5cb971b368085e9c4f607d906e0622aa94d65c0f7c820d9cbdf23fb972c33"
+  revision 2
 
   bottle do
-    sha256 "4a29d32a127a60f4d4220eb2cfa582023ca9ed18d18e5b1202a48e2934ce39a0" => :high_sierra
-    sha256 "d188609e6db0e8ff98263ff8ccef6aec1dc86aa5e036156d491dead73f564556" => :sierra
-    sha256 "a4746f37993c2c62cc324b484164556f1780e5308cf606f4fd8c4f5c9260b5f7" => :el_capitan
+    sha256 "5702c04b7d3993c304367a4e57adda68967f49d8c00cd5861712c44cfd416f1a" => :high_sierra
+    sha256 "c71458325b064cd1062be74b0d8ceadccb9e76c70f272d464f4461884b2745d2" => :sierra
+    sha256 "b0ecff4280242c2d91aa2bdb383fbbb60f682522b42ded34286c0b55616b2494" => :el_capitan
   end
 
   depends_on "crystal-lang"

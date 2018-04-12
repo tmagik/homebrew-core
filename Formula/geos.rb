@@ -1,7 +1,7 @@
 class Geos < Formula
   desc "Geometry Engine"
   homepage "https://trac.osgeo.org/geos"
-  url "http://download.osgeo.org/geos/geos-3.6.2.tar.bz2"
+  url "https://download.osgeo.org/geos/geos-3.6.2.tar.bz2"
   sha256 "045a13df84d605a866602f6020fc6cbf8bf4c42fb50de237a08926e1d7d7652a"
 
   bottle do
@@ -12,10 +12,8 @@ class Geos < Formula
     sha256 "5966c5ecea54189c67a3ffb5856176f4bb070ca72b3c3628ad7b76fb67e35de8" => :yosemite
   end
 
-  option "without-python", "Do not build the Python extension"
-  option "with-ruby", "Build the ruby extension"
-
-  depends_on "swig" => :build if build.with?("python") || build.with?("ruby")
+  depends_on "swig" => :build
+  depends_on "python@2"
 
   def install
     # https://trac.osgeo.org/geos/ticket/771
@@ -24,15 +22,9 @@ class Geos < Formula
       s.gsub! /PYTHON_LDFLAGS=.*/, 'PYTHON_LDFLAGS="-Wl,-undefined,dynamic_lookup"'
     end
 
-    args = [
-      "--disable-dependency-tracking",
-      "--prefix=#{prefix}",
-    ]
-
-    args << "--enable-python" if build.with?("python")
-    args << "--enable-ruby" if build.with?("ruby")
-
-    system "./configure", *args
+    system "./configure", "--disable-dependency-tracking",
+                          "--prefix=#{prefix}",
+                          "--enable-python"
     system "make", "install"
   end
 

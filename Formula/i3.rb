@@ -1,14 +1,15 @@
 class I3 < Formula
   desc "Tiling window manager"
   homepage "https://i3wm.org/"
-  url "https://i3wm.org/downloads/i3-4.14.1.tar.bz2"
-  sha256 "d0063ac561f3aa8d7e31e137356815bad781bd6ad774030362c89abe96ab5fb1"
+  url "https://i3wm.org/downloads/i3-4.15.tar.bz2"
+  sha256 "217d524d1fbc85ae346b25f6848d1b7bcd2c23184ec88d29114bf5a621385326"
+  revision 1
   head "https://github.com/i3/i3.git"
 
   bottle do
-    sha256 "e0158b3f76f09deb6254022af4cf797b8984ac002e9f00444f54ddb3f00a78fd" => :high_sierra
-    sha256 "cae76ee532cde865d6965786790768757d2d8156bcd8c59a7e7f4ae1ce4575a8" => :sierra
-    sha256 "fb731e5623251134919b0b823e40300df8eeeef609e9fb4c04b79ed5725f00ba" => :el_capitan
+    sha256 "830cfa4eb9b25d0f26c941a01419a093c014417f2f2ee6e78a828ea922868671" => :high_sierra
+    sha256 "88f9c1c997ea6c4b5f3886854a599900a7b01b0bdce5ce82b46c04f71ea82201" => :sierra
+    sha256 "c5999c78a3af9072039638eee8c6a2b5d3ef006c402b049da9cb3ef45dcdbac0" => :el_capitan
   end
 
   depends_on "asciidoc" => :build

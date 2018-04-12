@@ -1,17 +1,17 @@
 class JenkinsJobBuilder < Formula
   desc "Configure Jenkins jobs with YAML files stored in Git"
   homepage "https://docs.openstack.org/infra/system-config/jjb.html"
-  url "https://files.pythonhosted.org/packages/f1/64/7ea0ff40a8c0caaccfc540ba2973c668d13ab42aae1f93ca3610a723c120/jenkins-job-builder-2.0.0.tar.gz"
-  sha256 "fe9573250802ce0999eded252b927fe5a0c92baaa8419c767f2ef7b382fd9f96"
+  url "https://files.pythonhosted.org/packages/90/a6/dd9f719cababf5de1369d2cc2bd4775a7cbd4d3b0d377ffa50678ad94907/jenkins-job-builder-2.0.5.tar.gz"
+  sha256 "ddb163fdd252b60fe9fc38c6e417433d32a646d6f3e5b9ab38d060eb419878e8"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "90957fd52e76997260ee8a369fc78d26d84628245ee249addd019727995cc8e1" => :high_sierra
-    sha256 "0684e9eeda328830be74abf32f582a8665b1e269bd1bc27e824d8b618bb85aaf" => :sierra
-    sha256 "3948a98d3967b4facaceb12ef6af25d00e0be39321cc51395d353ae22332d328" => :el_capitan
+    sha256 "3cb6ec620432da20dff244bba2f042e058b98521b399332e11c9132b64dd8a23" => :high_sierra
+    sha256 "2f171ce8e6adad8318d8db795ff2647791b1eb7201947d79f9c79c49f69d1ee4" => :sierra
+    sha256 "d970b78322f261b738c0a3152a53bc8b34d7babbae18cab48d28189f331af143" => :el_capitan
   end
 
-  depends_on "python" if MacOS.version <= :snow_leopard
+  depends_on "python@2"
 
   resource "fasteners" do
     url "https://files.pythonhosted.org/packages/f4/6f/41b835c9bf69b03615630f8a6f6d45dafbec95eb4e2bb816638f043552b2/fasteners-0.14.1.tar.gz"
@@ -39,13 +39,13 @@ class JenkinsJobBuilder < Formula
   end
 
   resource "pbr" do
-    url "https://files.pythonhosted.org/packages/d5/d6/f2bf137d71e4f213b575faa9eb426a8775732432edb67588a8ee836ecb80/pbr-3.1.1.tar.gz"
-    sha256 "05f61c71aaefc02d8e37c0a3eeb9815ff526ea28b3b76324769e6158d7f95be1"
+    url "https://files.pythonhosted.org/packages/71/99/bbe0ed2c7077da3af0d7439127d215d4b90ebc8c8d096d2e39fc7e614d1f/pbr-4.0.1.tar.gz"
+    sha256 "56b7a8ba7d64bf6135a9dfefb85a80d95924b3fde5ed6343a1a1d464a040dae3"
   end
 
   resource "python-jenkins" do
-    url "https://files.pythonhosted.org/packages/09/1c/72bc7d3e1964633b29c9013813e3c0da0f6ae15c901ddc3863e2c54e87f7/python-jenkins-0.4.15.tar.gz"
-    sha256 "12c50a027e12048504c71e984e8e776a15a1204065b86ca2d1d871802c6da336"
+    url "https://files.pythonhosted.org/packages/15/dd/8dc3f8dca1532401ff06b2e0f29784e894f5def08223a24c722378a93905/python-jenkins-0.4.16.tar.gz"
+    sha256 "af899c4fb773a97acc920dc329dcc39f8bc6d2b3b6c7ad231d46f2eb370f9ab3"
   end
 
   resource "PyYAML" do

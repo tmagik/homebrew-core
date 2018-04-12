@@ -1,14 +1,14 @@
 class Gutenberg < Formula
   desc "Opinionated static site generator with everything built-in"
   homepage "https://www.getgutenberg.io/"
-  url "https://github.com/Keats/gutenberg/archive/v0.2.2.tar.gz"
-  sha256 "6ae747e791c96591bc8d3b41b1609ce53d06ad384c7db3c96875b5f8f049f72f"
+  url "https://github.com/Keats/gutenberg/archive/v0.3.3.tar.gz"
+  sha256 "5652e370d3826b2a4dc5ad70f0a6e695748eb6c41c566fde0cef88ac93ccb221"
   head "https://github.com/Keats/gutenberg.git"
 
   bottle do
-    sha256 "7f77f4e117416ed268649f1083a63bbff5c57d65e0e51f1f98941a00b0d0308d" => :high_sierra
-    sha256 "93748ce4280114f597c14161551057fa8b0d0893dcdf466d990dd5bd134d7af6" => :sierra
-    sha256 "32eccea3dbffec9e38a92d296d16f1dbfe6a3ccf545f23bac188c479b3c4892b" => :el_capitan
+    sha256 "d5936e84a4c873e63a7860ab7ad39c3f0619acb9997162770c4a575bf19d35d6" => :high_sierra
+    sha256 "506307c2f25e81039bd3568d5e7b1ca8f840a5189a74dad8d21330aac408fffb" => :sierra
+    sha256 "2fd5988c2ce2c9426cad1d3da33e9475929dc6ee48260651fc783da7d781f9d5" => :el_capitan
   end
 
   depends_on "cmake" => :build
@@ -24,7 +24,7 @@ class Gutenberg < Formula
   end
 
   test do
-    pipe_output("#{bin}/gutenberg init mysite", "\nn\nn\n", 0)
+    system "yes '' | #{bin}/gutenberg init mysite"
     (testpath/"mysite/content/blog/index.md").write <<~EOS
       +++
       +++

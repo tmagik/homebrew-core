@@ -1,20 +1,23 @@
 class Gdcm < Formula
   desc "Grassroots DICOM library and utilities for medical files"
   homepage "https://sourceforge.net/projects/gdcm/"
-  url "https://downloads.sourceforge.net/project/gdcm/gdcm%202.x/GDCM%202.8.4/gdcm-2.8.4.tar.gz"
-  sha256 "8f480d0a9b0b331f2e83dcc9cdb3d957f10eb32ee4db90fc1c153172dcb45587"
-  revision 2
+  url "https://downloads.sourceforge.net/project/gdcm/gdcm%202.x/GDCM%202.8.6/gdcm-2.8.6.tar.gz"
+  sha256 "05c912e3777af5d266641fbb4869fdcb5f6e955cadf3eaea803fecb9060b145a"
 
   bottle do
-    sha256 "7ca91961ffb0f74e9f055ece921101a23621c49a3130b06e6b4386ef374950e0" => :high_sierra
-    sha256 "15626e2bd1f80f15d05562fd25697a0f54476196f3fe52bfb9fc67d432d34de4" => :sierra
-    sha256 "51a57b3a49a2d65ceda86c6401303c514b940d9adeb54659d0d4aac34aa89fde" => :el_capitan
+    sha256 "2bd95f05df6e1d55db4494a8553e95af0efa14c8ed7a811fc809ea44abb89f2b" => :high_sierra
+    sha256 "6e8305b80da7c30655e2c9354fa48c6547156fe06faf2a23590f4d2284309fc9" => :sierra
+    sha256 "5648c8c74bc0d6e8972f2a6df81a08dd209a902b0cbb72c91a3456178e36b0b4" => :el_capitan
   end
 
-  option "without-python", "Build without python2 support"
+  option "without-python@2", "Build without python2 support"
 
-  depends_on "python3" => :optional
-  depends_on "swig" => :build if build.with?("python") || build.with?("python3")
+  deprecated_option "with-python3" => "with-python"
+  deprecated_option "without-python" => "without-python@2"
+
+  depends_on "python@2" => :recommended
+  depends_on "python" => :optional
+  depends_on "swig" => :build if build.with?("python") || build.with?("python@2")
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
@@ -38,7 +41,7 @@ class Gdcm < Formula
     ]
 
     mkdir "build" do
-      if build.without?("python") && build.without?("python3")
+      if build.without?("python") && build.without?("python@2")
         system "cmake", "..", *common_args
         system "make", "install"
       else
@@ -63,7 +66,7 @@ class Gdcm < Formula
   end
 
   test do
-    (testpath/"test.cxx").write <<-EOS
+    (testpath/"test.cxx").write <<~EOS
       #include "gdcmReader.h"
       int main(int, char *[])
       {

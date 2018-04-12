@@ -1,29 +1,17 @@
 class Nginx < Formula
   desc "HTTP(S) server and reverse proxy, and IMAP/POP3 proxy server"
   homepage "https://nginx.org/"
-  url "https://nginx.org/download/nginx-1.12.2.tar.gz"
-  sha256 "305f379da1d5fb5aefa79e45c829852ca6983c7cd2a79328f8e084a324cf0416"
-  revision 1
+  url "https://nginx.org/download/nginx-1.13.11.tar.gz"
+  sha256 "35799c974644d2896b34ba876461dfd142c1b11f06f5aa57d255a77d4da36f05"
   head "https://hg.nginx.org/nginx/", :using => :hg
 
   bottle do
-    sha256 "b773b2394e84c697d5193242589361c611869560200269e4b325634c2ca1464c" => :high_sierra
-    sha256 "817a7928bd81518e419c6837c1483cacf4d969f3d6acbf711567f5d5f731497f" => :sierra
-    sha256 "4e9d4c1ce74bc3b3fea4d90ba6c7c73c6d0457eff26da37163f9393dfc027ac0" => :el_capitan
+    sha256 "176cdc24c2e24ebc7e9569ff94fd921bf1f1f502be9a8a421a88c02776a19a0a" => :high_sierra
+    sha256 "0429462283a4afe8caf2b62c3a38d42b40d681a89bdb7c04f67ac4149f40c69e" => :sierra
+    sha256 "b4645fd4a008adbd01c85c29add2f20c383f0a354b3cf497c296ea809d0e0d54" => :el_capitan
   end
 
-  devel do
-    url "https://nginx.org/download/nginx-1.13.8.tar.gz"
-    sha256 "8410b6c31ff59a763abf7e5a5316e7629f5a5033c95a3a0ebde727f9ec8464c5"
-  end
-
-  # Before submitting more options to this formula please check they aren't
-  # already in Homebrew/homebrew-nginx/nginx-full:
-  # https://github.com/Homebrew/homebrew-nginx/blob/master/Formula/nginx-full.rb
   option "with-passenger", "Compile with support for Phusion Passenger module"
-  option "with-webdav", "Compile with support for WebDAV module"
-  option "with-debug", "Compile with support for debug log"
-  option "with-gunzip", "Compile with support for gunzip module"
 
   depends_on "openssl" # don't switch to 1.1 until passenger is switched, too
   depends_on "pcre"
@@ -44,8 +32,6 @@ class Nginx < Formula
 
     args = %W[
       --prefix=#{prefix}
-      --with-http_ssl_module
-      --with-pcre
       --sbin-path=#{bin}/nginx
       --with-cc-opt=#{cc_opt}
       --with-ld-opt=#{ld_opt}
@@ -59,18 +45,38 @@ class Nginx < Formula
       --http-scgi-temp-path=#{var}/run/nginx/scgi_temp
       --http-log-path=#{var}/log/nginx/access.log
       --error-log-path=#{var}/log/nginx/error.log
+      --with-debug
+      --with-http_addition_module
+      --with-http_auth_request_module
+      --with-http_dav_module
+      --with-http_degradation_module
+      --with-http_flv_module
+      --with-http_gunzip_module
       --with-http_gzip_static_module
+      --with-http_mp4_module
+      --with-http_random_index_module
+      --with-http_realip_module
+      --with-http_secure_link_module
+      --with-http_slice_module
+      --with-http_ssl_module
+      --with-http_stub_status_module
+      --with-http_sub_module
       --with-http_v2_module
+      --with-ipv6
+      --with-mail
+      --with-mail_ssl_module
+      --with-pcre
+      --with-pcre-jit
+      --with-stream
+      --with-stream_realip_module
+      --with-stream_ssl_module
+      --with-stream_ssl_preread_module
     ]
 
     if build.with? "passenger"
       nginx_ext = `#{Formula["passenger"].opt_bin}/passenger-config --nginx-addon-dir`.chomp
       args << "--add-module=#{nginx_ext}"
     end
-
-    args << "--with-http_dav_module" if build.with? "webdav"
-    args << "--with-debug" if build.with? "debug"
-    args << "--with-http_gunzip_module" if build.with? "gunzip"
 
     if build.head?
       system "./auto/configure", *args
@@ -162,7 +168,7 @@ class Nginx < Formula
   end
 
   test do
-    (testpath/"nginx.conf").write <<-EOS
+    (testpath/"nginx.conf").write <<~EOS
       worker_processes 4;
       error_log #{testpath}/error.log;
       pid #{testpath}/nginx.pid;

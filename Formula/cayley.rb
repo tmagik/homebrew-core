@@ -1,15 +1,15 @@
 class Cayley < Formula
   desc "Graph database inspired by Freebase and Knowledge Graph"
   homepage "https://github.com/cayleygraph/cayley"
-  url "https://github.com/cayleygraph/cayley/archive/v0.7.0.tar.gz"
-  sha256 "d78970997d2c23991c11d5a06e266d4421a9f175e8364dc6a094308489882314"
+  url "https://github.com/cayleygraph/cayley/archive/v0.7.2.tar.gz"
+  sha256 "12be10ef129fef84392f2056a56a9f29ac8e1ecfb8facf1d5b5cff17a81e8e97"
   head "https://github.com/google/cayley.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "192570b3e952d0697624b5315348892be330923bdc12b57dafc8b59ce8197983" => :high_sierra
-    sha256 "c558ffdc02dfae52b0dee74b9de1b3b81bf19bebd9459ad1ee529e4ffb4a6623" => :sierra
-    sha256 "14b1f7f81db724c6929e52d9dee0786943fbe23d48ef05f1b8cbd20ec62c3515" => :el_capitan
+    sha256 "da3ebc16ae88c74fe4d4fcf1e4721e009f93eb3f237f846585120936a251bd41" => :high_sierra
+    sha256 "f66d9137ad0bed1614ef52b3bf654fd9ccb55dd4479d45f9622d88f3ec1e34b5" => :sierra
+    sha256 "2404473b2973f8d47fb40a0eac16998d1e27b1036901261f47f07a7cbccdc713" => :el_capitan
   end
 
   option "without-samples", "Don't install sample data"
