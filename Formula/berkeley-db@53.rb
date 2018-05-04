@@ -22,7 +22,7 @@ class BerkeleyDbAT53 < Formula
       --prefix=#{prefix}
       --mandir=#{man}
       --enable-cxx
-      CFLAGS=-mmacosx-version-min=10.10
+      CFLAGS=-mmacosx-version-min=10.10\ -march=x86_64
       LDFLAGS=-mmacosx-version-min=10.10
     ]
 
