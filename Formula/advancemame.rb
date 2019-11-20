@@ -1,17 +1,19 @@
 class Advancemame < Formula
   desc "MAME with advanced video support"
   homepage "https://www.advancemame.it/"
-  url "https://github.com/amadvance/advancemame/releases/download/v3.7/advancemame-3.7.tar.gz"
-  sha256 "36c88305dc485e85ff86854b3d8bb75c4c81fa7356f6dbfcbfd6a5e192199b2c"
+  url "https://github.com/amadvance/advancemame/releases/download/v3.9/advancemame-3.9.tar.gz"
+  sha256 "3e4628e1577e70a1dbe104f17b1b746745b8eda80837f53fbf7b091c88be8c2b"
 
   bottle do
-    sha256 "cebd9f5bdee213f0994527f63a3c8ad6d78cb43e377bdd19978fa2d9e03acd15" => :high_sierra
-    sha256 "3bf6b73863b14621de91fe5908921d322e28e4e26855eae7f5cf3ba15b360c07" => :sierra
-    sha256 "e5f14218046ce7f164a270378743aefff119d0fc7c69987bfb78fc8d1105ea7b" => :el_capitan
+    sha256 "7530ca2e37ac45b53164ae54ab6669f1796ea0af88541a85a93a74c155fb0029" => :catalina
+    sha256 "95f2cdff91ff98c3c9f65a0751d7948cefb3829d96e1977b5b8869163eba0790" => :mojave
+    sha256 "9c5e0a9f81f43ec02eb951b82b4930639dafcdbacbeadf7bcc5e74f2e2ec7c45" => :high_sierra
+    sha256 "6ba2c02db07a9ef7ddf561dbc2cde3904abe0b1b0ab9c9469020fdeced72e011" => :sierra
   end
 
-  depends_on "sdl"
+  depends_on "pkg-config" => :build
   depends_on "freetype"
+  depends_on "sdl"
 
   conflicts_with "advancemenu", :because => "both install `advmenu` binaries"
 

@@ -3,35 +3,37 @@ class EasyTag < Formula
   homepage "https://projects.gnome.org/easytag"
   url "https://download.gnome.org//sources/easytag/2.4/easytag-2.4.3.tar.xz"
   sha256 "fc51ee92a705e3c5979dff1655f7496effb68b98f1ada0547e8cbbc033b67dd5"
-  revision 1
+  revision 2
 
   bottle do
-    sha256 "3ff0ba537d0f0f74f3c61cb116fd11319378148fbeb1d547428deb93040c522f" => :high_sierra
-    sha256 "53f9be6d08d22ddd73e13f73fa74f9acd1dd7f4c834043637cddffa8d900435d" => :sierra
-    sha256 "eb0d0b85c5d5047d06aa311784e859041bffdb447e57c13fec7587f60a6e6043" => :el_capitan
+    sha256 "52f2f77282dba441fac171c123788cb48de619308f4b1726e7e2c68e13b07ee2" => :mojave
+    sha256 "88f0ad1c24e8c4baba55dd760e540b2bc3905e3e6cfb35be23f358b7006cd1a8" => :high_sierra
+    sha256 "82ed5509af9fd9eb2847eecc75ec3c181ac159c8d8efccb9de356dd72d1b8151" => :sierra
   end
 
-  depends_on "pkg-config" => :build
   depends_on "intltool" => :build
   depends_on "itstool" => :build
+  depends_on "pkg-config" => :build
+  depends_on "python" => :build
+  depends_on "adwaita-icon-theme"
+  depends_on "flac"
   depends_on "gtk+3"
   depends_on "hicolor-icon-theme"
-  depends_on "adwaita-icon-theme"
   depends_on "id3lib"
   depends_on "libid3tag"
-  depends_on "taglib"
-
-  depends_on "libvorbis"
-  depends_on "flac"
   depends_on "libogg"
+  depends_on "libvorbis"
   depends_on "speex"
+  depends_on "taglib"
   depends_on "wavpack"
 
   # disable gtk-update-icon-cache
   patch :DATA
 
   def install
-    ENV.append_path "PYTHONPATH", "#{Formula["libxml2"].opt_lib}/python2.7/site-packages"
+    xy = Language::Python.major_minor_version "python3"
+    ENV.append_path "PYTHONPATH", "#{Formula["libxml2"].opt_lib}/python#{xy}/site-packages"
+
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
                           "--disable-schemas-compile"

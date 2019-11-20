@@ -5,30 +5,24 @@ class Cryptol < Formula
 
   desc "Domain-specific language for specifying cryptographic algorithms"
   homepage "https://www.cryptol.net/"
-  url "https://hackage.haskell.org/package/cryptol-2.5.0/cryptol-2.5.0.tar.gz"
-  sha256 "910928617beb1434ad5681672b78ede5dda7715b85dcb8246fa8d9ddb2261cf1"
+  url "https://hackage.haskell.org/package/cryptol-2.8.0/cryptol-2.8.0.tar.gz"
+  sha256 "b061bf88de09de5034a3707960af01fbcc0425cdbff1085c50c00748df9910bb"
   head "https://github.com/GaloisInc/cryptol.git"
 
   bottle do
     cellar :any_skip_relocation
-    rebuild 1
-    sha256 "04ed08859f18cb0fdbc5c37b2db15f474ad241b908a06aeb0d890145d84fdf8b" => :high_sierra
-    sha256 "caad7d780203e43fd57a8cb0eb0d30e59bc7dea5bc258dfdf938b84e26a9e207" => :sierra
-    sha256 "6679c45e92d3093e89b54bcddeb1e107445afb47243a766b197240362c281d1a" => :el_capitan
+    sha256 "0aca3e2c29be5d4533e6114f0e7fd774173358f92d0f4e73903d0d536fb54160" => :mojave
+    sha256 "04d3178e67b8836a720d82dc3b88d1c69366aae6f0e7abdb9a1155b7dc31c28c" => :high_sierra
+    sha256 "3c3ffec1e47196b6c1767086fb9cc62e792546476cad5c6b92896eb45db13744" => :sierra
   end
 
-  depends_on "ghc@8.2" => :build
   depends_on "cabal-install" => :build
+  depends_on "ghc" => :build
   depends_on "z3"
+  uses_from_macos "ncurses"
 
   def install
-    # Remove the "happy<1.19.6" for cryptol > 2.5.0
-    # See revision 1 of https://hackage.haskell.org/package/cryptol-2.5.0/revisions/
-    if build.stable?
-      install_cabal_package :using => ["alex", "happy<1.19.6"]
-    else
-      install_cabal_package :using => ["alex", "happy"]
-    end
+    install_cabal_package :using => ["alex", "happy"]
   end
 
   test do

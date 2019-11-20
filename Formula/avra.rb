@@ -1,37 +1,22 @@
 class Avra < Formula
   desc "Assember for the Atmel AVR microcontroller family"
-  homepage "https://avra.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/avra/1.3.0/avra-1.3.0.tar.bz2"
-  sha256 "a62cbf8662caf9cc4e75da6c634efce402778639202a65eb2d149002c1049712"
-  revision 1
+  homepage "https://github.com/hsoft/avra"
+  url "https://github.com/hsoft/avra/archive/1.4.1.tar.gz"
+  sha256 "0b92f3a2709d72b903fd95afee2c985ed3847440ad12cd651738afffa14ec69e"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "0c4ac95218144b45bfed147a584707c8f2b8f0ec7c75b2ac4fdfae5592029b92" => :high_sierra
-    sha256 "2fd31c2a27b2ef237a6c9e33d7b378682dcba6b79131717f6c97264999b85658" => :sierra
-    sha256 "a53990c229653465948d9d66fc972e695591cddf6529c25ad834fed7fbd7267d" => :el_capitan
-    sha256 "1fd6d746309dbdf2811ba8d461188ec63e93363a34546a3af7ad9b4f47c75ffc" => :yosemite
-  end
-
-  # Crashes with 'abort trap 6' unless this fix is applied.
-  # See: https://sourceforge.net/p/avra/patches/16/
-  patch do
-    url "https://gist.githubusercontent.com/adammck/7e4a14f7dd4cc58eea8afa99d1ad9f5d/raw/5cdbfe5ac310a12cae6671502697737d56827b05/avra-fix-osx.patch"
-    sha256 "03493058c351cfce0764a8c2e63c2a7b691601dd836c760048fe47ddb9e91682"
+    sha256 "97a934f11ada79ed1b37a74a6e726445150edb713f2520c2d0c5131fca2f36b6" => :catalina
+    sha256 "8d75188d31649e471e5851df65c723016924a08307b6560cfa855379a7169b1c" => :mojave
+    sha256 "401635c4cf252ba0d19ed77866748d3d3deb05a6f024f3aa3c8bfbba69eba8f3" => :high_sierra
+    sha256 "0c349d7192c3eb3b3ba63fc26efb3ea2ca58de6160747804da51ee85c7cc98b5" => :sierra
   end
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
 
   def install
-    # build fails if these don't exist
-    touch "NEWS"
-    touch "ChangeLog"
-    cd "src" do
-      system "./bootstrap"
-      system "./configure", "--prefix=#{prefix}"
-      system "make", "install"
-    end
+    system "make", "install", "PREFIX=#{prefix}", "OS=osx"
     pkgshare.install Dir["includes/*"]
   end
 

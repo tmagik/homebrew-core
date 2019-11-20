@@ -3,17 +3,18 @@ class Qrupdate < Formula
   homepage "https://sourceforge.net/projects/qrupdate/"
   url "https://downloads.sourceforge.net/qrupdate/qrupdate-1.1.2.tar.gz"
   sha256 "e2a1c711dc8ebc418e21195833814cb2f84b878b90a2774365f0166402308e08"
-  revision 8
+  revision 11
 
   bottle do
     cellar :any
-    sha256 "b5f9fcfd7ddaca8e64b8b200bd413588a7fe608b31b7d1b9a23be53a2084bd3a" => :high_sierra
-    sha256 "f1213f270e9c6a84e8c1707d3b956e7bb2a6670f53bbf405cdba4d8da2393846" => :sierra
-    sha256 "c84f04635d00f139bcc5114b36395e7347c675ccb10fbf88a1779de5c6816c3a" => :el_capitan
+    sha256 "e275c1facc9afebb6884c4dff4fce18c2ddd7be138502971fcfcf81ab36caab2" => :catalina
+    sha256 "e509deee8107d09eaff0e02cbe38bbe27abfb5bed32b3766be83207fccc00320" => :mojave
+    sha256 "743423a355fe7fcd2e43f3056829227d3d957f717b08d956d9cee1902bbbaafc" => :high_sierra
+    sha256 "835f8dbf0f30b16079b35eba39ad788dfdb3834bf6ab9acdcc8d2083f9199b5c" => :sierra
   end
 
   depends_on "gcc" # for gfortran
-  depends_on "veclibfort"
+  depends_on "openblas"
 
   def install
     # Parallel compilation not supported. Reported on 2017-07-21 at
@@ -21,7 +22,7 @@ class Qrupdate < Formula
     ENV.deparallelize
 
     system "make", "lib", "solib",
-                   "BLAS=-L#{Formula["veclibfort"].opt_lib} -lvecLibFort"
+                   "BLAS=-L#{Formula["openblas"].opt_lib} -lopenblas"
 
     # Confuses "make install" on case-insensitive filesystems
     rm "INSTALL"
@@ -37,7 +38,8 @@ class Qrupdate < Formula
 
   test do
     system "gfortran", "-o", "test", pkgshare/"tch1dn.f", pkgshare/"utils.f",
-                       "-L#{lib}", "-lqrupdate", "-lvecLibFort"
+                       "-L#{lib}", "-lqrupdate",
+                       "-L#{Formula["openblas"].opt_lib}", "-lopenblas"
     assert_match "PASSED   4     FAILED   0", shell_output("./test")
   end
 end

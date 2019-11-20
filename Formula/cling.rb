@@ -1,28 +1,30 @@
 class Cling < Formula
   desc "The cling C++ interpreter"
   homepage "https://root.cern.ch/cling"
-  url "http://root.cern.ch/git/cling.git",
-      :tag => "v0.5",
+  url "https://github.com/root-project/cling.git",
+      :tag      => "v0.5",
       :revision => "0f1d6d24d4417fc02b73589c8b1d813e92de1c3f"
-  revision 1
+  revision 2
 
   bottle do
-    sha256 "fe94e56a3ee12dc8ada76ab4e9f96f4ff754f356a9ca9ad35708c0dbf4a41802" => :high_sierra
-    sha256 "c947df2499dcdeaa9807c3eae023d5c5cf9ba49902a68998e242b24e0fedcd9f" => :sierra
-    sha256 "a735b768dd2e5b9b000ca81660d5472897036d331277595501b341075da5ee8b" => :el_capitan
+    cellar :any
+    rebuild 1
+    sha256 "e9d2d3b1c5f00e6d511323937a231ec4b86c84934a5e7ab7bd8e589720c68230" => :catalina
+    sha256 "6278a45d807370fc4d434ceaa518ca48f1149425a301724deac437ffdf5f0d8d" => :mojave
+    sha256 "743ebf99fbc9218f313f9423dad4c767d47bdea4e033d42c8eb989ad89b63458" => :high_sierra
   end
 
   depends_on "cmake" => :build
 
   resource "clang" do
     url "http://root.cern.ch/git/clang.git",
-        :tag => "cling-patches-r302975",
+        :tag      => "cling-patches-r302975",
         :revision => "1f8b137c7eb06ed8e321649ef7e3f3e7a96f361c"
   end
 
   resource "llvm" do
     url "http://root.cern.ch/git/llvm.git",
-        :tag => "cling-patches-r302975",
+        :tag      => "cling-patches-r302975",
         :revision => "2a34248cb945d63ded5ee55128e68efd7e5b87c8"
   end
 
@@ -31,7 +33,9 @@ class Cling < Formula
     (buildpath/"src/tools/cling").install buildpath.children - [buildpath/"src"]
     (buildpath/"src/tools/clang").install resource("clang")
     mkdir "build" do
-      system "cmake", *std_cmake_args, "-DCMAKE_INSTALL_PREFIX=#{libexec}", "../src"
+      system "cmake", *std_cmake_args, "../src",
+                      "-DCMAKE_INSTALL_PREFIX=#{libexec}",
+                      "-DCLING_CXX_PATH=clang++"
       system "make", "install"
     end
     bin.install_symlink libexec/"bin/cling"

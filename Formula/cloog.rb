@@ -7,6 +7,8 @@ class Cloog < Formula
 
   bottle do
     cellar :any
+    sha256 "4f21a763ea566aa97203b1823a659047c165df9b9d3144ed6df8e3038c054273" => :catalina
+    sha256 "f26e41c339aaf9d6207d9843f9e9a0c93d623d6cfb4e1b9d1f536afee85e25ea" => :mojave
     sha256 "32b9d6ae3b69a1ac153d83997999add0a5836214c21d41fe18a0ef2dd44b3123" => :high_sierra
     sha256 "f517f774f48f11a1fdcf7d0023bdeacbd919cb22085a539fba539fac80025826" => :sierra
     sha256 "2e4ac62185b9291272f07381c19bba476eac505a40ff974aa8017b9ec4359b13" => :el_capitan
@@ -17,7 +19,7 @@ class Cloog < Formula
 
   resource "isl" do
     url "http://isl.gforge.inria.fr/isl-0.18.tar.xz"
-    mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/i/isl/isl_0.18.orig.tar.xz"
+    mirror "https://deb.debian.org/debian/pool/main/i/isl/isl_0.18.orig.tar.xz"
     sha256 "0f35051cc030b87c673ac1f187de40e386a1482a0cfdf2c552dd6031b307ddc4"
   end
 

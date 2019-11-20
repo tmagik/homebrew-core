@@ -1,14 +1,14 @@
 class MonoLibgdiplus < Formula
   desc "GDI+-compatible API on non-Windows operating systems"
   homepage "https://www.mono-project.com/docs/gui/libgdiplus/"
-  url "https://github.com/mono/libgdiplus/archive/5.6.tar.gz"
-  sha256 "6a75e4a476695cd6a1475fd6b989423ecf73978fd757673669771d8a6e13f756"
+  url "https://github.com/mono/libgdiplus/archive/6.0.4.tar.gz"
+  sha256 "9a5e3f98018116f99361520348e9713cd05680c231d689a83d87acfaf237d3a8"
 
   bottle do
     cellar :any
-    sha256 "e025958c8b7c9e7ec1f699a9a32149f31e5ba66279d733948036f26e2f19699b" => :high_sierra
-    sha256 "8cd50ca8eac2fae538ba0ecf66809838f4929c25e49b65c31c2c7e409cb560de" => :sierra
-    sha256 "d099b8722d00774e64d1685cdb8506f03e3f026e05984cf4f0148359b5036693" => :el_capitan
+    sha256 "f188b273e8486964db3cbbc9583112c6f6abffa37d996f0aab069dbb98c67682" => :catalina
+    sha256 "b8ef1609c1fc1f76b488a4d98792bba7267549f7d861df0abb420b1f6f4d40d1" => :mojave
+    sha256 "35cdac699b7bf1b7cf7a656007f1401e2c495bee8e7bead9a780be48c44ec5dc" => :high_sierra
   end
 
   depends_on "autoconf" => :build

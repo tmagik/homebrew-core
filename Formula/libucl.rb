@@ -6,16 +6,18 @@ class Libucl < Formula
 
   bottle do
     cellar :any
-    sha256 "e30a7ebee16c366f71c7fb29b38a41b1c9e95cfc1f373f9d7ea7e1bbc47b8617" => :high_sierra
-    sha256 "9a39086f31e5dbbafb5524f0d5a2609bdfc2155b436b6c3db99f3689bc507be1" => :sierra
-    sha256 "ba333fada04cdb99bfbfeefdbe21d2261baa76a5f814278c08a57b7821d27ace" => :el_capitan
+    rebuild 3
+    sha256 "8ff53b6da5423f7b6e11b6173b4b720d3563b1a24243ea4f977cf269d67aeb4c" => :catalina
+    sha256 "1ffddb657d95f504ba3b7331f5dbbd995c5d237cda3f736e99182a16a8e8181d" => :mojave
+    sha256 "dd5dbb4eb7e3d37816acc4f3bc2842c8e91caeb4a6f058eed75cab9d72192315" => :high_sierra
+    sha256 "5c477e0feb163dc955e89eabf97cae445fefc9c920fe46073c85af348535d7cd" => :sierra
+    sha256 "93e7d66507c386c9fe720b5f4c77d3b719574b7c311319cddc09bcbda659bce7" => :el_capitan
   end
 
-  depends_on "automake" => :build
   depends_on "autoconf" => :build
+  depends_on "automake" => :build
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
-  depends_on "lua" => :optional
 
   def install
     system "./autogen.sh"
@@ -24,9 +26,9 @@ class Libucl < Formula
       --disable-debug
       --disable-dependency-tracking
       --disable-silent-rules
+      --enable-utils
       --prefix=#{prefix}
     ]
-    args << "--enable-lua" if build.with? "lua"
 
     system "./configure", *args
     system "make", "install"

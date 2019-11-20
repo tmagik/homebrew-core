@@ -3,44 +3,49 @@ class Remarshal < Formula
 
   desc "Convert between TOML, YAML and JSON"
   homepage "https://github.com/dbohdan/remarshal"
-  url "https://github.com/dbohdan/remarshal/archive/v0.7.0.tar.gz"
-  sha256 "785f1928e3522671a21eb2e0ce7b6882e8589ccb195b4ee49dec2403fe3d6f4b"
+  url "https://github.com/dbohdan/remarshal/archive/v0.11.2.tar.gz"
+  sha256 "3f383e48f59722a4d93ef2b5e417b6a8c152f382a1faad416099ffcde5c87a66"
   head "https://github.com/dbohdan/remarshal.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "59a7c2f89d2bac4215499eb54430dc7099ee2ab396c219be17a13314a07bea52" => :high_sierra
-    sha256 "65c68073ccdbc44ab9c6c2228cc5b1c762ffd5d603bff557408682003fd88a92" => :sierra
-    sha256 "99c3c25f5d38962b7a922e4aacef296b23589856db37747f2624a62fd0d46447" => :el_capitan
-    sha256 "d018b3c983e5256542d1864e6908057bc942b52db07c295cd89f6c8494855405" => :yosemite
+    sha256 "09d9250297513d0e3b4e32ec13f84f3289b4fccec3f7d47ceb646854881703cd" => :catalina
+    sha256 "5a74936a60c2a6242cfafde7aef7c07c2c311c88c114cba85ca927bb54e9346f" => :mojave
+    sha256 "757a22523a68e47fbfc372d84c44d840bd61c212fb02d5e1f17fccdfd870d62a" => :high_sierra
+    sha256 "645c1cbaa4ff1fa317b2ca3cfdf2ccd8763bd2a11b69b3ffe9bb39e0ee4b8669" => :sierra
   end
 
-  depends_on "python@2"
+  depends_on "python"
 
   resource "PyYAML" do
-    url "https://files.pythonhosted.org/packages/4a/85/db5a2df477072b2902b0eb892feb37d88ac635d36245a72a6a69b23b383a/PyYAML-3.12.tar.gz"
-    sha256 "592766c6303207a20efc445587778322d7f73b161bd994f227adaa341ba212ab"
+    url "https://files.pythonhosted.org/packages/a3/65/837fefac7475963d1eccf4aa684c23b95aa6c1d033a2c5965ccb11e22623/PyYAML-5.1.1.tar.gz"
+    sha256 "b4bb4d3f5e232425e25dda21c070ce05168a786ac9eda43768ab7f3ac2770955"
   end
 
   resource "pytoml" do
-    url "https://files.pythonhosted.org/packages/6d/2a/c5a0eb781cff59df8613a531f07f9d82bb47ea595aa91c6f114f1621a94a/pytoml-0.1.14.tar.gz"
-    sha256 "aff69147d436c3ba8c7f3bc1b3f4aa3d7e47d305a495f2631872e6429694aabf"
+    url "https://files.pythonhosted.org/packages/f4/ba/98ee2054a2d7b8bebd367d442e089489250b6dc2aee558b000e961467212/pytoml-0.1.21.tar.gz"
+    sha256 "8eecf7c8d0adcff3b375b09fe403407aa9b645c499e5ab8cac670ac4a35f61e7"
   end
 
   resource "python-dateutil" do
-    url "https://files.pythonhosted.org/packages/51/fc/39a3fbde6864942e8bb24c93663734b74e281b984d1b8c4f95d64b0c21f6/python-dateutil-2.6.0.tar.gz"
-    sha256 "62a2f8df3d66f878373fd0072eacf4ee52194ba302e00082828e0d263b0418d2"
+    url "https://files.pythonhosted.org/packages/ad/99/5b2e99737edeb28c71bcbec5b5dda19d0d9ef3ca3e92e3e925e7c0bb364c/python-dateutil-2.8.0.tar.gz"
+    sha256 "c89805f6f4d64db21ed966fda138f8a5ed7a4fdbc1a8ee329ce1b74e3c74da9e"
   end
 
   resource "six" do
-    url "https://files.pythonhosted.org/packages/b3/b2/238e2590826bfdd113244a40d9d3eb26918bd798fc187e2360a8367068db/six-1.10.0.tar.gz"
-    sha256 "105f8d68616f8248e24bf0e9372ef04d3cc10104f1980f54d57b2ce73a5ad56a"
+    url "https://files.pythonhosted.org/packages/dd/bf/4138e7bfb757de47d1f4b6994648ec67a51efe58fa907c1e11e350cddfca/six-1.12.0.tar.gz"
+    sha256 "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"
+  end
+
+  resource "u-msgpack-python" do
+    url "https://files.pythonhosted.org/packages/d4/6b/b2deb0763305a2de35c4d125bfede7b0e414b7c18fb43011b554b9ce1832/u-msgpack-python-2.5.1.tar.gz"
+    sha256 "6c02a0654a5e11f8fad532ed634109ed49cdc929f7b972848773e4e0ce52f30c"
   end
 
   def install
     virtualenv_install_with_resources
 
-    ["toml", "yaml", "json"].permutation(2).each do |informat, outformat|
+    %w[toml yaml json msgpack].permutation(2).each do |informat, outformat|
       bin.install_symlink "remarshal" => "#{informat}2#{outformat}"
     end
   end
@@ -65,5 +70,6 @@ class Remarshal < Formula
     assert_equal toml, pipe_output("#{bin}/yaml2toml", yaml)
     assert_equal json, pipe_output("#{bin}/remarshal -if=toml -of=json", toml).chomp
     assert_equal json, pipe_output("#{bin}/toml2json", toml).chomp
+    assert_equal pipe_output("#{bin}/remarshal -if=yaml -of=msgpack", yaml), pipe_output("#{bin}/remarshal -if=json -of=msgpack", json)
   end
 end

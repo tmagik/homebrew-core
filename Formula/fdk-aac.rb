@@ -1,14 +1,14 @@
 class FdkAac < Formula
   desc "Standalone library of the Fraunhofer FDK AAC code from Android"
   homepage "https://sourceforge.net/projects/opencore-amr/"
-  url "https://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-0.1.6.tar.gz"
-  sha256 "aab61b42ac6b5953e94924c73c194f08a86172d63d39c5717f526ca016bed3ad"
+  url "https://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-2.0.1.tar.gz"
+  sha256 "840133aa9412153894af03b27b03dde1188772442c316a4ce2a24ed70093f271"
 
   bottle do
     cellar :any
-    sha256 "d2ae46afcc4d6ac9357ab182950800d481d755eeac3dd8e53dcafa207cc6e27b" => :high_sierra
-    sha256 "ba9e98f8efdc369531aba9de7d25e442c4c1392c3d4297e051ca3c58dcdb368f" => :sierra
-    sha256 "f055e0e9755cf384a607738e2672ddfc2b63721f1ed271db5c16c7de1f868e01" => :el_capitan
+    sha256 "526c83a79b7f208f07e8d04ad5ce47c8104d90a76034e42422d124fba128ba3c" => :catalina
+    sha256 "9353da38e4b43913964f9cdc5fc2a28c4b6c0a19ceef4e2a58db62ba3fdb4d49" => :mojave
+    sha256 "a8812e355f28272c7d8153bcda0e48a58c0bd0a880ed0256a2bc460143d1df78" => :high_sierra
   end
 
   head do

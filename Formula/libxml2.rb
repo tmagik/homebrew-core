@@ -1,19 +1,19 @@
 class Libxml2 < Formula
   desc "GNOME XML library"
   homepage "http://xmlsoft.org/"
-  url "http://xmlsoft.org/sources/libxml2-2.9.7.tar.gz"
-  mirror "https://ftp.osuosl.org/pub/blfs/conglomeration/libxml2/libxml2-2.9.7.tar.gz"
-  sha256 "f63c5e7d30362ed28b38bfa1ac6313f9a80230720b7fb6c80575eeab3ff5900c"
+  url "http://xmlsoft.org/sources/libxml2-2.9.10.tar.gz"
+  mirror "https://ftp.osuosl.org/pub/blfs/conglomeration/libxml2/libxml2-2.9.10.tar.gz"
+  sha256 "aafee193ffb8fe0c82d4afef6ef91972cbaf5feea100edc2f262750611b4be1f"
 
   bottle do
     cellar :any
-    sha256 "ff9bf7d946d5413fb1f2837a187bd026f469a67b78ba6589f5b565f0133b58f2" => :high_sierra
-    sha256 "0b9bc0fe308a22b557822d0bc254f209e33bd7b4948d7d08a14d620e1f8b6a3b" => :sierra
-    sha256 "cdcc13eab3436e1c44dcae42396e519e4a5119552818b656a2c7a5d878b9a912" => :el_capitan
+    sha256 "f23173c9ac3fa357cb1cfe511e4e5c48f28b8a06430b5a5849bb800c3357a1af" => :catalina
+    sha256 "472ed1a73a91c49fd9f39bd8cc4a7472b09c691659b3b9305c9da42ed35e1475" => :mojave
+    sha256 "cb117095b46da6b0ebac46ed0b867f3dfd8b448880d577b76c161a88e6f21302" => :high_sierra
   end
 
   head do
-    url "https://git.gnome.org/browse/libxml2.git"
+    url "https://gitlab.gnome.org/GNOME/libxml2.git"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build
@@ -23,20 +23,43 @@ class Libxml2 < Formula
 
   keg_only :provided_by_macos
 
-  depends_on "python@2"
+  depends_on "python"
+  depends_on "readline"
+
+  # Fix crash when using Python 3 using Fedora's patch.
+  # Reported upstream:
+  # https://bugzilla.gnome.org/show_bug.cgi?id=789714
+  # https://gitlab.gnome.org/GNOME/libxml2/issues/12
+  patch do
+    url "https://bugzilla.opensuse.org/attachment.cgi?id=746044"
+    sha256 "37eb81a8ec6929eed1514e891bff2dd05b450bcf0c712153880c485b7366c17c"
+  end
+
+  # Resolves CVE-2018-8048, CVE-2018-3740, CVE-2018-3741
+  # Upstream hasn't patched this bug, but Nokogiri distributes
+  # libxml2 with this patch to fixe this issue
+  # https://bugzilla.gnome.org/show_bug.cgi?id=769760
+  # https://github.com/sparklemotion/nokogiri/pull/1746
+  patch do
+    url "https://raw.githubusercontent.com/sparklemotion/nokogiri/38721829c1df30e93bdfbc88095cc36838e497f3/patches/libxml2/0001-Revert-Do-not-URI-escape-in-server-side-includes.patch"
+    sha256 "c755e6e17c02584bfbfc8889ffc652384b010c0bd71879d7ff121ca60a218fcd"
+  end
 
   def install
     system "autoreconf", "-fiv" if build.head?
+
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
+                          "--with-history",
                           "--without-python",
                           "--without-lzma"
     system "make", "install"
 
     cd "python" do
       # We need to insert our include dir first
-      inreplace "setup.py", "includes_dir = [", "includes_dir = ['#{include}', '#{MacOS.sdk_path}/usr/include',"
-      system "python", "setup.py", "install", "--prefix=#{prefix}"
+      inreplace "setup.py", "includes_dir = [",
+                            "includes_dir = ['#{include}', '#{MacOS.sdk_path}/usr/include',"
+      system "python3", "setup.py", "install", "--prefix=#{prefix}"
     end
   end
 
@@ -58,7 +81,8 @@ class Libxml2 < Formula
     system ENV.cc, *args
     system "./test"
 
-    ENV.prepend_path "PYTHONPATH", lib/"python2.7/site-packages"
-    system "python2.7", "-c", "import libxml2"
+    xy = Language::Python.major_minor_version "python3"
+    ENV.prepend_path "PYTHONPATH", lib/"python#{xy}/site-packages"
+    system "python3", "-c", "import libxml2"
   end
 end

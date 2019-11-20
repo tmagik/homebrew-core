@@ -1,25 +1,25 @@
 class Yaz < Formula
   desc "Toolkit for Z39.50/SRW/SRU clients/servers"
   homepage "https://www.indexdata.com/yaz"
-  url "http://ftp.indexdata.dk/pub/yaz/yaz-5.24.0.tar.gz"
-  sha256 "1269da293f65918e1c687ae41bfe28a3fe9c46dd20543c7fb2d9f04f9b617f46"
+  url "http://ftp.indexdata.dk/pub/yaz/yaz-5.27.2.tar.gz"
+  sha256 "09fdebc78ef169194f3d275ede5ef39087484c1395bf518484051bba81cb154e"
 
   bottle do
     cellar :any
-    sha256 "935945eb04881baaaf4ea8b8dc91d5df916bdd6c494a3e01238c9af8b9c9a26e" => :high_sierra
-    sha256 "4b083b44a2c19eb9c7064c734129f08dc1ffb122080371ce7e0103bbe3193276" => :sierra
-    sha256 "adf7dbd85147165647b0123ce19e9caf0ac4af5029a6d02702acc78299ac262d" => :el_capitan
+    sha256 "dec79484e11ffb10ac51d1d902ac9860036af7bea924a0c3022b40d9f6df8c2f" => :catalina
+    sha256 "765a114f35202bf28fd7a05011d7c8e388929a2c10a6c03f4b5a1348684296ea" => :mojave
+    sha256 "047af6554ea6d94e46ca01d8c146a0ea8414fc5e2c0956e90e7a33cce8a133dc" => :high_sierra
   end
 
   head do
     url "https://github.com/indexdata/yaz.git"
-    depends_on "automake" => :build
     depends_on "autoconf" => :build
+    depends_on "automake" => :build
     depends_on "libtool" => :build
   end
 
   depends_on "pkg-config" => :build
-  depends_on "icu4c" => :recommended
+  depends_on "icu4c"
 
   def install
     system "./buildconf.sh" if build.head?
@@ -38,40 +38,32 @@ class Yaz < Formula
     result.force_encoding(Encoding::UTF_8) if result.respond_to?(:force_encoding)
     assert_equal "世界こんにちは！", result
 
-    # Test ICU support if building with ICU by running yaz-icu
-    # with the example icu_chain from its man page.
-    if build.with? "icu4c"
-      # The input string should be transformed to be:
-      # * without control characters (tab)
-      # * split into tokens at word boundaries (including -)
-      # * without whitespace and Punctuation
-      # * xy transformed to z
-      # * lowercase
-      configurationfile = testpath/"icu-chain.xml"
-      configurationfile.write <<~EOS
-        <?xml version="1.0" encoding="UTF-8"?>
-        <icu_chain locale="en">
-          <transform rule="[:Control:] Any-Remove"/>
-          <tokenize rule="w"/>
-          <transform rule="[[:WhiteSpace:][:Punctuation:]] Remove"/>
-          <transliterate rule="xy > z;"/>
-          <display/>
-          <casemap rule="l"/>
-        </icu_chain>
-      EOS
+    # Test ICU support by running yaz-icu with the example icu_chain
+    # from its man page.
+    configfile = testpath/"icu-chain.xml"
+    configfile.write <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <icu_chain locale="en">
+        <transform rule="[:Control:] Any-Remove"/>
+        <tokenize rule="w"/>
+        <transform rule="[[:WhiteSpace:][:Punctuation:]] Remove"/>
+        <transliterate rule="xy > z;"/>
+        <display/>
+        <casemap rule="l"/>
+      </icu_chain>
+    EOS
 
-      inputfile = testpath/"icu-test.txt"
-      inputfile.write "yaz-ICU	xy!"
+    inputfile = testpath/"icu-test.txt"
+    inputfile.write "yaz-ICU	xy!"
 
-      expectedresult = <<~EOS
-        1 1 'yaz' 'yaz'
-        2 1 '' ''
-        3 1 'icuz' 'ICUz'
-        4 1 '' ''
-      EOS
+    expectedresult = <<~EOS
+      1 1 'yaz' 'yaz'
+      2 1 '' ''
+      3 1 'icuz' 'ICUz'
+      4 1 '' ''
+    EOS
 
-      result = shell_output("#{bin}/yaz-icu -c #{configurationfile} #{inputfile}")
-      assert_equal expectedresult, result
-    end
+    result = shell_output("#{bin}/yaz-icu -c #{configfile} #{inputfile}")
+    assert_equal expectedresult, result
   end
 end

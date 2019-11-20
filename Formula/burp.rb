@@ -1,21 +1,23 @@
 class Burp < Formula
   desc "Network backup and restore"
   homepage "https://burp.grke.org/"
+  revision 1
 
   stable do
-    url "https://downloads.sourceforge.net/project/burp/burp-2.1.32/burp-2.1.32.tar.bz2"
-    sha256 "56f8a13ae96e50f2274857a08c9f3d9f06ed6dee306d49fd189e3ff9f93c74fd"
+    url "https://downloads.sourceforge.net/project/burp/burp-2.2.18/burp-2.2.18.tar.bz2"
+    sha256 "9c0c5298d8c2995d30d4e1a63d2882662e7056ce2b0cee1f65d7d0a6775c0f81"
 
     resource "uthash" do
       url "https://github.com/troydhanson/uthash.git",
-          :revision => "1048ed82f22fe57f1e139821ae3a3ce6a52f1002"
+          :revision => "8b214aefcb81df86a7e5e0d4fa20e59a6c18bc02"
     end
   end
 
   bottle do
-    sha256 "63448a114768888ecf29a7e43dc47bfa7d6bf8dcf29100dd686427c767d5c1f1" => :high_sierra
-    sha256 "7227edca3f5ccc37bb27c129f6191440341f1d6513a720a45d0132aae52f2a69" => :sierra
-    sha256 "327c71e933b05d212cc522748e4928b52da9c968f7f2ca50cee31a7ec99add0b" => :el_capitan
+    sha256 "a028ea604ba4bbb5abe2d9985e94ece9f673cf33e35191063eb91e356923e982" => :catalina
+    sha256 "f45062f56a6cc3bc9ba09b84d9f44e599015387d6d31b0ae8a289fa74a904021" => :mojave
+    sha256 "1855c5623a4d7ec1ed397f2646772d807a127f80f196c41dcae0efe7615afd8d" => :high_sierra
+    sha256 "157aa6cc33291ec50b8597b3bd97b08e0a92f79e634ec122eb0911e86bc395c9" => :sierra
   end
 
   head do
@@ -32,7 +34,8 @@ class Burp < Formula
 
   depends_on "pkg-config" => :build
   depends_on "librsync"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
+  uses_from_macos "zlib"
 
   def install
     resource("uthash").stage do
@@ -59,7 +62,7 @@ class Burp < Formula
   def caveats; <<~EOS
     Before installing the launchd entry you should configure your burp client in
       #{etc}/burp/burp.conf
-    EOS
+  EOS
   end
 
   plist_options :startup => true
@@ -87,10 +90,10 @@ class Burp < Formula
       <string>#{HOMEBREW_PREFIX}</string>
     </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do
-    system bin/"burp", "-v"
+    system bin/"burp", "-V"
   end
 end

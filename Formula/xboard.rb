@@ -4,12 +4,13 @@ class Xboard < Formula
   url "https://ftp.gnu.org/gnu/xboard/xboard-4.9.1.tar.gz"
   mirror "https://ftpmirror.gnu.org/xboard/xboard-4.9.1.tar.gz"
   sha256 "2b2e53e8428ad9b6e8dc8a55b3a5183381911a4dae2c0072fa96296bbb1970d6"
-  revision 2
+  revision 3
 
   bottle do
-    sha256 "00118aebe71d62daeb3b57f2112dc8f86dcc94cb885e7087b10f609a0307b73b" => :high_sierra
-    sha256 "4a50ceee531601a9a920ca1a2d099113993b0369e5b76fe4125ba43563c2b04a" => :sierra
-    sha256 "47d20242d82c9223754908ec0a7443ea5f7774a82eaf43bfbeaacbda5c750ce8" => :el_capitan
+    sha256 "561953a63ec6296b6faeb38b999f83ede6ba7c91501cce88eeb560c282985ee7" => :catalina
+    sha256 "c94386e2985c9a4175aba3280658670810269c0a6fe8315676cc49198070bf14" => :mojave
+    sha256 "eecee1fb605e34564d8906a72f41d1516a210cb41af86c9dd51cdd05376d8b48" => :high_sierra
+    sha256 "5c9c512b8267d66e69842e9f11b9f63169ae2b953108df72f200122267724f9d" => :sierra
   end
 
   head do
@@ -19,12 +20,12 @@ class Xboard < Formula
   end
 
   depends_on "pkg-config" => :build
-  depends_on "fairymax" => :recommended
-  depends_on "polyglot" => :recommended
-  depends_on "gettext"
   depends_on "cairo"
-  depends_on "librsvg"
+  depends_on "fairymax"
+  depends_on "gettext"
   depends_on "gtk+"
+  depends_on "librsvg"
+  depends_on "polyglot"
 
   def install
     system "./autogen.sh" if build.head?

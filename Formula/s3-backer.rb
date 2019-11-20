@@ -1,18 +1,18 @@
 class S3Backer < Formula
   desc "FUSE-based single file backing store via Amazon S3"
   homepage "https://github.com/archiecobbs/s3backer"
-  url "https://s3.amazonaws.com/archie-public/s3backer/s3backer-1.4.4.tar.gz"
-  sha256 "7efa9347490e04bc22b4e62bed36864be1ba31bf8558d598cab57ef5096f2c02"
+  url "https://archie-public.s3.amazonaws.com/s3backer/s3backer-1.5.4.tar.gz"
+  sha256 "7e73bb8378a4ccf7b1904a078fbc4731b07138951cbe1c20ce7aa0eb3e8da0d0"
 
   bottle do
     cellar :any
-    sha256 "9621195e9c7b6f019f83cc82f75099cd09a980f483784f2bfb8506fbeb9d4634" => :high_sierra
-    sha256 "829b0c2b6d9d2452dc2e31f13d0f7105e28d40452b12f400b0365a89cdfaf1f4" => :sierra
-    sha256 "0ca2e4610cdee2171357af542fcc4540a69a0336e278e0e5a30ee7748be174a0" => :el_capitan
+    sha256 "81a2723bf9153259c910e49858bb49bd1aa26ef8a23e05a0ed7a8b01c6e8a032" => :catalina
+    sha256 "56ce3b86f53c7712f6e60f5059e920ef5237f335a19443ff81fe1a2a3a40b583" => :mojave
+    sha256 "f1544f1d212b7bf4fe34cea698a3f8a3a0fef49f9590777ab81d1eb56b71d40f" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on :osxfuse
 
   def install

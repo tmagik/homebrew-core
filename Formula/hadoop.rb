@@ -1,9 +1,8 @@
 class Hadoop < Formula
   desc "Framework for distributed processing of large data sets"
   homepage "https://hadoop.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=hadoop/common/hadoop-3.0.0/hadoop-3.0.0.tar.gz"
-  mirror "https://archive.apache.org/dist/hadoop/common/hadoop-3.0.0/hadoop-3.0.0.tar.gz"
-  sha256 "726e28fa7aea71e4587ce91ed3d96c56b15777fc859c09a7438a6d0092e08c74"
+  url "https://www.apache.org/dyn/closer.cgi?path=hadoop/common/hadoop-3.2.1/hadoop-3.2.1.tar.gz"
+  sha256 "f66a3a4115b8f16c1077d1a198a06854dbef0e4233291712ed08d0a10629ed37"
 
   bottle :unneeded
 
@@ -16,6 +15,9 @@ class Hadoop < Formula
     libexec.install %w[bin sbin libexec share etc]
     bin.write_exec_script Dir["#{libexec}/bin/*"]
     sbin.write_exec_script Dir["#{libexec}/sbin/*"]
+    libexec.write_exec_script Dir["#{libexec}/libexec/*.sh"]
+    # Temporary fix until https://github.com/Homebrew/brew/pull/4512 is fixed
+    chmod 0755, Dir["#{libexec}/*.sh"]
   end
 
   test do

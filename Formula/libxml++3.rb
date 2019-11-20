@@ -1,21 +1,20 @@
 class Libxmlxx3 < Formula
   desc "C++ wrapper for libxml"
-  homepage "https://libxmlplusplus.sourceforge.io"
+  homepage "https://libxmlplusplus.sourceforge.io/"
   url "https://download.gnome.org/sources/libxml++/3.0/libxml++-3.0.1.tar.xz"
   sha256 "19dc8d21751806c015179bc0b83f978e65c878724501bfc0b6c1bcead29971a6"
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "81a832266045b5cc62d2c1b487ac2a221533ef5039f344bcfce98091549a32b7" => :high_sierra
-    sha256 "1d5baca91832c79cc7ae0257f3b0f35d67184f25db8aa75bdabe2e2d581caf7b" => :sierra
-    sha256 "9a1c98fc76dc4dede0d4092c1c015a690bcb8a8fe24be1a37235fe9846a302c0" => :el_capitan
-    sha256 "3f9d20753370b2ff1ff3e3e9bb0df129787f3b2904d5f0ee475b9099ca66dbfc" => :yosemite
+    sha256 "005a1ad3816a68e931cb9f846ea308890ee1cb193c78930ab807ea2b8eb045aa" => :catalina
+    sha256 "e28337e04206928b26c1ef1b0e01e17611fae0c71f2aff3446cfbba00d3271d0" => :mojave
+    sha256 "a454a9d800341cbed2a10d89dbce4a633036dfad4965cac8b4eab36fd77133b7" => :high_sierra
+    sha256 "1f3337b717075e6391dcfb784025fe911d044145ce136f38218ff27ed2d2955e" => :sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "glibmm"
-
-  needs :cxx11
 
   def install
     ENV.cxx11
@@ -30,7 +29,7 @@ class Libxmlxx3 < Formula
       int main(int argc, char *argv[])
       {
          xmlpp::Document document;
-         document.set_internal_subset("homebrew", "", "http://www.brew.sh/xml/test.dtd");
+         document.set_internal_subset("homebrew", "", "https://www.brew.sh/xml/test.dtd");
          xmlpp::Element *rootnode = document.create_root_node("homebrew");
          return 0;
       }
@@ -39,7 +38,7 @@ class Libxmlxx3 < Formula
     gettext = Formula["gettext"]
     glib = Formula["glib"]
     glibmm = Formula["glibmm"]
-    libsigcxx = Formula["libsigc++"]
+    libsigcxx = Formula["libsigc++@2"]
     flags = %W[
       -I#{gettext.opt_include}
       -I#{glib.opt_include}/glib-2.0

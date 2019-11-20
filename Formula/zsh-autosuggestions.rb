@@ -1,8 +1,8 @@
 class ZshAutosuggestions < Formula
   desc "Fish-like fast/unobtrusive autosuggestions for zsh"
   homepage "https://github.com/zsh-users/zsh-autosuggestions"
-  url "https://github.com/zsh-users/zsh-autosuggestions/archive/v0.4.2.tar.gz"
-  sha256 "d2316f998338ee7a83ed1741a82e59f3c83757541291ca4eb0025625c1dae9dd"
+  url "https://github.com/zsh-users/zsh-autosuggestions/archive/v0.6.3.tar.gz"
+  sha256 "06f5c5bfedc469dc51f7a2db26ddc2dbcd2e742ea82d8057a7fa9e215c39db4c"
 
   bottle :unneeded
 
@@ -23,7 +23,7 @@ class ZshAutosuggestions < Formula
   end
 
   test do
-    assert_match "default",
+    assert_match "history",
       shell_output("zsh -c '. #{pkgshare}/zsh-autosuggestions.zsh && echo $ZSH_AUTOSUGGEST_STRATEGY'")
   end
 end

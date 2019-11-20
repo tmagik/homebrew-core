@@ -1,14 +1,15 @@
 class Libbluray < Formula
   desc "Blu-Ray disc playback library for media players like VLC"
   homepage "https://www.videolan.org/developers/libbluray.html"
-  url "https://download.videolan.org/pub/videolan/libbluray/1.0.2/libbluray-1.0.2.tar.bz2"
-  sha256 "6d9e7c4e416f664c330d9fa5a05ad79a3fb39b95adfc3fd6910cbed503b7aeff"
+  url "https://download.videolan.org/pub/videolan/libbluray/1.1.2/libbluray-1.1.2.tar.bz2"
+  sha256 "a3dd452239b100dc9da0d01b30e1692693e2a332a7d29917bf84bb10ea7c0b42"
 
   bottle do
     cellar :any
-    sha256 "5bca035002a063c9c99a08e3e15f0f15ebac30a94dce6e57116b7d8d44d690c2" => :high_sierra
-    sha256 "af79492225913a9b9be4653fa8f755183c8775c4be95458fd2a2f9dbb967a9c3" => :sierra
-    sha256 "d07c0b951f2a4a43e1ca3c349ecac84e7916fc7806100191fba8316b3d1973d5" => :el_capitan
+    rebuild 1
+    sha256 "02450f9c05b48ec198c967ef34b109002c9d9f2c496ef8876f3779e451ed2271" => :catalina
+    sha256 "cf27d6ba0b4e169785801140ba11fb47e78040f26b5af9e2279bc808e5b62bc3" => :mojave
+    sha256 "1566fcca5871d636404d2517dba45f6c287ab8dd5c9ffc8b9b09dc1bf2af0e18" => :high_sierra
   end
 
   head do
@@ -23,7 +24,7 @@ class Libbluray < Formula
   depends_on :java => ["1.8", :build]
   depends_on "pkg-config" => :build
   depends_on "fontconfig"
-  depends_on "freetype" => :recommended
+  depends_on "freetype"
 
   def install
     # Need to set JAVA_HOME manually since ant overrides 1.8 with 1.8+
@@ -33,12 +34,27 @@ class Libbluray < Formula
     # https://mailman.videolan.org/pipermail/libbluray-devel/2014-April/001401.html
     ENV.append_to_cflags "-D_DARWIN_C_SOURCE"
 
+    # Work around Xcode 11 clang bug
+    # https://code.videolan.org/videolan/libbluray/issues/20
+    ENV.append_to_cflags "-fno-stack-check" if DevelopmentTools.clang_build_version >= 1010
+
     args = %W[--prefix=#{prefix} --disable-dependency-tracking]
-    args << "--without-freetype" if build.without? "freetype"
 
     system "./bootstrap" if build.head?
     system "./configure", *args
     system "make"
     system "make", "install"
+  end
+
+  test do
+    (testpath/"test.c").write <<~EOS
+      #include <libbluray/bluray.h>
+      int main(void) {
+        BLURAY *bluray = bd_init();
+      }
+    EOS
+
+    system ENV.cc, "test.c", "-I#{include}", "-L#{lib}", "-lbluray", "-o", "test"
+    system "./test"
   end
 end

@@ -7,13 +7,15 @@ class Bubbros < Formula
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "99e021124d687f99b814502f1c2dca530f8551ceaeba68410b6cf9f5ab97ff42" => :high_sierra
-    sha256 "4e4f5ae81a3393f4ea449739004e0bda1c628f25fbd0bb00a8c08a73b8ed16db" => :sierra
-    sha256 "e5ca6894981c7c33de857573f3cf2ad7c5e77f27b301228a37ff86640bd186c4" => :el_capitan
+    rebuild 1
+    sha256 "0787da9180d41eb01bca38a6e0c04759877e5c141d9dd1de02c3e81ebc6ad771" => :catalina
+    sha256 "40db40b8456691091963eeb5e7183a79dfa392c3428261b582b29f1201398163" => :mojave
+    sha256 "e808145d3d1ae843d32a437be1ef8ad70c837bf4b2ccf66e4963cd6561d45c14" => :high_sierra
+    sha256 "afee50e9fa76478ba416a51cae53efa3ac6ff9fd457d58fb5b6b0b09d343e4c9" => :sierra
+    sha256 "989c2af93a6acef698f8e02dbed8c7a282a550cec60aba5b4029db830dcbeff1" => :el_capitan
   end
 
-  depends_on "python@2"
-  depends_on :x11 => :optional
+  depends_on "python@2" # does not support Python 3
 
   # Patches from debian https://sources.debian.net/patches/bubbros
   patch do
@@ -43,7 +45,6 @@ class Bubbros < Formula
 
   def install
     system "make", "-C", "bubbob"
-    system "make", "-C", "display" if build.with? :x11
     system "python", "bubbob/images/buildcolors.py"
 
     man6.install "doc/BubBob.py.1" => "bubbros.6"
@@ -62,16 +63,7 @@ class Bubbros < Formula
     #!/bin/bash
     cd "#{prefix}"
     python "#{target}" "$@"
-    EOS
-  end
-
-  def caveats
-    s = <<~EOS
-      The Shared Memory extension of X11 display driver is not supported.
-      Run the display client with --shm=no
-        bubbros-client --shm=no
-    EOS
-    s if build.with? :x11
+  EOS
   end
 
   test do

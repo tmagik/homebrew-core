@@ -1,26 +1,23 @@
 class Unixodbc < Formula
   desc "ODBC 3 connectivity for UNIX"
   homepage "http://www.unixodbc.org/"
-  url "http://www.unixodbc.org/unixODBC-2.3.6.tar.gz"
-  sha256 "88b637f647c052ecc3861a3baa275c3b503b193b6a49ff8c28b2568656d14d69"
+  url "http://www.unixodbc.org/unixODBC-2.3.7.tar.gz"
+  sha256 "45f169ba1f454a72b8fcbb82abd832630a3bf93baa84731cf2949f449e1e3e77"
 
   bottle do
-    sha256 "cd5a1ea2f0ba6db321b63514b2c33c0c1d74ada9541de8390cca0bc349f4845d" => :high_sierra
-    sha256 "2ccf3f7384697dd2460631a4afb685465a93c8f64fb0217c7485ab8919606e7d" => :sierra
-    sha256 "3330aee67c21712979a5e0cca8360f691b3e3bd0dd751fdeb15af998d2e6814c" => :el_capitan
+    rebuild 1
+    sha256 "03ba378d971af98d07652f978548ffacb4c155ba11dd36af9d46af36e2d5674b" => :catalina
+    sha256 "d9f30688c0639d73b9e3a4b4b94d3679b2762e2cf0bff6b2ad64fcd175cc30ca" => :mojave
+    sha256 "0b30b166c0e6bbd9df375a018d0f2a80b944617230b15531093d20eb015971e6" => :high_sierra
+    sha256 "44407c41dc2c5cc58fcd2c254fa54ede75e7782b82567f4f1ba421d357203105" => :sierra
   end
 
   depends_on "libtool"
 
-  keg_only "shadows system iODBC header files" if MacOS.version < :mavericks
-
+  conflicts_with "libiodbc", :because => "both install 'odbcinst.h' header"
   conflicts_with "virtuoso", :because => "Both install `isql` binaries."
 
   def install
-    # Fixes "sed: -e: No such file or directory"
-    # Reported 22 Mar 2018 to nick AT unixodbc DOT org
-    inreplace "exe/Makefile.in", "@sed -i -e", "@sed -i '' -e"
-
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--prefix=#{prefix}",

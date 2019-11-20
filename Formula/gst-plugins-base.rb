@@ -1,14 +1,14 @@
 class GstPluginsBase < Formula
   desc "GStreamer plugins (well-supported, basic set)"
   homepage "https://gstreamer.freedesktop.org/"
-  url "https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.14.0.tar.xz"
-  sha256 "7e904660ff56e02b036cf7fdfb77a50a540828ca9d2614d69ba931772e5b6940"
-  revision 1
+  url "https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.16.1.tar.xz"
+  sha256 "5c3cc489933d0597087c9bc6ba251c93693d64554bcc563539a084fa2d5fcb2b"
 
   bottle do
-    sha256 "0a82c40cf5b175045cf16a08f53e7ef0eee5ea11c4c1b27bc3d0a210b2de0919" => :high_sierra
-    sha256 "a7b042843228bc8524ae462214283daa56b2ff9145959d64272698b8db52df34" => :sierra
-    sha256 "5c43f575a15843ef1432c9fe59cecea79376619f5abd6edf9da6e18594c89192" => :el_capitan
+    sha256 "54ab689dd69b17d4dc78f98b8e36b44d65df8310500f9461feab5522504ebce8" => :catalina
+    sha256 "4acaaf10a1174a9b4339653683a17601dbaa7be69e379680fc51650e64c3b19b" => :mojave
+    sha256 "1a0f81a6161550b42e7bbd349eee7accb5b5e489f6b24756ff7d2847bd8eaafc" => :high_sierra
+    sha256 "3adaa7060d255bf9198db9c72894d605eca6f15507e1b725c8f53637cb93a702" => :sierra
   end
 
   head do
@@ -23,16 +23,12 @@ class GstPluginsBase < Formula
   depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "gstreamer"
-
-  # The set of optional dependencies is based on the intersection of
-  # https://cgit.freedesktop.org/gstreamer/gst-plugins-base/tree/REQUIREMENTS
-  # and Homebrew formulae
-  depends_on "orc" => :recommended
-  depends_on "libogg" => :optional
-  depends_on "opus" => :optional
-  depends_on "pango" => :recommended
-  depends_on "theora" => :optional
-  depends_on "libvorbis" => :optional
+  depends_on "libogg"
+  depends_on "libvorbis"
+  depends_on "opus"
+  depends_on "orc"
+  depends_on "pango"
+  depends_on "theora"
 
   def install
     # gnome-vfs turned off due to lack of formula for it.

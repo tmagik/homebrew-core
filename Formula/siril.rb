@@ -1,15 +1,14 @@
 class Siril < Formula
   desc "Astronomical image processing tool"
-  homepage "https://free-astro.org/index.php/Siril"
-  url "https://free-astro.org/download/siril-0.9.8.3.tar.bz2"
-  sha256 "f6ca57b668441505010673b153f85fa23efdf41fe74ee7ecb5a4926a572acfa3"
-  revision 3
-  head "https://free-astro.org/svn/siril/", :using => :svn
+  homepage "https://www.siril.org"
+  url "https://free-astro.org/download/siril-0.9.12.tar.bz2"
+  sha256 "9fb7f8a10630ea028137e8f213727519ae9916ea1d88cd8d0cc87f336d8d53b1"
+  head "https://gitlab.com/free-astro/siril.git"
 
   bottle do
-    sha256 "ccee3e880c5af388b212428db431131f14ae8cef08b2a3b5cb12fb3f1ccc29e0" => :high_sierra
-    sha256 "50063d351c407ee465213a65defa9a3a99d36d0e48365cb2c4221b1ff6bb68dc" => :sierra
-    sha256 "eb7d239829e8bf22335dc12ef7b8e4808b2d3ae1382cf13dce574be850006780" => :el_capitan
+    sha256 "4c3469d4804c3b335e81133f592a8b8ba22bd94e0b7431ede268b630de106cec" => :catalina
+    sha256 "6328882b1ba84dfe563a772712c0c385ab8b80f4656f95aeddd871e65769a3ee" => :mojave
+    sha256 "4ba449d82d587314124096d8d4f772a7dc0129a11ea3ebdb275d01be39d7d912" => :high_sierra
   end
 
   depends_on "autoconf" => :build
@@ -21,11 +20,12 @@ class Siril < Formula
   depends_on "cfitsio"
   depends_on "ffms2"
   depends_on "fftw"
-  depends_on "gcc" # for OpenMP
   depends_on "gnuplot"
   depends_on "gsl"
   depends_on "gtk-mac-integration"
+  depends_on "jpeg"
   depends_on "libconfig"
+  depends_on "libomp"
   depends_on "libraw"
   depends_on "librsvg"
   depends_on "libsvg"
@@ -33,14 +33,12 @@ class Siril < Formula
   depends_on "opencv"
   depends_on "openjpeg"
 
-  fails_with :clang # no OpenMP support
-
-  needs :cxx11
-
   def install
-    ENV.cxx11
+    # siril uses pkg-config but it has wrong include paths for several
+    # headers. Work around that by letting it find all includes.
+    ENV.append_to_cflags "-I#{HOMEBREW_PREFIX}/include -Xpreprocessor -fopenmp -lomp"
 
-    system "./autogen.sh", "--prefix=#{prefix}", "--enable-openmp"
+    system "./autogen.sh", "--prefix=#{prefix}"
     system "make", "install"
   end
 

@@ -1,13 +1,14 @@
 class Zig < Formula
   desc "Programming language designed for robustness, optimality, and clarity"
   homepage "https://ziglang.org/"
-  url "https://github.com/zig-lang/zig/archive/0.2.0.tar.gz"
-  sha256 "09843a3748bf8a5f1742fe93dbf45699f92051ecf479b23272b067dfc3837cc7"
+  url "https://ziglang.org/download/0.5.0/zig-0.5.0.tar.xz"
+  sha256 "55ae16960f152bcb9cf98b4f8570902d0e559a141abf927f0d3555b7cc838a31"
+  head "https://github.com/ziglang/zig.git"
 
   bottle do
-    sha256 "9985f61a3ad0913ff7ef4595b64ed940532720f2e6e07e0e535cdb660a758c1a" => :high_sierra
-    sha256 "4c2b272a5229f0b0d67759a075cc647e09860b29b0325d0feb38a9abbb58830f" => :sierra
-    sha256 "4244c50ca567e20e6a98a783b7cdc97455d5114ae0f9d754d6c72a21b5a45c1f" => :el_capitan
+    sha256 "3b5659dac004dcdf68e57bed34f9b7f097524aebecd7cf263ff74d643fcc7d22" => :catalina
+    sha256 "3142c933d0a51bd29119cb242e4241cb012f22d9aa65380f1541bd16876206ae" => :mojave
+    sha256 "db30263fb131a6dce56904b5232dbba1165d58c58545b84a9958102f779fe13b" => :high_sierra
   end
 
   depends_on "cmake" => :build

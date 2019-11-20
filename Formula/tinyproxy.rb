@@ -1,24 +1,19 @@
 class Tinyproxy < Formula
   desc "HTTP/HTTPS proxy for POSIX systems"
   homepage "https://www.banu.com/tinyproxy/"
-  url "https://github.com/tinyproxy/tinyproxy/releases/download/1.8.4/tinyproxy-1.8.4.tar.xz"
-  sha256 "a41f4ddf0243fc517469cf444c8400e1d2edc909794acda7839f1d644e8a5000"
+  url "https://github.com/tinyproxy/tinyproxy/releases/download/1.10.0/tinyproxy-1.10.0.tar.xz"
+  sha256 "59be87689c415ba0d9c9bc6babbdd3df3b372d60b21e526b118d722dbc995682"
+  revision 1
 
   bottle do
-    rebuild 1
-    sha256 "7e7250cfbda60dcf40e291ce777842953bdfa573023ca28d2b09eefe41c0e523" => :high_sierra
-    sha256 "f04c44c7119f0eac9c0ec0a9a48044808d9e2fc2f1a8c0ddf197206fa0683e4a" => :sierra
-    sha256 "2ccb9fb5ba5dd782407fa1c6d261d57eaa4189c902e674cbed839c903e39c177" => :el_capitan
+    sha256 "e5a6e416b7f80da4a8e3af8ebaaf4e4c30d5f375845e44e72878170eeabffac0" => :catalina
+    sha256 "fdf164a29e4730795b6b66fdabb34a35f34b91e4d8c896fa461542ec356d464d" => :mojave
+    sha256 "05aed7a81fe9f92f043fe55ac10dba2474df664f710c01ee92283e5cf7fe0324" => :high_sierra
+    sha256 "97cefacaaf1aa12eabe102ad86cee01c24f50f2a3ec07ca1eb17799319f02385" => :sierra
   end
-
-  option "with-reverse", "Enable reverse proxying"
-  option "with-transparent", "Enable transparent proxying"
-  option "with-filter", "Enable url filtering"
 
   depends_on "asciidoc" => :build
   depends_on "docbook-xsl" => :build
-
-  deprecated_option "reverse" => "with-reverse"
 
   def install
     ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog"
@@ -31,19 +26,12 @@ class Tinyproxy < Formula
       --localstatedir=#{var}
       --sysconfdir=#{etc}
       --disable-regexcheck
+      --enable-filter
+      --enable-reverse
+      --enable-transparent
     ]
 
-    args << "--enable-reverse" if build.with? "reverse"
-    args << "--enable-transparent" if build.with? "transparent"
-    args << "--enable-filter" if build.with? "filter"
-
     system "./configure", *args
-
-    # Fix broken XML lint
-    # See: https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=154624
-    inreplace %w[docs/man5/Makefile docs/man8/Makefile], "-f manpage",
-                                                         "-f manpage \\\n  -L"
-
     system "make", "install"
   end
 
@@ -67,19 +55,19 @@ class Tinyproxy < Formula
         <false/>
         <key>ProgramArguments</key>
         <array>
-            <string>#{opt_sbin}/tinyproxy</string>
+            <string>#{opt_bin}/tinyproxy</string>
             <string>-d</string>
         </array>
         <key>WorkingDirectory</key>
         <string>#{HOMEBREW_PREFIX}</string>
       </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do
     pid = fork do
-      exec "#{sbin}/tinyproxy"
+      exec "#{bin}/tinyproxy"
     end
     sleep 2
 

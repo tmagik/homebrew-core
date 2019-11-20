@@ -1,9 +1,9 @@
 class Nexus < Formula
   desc "Repository manager for binary software components"
   homepage "https://www.sonatype.org/"
-  url "https://sonatype-download.global.ssl.fastly.net/nexus/oss/nexus-2.14.8-01-bundle.tar.gz"
-  version "2.14.8-01"
-  sha256 "dfe47d5e5b3c6667854d967eede2f778169c01c55ad930a17f79ee6a59c36903"
+  url "https://sonatype-download.global.ssl.fastly.net/repository/repositoryManager/oss/nexus-2.14.13-01-bundle.tar.gz"
+  version "2.14.13-01"
+  sha256 "66e2ae803af26c6af34a82cc510d7fa2037080f35a72b4398f65d2f157fd3afc"
 
   bottle :unneeded
 
@@ -35,7 +35,7 @@ class Nexus < Formula
       <true/>
       </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

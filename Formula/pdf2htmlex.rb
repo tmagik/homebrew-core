@@ -3,36 +3,33 @@ class Pdf2htmlex < Formula
   homepage "https://coolwanglu.github.io/pdf2htmlEX/"
   url "https://github.com/coolwanglu/pdf2htmlEX/archive/v0.14.6.tar.gz"
   sha256 "320ac2e1c2ea4a2972970f52809d90073ee00a6c42ef6d9833fb48436222f0e5"
-  revision 20
-
+  revision 23
   head "https://github.com/coolwanglu/pdf2htmlEX.git"
 
   bottle do
-    sha256 "316df8e38b0533e5c7ebbd3b120fe4e5d2957f7d7de92ccc0dbe75c72d1285b6" => :high_sierra
-    sha256 "e02628e81215b1e9fea902f9b353e6f8ea93f1eda7e385f886cee95e39627d20" => :sierra
-    sha256 "5c72b64128d75ce84c0158f6c90c8e710c299de71f593a5b15868c006c5396fb" => :el_capitan
+    sha256 "1a1b620ab8cdd6de2dc077db281ed1fa2430045d3eba557dcaa44319503d9d3a" => :catalina
+    sha256 "55b985d379323de15e3934f65838248b20a7b29f00909c19989aca395083e7ae" => :mojave
+    sha256 "867efcfa4aaf56210e6131b0eb70345e2fed6296a7b6784c936dc7ce2303b8e1" => :high_sierra
   end
 
-  depends_on :macos => :lion
+  depends_on "autoconf" => :build # for fontforge
+  depends_on "automake" => :build # for fontforge
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
+  depends_on "cairo" # for fontforge
+  depends_on "freetype" # for fontforge
+  depends_on "gettext" # for fontforge
+  depends_on "giflib" # for fontforge
+  depends_on "glib" # for fontforge
   depends_on "gnu-getopt"
-  depends_on "openjpeg" # for poppler
-  depends_on "ttfautohint"
+  depends_on "jpeg" # for fontforge
+  depends_on "libpng" # for fontforge
+  depends_on "libtiff" # for fontforge
+  depends_on "libtool" # for fontforge
 
-  # Fontforge dependencies
-  depends_on "autoconf" => :build
-  depends_on "automake" => :build
-  depends_on "libtool"
-  depends_on "cairo"
-  depends_on "freetype"
-  depends_on "gettext"
-  depends_on "giflib"
-  depends_on "glib"
-  depends_on "jpeg"
-  depends_on "libpng"
-  depends_on "libtiff"
-  depends_on "pango"
+  depends_on "openjpeg" # for poppler
+  depends_on "pango" # for fontforge
+  depends_on "ttfautohint"
 
   # Pdf2htmlex use an outdated, customised Fontforge installation.
   # See https://github.com/coolwanglu/pdf2htmlEX/wiki/Building
@@ -53,8 +50,6 @@ class Pdf2htmlex < Formula
   end
 
   def install
-    ENV.cxx11 if MacOS.version < :mavericks
-
     resource("fontforge").stage do
       # Fix for incomplete giflib 5 support, see
       # https://github.com/coolwanglu/pdf2htmlEX/issues/713
@@ -71,6 +66,8 @@ class Pdf2htmlex < Formula
                             "--without-libzmq",
                             "--without-x",
                             "--without-iconv",
+                            "--without-libspiro",
+                            "--without-libuninameslist",
                             "--disable-python-scripting",
                             "--disable-python-extension"
       system "make"

@@ -3,23 +3,18 @@ require "language/node"
 class Joplin < Formula
   desc "Note taking and to-do application with synchronisation capabilities"
   homepage "https://joplin.cozic.net/"
-  url "https://registry.npmjs.org/joplin/-/joplin-1.0.106.tgz"
-  sha256 "c1f1b19f0d078cd232bce5f62e8ec4f1a69bfcddf1cb90701c7cd7a4ecc59613"
-  revision 1
+  url "https://registry.npmjs.org/joplin/-/joplin-1.0.150.tgz"
+  sha256 "8baab0baf97ac77a10d05ca74abc03b4a8b78d53480d70420d6448ec4986bb8b"
 
   bottle do
-    sha256 "623689379519111d6d9169b788d9037b9fc04c822ab98fbb1775731483558a2c" => :high_sierra
-    sha256 "37f80d50bfea27769e8fedab3394e2835868a483e34cdfbb5ddca73a09683c20" => :sierra
-    sha256 "4478b84cf2bbb5b7b08e2c05f6c0c855687a12d164934d50a1bde9813af55cd1" => :el_capitan
+    sha256 "e109e114f10667484a610ac694883c3c6a58791ceca6a2744c7f17d2f6dff207" => :catalina
+    sha256 "53867d6ce8e1ae6981d7375ec60afa0500b8b31645673dea8fb35c201ef52732" => :mojave
+    sha256 "dcf1c24522a4471089d0af2aca9b46c57540123f1f404aedad7f66a3bf82c9ab" => :high_sierra
   end
 
   depends_on "node"
-  depends_on "python@2" => :build
 
   def install
-    # upgrade the sqlite3 dependency to a version with node 10 support
-    inreplace "package.json", "\"sqlite3\": \"^3.1.8\",", "\"sqlite3\": \"^4.0.0\","
-
     system "npm", "install", *Language::Node.std_npm_install_args(libexec)
     bin.install_symlink Dir["#{libexec}/bin/*"]
   end

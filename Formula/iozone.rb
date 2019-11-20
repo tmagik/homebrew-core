@@ -1,14 +1,15 @@
 class Iozone < Formula
   desc "File system benchmark tool"
   homepage "http://www.iozone.org/"
-  url "http://www.iozone.org/src/current/iozone3_478.tar"
-  sha256 "47517c0dcb4cab80b5ff46dd72ecd60e806ba36b751d9d2faabeb6734b1235b7"
+  url "http://www.iozone.org/src/current/iozone3_487.tar"
+  sha256 "2c488a7ccddd624fd557af16e71442c367b131d6178e1b4023bbd532bacdda59"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "f695c668b322794f067c2c333f332073d0a14877cd611fa0880c47276643b048" => :high_sierra
-    sha256 "43164b675e0019918cbc8661eedd37682e6c2167aad8ce4408e8c2dc80ab9d45" => :sierra
-    sha256 "1d7e34cd91861d25a446ecc5f14106fe189ada84eb2bfc0da61b6daf1d1ae838" => :el_capitan
+    sha256 "704c25cbbe9ac821b7f4bef8c23b5ac4df5117d15574062f77247769bca8e6ef" => :catalina
+    sha256 "ed77f59ddfb45e302b60e80d2f4a842e838af5973df7e6dc7d95a3d27c06d0e8" => :mojave
+    sha256 "c0f0f7a10f585f40435d1d0a07322739925c9cae2afeb8c8714fe9e121a41572" => :high_sierra
+    sha256 "09eda4f32813be63ba4e05dee24a9cac6805667d022fb8a2ed42ef8b0fafe9dc" => :sierra
   end
 
   def install

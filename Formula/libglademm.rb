@@ -3,20 +3,19 @@ class Libglademm < Formula
   homepage "https://gnome.org"
   url "https://download.gnome.org/sources/libglademm/2.6/libglademm-2.6.7.tar.bz2"
   sha256 "38543c15acf727434341cc08c2b003d24f36abc22380937707fc2c5c687a2bc3"
-  revision 4
+  revision 6
 
   bottle do
     cellar :any
-    sha256 "d4d4e5f046c43138db2839eb7be00b5aa46eb0956d779d53358d993991ed82da" => :high_sierra
-    sha256 "264970cba76877ef75a4b44ed25bc49b9251beaed15d9e4a3914c1d163253bed" => :sierra
-    sha256 "69e5d6ec8c771dbff8620e7cd6421fdbfa789b2d9dd88688081f87ab8697e76e" => :el_capitan
+    sha256 "d123ccbbf9e8e599a6b889e3b02214b7556b9b205d1835cabb4259bf1520738d" => :catalina
+    sha256 "7198c6996d64bbe6a06380c23d010f0c9a949e3220c8a3dcb785fba0ceb22c33" => :mojave
+    sha256 "4daab6726178c96ac56452716422004dd4fcdfbaef22b85d99f9ddc317c88ea1" => :high_sierra
+    sha256 "6f7c8cbd127f333df690910aa8aa3561989679719bebbfb9d1d4c41a9821d57c" => :sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "gtkmm"
   depends_on "libglade"
-
-  needs :cxx11
 
   def install
     ENV.cxx11
@@ -51,9 +50,10 @@ class Libglademm < Formula
     glibmm = Formula["glibmm"]
     gtkx = Formula["gtk+"]
     gtkmm = Formula["gtkmm"]
+    harfbuzz = Formula["harfbuzz"]
     libglade = Formula["libglade"]
     libpng = Formula["libpng"]
-    libsigcxx = Formula["libsigc++"]
+    libsigcxx = Formula["libsigc++@2"]
     pango = Formula["pango"]
     pangomm = Formula["pangomm"]
     pixman = Formula["pixman"]
@@ -80,6 +80,7 @@ class Libglademm < Formula
       -I#{gtkx.opt_include}/gtk-2.0
       -I#{gtkx.opt_include}/gtk-unix-print-2.0
       -I#{gtkx.opt_lib}/gtk-2.0/include
+      -I#{harfbuzz.opt_include}/harfbuzz
       -I#{include}/libglademm-2.4
       -I#{libglade.opt_include}/libglade-2.0
       -I#{libpng.opt_include}/libpng16

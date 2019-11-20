@@ -1,21 +1,22 @@
 class Libshout < Formula
   desc "Data and connectivity library for the icecast server"
-  homepage "http://www.icecast.org/"
-  url "https://downloads.xiph.org/releases/libshout/libshout-2.4.1.tar.gz"
-  sha256 "f3acb8dec26f2dbf6df778888e0e429a4ce9378a9d461b02a7ccbf2991bbf24d"
+  homepage "https://icecast.org/"
+  url "https://downloads.xiph.org/releases/libshout/libshout-2.4.3.tar.gz"
+  sha256 "0d8af55d1141bf90710bcd41a768c9cc5adb251502a0af1dd22c8da215d40dfe"
 
   bottle do
     cellar :any
-    sha256 "31b3490184bacfbacc6a537385f7ebc421ae750cd2e466f00d53dc9f78ebf948" => :high_sierra
-    sha256 "a13a78cf64be826de47b9bc0430ead7ac900fa513be146ad408370d412ce3bce" => :sierra
-    sha256 "691763e02e7e63b03d2d530447798351ab92d705fb1fd68cc90f9a5ccd131d53" => :el_capitan
+    sha256 "c0a0c87887e331d2f4b174d956e974bae44d427f282024f6a7b36910da7dbe05" => :catalina
+    sha256 "14144ef978dbceb4b858ebeb667be83721ba4b3742fd0e0743ab76a9b2f99095" => :mojave
+    sha256 "f9fef02da35d628c601f24726fa2d748f350692d4bf4c196d28bd08b0f4786eb" => :high_sierra
+    sha256 "1d246580781a0bf5240363da62a476499a16948935f1b0693d05660ccd5aa9de" => :sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "libogg"
   depends_on "libvorbis"
-  depends_on "theora"
   depends_on "speex"
+  depends_on "theora"
 
   def install
     system "./configure", "--disable-dependency-tracking", "--prefix=#{prefix}"

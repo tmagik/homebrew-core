@@ -1,45 +1,35 @@
 class Z3 < Formula
   desc "High-performance theorem prover"
   homepage "https://github.com/Z3Prover/z3"
-  url "https://github.com/Z3Prover/z3/archive/z3-4.6.0.tar.gz"
-  sha256 "511da31d1f985cf0c79b2de05bda4e057371ba519769d1546ff71e1304fe53c9"
-  revision 1
+  url "https://github.com/Z3Prover/z3/archive/z3-4.8.6.tar.gz"
+  sha256 "37922fa5085170cad6504498d9758fb63c61d5cb5b68689c11a6c5e84f0311b3"
   head "https://github.com/Z3Prover/z3.git"
 
   bottle do
     cellar :any
-    sha256 "c2493989f46145689553af054cf41a7c21995fcdb5f84ab5992e2f3cc73f6e65" => :high_sierra
-    sha256 "356863daa6b6701579e1840b5c069fe021a013e2cdef293e91e8984867c87804" => :sierra
-    sha256 "c351bed3d338b1eff6801956915d22b86f8b00fb056b1048c8c88983aa724748" => :el_capitan
+    sha256 "77e5760f19f5acdf3b73adebdf1e93ad00d5bc43d695a0565728ca8e6aa02b70" => :catalina
+    sha256 "0c71a481c7232c4c93e4a28e85271959a7ec2fe4ff88f4245936bdf5dff5c389" => :mojave
+    sha256 "5999876e4ae35a590879c8f7caeace02aacc4fe77eb58819443dd2fb05aff495" => :high_sierra
+    sha256 "e08003ed5ac98409f7d9c0f6fbe2bd483d202079db5233ddbca53e3182a6108a" => :sierra
   end
 
-  option "without-python@2", "Build without python 2 support"
-
-  deprecated_option "with-python3" => "with-python"
-  deprecated_option "without-python" => "without-python@2"
-
-  depends_on "python@2" => :recommended
-  depends_on "python" => :optional
+  depends_on "python"
 
   def install
-    if build.without?("python") && build.without?("python@2")
-      odie "z3: --with-python must be specified when using --without-python@2"
+    xy = Language::Python.major_minor_version "python3"
+    system "python3", "scripts/mk_make.py",
+                      "--prefix=#{prefix}",
+                      "--python",
+                      "--pypkgdir=#{lib}/python#{xy}/site-packages",
+                      "--staticlib"
+
+    cd "build" do
+      system "make"
+      system "make", "install"
     end
 
-    Language::Python.each_python(build) do |python, version|
-      system python, "scripts/mk_make.py", "--prefix=#{prefix}", "--python", "--pypkgdir=#{lib}/python#{version}/site-packages", "--staticlib"
-      cd "build" do
-        system "make"
-        system "make", "install"
-      end
-    end
-
-    # qprofdiff is not yet part of the source release (it will be as soon as a
-    # version is released after 4.5.0), so we only include it in HEAD builds
-    if build.head?
-      system "make", "-C", "contrib/qprofdiff"
-      bin.install "contrib/qprofdiff/qprofdiff"
-    end
+    system "make", "-C", "contrib/qprofdiff"
+    bin.install "contrib/qprofdiff/qprofdiff"
 
     pkgshare.install "examples"
   end

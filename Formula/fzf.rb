@@ -1,26 +1,22 @@
 class Fzf < Formula
   desc "Command-line fuzzy finder written in Go"
   homepage "https://github.com/junegunn/fzf"
-  url "https://github.com/junegunn/fzf/archive/0.17.3.tar.gz"
-  sha256 "e843904417adf926613431e4403fded24fade56269446e92aac6ff1db86af81e"
+  url "https://github.com/junegunn/fzf/archive/0.19.0.tar.gz"
+  sha256 "4d7ee0b621287e64ed450d187e5022d906aa378c5390d8c7c1f843417d2f3422"
   head "https://github.com/junegunn/fzf.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "81658f0f3113ff48873fe7bbc79338f1f50284c5a2f2da456047670d4350221b" => :high_sierra
-    sha256 "f430afe26c931e0d5b210793cd2daa98a24551868fc16501c67209042535c5c2" => :sierra
-    sha256 "c32dd7988d5c606fb790f59fe57f9cca9c40eddf8c187ff7a95c56f81b1c02f8" => :el_capitan
+    sha256 "0be169ab230f6ff7b2322ee3d61fa0cd44e04300b688d207b67e910d948af442" => :catalina
+    sha256 "5b5f429819576c27bab7bb658e3a99ae8043535e19d887fd9eaee954667ee715" => :mojave
+    sha256 "19e9ba86b09129e06530b322f892ba89fb1db3173219ca0228cc0fe2d8281fbc" => :high_sierra
   end
 
-  depends_on "glide" => :build
   depends_on "go" => :build
+  uses_from_macos "ncurses"
 
   def install
-    ENV["GLIDE_HOME"] = buildpath/"glide_home"
-    ENV["GOPATH"] = buildpath
-    (buildpath/"src/github.com/junegunn").mkpath
-    ln_s buildpath, buildpath/"src/github.com/junegunn/fzf"
-    system "glide", "install"
+    ENV["GOPATH"] = HOMEBREW_CACHE/"go_cache"
     system "go", "build", "-o", bin/"fzf", "-ldflags", "-X main.revision=brew"
 
     prefix.install "install", "uninstall"
@@ -37,7 +33,7 @@ class Fzf < Formula
 
     To use fzf in Vim, add the following line to your .vimrc:
       set rtp+=#{opt_prefix}
-    EOS
+  EOS
   end
 
   test do

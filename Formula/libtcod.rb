@@ -1,14 +1,16 @@
 class Libtcod < Formula
   desc "API for roguelike developers"
-  homepage "http://roguecentral.org/doryen/libtcod/"
-  url "https://bitbucket.org/libtcod/libtcod/get/1.6.4.tar.bz2"
-  sha256 "f40855d48e89b34cd9c0091fbe8d7bdb59e58b9f574445824abbb3e9a29a06b7"
+  homepage "https://github.com/libtcod/libtcod"
+  url "https://bitbucket.org/libtcod/libtcod/get/1.8.2.tar.bz2"
+  sha256 "a33aa463e78b6df327d2aceae875edad8dba7a9e5ea0f1299c486b99f4bed31c"
 
   bottle do
     cellar :any
-    sha256 "c9e64cf1266592a440401c31028f97daf076d8bb9ace113a19da1b9c6a01b4bc" => :high_sierra
-    sha256 "360839e84034f149f3538be489273274a7db2f3b9020162dc94b9798e31dc402" => :sierra
-    sha256 "8728af3c1c018e2586708b66fdf8578260a83c875602ff6e796f96f44ea0382e" => :el_capitan
+    rebuild 1
+    sha256 "6fab34197cacd706fb4b33c822d9827a2812201d8c1c662effcfb3779a48b83c" => :catalina
+    sha256 "4ed64942b836e3bbfe50fa3eb97eeb66acd4d0d1aa7fe253126c2b5b6353d6c8" => :mojave
+    sha256 "961e7dee0e97894c62d382e6ab2454d14cb77a7a3d20ead0fbd965b825957ca4" => :high_sierra
+    sha256 "cf96ee73d811071c9ee411e884d9cd8276f1dcbbd121d9d42284ead55a1dcb6b" => :sierra
   end
 
   depends_on "autoconf" => :build
@@ -17,7 +19,8 @@ class Libtcod < Formula
   depends_on "pkg-config" => :build
   depends_on "sdl2"
 
-  conflicts_with "libzip", :because => "both install `zip.h` header"
+  conflicts_with "libzip", "minizip2",
+    :because => "libtcod, libzip and minizip2 install a `zip.h` header"
 
   def install
     cd "build/autotools" do

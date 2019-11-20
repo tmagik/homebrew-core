@@ -3,16 +3,18 @@ class Vte < Formula
   homepage "https://developer.gnome.org/vte/"
   url "https://download.gnome.org/sources/vte/0.28/vte-0.28.2.tar.xz"
   sha256 "86cf0b81aa023fa93ed415653d51c96767f20b2d7334c893caba71e42654b0ae"
-  revision 2
+  revision 4
 
   bottle do
-    sha256 "39b6a674facccd03a24f040ae3a6b7d3426280332e0a2908355a89a9d35d7a38" => :high_sierra
-    sha256 "41ba9567a2cfa0fa8838d0331fba21aa620362677d90eca4446922bc4ef0382e" => :sierra
-    sha256 "f57ca7c969e677208d1df618243a7fc453ae49660d114de05365467b51d97adc" => :el_capitan
+    rebuild 1
+    sha256 "26d7503f02898f3b188f3c9eb3bf843feaccc0d6694a9f360f1e6e3ea0e10bd1" => :catalina
+    sha256 "320ff58d9e751660a0f6feea056915df5b1266d43ee4223e4622bc07da0dcf24" => :mojave
+    sha256 "f8ed141e63dea2c9bbb68e974571a574bda1330d32575c10c792de5e0ea4ffea" => :high_sierra
+    sha256 "f84c4aa751a6c63962cc8c1a30cd1fcc3938652b259f51e252b20763fe4a9ef8" => :sierra
   end
 
-  depends_on "pkg-config" => :build
   depends_on "intltool" => :build
+  depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "glib"
   depends_on "gtk+"
@@ -53,6 +55,7 @@ class Vte < Formula
     gettext = Formula["gettext"]
     glib = Formula["glib"]
     gtkx = Formula["gtk+"]
+    harfbuzz = Formula["harfbuzz"]
     libpng = Formula["libpng"]
     pango = Formula["pango"]
     pixman = Formula["pixman"]
@@ -68,6 +71,7 @@ class Vte < Formula
       -I#{glib.opt_lib}/glib-2.0/include
       -I#{gtkx.opt_include}/gtk-2.0
       -I#{gtkx.opt_lib}/gtk-2.0/include
+      -I#{harfbuzz.opt_include}/harfbuzz
       -I#{include}/vte-0.0
       -I#{libpng.opt_include}/libpng16
       -I#{pango.opt_include}/pango-1.0

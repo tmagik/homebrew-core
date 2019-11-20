@@ -1,27 +1,19 @@
 class Gdb < Formula
   desc "GNU debugger"
   homepage "https://www.gnu.org/software/gdb/"
-  url "https://ftp.gnu.org/gnu/gdb/gdb-8.1.tar.xz"
-  mirror "https://ftpmirror.gnu.org/gdb/gdb-8.1.tar.xz"
-  sha256 "af61a0263858e69c5dce51eab26662ff3d2ad9aa68da9583e8143b5426be4b34"
+  url "https://ftp.gnu.org/gnu/gdb/gdb-8.3.tar.xz"
+  mirror "https://ftpmirror.gnu.org/gdb/gdb-8.3.tar.xz"
+  sha256 "802f7ee309dcc547d65a68d61ebd6526762d26c3051f52caebe2189ac1ffd72e"
+  head "https://sourceware.org/git/binutils-gdb.git"
 
   bottle do
-    sha256 "43a6d6cca157ef70d13848f35c04e11d832dc0c96f5bcf53a43330f524b3ac40" => :high_sierra
-    sha256 "fe7c6261f9164e7a744c9c512ba7e5afff0e74e373ece9b5aa19d5da6443bfc2" => :sierra
-    sha256 "cd89001bcf8c93b5d6425ab91a400aeffe0cd5bbb0eccd8ab38c719ab5ca34ba" => :el_capitan
+    sha256 "fbc1eb60dc46eb6517ea530049496336e1a4d3c9b3bdf8816665cac528fd99a4" => :catalina
+    sha256 "16da5f61ca304740defde7f8a772d5fb5f5c48ac658984ef186d1c77f53b5d6a" => :mojave
+    sha256 "2721c3a733fba77d623f84c33cce6a1cca46c6a020649269f4431de402704fa1" => :high_sierra
+    sha256 "b2343fca9963d198248c98ee069211c28e04135effcc2e7ed0900fec7c7d95a3" => :sierra
   end
 
-  deprecated_option "with-brewed-python" => "with-python@2"
-  deprecated_option "with-guile" => "with-guile@2.0"
-  deprecated_option "with-python" => "with-python@2"
-
-  option "with-python", "Use the Homebrew version of Python; by default system Python is used"
-  option "with-version-suffix", "Add a version suffix to program"
-  option "with-all-targets", "Build with support for all targets"
-
   depends_on "pkg-config" => :build
-  depends_on "python@2" => :optional
-  depends_on "guile@2.0" => :optional
 
   fails_with :clang do
     build 800
@@ -31,41 +23,21 @@ class Gdb < Formula
     EOS
   end
 
-  fails_with :clang do
-    build 600
-    cause <<~EOS
-      clang: error: unable to execute command: Segmentation fault: 11
-      Test done on: Apple LLVM version 6.0 (clang-600.0.56) (based on LLVM 3.5svn)
-    EOS
-  end
-
   def install
-    args = [
-      "--prefix=#{prefix}",
-      "--disable-debug",
-      "--disable-dependency-tracking",
+    args = %W[
+      --prefix=#{prefix}
+      --disable-debug
+      --disable-dependency-tracking
+      --enable-targets=all
+      --with-python=/usr
+      --disable-binutils
     ]
-
-    args << "--with-guile" if build.with? "guile@2.0"
-    args << "--enable-targets=all" if build.with? "all-targets"
-
-    if build.with? "python@2"
-      args << "--with-python=#{Formula["python"].opt_libexec}/bin"
-    else
-      args << "--with-python=/usr"
-    end
-
-    if build.with? "version-suffix"
-      args << "--program-suffix=-#{version.to_s.slice(/^\d/)}"
-    end
 
     system "./configure", *args
     system "make"
 
     # Don't install bfd or opcodes, as they are provided by binutils
-    inreplace ["bfd/Makefile", "opcodes/Makefile"], /^install:/, "dontinstall:"
-
-    system "make", "install"
+    system "make", "install-gdb"
   end
 
   def caveats; <<~EOS
@@ -77,7 +49,7 @@ class Gdb < Formula
     On 10.12 (Sierra) or later with SIP, you need to run this:
 
       echo "set startup-with-shell off" >> ~/.gdbinit
-    EOS
+  EOS
   end
 
   test do

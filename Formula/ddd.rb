@@ -8,6 +8,8 @@ class Ddd < Formula
 
   bottle do
     rebuild 1
+    sha256 "a2d1ceeadc2055223cea7c3e3776393dfc01bd0f2946ed82dda8226fe11ccb29" => :catalina
+    sha256 "41917b105d1329eaa9421fe314e449fca4c9b9f27b5c4a2ad10d0dbb746a8cea" => :mojave
     sha256 "381ae07c96a67534b05a03ca72741d99aa3437a01c0fef603336ea218c470df9" => :high_sierra
     sha256 "af12e95b5b4326906236559a40f6715e896d164d5c18d9448384e0e22d089abf" => :sierra
     sha256 "68864faf1967b400bc5df5809ab9ee03a0d632f3736071131dd5469be715c58f" => :el_capitan
@@ -18,11 +20,9 @@ class Ddd < Formula
 
   # Needed for OSX 10.9 DP6 build failure:
   # https://savannah.gnu.org/patch/?8178
-  if MacOS.version >= :mavericks
-    patch :p0 do
-      url "https://savannah.gnu.org/patch/download.php?file_id=29114"
-      sha256 "aaacae79ce27446ead3483123abef0f8222ebc13fd61627bfadad96016248af6"
-    end
+  patch :p0 do
+    url "https://savannah.gnu.org/patch/download.php?file_id=29114"
+    sha256 "aaacae79ce27446ead3483123abef0f8222ebc13fd61627bfadad96016248af6"
   end
 
   # https://savannah.gnu.org/bugs/?41997

@@ -1,30 +1,22 @@
 class Ack < Formula
   desc "Search tool like grep, but optimized for programmers"
   homepage "https://beyondgrep.com/"
-  url "https://beyondgrep.com/ack-2.22-single-file"
-  version "2.22"
-  sha256 "fd0617585b88517a3d41d3d206c1dc38058c57b90dfd88c278049a41aeb5be38"
-  head "https://github.com/petdance/ack2.git", :branch => "dev"
+  url "https://beyondgrep.com/ack-v3.2.0"
+  sha256 "dee06c35c2f432ceedf6b0dad6d393c946d49d51af4e1e031be13445a0e6ce55"
 
-  devel do
-    url "https://beyondgrep.com/ack-2.999_03-single-file"
-    version "2.999-03"
-    sha256 "7e75bbe0baffac14aa7798198faa2184241990a72ff0150f157ef6296a148e3c"
+  head do
+    url "https://github.com/beyondgrep/ack3.git", :branch => "dev"
+
+    resource "File::Next" do
+      url "https://cpan.metacpan.org/authors/id/P/PE/PETDANCE/File-Next-1.16.tar.gz"
+      sha256 "6965f25c2c132d0ba7a6f72b57b8bc6d25cf8c1b7032caa3a9bda8612e41d759"
+    end
   end
 
   bottle :unneeded
 
-  resource "File::Next" do
-    url "https://cpan.metacpan.org/authors/id/P/PE/PETDANCE/File-Next-1.16.tar.gz"
-    sha256 "6965f25c2c132d0ba7a6f72b57b8bc6d25cf8c1b7032caa3a9bda8612e41d759"
-  end
-
   def install
-    if build.stable? || build.devel?
-      bin.install "ack-#{version.to_s.tr("-", "_")}-single-file" => "ack"
-      system "pod2man", "#{bin}/ack", "ack.1"
-      man1.install "ack.1"
-    else
+    if build.head?
       ENV.prepend_create_path "PERL5LIB", libexec/"lib/perl5"
       ENV.prepend_path "PERL5LIB", libexec/"lib"
 
@@ -41,6 +33,10 @@ class Ack < Formula
       (libexec/"lib").install "blib/lib/App"
       (bin/"ack").write_env_script("#{libexec}/ack", :PERL5LIB => ENV["PERL5LIB"])
       man1.install "blib/man1/ack.1"
+    else
+      bin.install "ack-v#{version.to_s.tr("-", "_")}" => "ack"
+      system "pod2man", "#{bin}/ack", "ack.1"
+      man1.install "ack.1"
     end
   end
 

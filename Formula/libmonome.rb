@@ -6,14 +6,21 @@ class Libmonome < Formula
   head "https://github.com/monome/libmonome.git"
 
   bottle do
-    sha256 "c342cf6cf6bf7a216135950836a2e447212d1fd8c05338a63e14325fddd4a820" => :high_sierra
-    sha256 "b6ef0089684a846cc18a6405260f7f9426affb7f025dd871a8d7d55627538435" => :sierra
-    sha256 "410e76c1cc6ef3791e7efea3e30381cfef6f9df874385ad0c8508856286170bb" => :el_capitan
+    cellar :any
+    rebuild 2
+    sha256 "2f50af40811f13ee3dc2a372c98a3efa413d55a311093c1e34a9fabedda624e0" => :catalina
+    sha256 "edd05ad00d159e4cb6ff44306d94e981891a2009999706700f614f4127feeef8" => :mojave
+    sha256 "c99ff2d00d681cc2ea502023119bd29453000920142709fa6927259a2dca9584" => :high_sierra
   end
 
   depends_on "liblo"
 
   def install
+    # Fix build on Mojave
+    # https://github.com/monome/libmonome/issues/62
+    inreplace "wscript", /conf.env.append_unique.*-mmacosx-version-min=10.5.*/,
+                         "pass"
+
     system "./waf", "configure", "--prefix=#{prefix}"
     system "./waf", "build"
     system "./waf", "install"

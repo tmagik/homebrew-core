@@ -1,22 +1,24 @@
 class Dnsperf < Formula
   desc "Measure DNS performance by simulating network conditions"
-  homepage "https://nominum.com/measurement-tools/"
-  url "ftp://ftp.nominum.com/pub/nominum/dnsperf/2.1.0.0/dnsperf-src-2.1.0.0-1.tar.gz"
-  version "2.1.0.0"
-  sha256 "64b5f0a680e1ad60bca5fd709f1a9a8404ac2fd85af6138bd22ca9a28b616e0e"
+  homepage "https://www.dns-oarc.net/tools/dnsperf"
+  url "https://www.dns-oarc.net/files/dnsperf/dnsperf-2.3.2.tar.gz"
+  sha256 "292bbaeb95389b549a91f4bfc7faf8062326ef75a0382e879ca86cdfe71df408"
 
   bottle do
     cellar :any
-    sha256 "654185e3cd66f2ba80a14e2018d55bdcbd0a8c2f2b2cca1959f9358f2b67c2f6" => :high_sierra
-    sha256 "022ff860326489a63461893dc00c22854fea6fd63949b48ae44abf37e539c20b" => :sierra
-    sha256 "5e605b056442f7c84a1f7b826ae3fc0e113d12b8ab2174371e004c79acc4336a" => :el_capitan
-    sha256 "8d18fb864b8cb9fd3624e10d178fc11d9bd569863ca9e94ff9fd7afc0ee91afc" => :yosemite
+    sha256 "7c89a8d743a3a62653aebf2d0a6102991a88efa5fb0b8743d425745b2cc60e2a" => :catalina
+    sha256 "8901054afed6de33bdbbe8eda68f9238f0ac3915acd5ee319c942acae741841a" => :mojave
+    sha256 "f67934e4c9b06aafd7220815911a6fa27e430ef0add19b5fe8cfda3adb9dcae9" => :high_sierra
   end
 
+  depends_on "pkg-config" => :build
   depends_on "bind"
   depends_on "libxml2"
 
   def install
+    # Fix "ld: file not found: /usr/lib/system/libsystem_darwin.dylib" for lxml
+    ENV["SDKROOT"] = MacOS.sdk_path if MacOS.version == :sierra
+
     system "./configure", "--prefix=#{prefix}"
     system "make", "install"
   end

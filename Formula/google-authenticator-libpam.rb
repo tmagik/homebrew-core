@@ -1,14 +1,15 @@
 class GoogleAuthenticatorLibpam < Formula
   desc "PAM module for two-factor authentication"
   homepage "https://github.com/google/google-authenticator-libpam"
-  url "https://github.com/google/google-authenticator-libpam/archive/1.05.tar.gz"
-  sha256 "862412d6927ee1a19d81150006d53c21935897ba6d033616c31fc4d6aaa4db08"
+  url "https://github.com/google/google-authenticator-libpam/archive/1.06.tar.gz"
+  sha256 "52f03ec746e8deb1af37911697d096f0fa87583491b7cc460cdf09a6ef0d6b06"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "6b76859ee4008c2d66712585617f0b47d5a40cb4583fda5784f9b7f05260387e" => :high_sierra
-    sha256 "1082f7a7a81ac9e3045176b66baedbdf956aca8ccd7e4b008013b24f0d2ed3c2" => :sierra
-    sha256 "2d48707e7e2dc9821c6954295c983ad76c9edcd6bac71f9da1cb2ecdb7b560a2" => :el_capitan
+    sha256 "aa5f60e9fa0a2d69c03127e9398d495d4bf06c4fea64d3dc4b9b6d7b94c7f1d1" => :catalina
+    sha256 "7705a1508ebbf3b288dd23864957af565d0133300808325aae1be638db759aa3" => :mojave
+    sha256 "95296464b3cc30ae3120d74c2a00ebd7f48270313cdf3e5f2e17149e5811bf23" => :high_sierra
+    sha256 "2555908b0fe0caaed427bb7722a8fd84c3495732db7a95c241b078850e3b140b" => :sierra
   end
 
   depends_on "autoconf" => :build
@@ -34,12 +35,12 @@ class GoogleAuthenticatorLibpam < Formula
       "nullok" | sudo tee -a /etc/pam.d/sshd
 
     (Or just manually edit /etc/pam.d/sshd)
-    EOS
+  EOS
   end
 
   test do
     system "#{bin}/google-authenticator", "--force", "--time-based",
            "--disallow-reuse", "--rate-limit=3", "--rate-time=30",
-           "--window-size=3"
+           "--window-size=3", "--no-confirm"
   end
 end

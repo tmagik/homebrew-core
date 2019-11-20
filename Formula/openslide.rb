@@ -1,26 +1,27 @@
 class Openslide < Formula
   desc "C library to read whole-slide images (a.k.a. virtual slides)"
-  homepage "http://openslide.org/"
+  homepage "https://openslide.org/"
   url "https://github.com/openslide/openslide/releases/download/v3.4.1/openslide-3.4.1.tar.xz"
   sha256 "9938034dba7f48fadc90a2cdf8cfe94c5613b04098d1348a5ff19da95b990564"
-  revision 4
+  revision 5
 
   bottle do
     cellar :any
-    sha256 "9118b45fe096442eb436126366d3f617d8fc5e356b1a764535686115941b0aac" => :high_sierra
-    sha256 "e5f7b2fe405fcbc70797c326fba07b7311b334bdd03e7ce88cfd28231557ea51" => :sierra
-    sha256 "8d8bdded3aa4db040a15f1cf0c31db10832d0349320a550eaa73a0fe77abfcd6" => :el_capitan
+    sha256 "6b59207518417bb5a45a716d6c26a01ed8d9977af51992b00d0479a7d9a4ffae" => :catalina
+    sha256 "d90e3ee5514064389cea2bdf1d4369cc2be4e1d965ac9d56f47e0c6e22f310af" => :mojave
+    sha256 "1d70f22fad80e061bcfa5d4955d522d37bd077c51cad4697579a104759233ad2" => :high_sierra
+    sha256 "de34071d033c87c731be7954d7c0ced87ddf086100c29fea07410d68621b9929" => :sierra
   end
 
   depends_on "pkg-config" => :build
-  depends_on "libpng"
-  depends_on "jpeg"
-  depends_on "libxml2"
-  depends_on "libtiff"
-  depends_on "glib"
-  depends_on "openjpeg"
   depends_on "cairo"
   depends_on "gdk-pixbuf"
+  depends_on "glib"
+  depends_on "jpeg"
+  depends_on "libpng"
+  depends_on "libtiff"
+  depends_on "libxml2"
+  depends_on "openjpeg"
 
   resource "svs" do
     url "http://openslide.cs.cmu.edu/download/openslide-testdata/Aperio/CMU-1-Small-Region.svs"

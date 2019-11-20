@@ -1,31 +1,21 @@
 class OpensslAT11 < Formula
   desc "Cryptography and SSL/TLS Toolkit"
   homepage "https://openssl.org/"
-  url "https://www.openssl.org/source/openssl-1.1.0h.tar.gz"
-  mirror "https://dl.bintray.com/homebrew/mirror/openssl@1.1-1.1.0h.tar.gz"
-  mirror "https://www.mirrorservice.org/sites/ftp.openssl.org/source/openssl-1.1.0h.tar.gz"
-  sha256 "5835626cde9e99656585fc7aaa2302a73a7e1340bf8c14fd635a62c66802a517"
+  url "https://www.openssl.org/source/openssl-1.1.1d.tar.gz"
+  mirror "https://dl.bintray.com/homebrew/mirror/openssl@1.1--1.1.1d.tar.gz"
+  mirror "https://www.mirrorservice.org/sites/ftp.openssl.org/source/openssl-1.1.1d.tar.gz"
+  sha256 "1e3a91bc1f9dfce01af26026f856e064eab4c8ee0a8f457b5ae30b40b8b711f2"
   version_scheme 1
 
   bottle do
-    sha256 "bbd397eec4b1eccc2da9da7b546c07913339fdb475e46ddfeb034f628e17b2d9" => :high_sierra
-    sha256 "b9626f5fa02f1dd1087fe97fc801be03e531c200bf46eb86be0deba1a6d7cb18" => :sierra
-    sha256 "aefb8af514d06dcf80d50855bc5ca64ab128602a2ca6bf2dfe66844b94b462d8" => :el_capitan
+    sha256 "d7f992ebfd78f80828051f6dc6a1a99aed405f86b0f39ea651fd0afeadd1b0f4" => :catalina
+    sha256 "104ef018b7bb8fcc49f57e5a60359a28a02d480d85a959e6141394b0571cbb28" => :mojave
+    sha256 "c7681ee40cb3680cd9fafcdb092bde153b9d4903907d67858baa5f19025f927b" => :high_sierra
+    sha256 "a95d756e9aa3a8d118833f9083112048bf635f20c33943de04163bdcf7412328" => :sierra
   end
 
-  devel do
-    url "https://www.openssl.org/source/openssl-1.1.1-pre6.tar.gz"
-    sha256 "01f91c5370fe210f7172d863c5bdc5dee2450c3faa98b4af2627ee6f7e128d87"
-  end
-
-  keg_only :versioned_formula
-
-  option "without-test", "Skip build-time tests (not recommended)"
-
-  # Only needs 5.10 to run, but needs >5.13.4 to run the testsuite.
-  # https://github.com/openssl/openssl/blob/4b16fa791d3ad8/README.PERL
-  # The MacOS ML tag is same hack as the way we handle most :python deps.
-  depends_on "perl" if build.with?("test") && MacOS.version <= :mountain_lion
+  keg_only :provided_by_macos,
+    "openssl/libressl is provided by macOS so don't link an incompatible version"
 
   # SSLv2 died with 1.1.0, so no-ssl2 no longer required.
   # SSLv3 & zlib are off by default with 1.1.0 but this may not
@@ -51,16 +41,12 @@ class OpensslAT11 < Formula
       ENV["PERL"] = Formula["perl"].opt_bin/"perl"
     end
 
-    if MacOS.prefer_64_bit?
-      arch_args = %w[darwin64-x86_64-cc enable-ec_nistp_64_gcc_128]
-    else
-      arch_args = %w[darwin-i386-cc]
-    end
+    arch_args = %w[darwin64-x86_64-cc enable-ec_nistp_64_gcc_128]
 
     ENV.deparallelize
     system "perl", "./Configure", *(configure_args + arch_args)
     system "make"
-    system "make", "test" if build.with?("test")
+    system "make", "test"
     system "make", "install", "MANDIR=#{man}", "MANSUFFIX=ssl"
   end
 
@@ -88,7 +74,7 @@ class OpensslAT11 < Formula
     end
 
     openssldir.mkpath
-    (openssldir/"cert.pem").atomic_write(valid_certs.join("\n"))
+    (openssldir/"cert.pem").atomic_write(valid_certs.join("\n") << "\n")
   end
 
   def caveats; <<~EOS
@@ -98,7 +84,7 @@ class OpensslAT11 < Formula
 
     and run
       #{opt_bin}/c_rehash
-    EOS
+  EOS
   end
 
   test do

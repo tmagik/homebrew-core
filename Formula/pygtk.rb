@@ -3,22 +3,29 @@ class Pygtk < Formula
   homepage "http://www.pygtk.org/"
   url "https://download.gnome.org/sources/pygtk/2.24/pygtk-2.24.0.tar.bz2"
   sha256 "cd1c1ea265bd63ff669e92a2d3c2a88eb26bcd9e5363e0f82c896e649f206912"
-  revision 2
+  revision 3
 
   bottle do
     cellar :any
-    sha256 "228a919cbba58afc99747e9b5dc6d01013ef8463de2ede5d81c20103afccbb9f" => :high_sierra
-    sha256 "fce76d2bf1e1748ac110aede98a622e5f8b737390a3a5e22f56872834b73c033" => :sierra
-    sha256 "fd1cef5484267e02971c4daa1eda42e3a66c77786923b0f76b496007282b10a1" => :el_capitan
+    rebuild 2
+    sha256 "12bab3d76587659b38e56867c9b359941803275716896e2936cd3e8029cf5f3f" => :catalina
+    sha256 "87f89d246e3a779381ec2efdee7ee2b69fda464f38a59dd8e14304435d759419" => :mojave
+    sha256 "969cef803e110b2767c6d3ade304b92d7f23a02ff7eb4030772b69b52df7c3b2" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
+  depends_on "atk"
   depends_on "glib"
   depends_on "gtk+"
-  depends_on "atk"
-  depends_on "pygobject"
+  depends_on "libglade"
   depends_on "py2cairo"
-  depends_on "libglade" => :optional
+  depends_on "pygobject"
+
+  # Allow building with recent Pango, where some symbols were removed
+  patch do
+    url "https://raw.githubusercontent.com/Homebrew/formula-patches/85fa66a9/pygtk/2.24.0.diff"
+    sha256 "ec480cff20082c41d9015bb7f7fc523c27a2c12a60772b2c55222e4ba0263dde"
+  end
 
   def install
     ENV.append "CFLAGS", "-ObjC"

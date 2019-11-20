@@ -1,20 +1,18 @@
 class Libosinfo < Formula
   desc "The Operating System information database"
   homepage "https://libosinfo.org/"
-  url "https://releases.pagure.org/libosinfo/libosinfo-1.1.0.tar.gz"
-  sha256 "600f43a4a8dae5086a01a3d44bcac2092b5fa1695121289806d544fb287d3136"
-  revision 1
+  url "https://releases.pagure.org/libosinfo/libosinfo-1.6.0.tar.gz"
+  sha256 "3c385c1cceb46301fdc79115e7b28e3df7aa26fafce0a787a60132a86a1990c7"
 
   bottle do
-    sha256 "f4a54c53fe160f16818d4db569f8818a30c55e777c326982d140478fdd4c8b35" => :high_sierra
-    sha256 "538937526c8ad280e978e5e1dba5fa2d73ed6636d7962bc59bb0048a07b7d906" => :sierra
-    sha256 "1da58b656ab9eb087eb4d8b6990d40b4a5fd92fc4e0c08c561c139ad4fcef039" => :el_capitan
+    sha256 "8242828a781ce96d398c46860ae0202afab5fe579b5e91aaa256e969fd85d0a6" => :catalina
+    sha256 "c67caf435fca9b083f3928bd6983dcaf4347f33b16693e5f28debe5b216b012d" => :mojave
+    sha256 "bed6f6794bcf73559378663f1856436508ab77572a9d6a79fce658ac6f320787" => :high_sierra
+    sha256 "a9d1632746e463740d21c64cacfd00f9625664c14369c6089edf6aa3f29170b0" => :sierra
   end
 
   depends_on "gobject-introspection" => :build
-  depends_on "intltool" => :build
   depends_on "pkg-config" => :build
-  depends_on "vala" => :optional
   depends_on "check"
   depends_on "gettext"
   depends_on "glib"
@@ -30,17 +28,12 @@ class Libosinfo < Formula
       --localstatedir=#{var}
       --mandir=#{man}
       --sysconfdir=#{etc}
+      --disable-dependency-tracking
       --disable-silent-rules
-      --disable-udev
-      --enable-tests
+      --disable-vala
       --enable-introspection
+      --enable-tests
     ]
-
-    if build.with? "vala"
-      args << "--enable-vala"
-    else
-      args << "--disable-vala"
-    end
 
     system "./configure", *args
 
@@ -71,7 +64,6 @@ class Libosinfo < Formula
       -losinfo-1.0
       -lglib-2.0
       -lgobject-2.0
-      -lintl
     ]
     system ENV.cc, "test.c", "-o", "test", *flags
     system "./test"

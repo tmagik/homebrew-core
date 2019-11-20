@@ -1,15 +1,17 @@
 class Dash < Formula
   desc "POSIX-compliant descendant of NetBSD's ash (the Almquist SHell)"
   homepage "http://gondor.apana.org.au/~herbert/dash/"
-  url "http://gondor.apana.org.au/~herbert/dash/files/dash-0.5.10.tar.gz"
-  mirror "https://dl.bintray.com/homebrew/mirror/dash-0.5.10.tar.gz"
-  sha256 "ad70e0cc3116b424931c392912b3ebdb8053b21f3fd968c782f0b19fd8ae31ab"
+  url "http://gondor.apana.org.au/~herbert/dash/files/dash-0.5.10.2.tar.gz"
+  mirror "https://dl.bintray.com/homebrew/mirror/dash-0.5.10.2.tar.gz"
+  sha256 "3c663919dc5c66ec991da14c7cf7e0be8ad00f3db73986a987c118862b5f6071"
+  revision 1
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "9f1902af5e7e0e39575260af6b9058a48afc45557ae5bbd0e99b4e093ab07f4a" => :high_sierra
-    sha256 "3624150f7a9ddcf1d47266aa9623c16931c4957d2fbcd1061317c27117dd6b1d" => :sierra
-    sha256 "40ba355540342b25cc61fd28940829bc5ac819ac390c96b4f20340f4d084fd8b" => :el_capitan
+    sha256 "21446fdece550bbaa24c64db4f03cba0c41a6b46eaaa20101573026a7f57f96c" => :catalina
+    sha256 "aa6941a564fca697da6eb30e3691a8fa354de093d05ee84bbbc50c8045a55f66" => :mojave
+    sha256 "49ebe51a7662187224ab620aa50b0473b11c1f88372f7c17da328559d895f5e0" => :high_sierra
+    sha256 "4c7ca79c9b006065cb9bba57190103c518791b5a7ea078bb1f960e6f6c9dd7e9" => :sierra
   end
 
   head do
@@ -23,9 +25,7 @@ class Dash < Formula
 
     system "./configure", "--prefix=#{prefix}",
                           "--with-libedit",
-                          "--disable-dependency-tracking",
-                          "--enable-fnmatch",
-                          "--enable-glob"
+                          "--disable-dependency-tracking"
     system "make"
     system "make", "install"
   end

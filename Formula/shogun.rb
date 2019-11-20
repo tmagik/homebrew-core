@@ -1,40 +1,31 @@
 class Shogun < Formula
   desc "Large scale machine learning toolbox"
-  homepage "http://www.shogun-toolbox.org/"
-  url "http://shogun-toolbox.org/archives/shogun/releases/6.1/sources/shogun-6.1.3.tar.bz2"
+  homepage "https://www.shogun-toolbox.org/"
+  url "https://github.com/shogun-toolbox/shogun.git",
+      :tag      => "shogun_6.1.4",
+      :revision => "ab274e7ab6bf24dd598c1daf1e626cb686d6e1cc"
   sha256 "57169dc8c05b216771c567b2ee2988f14488dd13f7d191ebc9d0703bead4c9e6"
-  revision 1
+  revision 2
 
   bottle do
-    sha256 "10de56b1bc9e966da1b0fa4d05072436dacfe6d1a543eefe5e9c94af6fa52cbb" => :high_sierra
-    sha256 "2c2a094c9b5b3430cb76c7fcd11ce98d4578b80aeb352fd724595f196ad6208e" => :sierra
-    sha256 "f39f707ccb48ba9a05959f3390bc4be94f3d64117914d11b6c3db996f32eed79" => :el_capitan
+    sha256 "4a4357b68122c0cca55e2e61860693119c961117cd27b0eb18d305298b913ced" => :catalina
+    sha256 "3be310b08bf199da3f3e95a813f02ec73138a841785a4f59d9ba624dfeabc8d2" => :mojave
+    sha256 "cfcd1c05a76fcb7af011232c0e534c46c8abe050da5f4d971ffb20f3ca2d3eb4" => :high_sierra
   end
 
   depends_on "cmake" => :build
-  depends_on :java => ["1.7+", :build]
   depends_on "pkg-config" => :build
-  depends_on "swig" => :build
   depends_on "arpack"
   depends_on "eigen"
   depends_on "glpk"
   depends_on "hdf5"
   depends_on "json-c"
-  depends_on "lapack" if MacOS.version >= :high_sierra
   depends_on "lzo"
   depends_on "nlopt"
-  depends_on "python@2"
+  depends_on "openblas"
+  depends_on "protobuf"
   depends_on "snappy"
   depends_on "xz"
-
-  cxxstdlib_check :skip
-
-  # Fixes the linking of the python interface.
-  # Upstream commit from 8 Jan 2018 https://github.com/shogun-toolbox/shogun/commit/ff8840ce0e
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/7bbffa4/shogun/fix_python_linking.patch"
-    sha256 "2043b939c1ae8f63cdc753141488207d76ea86d79d06be7917a833cf86cd193f"
-  end
 
   # Fixes when Accelerator framework is to be used as a LAPACK backend for
   # Eigen. CMake swallows some of the include header flags hence on some
@@ -45,94 +36,75 @@ class Shogun < Formula
     sha256 "de7ebe4c91da9f63fc322c5785f687c0005ed8df2c70cd3e9024fbac7b6d3745"
   end
 
-  resource "jblas" do
-    url "https://mikiobraun.github.io/jblas/jars/jblas-1.2.3.jar"
-    sha256 "e9328d4e96db6b839abf50d72f63626b2309f207f35d0858724a6635742b8398"
+  # Fixes compiling with json-c 0.13.1. Shogun 6.1.3 is using the
+  # deprecated json-c is_error() macro which got removed in json-c 0.13.1.
+  patch do
+    url "https://github.com/shogun-toolbox/shogun/commit/365ce4c4c7.patch?full_index=1"
+    sha256 "0a1c3e2e16b2ce70855c1f15876bddd5e5de35ab29290afceacdf7179c4558cb"
   end
-
-  resource "numpy" do
-    url "https://files.pythonhosted.org/packages/ee/66/7c2690141c520db08b6a6f852fa768f421b0b50683b7bbcd88ef51f33170/numpy-1.14.0.zip"
-    sha256 "3de643935b212307b420248018323a44ec51987a336d1d747c1322afc3c099fb"
-  end
-
-  needs :cxx11
 
   def install
     ENV.cxx11
 
-    # Fix build of modular interfaces with SWIG 3.0.5 on macOS
-    # https://github.com/shogun-toolbox/shogun/pull/2694
-    # https://github.com/shogun-toolbox/shogun/commit/fef8937d215db7
-    ENV.append_to_cflags "-D__ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES=0"
-
-    ENV.prepend_create_path "PYTHONPATH", libexec/"vendor/lib/python2.7/site-packages"
-    resource("numpy").stage do
-      system "python", *Language::Python.setup_install_args(libexec/"vendor")
-    end
-
-    if MacOS.version >= :high_sierra
-      ENV["LAPACKE_PATH"] = Formula["lapack"].opt_lib
-    end
-
-    libexec.install resource("jblas")
-
-    python_executable = Formula["python@2"].opt_bin/"python2"
-    python_prefix = Utils.popen_read("#{python_executable} -c 'import sys; print(sys.prefix)'").chomp
-    python_include = Utils.popen_read("#{python_executable} -c 'from distutils import sysconfig; print(sysconfig.get_python_inc(True))'").chomp
-    python_library = "#{python_prefix}/Python"
+    args = std_cmake_args + %w[
+      -DBLA_VENDOR=OpenBLAS
+      -DBUILD_EXAMPLES=OFF
+      -DBUILD_META_EXAMPLES=OFF
+      -DBUNDLE_JSON=OFF
+      -DBUNDLE_NLOPT=OFF
+      -DCMAKE_DISABLE_FIND_PACKAGE_ARPREC=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_CCache=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_ColPack=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_CPLEX=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_Ctags=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_GDB=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_LpSolve=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_Mosek=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_Pandoc=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_rxcpp=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_Sphinx=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_TFLogger=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_ViennaCL=ON
+      -DENABLE_COVERAGE=OFF
+      -DENABLE_LTO=ON
+      -DENABLE_TESTING=OFF
+      -DINTERFACE_CSHARP=OFF
+      -DINTERFACE_JAVA=OFF
+      -DINTERFACE_LUA=OFF
+      -DINTERFACE_OCTAVE=OFF
+      -DINTERFACE_PERL=OFF
+      -DINTERFACE_PYTHON=OFF
+      -DINTERFACE_R=OFF
+      -DINTERFACE_RUBY=OFF
+      -DINTERFACE_SCALA=OFF
+    ]
 
     mkdir "build" do
-      system "cmake", "..", "-DBUILD_EXAMPLES=OFF",
-                            "-DBUNDLE_JSON=OFF",
-                            "-DBUNDLE_NLOPT=OFF",
-                            "-DENABLE_TESTING=OFF",
-                            "-DENABLE_COVERAGE=OFF",
-                            "-DBUILD_META_EXAMPLES=OFF",
-                            "-DINTERFACE_PYTHON=ON",
-                            "-DINTERFACE_JAVA=ON",
-                            "-DJBLAS=#{libexec}/jblas-#{resource("jblas").version}.jar",
-                            "-DLIB_INSTALL_DIR=#{lib}",
-                            "-DPYTHON_EXECUTABLE=#{python_executable}",
-                            "-DPYTHON_INCLUDE_DIR=#{python_include}",
-                            "-DPYTHON_LIBRARY=#{python_library}",
-                            *std_cmake_args
+      system "cmake", *args, ".."
+      system "make"
       system "make", "install"
     end
-  end
 
-  def caveats
-    homebrew_site_packages = Language::Python.homebrew_site_packages
-    user_site_packages = Language::Python.user_site_packages "python"
-    <<~EOS
-      If you use system python (that comes - depending on the macOS version -
-      with an old version of numpy), you may need to ensure that the brewed
-      packages come earlier in Python's sys.path with:
-        mkdir -p #{user_site_packages}
-        echo 'import sys; sys.path.insert(1, "#{homebrew_site_packages}")' >> #{user_site_packages}/homebrew.pth
-    EOS
+    inreplace lib/"cmake/shogun/ShogunTargets.cmake",
+      Formula["hdf5"].prefix.realpath,
+      Formula["hdf5"].opt_prefix
   end
 
   test do
     (testpath/"test.cpp").write <<~EOS
-      #include <cstdlib>
+      #include <cassert>
       #include <cstring>
-      #include <assert.h>
-
       #include <shogun/base/init.h>
       #include <shogun/lib/versionstring.h>
-
-      using namespace shogun;
-
-      int main(int argc, char** argv)
-      {
-        init_shogun_with_defaults();
-        assert (std::strcmp(MAINVERSION, "#{version}") == 0);
-        exit_shogun();
-
-        return EXIT_SUCCESS;
+      int main() {
+        shogun::init_shogun_with_defaults();
+        assert(std::strcmp(MAINVERSION, "#{version}") == 0);
+        shogun::exit_shogun();
+        return 0;
       }
     EOS
-
     system ENV.cxx, "-std=c++11", "-I#{include}", "test.cpp", "-o", "test",
                     "-L#{lib}", "-lshogun"
     system "./test"

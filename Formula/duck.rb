@@ -2,24 +2,31 @@ class Duck < Formula
   desc "Command-line interface for Cyberduck (a multi-protocol file transfer tool)"
   homepage "https://duck.sh/"
   # check the changelog for the latest stable version: https://cyberduck.io/changelog/
-  url "https://dist.duck.sh/duck-src-6.5.0.27854.tar.gz"
-  sha256 "a989dcc6b3d86cd488bd95f4c5dc0c182ce8d24b4ed27904c0bf38328826f4cd"
+  url "https://dist.duck.sh/duck-src-7.0.2.30998.tar.gz"
+  sha256 "2436d2c5b77fc7500841d677f63335acc7cd0f4a6168d1ce5d9eaa179c226f54"
   head "https://svn.cyberduck.io/trunk/"
 
   bottle do
-    sha256 "66158ea16b94cfa85f582a40a4fb7f8bd91690ce05c1ace320eb049de058efb3" => :high_sierra
-    sha256 "ed08bc63c5536a1646b872bf35e15491d92c47a4c2208e7e9a2ed401a2a15791" => :sierra
-    sha256 "e202a3b2b457402616a85386641b5f6e800981798e440ab39556576806bc3a00" => :el_capitan
+    cellar :any
+    sha256 "a3dba53b383cdd570fcec5b8c8d010d1fcd86180ddca46abdc767a07e4f524d9" => :mojave
+    sha256 "9e16a3e6263dfaf668e42a8a214e9bc0cad7109eceabd03764f72748ccf3f44f" => :high_sierra
+    sha256 "ed2b7813acecdcd36f8c1a1bf1223315abcdb19d7f8fc9954b5f99f09347e6d1" => :sierra
   end
 
-  depends_on :java => ["1.8+", :build]
-  depends_on :xcode => :build
   depends_on "ant" => :build
+  depends_on :java => ["1.8", :build]
   depends_on "maven" => :build
+  depends_on :xcode => :build
 
   def install
+    xcconfig = buildpath/"Overrides.xcconfig"
+    xcconfig.write <<~EOS
+      OTHER_LDFLAGS = -headerpad_max_install_names
+    EOS
+    ENV["XCODE_XCCONFIG_FILE"] = xcconfig
     revision = version.to_s.rpartition(".").last
-    system "mvn", "-DskipTests", "-Dgit.commitsCount=#{revision}", "--projects", "cli/osx", "--also-make", "verify"
+    system "mvn", "-DskipTests", "-Dgit.commitsCount=#{revision}",
+                  "--projects", "cli/osx", "--also-make", "verify"
     libexec.install Dir["cli/osx/target/duck.bundle/*"]
     bin.install_symlink "#{libexec}/Contents/MacOS/duck" => "duck"
   end

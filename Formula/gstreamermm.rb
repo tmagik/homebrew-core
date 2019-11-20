@@ -3,21 +3,20 @@ class Gstreamermm < Formula
   homepage "https://gstreamer.freedesktop.org/bindings/cplusplus.html"
   url "https://download.gnome.org/sources/gstreamermm/1.10/gstreamermm-1.10.0.tar.xz"
   sha256 "be58fe9ef7d7e392568ec85e80a84f4730adbf91fb0355ff7d7c616675ea8d60"
-  revision 1
+  revision 4
 
   bottle do
     cellar :any
-    sha256 "9ad4843f35113436c3249f986482a26d9f0ed5d0f9c7f76e18e3a68255ba14f2" => :high_sierra
-    sha256 "0c8aaffbad1c3b96d22295789372169d31b8aa0f995a440d30bf2c379df9b85a" => :sierra
-    sha256 "81fa941e71fd8cd6fe63e89a594bfac17d88e82ce8d588041205d67c04de2806" => :el_capitan
+    sha256 "2cd58f367c293ee4b19caddbc97ffb3be2fffb0382e0c0908bd4c2e604912ad7" => :catalina
+    sha256 "8249cddb44016172a38348a0d1f1092d07fe3848b0bbb0f2b964213305bc6be4" => :mojave
+    sha256 "fee76c2e868cd7f21a0953a53144ef5ee8a07960a1873cb0db84933baa471cfd" => :high_sierra
+    sha256 "c1fcf19c49b4cb0674bfb7deeb51c403093b53d0a03c5f3819d7905131f64a4e" => :sierra
   end
 
   depends_on "pkg-config" => :build
-  depends_on "gstreamer"
   depends_on "glibmm"
   depends_on "gst-plugins-base"
-
-  needs :cxx11
+  depends_on "gstreamer"
 
   def install
     ENV.cxx11
@@ -42,7 +41,7 @@ class Gstreamermm < Formula
     glibmm = Formula["glibmm"]
     gst_plugins_base = Formula["gst-plugins-base"]
     gstreamer = Formula["gstreamer"]
-    libsigcxx = Formula["libsigc++"]
+    libsigcxx = Formula["libsigc++@2"]
     flags = %W[
       -I#{gettext.opt_include}
       -I#{glib.opt_include}/glib-2.0

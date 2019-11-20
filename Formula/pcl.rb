@@ -1,26 +1,16 @@
 class Pcl < Formula
   desc "Library for 2D/3D image and point cloud processing"
   homepage "http://www.pointclouds.org/"
-  revision 3
+  url "https://github.com/PointCloudLibrary/pcl/archive/pcl-1.9.1.tar.gz"
+  sha256 "0add34d53cd27f8c468a59b8e931a636ad3174b60581c0387abb98a9fc9cddb6"
+  revision 4
   head "https://github.com/PointCloudLibrary/pcl.git"
 
-  stable do
-    url "https://github.com/PointCloudLibrary/pcl/archive/pcl-1.8.1.tar.gz"
-    sha256 "5a102a2fbe2ba77c775bf92c4a5d2e3d8170be53a68c3a76cfc72434ff7b9783"
-
-    # VTK 8.1 compat
-    # Upstream commit from 10 Nov 2017 "VTK function change since version 7.1 (#2063)"
-    # See https://github.com/PointCloudLibrary/pcl/pull/2063
-    patch do
-      url "https://github.com/PointCloudLibrary/pcl/commit/6555b9a91f.patch?full_index=1"
-      sha256 "860a7b8e7964725b2d11a4237d6a6b65a42f049bc855ecbfcdc406b8e505b478"
-    end
-  end
-
   bottle do
-    sha256 "4ce797b0f374af5f48dc0973444a484758138ae4f266c3b05eaaa3fa397150de" => :high_sierra
-    sha256 "19059cdc4d921fa94df4422db43bd08c92f3523c5c71d56232a30e52a930e103" => :sierra
-    sha256 "d0b054af73d2d35b7de29e1382ba1232386ddd6e3f00467723eb6ce3c0150256" => :el_capitan
+    rebuild 2
+    sha256 "ac0fc06be7ed9e4fa4b8e7ccddc733f6c59d381034c338ca17024a44a0b862c3" => :catalina
+    sha256 "272bcee97cfdd53897811265cb1adca2bbe1e5369165fe56577b07b32a015d73" => :mojave
+    sha256 "50b77a12bcea32681255b01aea10f843c35056a3cde8597133d7b970b114dc9d" => :high_sierra
   end
 
   depends_on "cmake" => :build
@@ -34,13 +24,13 @@ class Pcl < Formula
   depends_on "qhull"
   depends_on "vtk"
 
-  def install
-    # Fix "error: no matching constructor for initialization of
-    # 'boost::uuids::random_generator' (aka 'boost::uuids::random_generator_pure')"
-    # Upstream issue 18 Apr 2018 "Fails to build against Boost 1.67"
-    # See https://github.com/PointCloudLibrary/pcl/issues/2284
-    ENV.append "CXXFLAGS", "-DBOOST_UUID_RANDOM_GENERATOR_COMPAT"
+  # Upstream patch for boost 1.70.0
+  patch do
+    url "https://github.com/PointCloudLibrary/pcl/commit/648932bc.diff?full_index=1"
+    sha256 "23f2cced7786715c59b49a48e4037eb9dea9abee099c4c5c92d95a647636b5ec"
+  end
 
+  def install
     args = std_cmake_args + %w[
       -DBUILD_SHARED_LIBS:BOOL=ON
       -DBUILD_apps=AUTO_OFF

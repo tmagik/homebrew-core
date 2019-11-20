@@ -1,19 +1,19 @@
 class Fq < Formula
   desc "Brokered message queue optimized for performance"
   homepage "https://github.com/circonus-labs/fq"
-  url "https://github.com/circonus-labs/fq/archive/v0.10.10.tar.gz"
-  sha256 "dafa5654d50c2e5d88340053952c16fd69f95e3af215b8f8edefd50faba0844a"
+  url "https://github.com/circonus-labs/fq/archive/v0.12.0.tar.gz"
+  sha256 "3055ab146328c6d2882f3ce5c1e5de592e0b05f77bc09feb3e687ac26f1840a5"
   head "https://github.com/circonus-labs/fq.git"
 
   bottle do
-    sha256 "f3c055e79684d71db62dbc1ee77c31ef2008d6dc0bef3bfbb712eb78bb7f3ebf" => :high_sierra
-    sha256 "45f97a6b9974bdf11dcc45f65602380f18c1c9da327e85cec40a951d448b356e" => :sierra
-    sha256 "3653d5b46e6d484b0d53fb19556db680ab0849c7dd12f30fca0fd007c9edbef2" => :el_capitan
+    sha256 "de903e4f96819780c272902e97e06fa91638746f74a0cca4ac412eead49d0d90" => :mojave
+    sha256 "07321dacbe8386f547c8f7bee1ddcd9551d44268bf77688a1ef353c0c4b5bc87" => :high_sierra
+    sha256 "3c37408415b375b759652ea84f8485f010bbeb84ea84fe4c81c8303b7785e647" => :sierra
   end
 
   depends_on "concurrencykit"
   depends_on "jlog"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     inreplace "Makefile", "/usr/lib/dtrace", "#{lib}/dtrace"

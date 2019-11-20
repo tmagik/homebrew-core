@@ -1,15 +1,17 @@
 class Texinfo < Formula
   desc "Official documentation format of the GNU project"
   homepage "https://www.gnu.org/software/texinfo/"
-  url "https://ftp.gnu.org/gnu/texinfo/texinfo-6.5.tar.xz"
-  mirror "https://ftpmirror.gnu.org/texinfo/texinfo-6.5.tar.xz"
-  sha256 "77774b3f4a06c20705cc2ef1c804864422e3cf95235e965b1f00a46df7da5f62"
+  url "https://ftp.gnu.org/gnu/texinfo/texinfo-6.7.tar.xz"
+  mirror "https://ftpmirror.gnu.org/texinfo/texinfo-6.7.tar.xz"
+  sha256 "988403c1542d15ad044600b909997ba3079b10e03224c61188117f3676b02caa"
 
   bottle do
-    sha256 "a38bf65a736b3e64843eecf9a3ad6029cb6538ff09261072c2cd339598ae2f8d" => :high_sierra
-    sha256 "ad81d72c79b14e1ed7beed59202514817fde7d12cc4e37657fdc689bb081a2e2" => :sierra
-    sha256 "e3099c5bc15295e7cadb2ce8b5f89d8983a8599b8d8602277aae23b9ff3482b1" => :el_capitan
+    sha256 "0686381d97b0448c10d11eaba59722c029d17c8423c17ad524b76ec086790f44" => :catalina
+    sha256 "419fccc89f850de008e954984c65eea9b7f82940178f7ee439e42c2c892a2e52" => :mojave
+    sha256 "a634a1bd15d3d7735e4934fcf26bfa295ce17108912ae7451d2761c6d578de6a" => :high_sierra
   end
+
+  depends_on "gettext" if MacOS.version <= :high_sierra
 
   keg_only :provided_by_macos, <<~EOS
     software that uses TeX, such as lilypond and octave, require a newer

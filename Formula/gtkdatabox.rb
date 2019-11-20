@@ -3,13 +3,15 @@ class Gtkdatabox < Formula
   homepage "https://sourceforge.net/projects/gtkdatabox/"
   url "https://downloads.sourceforge.net/project/gtkdatabox/gtkdatabox/0.9.3.0/gtkdatabox-0.9.3.0.tar.gz"
   sha256 "1f426b525c31a9ba8bf2b61084b7aef89eaed11f8d0b2a54bde467da16692ff2"
-  revision 1
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "2e24b55c41bd70931fb64ea6abf237b28b33fe600303642830debfebe9414ba9" => :high_sierra
-    sha256 "64252cc92bb8c58a94ca90fce495d838ebc0b64cbfd697663e61ef162d3113ac" => :sierra
-    sha256 "ad94200826b7f07ea53609402bf0261fdd415c0f0d136b37e953a07674751473" => :el_capitan
+    rebuild 1
+    sha256 "c7cbf6fdd92c3786d4731794d6d7f4ca9dbabcadddfe07c23a79e81df6bf0d35" => :catalina
+    sha256 "dd61a889f9b89bdf1756194af4924bee87c9e9e31a6e660d48148e9bb0864290" => :mojave
+    sha256 "b1a8bf39f02c44e674f412adf2699b06ca2c08159ae64559114ab2f6a077ed6e" => :high_sierra
+    sha256 "747c977d20ccb3a0ba7bb16c8921595139e9b6163f99d7aa02b4a8a00b29c3e8" => :sierra
   end
 
   depends_on "pkg-config" => :build
@@ -38,6 +40,7 @@ class Gtkdatabox < Formula
     gettext = Formula["gettext"]
     glib = Formula["glib"]
     gtkx = Formula["gtk+"]
+    harfbuzz = Formula["harfbuzz"]
     libpng = Formula["libpng"]
     pango = Formula["pango"]
     pixman = Formula["pixman"]
@@ -52,6 +55,7 @@ class Gtkdatabox < Formula
       -I#{glib.opt_lib}/glib-2.0/include
       -I#{gtkx.opt_include}/gtk-2.0
       -I#{gtkx.opt_lib}/gtk-2.0/include
+      -I#{harfbuzz.opt_include}/harfbuzz
       -I#{include}
       -I#{libpng.opt_include}/libpng16
       -I#{pango.opt_include}/pango-1.0

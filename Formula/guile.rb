@@ -1,15 +1,15 @@
 class Guile < Formula
   desc "GNU Ubiquitous Intelligent Language for Extensions"
   homepage "https://www.gnu.org/software/guile/"
-  url "https://ftp.gnu.org/gnu/guile/guile-2.2.3.tar.xz"
-  mirror "https://ftpmirror.gnu.org/guile/guile-2.2.3.tar.xz"
-  sha256 "8353a8849cd7aa77be66af04bd6bf7a6207440d2f8722e46672232bb9f0a4086"
-  revision 1
+  url "https://ftp.gnu.org/gnu/guile/guile-2.2.6.tar.xz"
+  mirror "https://ftpmirror.gnu.org/guile/guile-2.2.6.tar.xz"
+  sha256 "b33576331465a60b003573541bf3b1c205936a16c407bc69f8419a527bf5c988"
 
   bottle do
-    sha256 "d61c8dd379af7d9a86b120994a936f135f4f83587dc2bf7ee3dfafcab363894c" => :high_sierra
-    sha256 "0743241f9804f6b64a851b50590bcd7384c77b9b6dfce4910d2eca64a9ede948" => :sierra
-    sha256 "c38c4edf9a4e91680c90940416013741a7b3ed2b97f588be238b1c9c27cf1311" => :el_capitan
+    rebuild 1
+    sha256 "7bfe0c8f0f0ccbd3efa21dc515c149492d900e68e6bf6a802d4f9295c8bcf9e9" => :catalina
+    sha256 "b4c73a4155900d19f6b2a6255ff5b0ae454d3663eac004e16fb79fd4f69ec9c5" => :mojave
+    sha256 "f90ffabcd109edc74afe9b8c07c6f166207011d6dff277e626360b9d6b5a2db3" => :high_sierra
   end
 
   head do
@@ -20,28 +20,21 @@ class Guile < Formula
     depends_on "gettext" => :build
   end
 
-  depends_on "pkg-config" # guile-config is a wrapper around pkg-config.
-  depends_on "libtool"
-  depends_on "libffi"
-  depends_on "libunistring"
+  depends_on "gnu-sed" => :build
   depends_on "bdw-gc"
   depends_on "gmp"
+  depends_on "libffi"
+  depends_on "libtool"
+  depends_on "libunistring"
+  depends_on "pkg-config" # guile-config is a wrapper around pkg-config.
   depends_on "readline"
 
-  fails_with :clang do
-    build 211
-    cause "Segfaults during compilation"
-  end
-
   def install
+    # Work around Xcode 11 clang bug
+    # https://bitbucket.org/multicoreware/x265/issues/514/wrong-code-generated-on-macos-1015
+    ENV.append_to_cflags "-fno-stack-check" if DevelopmentTools.clang_build_version >= 1010
+
     system "./autogen.sh" unless build.stable?
-
-    # Fixes "sed: -i may not be used with stdin"
-    # Reported 7 Jan 2018 https://debbugs.gnu.org/cgi/bugreport.cgi?bug=30011
-    inreplace "libguile/Makefile.in",
-      /-e 's,\[@\]GUILE_EFFECTIVE_VERSION\[@\],\$\(GUILE_EFFECTIVE_VERSION\),g'      \\\n         -i/,
-      "\\0 ''"
-
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
                           "--with-libreadline-prefix=#{Formula["readline"].opt_prefix}",
@@ -51,6 +44,15 @@ class Guile < Formula
     # A really messed up workaround required on macOS --mkhl
     Pathname.glob("#{lib}/*.dylib") do |dylib|
       lib.install_symlink dylib.basename => "#{dylib.basename(".dylib")}.so"
+    end
+
+    # This is either a solid argument for guile including options for
+    # --with-xyz-prefix= for libffi and bdw-gc or a solid argument for
+    # Homebrew automatically removing Cellar paths from .pc files in favour
+    # of opt_prefix usage everywhere.
+    inreplace lib/"pkgconfig/guile-2.2.pc" do |s|
+      s.gsub! Formula["bdw-gc"].prefix.realpath, Formula["bdw-gc"].opt_prefix
+      s.gsub! Formula["libffi"].prefix.realpath, Formula["libffi"].opt_prefix
     end
 
     (share/"gdb/auto-load").install Dir["#{lib}/*-gdb.scm"]

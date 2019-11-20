@@ -3,14 +3,12 @@ class GraphTool < Formula
 
   desc "Efficient network analysis for Python 3"
   homepage "https://graph-tool.skewed.de/"
-  url "https://downloads.skewed.de/graph-tool/graph-tool-2.26.tar.bz2"
-  sha256 "df6273dc5ef327a0eaf1ef1c46751fce4c0b7573880944e544287b85a068f770"
-  revision 2
+  url "https://downloads.skewed.de/graph-tool/graph-tool-2.29.tar.bz2"
+  sha256 "6c0c4336bed6e2f79c91ace6d6914145ee03d0bd5025473b5918aec2b0657f7a"
+  revision 1
 
   bottle do
-    sha256 "b545489df056088a202e0505538c2f81e74e4b997f8659a0fa72c13f16321038" => :high_sierra
-    sha256 "6f23e45cf2609a29b769c3021f82c0ec83ae48592e597810b6234887c9d88f8f" => :sierra
-    sha256 "5d3da7df6c99092f318eb744adf4aff7d7caf757eb1f28619996516a2425987b" => :el_capitan
+    sha256 "1f996b31dfb36bd8cb6a0e8162df27820fdebadd76f8d6650e6b09f5f61576e1" => :mojave
   end
 
   depends_on "pkg-config" => :build
@@ -21,7 +19,7 @@ class GraphTool < Formula
   depends_on "google-sparsehash"
   depends_on "gtk+3"
   depends_on "librsvg"
-  depends_on :macos => :el_capitan # needs thread-local storage
+  depends_on :macos => :mojave # for C++17
   depends_on "numpy"
   depends_on "py3cairo"
   depends_on "pygobject3"
@@ -34,52 +32,55 @@ class GraphTool < Formula
   end
 
   resource "kiwisolver" do
-    url "https://files.pythonhosted.org/packages/31/60/494fcce70d60a598c32ee00e71542e52e27c978e5f8219fae0d4ac6e2864/kiwisolver-1.0.1.tar.gz"
-    sha256 "ce3be5d520b4d2c3e5eeb4cd2ef62b9b9ab8ac6b6fedbaa0e39cdb6f50644278"
+    url "https://files.pythonhosted.org/packages/16/e7/df58eb8868d183223692d2a62529a594f6414964a3ae93548467b146a24d/kiwisolver-1.1.0.tar.gz"
+    sha256 "53eaed412477c836e1b9522c19858a8557d6e595077830146182225613b11a75"
   end
 
   resource "matplotlib" do
-    url "https://files.pythonhosted.org/packages/ec/ed/46b835da53b7ed05bd4c6cae293f13ec26e877d2e490a53a709915a9dcb7/matplotlib-2.2.2.tar.gz"
-    sha256 "4dc7ef528aad21f22be85e95725234c5178c0f938e2228ca76640e5e84d8cde8"
+    url "https://files.pythonhosted.org/packages/12/d1/7b12cd79c791348cb0c78ce6e7d16bd72992f13c9f1e8e43d2725a6d8adf/matplotlib-3.1.1.tar.gz"
+    sha256 "1febd22afe1489b13c6749ea059d392c03261b2950d1d45c17e3aed812080c93"
   end
 
   resource "pyparsing" do
-    url "https://files.pythonhosted.org/packages/3c/ec/a94f8cf7274ea60b5413df054f82a8980523efd712ec55a59e7c3357cf7c/pyparsing-2.2.0.tar.gz"
-    sha256 "0832bcf47acd283788593e7a0f542407bd9550a55a8a8435214a1960e04bcb04"
+    url "https://files.pythonhosted.org/packages/5d/3a/24d275393f493004aeb15a1beae2b4a3043526e8b692b65b4a9341450ebe/pyparsing-2.4.0.tar.gz"
+    sha256 "1873c03321fc118f4e9746baf201ff990ceb915f433f23b395f5580d1840cb2a"
   end
 
   resource "python-dateutil" do
-    url "https://files.pythonhosted.org/packages/c5/39/4da7c2dbc4f023fba5fb2325febcadf0d0ce0efdc8bd12083a0f65d20653/python-dateutil-2.7.2.tar.gz"
-    sha256 "9d8074be4c993fbe4947878ce593052f71dac82932a677d49194d8ce9778002e"
+    url "https://files.pythonhosted.org/packages/ad/99/5b2e99737edeb28c71bcbec5b5dda19d0d9ef3ca3e92e3e925e7c0bb364c/python-dateutil-2.8.0.tar.gz"
+    sha256 "c89805f6f4d64db21ed966fda138f8a5ed7a4fdbc1a8ee329ce1b74e3c74da9e"
   end
 
   resource "pytz" do
-    url "https://files.pythonhosted.org/packages/10/76/52efda4ef98e7544321fd8d5d512e11739c1df18b0649551aeccfb1c8376/pytz-2018.4.tar.gz"
-    sha256 "c06425302f2cf668f1bba7a0a03f3c1d34d4ebeef2c72003da308b3947c7f749"
+    url "https://files.pythonhosted.org/packages/df/d5/3e3ff673e8f3096921b3f1b79ce04b832e0100b4741573154b72b756a681/pytz-2019.1.tar.gz"
+    sha256 "d747dd3d23d77ef44c6a3526e274af6efeb0a6f1afd5a69ba4d5be4098c8e141"
   end
 
   resource "six" do
-    url "https://files.pythonhosted.org/packages/16/d8/bc6316cf98419719bd59c91742194c111b6f2e85abac88e496adefaf7afe/six-1.11.0.tar.gz"
-    sha256 "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9"
+    url "https://files.pythonhosted.org/packages/dd/bf/4138e7bfb757de47d1f4b6994648ec67a51efe58fa907c1e11e350cddfca/six-1.12.0.tar.gz"
+    sha256 "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"
   end
 
   def install
     xy = Language::Python.major_minor_version "python3"
-
     venv = virtualenv_create(libexec, "python3")
 
     resources.each do |r|
       venv.pip_install_and_link r
     end
 
-    system "./configure", "--disable-debug",
-                          "--disable-dependency-tracking",
-                          "--prefix=#{prefix}",
-                          "PYTHON=python3",
-                          "PYTHON_LIBS=-undefined dynamic_lookup",
-                          "--with-python-module-path=#{lib}/python#{xy}/site-packages",
-                          "--with-boost-python=libboost-python36",
-                          "--with-boost-python=36"
+    args = %W[
+      --disable-debug
+      --disable-dependency-tracking
+      --prefix=#{prefix}
+      PYTHON=python3
+      PYTHON_LIBS=-undefined\ dynamic_lookup
+      --with-python-module-path=#{lib}/python#{xy}/site-packages
+      --with-boost-python=boost_python#{xy.to_s.delete(".")}-mt
+    ]
+    args << "--with-expat=#{MacOS.sdk_path}/usr" if MacOS.sdk_path_if_needed
+
+    system "./configure", *args
     system "make", "install"
 
     site_packages = "lib/python#{xy}/site-packages"
@@ -89,7 +90,7 @@ class GraphTool < Formula
 
   test do
     (testpath/"test.py").write <<~EOS
-      import graph_tool.all as gt
+      import graph_tool as gt
       g = gt.Graph()
       v1 = g.add_vertex()
       v2 = g.add_vertex()

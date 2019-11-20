@@ -1,16 +1,16 @@
 class Iamy < Formula
   desc "AWS IAM import and export tool"
   homepage "https://github.com/99designs/iamy"
-  url "https://github.com/99designs/iamy/archive/v2.1.1.tar.gz"
-  sha256 "c23e061ab0ebe8009e2db27fef95d733490a5a76a4f7d54bd1323ab8faf2441a"
+  url "https://github.com/99designs/iamy/archive/v2.3.2.tar.gz"
+  sha256 "66d44dd6af485b2b003b0aa1c8dcd799f7bae934f1ce1efb7e5d5f6cfe7f8bf2"
   head "https://github.com/99designs/iamy.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "65aec3b7fda4554e1ae2d68a1f1828b237767d9d1b03e1a4010147dec671d07f" => :high_sierra
-    sha256 "0032e8af26d5f19e127680b3c2a46edf8acfcdcc43705ec28c59c29b5cb7cf8e" => :sierra
-    sha256 "e423ebfa60cb94e4af9d2bbe396c10791201f5be000da123981dbbce8bfca5fe" => :el_capitan
-    sha256 "7711c9a181026bbb9f662fa04b08da34cff6a3bc7744b5e7546e47bf1615b1b0" => :yosemite
+    sha256 "a74e94857f4b788918ac74f9ef20c3c6c19a0e1164522a4591165b0d070795a4" => :catalina
+    sha256 "d24e802f1fc572c7d49620531e57a5e143956b2ce1e1d05b2320167b09fbf875" => :mojave
+    sha256 "aac8b68119dad48d8aca16a2355cc5c8605e8b1fe44b18e5eb8326216873d657" => :high_sierra
+    sha256 "1d22caa158fea3cb67ca07ef5f0785dc9f8568470d0323a5958229ed1f650f6c" => :sierra
   end
 
   depends_on "go" => :build
@@ -18,9 +18,9 @@ class Iamy < Formula
 
   def install
     ENV["GOPATH"] = buildpath
-    dir = buildpath/"src/github.com/99designs/iamy"
-    dir.install buildpath.children
-    cd dir do
+    src = buildpath/"src/github.com/99designs/iamy"
+    src.install buildpath.children
+    src.cd do
       system "go", "build", "-o", bin/"iamy", "-ldflags",
              "-X main.Version=v#{version}"
       prefix.install_metafiles

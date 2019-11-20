@@ -1,47 +1,38 @@
 class Sleuthkit < Formula
   desc "Forensic toolkit"
   homepage "https://www.sleuthkit.org/"
-  url "https://github.com/sleuthkit/sleuthkit/releases/download/sleuthkit-4.6.0/sleuthkit-4.6.0.tar.gz"
-  sha256 "f52a08ab0de078182c0f2d19d3e1b341424a9e0c1633a61c3b892fb38f9acb97"
+  url "https://github.com/sleuthkit/sleuthkit/releases/download/sleuthkit-4.6.7/sleuthkit-4.6.7.tar.gz"
+  sha256 "525fced79117929621fb583ed4a554a01a07e8739e9c000507acfa793f8d6915"
 
   bottle do
     cellar :any
-    sha256 "d418bac269354588ffd2d16ed9f52bdde27a712333c34dab26ef816c210196c6" => :high_sierra
-    sha256 "cf98bd7df825bb78b3f7066da21fd65f55fe273023e16d08f448bc5c3f69c1c5" => :sierra
-    sha256 "dd9aaa5cba9a55db4132a31c308fc111e8bd1b66f7fa1255e045ffa110a7a6ba" => :el_capitan
+    sha256 "7cbf955a3df686e370616256ce35b7f4c6734c32b4446a3c7af3fdb6ec843569" => :catalina
+    sha256 "edd55849d72f35c2f7210d0760b5f21e6204e900a4da977a8c19fa6db3d5cf7b" => :mojave
+    sha256 "1938217697347d823ca2d915c9ab2046843d675b9d07dea38c1c452637a6db1e" => :high_sierra
+    sha256 "c8ce9b0639eb21ea41344bc117df1dda8ac103400be32dd412f79b6d18ebb50f" => :sierra
   end
 
-  option "with-jni", "Build Sleuthkit with JNI bindings"
-  option "with-debug", "Build debug version"
+  depends_on "ant" => :build
+  depends_on "afflib"
+  depends_on :java
+  depends_on "libewf"
+  depends_on "libpq"
+  depends_on "sqlite"
 
-  depends_on "afflib" => :optional
-  depends_on "libewf" => :optional
-
-  if build.with? "jni"
-    depends_on :java
-    depends_on "ant" => :build
-  end
-
-  conflicts_with "irods", :because => "both install `ils`"
   conflicts_with "ffind",
     :because => "both install a 'ffind' executable."
 
   def install
-    ENV.append_to_cflags "-DNDEBUG" if build.without? "debug"
+    ENV.append_to_cflags "-DNDEBUG"
 
-    args = ["--disable-dependency-tracking", "--prefix=#{prefix}"]
-    args << "--disable-java" if build.without? "jni"
-
-    system "./configure", *args
+    system "./configure", "--disable-dependency-tracking", "--prefix=#{prefix}"
     system "make"
     system "make", "install"
 
-    if build.with? "jni"
-      cd "bindings/java" do
-        system "ant"
-      end
-      prefix.install "bindings"
+    cd "bindings/java" do
+      system "ant"
     end
+    prefix.install "bindings"
   end
 
   test do

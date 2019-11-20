@@ -1,27 +1,21 @@
 class Spades < Formula
   desc "De novo genome sequence assembly"
   homepage "http://cab.spbu.ru/software/spades/"
-  url "http://cab.spbu.ru/files/release3.11.1/SPAdes-3.11.1.tar.gz"
-  sha256 "3ab85d86bf7d595bd8adf11c971f5d258bbbd2574b7c1703b16d6639a725b474"
-  revision 3
+  url "http://cab.spbu.ru/files/release3.13.0/SPAdes-3.13.0.tar.gz"
+  mirror "https://github.com/ablab/spades/releases/download/v3.13.0/SPAdes-3.13.0.tar.gz"
+  sha256 "c63442248c4c712603979fa70503c2bff82354f005acda2abc42dd5598427040"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "223ae1240164641e14120345c768d166fa4adfbd9368ee70e0acef1700cc91d2" => :high_sierra
-    sha256 "6977379e053ba4b8784e20df6103ac950bff11cbc159178404f321198f8fb156" => :sierra
-    sha256 "2bd814781ddaca6f9187c75dc06ae699f4ec51647aa569180aa50fa6e1980d6d" => :el_capitan
+    sha256 "f79562a627e66647a7013f989e257f3ed33023daf7cbc9f836fecb0356766aa7" => :catalina
+    sha256 "6eff79211afd0a5f2a3194db28a630bfa53cec5b968dc810e65bbaefce55fae4" => :mojave
+    sha256 "ef7d029efa28d81c236a428f40c0780b074827b50e5618cc328b4cfffdc7e579" => :high_sierra
+    sha256 "8418d4226f398f2853500eb3fea5788d58b392202101934a4fba502f7c77efcd" => :sierra
   end
 
   depends_on "cmake" => :build
   depends_on "gcc"
-  depends_on "python@2"
-
-  # Fix compilation with GCC 8.1 and later, remove in 3.12
-  # https://github.com/ablab/spades/pull/106
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/cbb208e3/spades/gcc8-fix.diff"
-    sha256 "9d0bb51570d0619d3dae0191695eebec60da392d2d38fdc464b1fd063173ca07"
-  end
 
   fails_with :clang # no OpenMP support
 

@@ -1,17 +1,20 @@
 class Pyvim < Formula
+  include Language::Python::Virtualenv
+
   desc "Pure Python Vim clone"
   homepage "https://github.com/jonathanslenders/pyvim"
-  url "https://files.pythonhosted.org/packages/d0/27/5b566e1ea31be7a2a36c531fdc4c5f65ff89913b056365dae53cb1434753/pyvim-0.0.21.tar.gz"
-  sha256 "8171931ab086fd5018f842916d751809ab2fab8fecaaf9346c8111bebe08f838"
+  url "https://files.pythonhosted.org/packages/6e/85/47543120e478ddc5d31e447a7fed1fe4ac81cbb066ca623a2cc54f685dff/pyvim-2.0.24.tar.gz"
+  sha256 "27b8f244bebc49cf375b10d16046df24438798208d7eaf199e3d04babf08cc6f"
+  revision 1
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "76dd168a56f90e7fb10497a5ed9d97891f023611a9b154bd5cd4bfba80bce19a" => :high_sierra
-    sha256 "76dd168a56f90e7fb10497a5ed9d97891f023611a9b154bd5cd4bfba80bce19a" => :sierra
-    sha256 "76295ee3821641b9ce9f951372b82a393e30d21e2420f870a0f8acef52e561b3" => :el_capitan
+    sha256 "db64f72516e0e11c230fab541f11d2707d9bb0d1069292a0435f462a54440bfc" => :mojave
+    sha256 "cc567ddff18dbcf58edc1a7578bfe1ff9228d84f22dfbd231d0b8b2b92ae366d" => :high_sierra
+    sha256 "b8626e91ddbbf8abaf02755765dc0228160e0a65faabb963a60352a03e9a6ac8" => :sierra
   end
 
-  depends_on "python@2"
+  depends_on "python"
 
   resource "docopt" do
     url "https://files.pythonhosted.org/packages/a2/55/8f8cab2afd404cf578136ef2cc5dfb50baa1761b68c9da1fb1e4eed343c9/docopt-0.6.2.tar.gz"
@@ -19,23 +22,23 @@ class Pyvim < Formula
   end
 
   resource "prompt_toolkit" do
-    url "https://files.pythonhosted.org/packages/8a/ad/cf6b128866e78ad6d7f1dc5b7f99885fb813393d9860778b2984582e81b5/prompt_toolkit-1.0.15.tar.gz"
-    sha256 "858588f1983ca497f1cf4ffde01d978a3ea02b01c8a26a8bbc5cd2e66d816917"
+    url "https://files.pythonhosted.org/packages/94/a0/57dc47115621d9b3fcc589848cdbcbb6c4c130186e8fc4c4704766a7a699/prompt_toolkit-2.0.9.tar.gz"
+    sha256 "2519ad1d8038fd5fc8e770362237ad0364d16a7650fb5724af6997ed5515e3c1"
   end
 
   resource "pyflakes" do
-    url "https://files.pythonhosted.org/packages/26/85/f6a315cd3c1aa597fb3a04cc7d7dbea5b3cc66ea6bd13dfa0478bf4876e6/pyflakes-1.6.0.tar.gz"
-    sha256 "8d616a382f243dbf19b54743f280b80198be0bca3a5396f1d2e1fca6223e8805"
+    url "https://files.pythonhosted.org/packages/52/64/87303747635c2988fcaef18af54bfdec925b6ea3b80bcd28aaca5ba41c9e/pyflakes-2.1.1.tar.gz"
+    sha256 "d976835886f8c5b31d47970ed689944a0262b5f3afa00a5a7b4dc81e5449f8a2"
   end
 
   resource "Pygments" do
-    url "https://files.pythonhosted.org/packages/71/2a/2e4e77803a8bd6408a2903340ac498cb0a2181811af7c9ec92cb70b0308a/Pygments-2.2.0.tar.gz"
-    sha256 "dbae1046def0efb574852fab9e90209b23f556367b5a320c0bcb871c77c3e8cc"
+    url "https://files.pythonhosted.org/packages/7e/ae/26808275fc76bf2832deb10d3a3ed3107bc4de01b85dcccbe525f2cd6d1e/Pygments-2.4.2.tar.gz"
+    sha256 "881c4c157e45f30af185c1ffe8d549d48ac9127433f2c380c24b84572ad66297"
   end
 
   resource "six" do
-    url "https://files.pythonhosted.org/packages/16/d8/bc6316cf98419719bd59c91742194c111b6f2e85abac88e496adefaf7afe/six-1.11.0.tar.gz"
-    sha256 "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9"
+    url "https://files.pythonhosted.org/packages/dd/bf/4138e7bfb757de47d1f4b6994648ec67a51efe58fa907c1e11e350cddfca/six-1.12.0.tar.gz"
+    sha256 "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"
   end
 
   resource "wcwidth" do
@@ -44,16 +47,7 @@ class Pyvim < Formula
   end
 
   def install
-    resources.each do |r|
-      r.stage do
-        system "python", *Language::Python.setup_install_args(libexec)
-      end
-    end
-
-    ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python2.7/site-packages"
-    system "python", *Language::Python.setup_install_args(libexec)
-    bin.install Dir[libexec/"bin/*"]
-    bin.env_script_all_files(libexec/"bin", :PYTHONPATH => ENV["PYTHONPATH"])
+    virtualenv_install_with_resources
   end
 
   test do

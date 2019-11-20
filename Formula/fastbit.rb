@@ -6,14 +6,14 @@ class Fastbit < Formula
 
   bottle do
     cellar :any
+    sha256 "2c72f2aa131632844a265fb3cef214701ab04618e77eadceeff70107a064155a" => :catalina
+    sha256 "fa55894d8decb82e8731d1af1541aa17569cf34691c1b23272525e5cd6ea66d3" => :mojave
     sha256 "10b30f7face5fec9926fcc84b1acda1e11edbaf6438ddde8d819a431766adc98" => :high_sierra
     sha256 "688a35ebf6323a6323181db1c8fd048c00031b8c3d89f49b2d81586576723541" => :sierra
     sha256 "8488bbb85691e3181243fb0ad2afb84715c684204551e5064bff9846d18be82e" => :el_capitan
   end
 
   depends_on :java
-
-  needs :cxx11
 
   conflicts_with "iniparser", :because => "Both install `include/dictionary.h`"
 
@@ -40,7 +40,7 @@ class Fastbit < Formula
       Potter,Harry
       Granger,Hermione
       Weasley,Ron
-     EOS
+    EOS
     system bin/"ardea", "-d", testpath,
            "-m", "a:t,b:t", "-t", testpath/"test.csv"
   end

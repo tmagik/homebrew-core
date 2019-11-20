@@ -1,13 +1,13 @@
 class Proj < Formula
   desc "Cartographic Projections Library"
-  homepage "http://proj4.org/"
-  url "https://download.osgeo.org/proj/proj-5.0.1.tar.gz"
-  sha256 "a792f78897482ed2c4e2af4e8a1a02e294c64e32b591a635c5294cb9d49fdc8c"
+  homepage "https://proj4.org/"
+  url "https://download.osgeo.org/proj/proj-6.2.1.tar.gz"
+  sha256 "7f2e0fe63312f1e766057cceb53dc9585c4a335ff6641de45696dbd40d17c340"
 
   bottle do
-    sha256 "dea27845b0290164d9fe626209006db318fa14c3d98c108b1821240519c9154c" => :high_sierra
-    sha256 "5efa456e11f2f427ec6a686ea4d60a786b8ee0e5d0a304d034ba9c18004c7bed" => :sierra
-    sha256 "1bdf8af9436c5b982f0d8e53a70fecd8f3d26a2c582dd58ac458e2985bede4dd" => :el_capitan
+    sha256 "afa15540ec072f6c577ad42fcf0cef6b0ea3d5fb25fe786c490cdbf1fcae918b" => :catalina
+    sha256 "47d58e22d2e01d1bbacd8abef95ccbe61935612c9a6b369c9065bd6a34cea26a" => :mojave
+    sha256 "f530ebfac70dc88a5fa1cab8094bf80000fc2e8229d87b60aeb4f424ad26f544" => :high_sierra
   end
 
   head do
@@ -17,67 +17,20 @@ class Proj < Formula
     depends_on "libtool" => :build
   end
 
-  option "with-vdatum", "Install vertical datum files (~380 MB)"
+  depends_on "pkg-config" => :build
 
   conflicts_with "blast", :because => "both install a `libproj.a` library"
 
-  # The datum grid files are required to support datum shifting
-  resource "datumgrid" do
-    url "https://download.osgeo.org/proj/proj-datumgrid-1.7.zip"
-    sha256 "ffcad4453fac3b4a13ca678ef343e688496e18019f35709ef03c5f200e9fb85a"
-  end
-
-  # Vertical datum files
-  resource "usa_geoid2012" do
-    url "https://download.osgeo.org/proj/vdatum/usa_geoid2012.zip"
-    sha256 "afe49dc2c405d19a467ec756483944a3c9148e8c1460cb7e82dc8d4a64c4c472"
-  end
-
-  resource "usa_geoid2009" do
-    url "https://download.osgeo.org/proj/vdatum/usa_geoid2009.zip"
-    sha256 "1a232fb7fe34d2dad2d48872025597ac7696882755ded1493118a573f60008b1"
-  end
-
-  resource "usa_geoid2003" do
-    url "https://download.osgeo.org/proj/vdatum/usa_geoid2003.zip"
-    sha256 "1d15950f46e96e422ebc9202c24aadec221774587b7a4cd963c63f8837421351"
-  end
-
-  resource "usa_geoid1999" do
-    url "https://download.osgeo.org/proj/vdatum/usa_geoid1999.zip"
-    sha256 "665cd4dfc991f2517752f9db84d632b56bba31a1ed6a5f0dc397e4b0b3311f36"
-  end
-
-  resource "vertconc" do
-    url "https://download.osgeo.org/proj/vdatum/vertcon/vertconc.gtx"
-    sha256 "ecf7bce7bf9e56f6f79a2356d8d6b20b9cb49743701f81db802d979b5a01fcff"
-  end
-
-  resource "vertcone" do
-    url "https://download.osgeo.org/proj/vdatum/vertcon/vertcone.gtx"
-    sha256 "f6da1c615c2682ecb7adcfdf22b1d37aba2771c2ea00abe8907acea07413903b"
-  end
-
-  resource "vertconw" do
-    url "https://download.osgeo.org/proj/vdatum/vertcon/vertconw.gtx"
-    sha256 "de648c0f6e8b5ebfc4b2d82f056c7b993ca3c37373a7f6b7844fe9bd4871821b"
-  end
-
-  resource "egm08_25" do
-    url "https://download.osgeo.org/proj/vdatum/egm08_25/egm08_25.gtx"
-    sha256 "c18f20d1fe88616e3497a3eff993227371e1d9acc76f96253e8d84b475bbe6bf"
-  end
-
   skip_clean :la
 
+  # The datum grid files are required to support datum shifting
+  resource "datumgrid" do
+    url "https://download.osgeo.org/proj/proj-datumgrid-1.8.zip"
+    sha256 "b9838ae7e5f27ee732fb0bfed618f85b36e8bb56d7afb287d506338e9f33861e"
+  end
+
   def install
-    resources.each do |r|
-      if r.name == "datumgrid"
-        (buildpath/"nad").install r
-      elsif build.with? "vdatum"
-        pkgshare.install r
-      end
-    end
+    (buildpath/"nad").install resource("datumgrid")
 
     system "./autogen.sh" if build.head?
     system "./configure", "--disable-dependency-tracking",
@@ -98,7 +51,8 @@ class Proj < Formula
       171224.94\t5415352.81 Paris, France
       -8101.66\t5707500.23 London, England
     EOS
-    assert_equal match,
-                 `#{bin}/proj +proj=poly +ellps=clrk66 -r #{testpath}/test`
+
+    output = shell_output("#{bin}/proj +proj=poly +ellps=clrk66 -r #{testpath}/test")
+    assert_equal match, output
   end
 end

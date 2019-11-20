@@ -1,8 +1,8 @@
 class Logstash < Formula
   desc "Tool for managing events and logs"
   homepage "https://www.elastic.co/products/logstash"
-  url "https://artifacts.elastic.co/downloads/logstash/logstash-6.2.4.tar.gz"
-  sha256 "4040c2b6a1e9c6908b12885659021a35dca415c6b884cef6938fcc589e94431e"
+  url "https://artifacts.elastic.co/downloads/logstash/logstash-oss-7.4.1.tar.gz"
+  sha256 "0770b6af348a681e218bfdb78360e55ea042dad9ddcea6f9d9b5021f44e5ef5d"
   head "https://github.com/elastic/logstash.git"
 
   bottle :unneeded
@@ -19,18 +19,33 @@ class Logstash < Formula
       cd "tar"
     end
 
-    inreplace %w[bin/logstash], %r{^\. "\$\(cd `dirname \${SOURCEPATH}`\/\.\.; pwd\)\/bin\/logstash\.lib\.sh\"}, ". #{libexec}/bin/logstash.lib.sh"
-    inreplace %w[bin/logstash-plugin], %r{^\. "\$\(cd `dirname \$0`\/\.\.; pwd\)\/bin\/logstash\.lib\.sh\"}, ". #{libexec}/bin/logstash.lib.sh"
-    inreplace %w[bin/logstash.lib.sh], /^LOGSTASH_HOME=.*$/, "LOGSTASH_HOME=#{libexec}"
+    inreplace "bin/logstash",
+              %r{^\. "\$\(cd `dirname \${SOURCEPATH}`\/\.\.; pwd\)\/bin\/logstash\.lib\.sh\"},
+              ". #{libexec}/bin/logstash.lib.sh"
+    inreplace "bin/logstash-plugin",
+              %r{^\. "\$\(cd `dirname \$0`\/\.\.; pwd\)\/bin\/logstash\.lib\.sh\"},
+              ". #{libexec}/bin/logstash.lib.sh"
+    inreplace "bin/logstash.lib.sh",
+              /^LOGSTASH_HOME=.*$/,
+              "LOGSTASH_HOME=#{libexec}"
+
     libexec.install Dir["*"]
+
+    # Move config files into etc
+    (etc/"logstash").install Dir[libexec/"config/*"]
+    (libexec/"config").rmtree
+
     bin.install libexec/"bin/logstash", libexec/"bin/logstash-plugin"
     bin.env_script_all_files(libexec/"bin", Language::Java.java_home_env("1.8"))
   end
 
+  def post_install
+    ln_s etc/"logstash", libexec/"config"
+  end
+
   def caveats; <<~EOS
-    Please read the getting started guide located at:
-      https://www.elastic.co/guide/en/logstash/current/getting-started-with-logstash.html
-    EOS
+    Configuration files are located in #{etc}/logstash/
+  EOS
   end
 
   plist_options :manual => "logstash"
@@ -66,17 +81,24 @@ class Logstash < Formula
   end
 
   test do
+    assert_includes(stable.url, "-oss-")
     # workaround https://github.com/elastic/logstash/issues/6378
-    mkdir testpath/"config"
-    ["jvm.options", "log4j2.properties", "startup.options"].each { |f| cp prefix/"libexec/config/#{f}", testpath/"config" }
+    (testpath/"config").mkpath
+    ["jvm.options", "log4j2.properties", "startup.options"].each do |f|
+      cp prefix/"libexec/config/#{f}", testpath/"config"
+    end
     (testpath/"config/logstash.yml").write <<~EOS
       path.queue: #{testpath}/queue
     EOS
-    mkdir testpath/"data"
-    mkdir testpath/"logs"
-    mkdir testpath/"queue"
+    (testpath/"data").mkpath
+    (testpath/"logs").mkpath
+    (testpath/"queue").mkpath
 
-    output = pipe_output("#{bin}/logstash -e '' --path.data=#{testpath}/data --path.logs=#{testpath}/logs --path.settings=#{testpath}/config --log.level=fatal", "hello world\n")
-    assert_match /hello world/, output
+    data = "--path.data=#{testpath}/data"
+    logs = "--path.logs=#{testpath}/logs"
+    settings = "--path.settings=#{testpath}/config"
+
+    output = pipe_output("#{bin}/logstash -e '' #{data} #{logs} #{settings} --log.level=fatal", "hello world\n")
+    assert_match "hello world", output
   end
 end

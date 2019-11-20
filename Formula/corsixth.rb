@@ -1,19 +1,19 @@
 class Corsixth < Formula
   desc "Open source clone of Theme Hospital"
   homepage "https://github.com/CorsixTH/CorsixTH"
-  url "https://github.com/CorsixTH/CorsixTH/archive/v0.61.tar.gz"
-  sha256 "b8e19743cd499436dce58af67479997e621fe50e21e31f08f440d2303e11f5d6"
-  revision 1
+  url "https://github.com/CorsixTH/CorsixTH/archive/v0.63.tar.gz"
+  sha256 "9016ce0a22e0e800937970a91b48aaf536fc901c98d3edd1e11bf97590523d81"
   head "https://github.com/CorsixTH/CorsixTH.git"
 
   bottle do
-    cellar :any
-    sha256 "f6fff1b9d33191fb30fc3b6ddd02b5690a1f23d1f0c80ab5e495c0b3ac8a05a2" => :high_sierra
-    sha256 "8c3fcdadd2f5aa7e23e72d516ca41bb23fcf148d7480243531eb4fd2a92cff94" => :sierra
-    sha256 "1b22606a88b9d76e6fa41d4892bc40ec8553740a9b5467fb5be17b1871376dbd" => :el_capitan
+    sha256 "61fc2f45fa162f5f83620081655667041bf1d8afd933a67c2e9bde711c384472" => :catalina
+    sha256 "42ffa795dfc4749f31e753c224fd8f7ce1373631fb0f231db0ea8990d2eda064" => :mojave
+    sha256 "6af1f1845c4a56747cd4663ef0774f976b57a9954f7b1524da2b268bf819ea4c" => :high_sierra
+    sha256 "2dd1c75f87d4dda6a2becebd48109dcf0b4b28bae903e5fa54db913557bacbde" => :sierra
   end
 
   depends_on "cmake" => :build
+  depends_on "luarocks" => :build
   depends_on :xcode => :build
   depends_on "ffmpeg"
   depends_on "freetype"
@@ -22,14 +22,14 @@ class Corsixth < Formula
   depends_on "sdl2_mixer"
 
   resource "lpeg" do
-    url "https://ftp.openbsd.org/pub/OpenBSD/distfiles/lpeg-1.0.1.tar.gz"
-    mirror "https://ftp.heanet.ie/mirrors/ftp.openbsd.org/distfiles/lpeg-1.0.1.tar.gz"
-    sha256 "62d9f7a9ea3c1f215c77e0cadd8534c6ad9af0fb711c3f89188a8891c72f026b"
+    url "http://www.inf.puc-rio.br/~roberto/lpeg/lpeg-1.0.2.tar.gz"
+    mirror "https://sources.voidlinux.org/lua-lpeg-1.0.2/lpeg-1.0.2.tar.gz"
+    sha256 "48d66576051b6c78388faad09b70493093264588fcd0f258ddaab1cdd4a15ffe"
   end
 
   resource "luafilesystem" do
-    url "https://github.com/keplerproject/luafilesystem/archive/v_1_6_3.tar.gz"
-    sha256 "5525d2b8ec7774865629a6a29c2f94cb0f7e6787987bf54cd37e011bfb642068"
+    url "https://github.com/keplerproject/luafilesystem/archive/v1_7_0_2.tar.gz"
+    sha256 "23b4883aeb4fb90b2d0f338659f33a631f9df7a7e67c54115775a77d4ac3cc59"
   end
 
   def install
@@ -46,11 +46,13 @@ class Corsixth < Formula
       end
     end
 
-    system "cmake", ".", "-DLUA_INCLUDE_DIR=#{Formula["lua"].opt_include}",
+    system "cmake", ".", "-DLUA_INCLUDE_DIR=#{Formula["lua"].opt_include}/lua",
                          "-DLUA_LIBRARY=#{Formula["lua"].opt_lib}/liblua.dylib",
                          "-DLUA_PROGRAM_PATH=#{Formula["lua"].opt_bin}/lua",
+                         "-DCORSIX_TH_DATADIR=#{prefix}/CorsixTH.app/Contents/Resources/",
                          *std_cmake_args
     system "make"
+    cp_r %w[CorsixTH/CorsixTH.lua CorsixTH/Lua CorsixTH/Levels CorsixTH/Campaigns CorsixTH/Graphics CorsixTH/Bitmap], "CorsixTH/CorsixTH.app/Contents/Resources/"
     prefix.install "CorsixTH/CorsixTH.app"
 
     env = { :LUA_PATH => ENV["LUA_PATH"], :LUA_CPATH => ENV["LUA_CPATH"] }

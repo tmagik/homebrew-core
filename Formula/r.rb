@@ -1,14 +1,15 @@
 class R < Formula
   desc "Software environment for statistical computing"
   homepage "https://www.r-project.org/"
-  url "https://cran.r-project.org/src/base/R-3/R-3.5.0.tar.gz"
-  sha256 "fd1725535e21797d3d9fea8963d99be0ba4c3aecadcf081b43e261458b416870"
+  url "https://cran.r-project.org/src/base/R-3/R-3.6.1.tar.gz"
+  sha256 "5baa9ebd3e71acecdcc3da31d9042fb174d55a42829f8315f2457080978b1389"
   revision 1
 
   bottle do
-    sha256 "e65df345554df730d9a3d90554a4afe345f2023712cddfea2e146496a04c7236" => :high_sierra
-    sha256 "cc9a616bd0981ead6f885015e1e41ae7c057e7c15c1e3d86d4fee7fc736130f2" => :sierra
-    sha256 "c5e9ef1321dfc402102fac4e0343ba1b12131a9c1c21d03e5d316a720d343dba" => :el_capitan
+    sha256 "daa26a653216abd86a51e09ce4e3ebedacbabb40f91aaec932dbe956d6f66909" => :catalina
+    sha256 "84d387b39408df62be83884fe70f4a6b40eb6f0154de1ab1d20398c1e2af2407" => :mojave
+    sha256 "910931f2feed30e33b8dd0044bf38e42bc85b57ea161d29ca25e80cfd22c4249" => :high_sierra
+    sha256 "5bcfa36f3be460d11af215712e3a9b00237d8fc6d4f963a1ef7b85091d465ba7" => :sierra
   end
 
   depends_on "pkg-config" => :build
@@ -16,19 +17,18 @@ class R < Formula
   depends_on "gettext"
   depends_on "jpeg"
   depends_on "libpng"
+  depends_on "openblas"
   depends_on "pcre"
   depends_on "readline"
   depends_on "xz"
-  depends_on "openblas" => :optional
-  depends_on :java => :optional
 
   # needed to preserve executable permissions on files without shebangs
   skip_clean "lib/R/bin"
 
   resource "gss" do
-    url "https://cloud.r-project.org/src/contrib/gss_2.1-8.tar.gz", :using => :nounzip
-    mirror "https://mirror.las.iastate.edu/CRAN/src/contrib/gss_2.1-8.tar.gz"
-    sha256 "176cce8ddd939afb9ec3de6c731d13fbff38bc8f0291cf9c7aa4bf35491084bc"
+    url "https://cloud.r-project.org/src/contrib/gss_2.1-10.tar.gz", :using => :nounzip
+    mirror "https://mirror.las.iastate.edu/CRAN/src/contrib/gss_2.1-10.tar.gz"
+    sha256 "26c47ecae6a9b7854a1b531c09f869cf8b813462bd8093e3618e1091ace61ee2"
   end
 
   def install
@@ -47,21 +47,9 @@ class R < Formula
       "--with-lapack",
       "--enable-R-shlib",
       "SED=/usr/bin/sed", # don't remember Homebrew's sed shim
+      "--disable-java",
+      "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas",
     ]
-
-    if build.with? "openblas"
-      args << "--with-blas=-L#{Formula["openblas"].opt_lib} -lopenblas"
-      ENV.append "LDFLAGS", "-L#{Formula["openblas"].opt_lib}"
-    else
-      args << "--with-blas=-framework Accelerate"
-      ENV.append_to_cflags "-D__ACCELERATE__" if ENV.compiler != :clang
-    end
-
-    if build.with? "java"
-      args << "--enable-java"
-    else
-      args << "--disable-java"
-    end
 
     # Help CRAN packages find gettext and readline
     ["gettext", "readline"].each do |f|

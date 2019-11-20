@@ -1,33 +1,32 @@
 class Harfbuzz < Formula
   desc "OpenType text shaping engine"
   homepage "https://wiki.freedesktop.org/www/Software/HarfBuzz/"
-  url "https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-1.7.6.tar.bz2"
-  sha256 "da7bed39134826cd51e57c29f1dfbe342ccedb4f4773b1c951ff05ff383e2e9b"
-  revision 2
+  url "https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-2.6.4.tar.xz"
+  sha256 "9413b8d96132d699687ef914ebb8c50440efc87b3f775d25856d7ec347c03c12"
 
   bottle do
-    rebuild 1
-    sha256 "024c2e5e0d1dadb170d524a2a353c103398a4fede77dafe4060fafe8c3b31c10" => :high_sierra
-    sha256 "ddc3631dc7057a086144294106c8c049db39203fbbf86b99a9cdb1b63749411b" => :sierra
-    sha256 "1c8c7e531d7440afa74a6c40ebe61b0d9c3022d366269da2c62e0185f3da036b" => :el_capitan
+    cellar :any
+    sha256 "feed99de447de882a40417ee9b0739faf8827d01d3dfb25f01d89e73aa1f2444" => :catalina
+    sha256 "b3fb0c92dcc1bf0917903ce0adca5d4beffde1fe500e3c12098a48a3708213e0" => :mojave
+    sha256 "272c2ed319b5141b2c20f6ce5aa4178d688e52cadbe3bcf258c285934f8edb62" => :high_sierra
   end
 
   head do
     url "https://github.com/behdad/harfbuzz.git"
 
-    depends_on "ragel" => :build
     depends_on "autoconf" => :build
     depends_on "automake" => :build
     depends_on "libtool" => :build
+    depends_on "ragel" => :build
   end
 
-  depends_on "pkg-config" => :build
   depends_on "gobject-introspection" => :build
-  depends_on "freetype" => :recommended
-  depends_on "graphite2" => :recommended
-  depends_on "icu4c" => :recommended
+  depends_on "pkg-config" => :build
   depends_on "cairo"
+  depends_on "freetype"
   depends_on "glib"
+  depends_on "graphite2"
+  depends_on "icu4c"
 
   resource "ttf" do
     url "https://github.com/behdad/harfbuzz/raw/fc0daafab0336b847ac14682e581a8838f36a0bf/test/shaping/fonts/sha1sum/270b89df543a7e48e206a2d830c0e10e5265c630.ttf"
@@ -38,31 +37,16 @@ class Harfbuzz < Formula
     args = %W[
       --disable-dependency-tracking
       --prefix=#{prefix}
-      --with-coretext=yes
+      --enable-introspection=yes
       --enable-static
       --with-cairo=yes
+      --with-coretext=yes
+      --with-freetype=yes
       --with-glib=yes
       --with-gobject=yes
-      --enable-introspection=yes
+      --with-graphite2=yes
+      --with-icu=yes
     ]
-
-    if build.with? "freetype"
-      args << "--with-freetype=yes"
-    else
-      args << "--with-freetype=no"
-    end
-
-    if build.with? "graphite2"
-      args << "--with-graphite2=yes"
-    else
-      args << "--with-graphite2=no"
-    end
-
-    if build.with? "icu4c"
-      args << "--with-icu=yes"
-    else
-      args << "--with-icu=no"
-    end
 
     system "./autogen.sh" if build.head?
     system "./configure", *args

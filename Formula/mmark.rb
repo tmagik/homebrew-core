@@ -1,45 +1,37 @@
-require "language/go"
-
 class Mmark < Formula
   desc "Powerful markdown processor in Go geared towards the IETF"
-  homepage "https://github.com/miekg/mmark"
-  url "https://github.com/miekg/mmark/archive/v1.3.6.tar.gz"
-  sha256 "9c49d335d0591003c9ac838f6f74f3ae8e0ac50dec892b6ed3485b17a8bedd77"
+  homepage "https://mmark.miek.nl/"
+  url "https://github.com/mmarkdown/mmark/archive/v2.2.0.tar.gz"
+  sha256 "8a7b278b93b737daf46554fa83b86538b1f6eee02f8508eb08581aa578531f02"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "89264dd592ebd8d86824e2df4567f65f5eacc3cdbc25912c47af6d1917930479" => :high_sierra
-    sha256 "50097c4c90c9865ab7f4e246931952387b260c6c82a23513d6200ebdab54af32" => :sierra
-    sha256 "ba58929bfe0eb4b5c4749b511c0187451ededc5cdd25bdb5e117813a979e5aa3" => :el_capitan
-    sha256 "47db5343e91cb6094efa1e6677423a2b907bdaf9b1e61ef28f09b61c7a960397" => :yosemite
+    sha256 "b502e75cb3bc36d562d342650766ef432b8823d7f14898ef57085fc9c939537f" => :catalina
+    sha256 "991527aa84e63ac9e1e0c3693c041339aed014f4441fb5c862b9ce9a4a32c419" => :mojave
+    sha256 "c3d57bbdd88cfdd3f212c68f73350afd5969b471d928f4ea6aa30d7545e2618d" => :high_sierra
   end
 
   depends_on "go" => :build
 
-  go_resource "github.com/BurntSushi/toml" do
-    url "https://github.com/BurntSushi/toml.git",
-        :revision => "a368813c5e648fee92e5f6c30e3944ff9d5e8895"
-  end
-
   resource "test" do
-    url "https://raw.githubusercontent.com/miekg/mmark/master/rfc/rfc1149.md"
-    sha256 "f4227951dc7a6ac3a579a44957d8c78080d01838bb78d4e0416f45bf5d99b626"
+    url "https://raw.githubusercontent.com/mmarkdown/mmark/master/rfc/2100.md"
+    sha256 "0b5383917a0fbc0d2a4ef009d6ccd787444ce2e80c1ea06088cb96269ecf11f0"
   end
 
   def install
     ENV["GOPATH"] = buildpath
-    mkdir_p buildpath/"src/github.com/miekg/"
-    ln_sf buildpath, buildpath/"src/github.com/miekg/mmark"
-    Language::Go.stage_deps resources, buildpath/"src"
 
-    cd "mmark" do
+    (buildpath/"src/github.com/mmarkdown/mmark").install buildpath.children
+    cd "src/github.com/mmarkdown/mmark" do
       system "go", "build", "-o", bin/"mmark"
+      man1.install "mmark.1"
+      prefix.install_metafiles
     end
   end
 
   test do
     resource("test").stage do
-      system "#{bin}/mmark", "-xml2", "-page", "rfc1149.md"
+      assert_match "The Naming of Hosts", shell_output("#{bin}/mmark -ast 2100.md")
     end
   end
 end

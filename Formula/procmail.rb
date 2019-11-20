@@ -1,12 +1,14 @@
 class Procmail < Formula
   desc "Autonomous mail processor"
-  homepage "http://www.procmail.org"
+  homepage "https://web.archive.org/web/20151013184044/procmail.org/"
   # Note the use of the patched version from Apple
   url "https://opensource.apple.com/tarballs/procmail/procmail-14.tar.gz"
   sha256 "f3bd815d82bb70625f2ae135df65769c31dd94b320377f0067cd3c2eab968e81"
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "a7f6ee9550f27ea88322a4c4c88b04421e6d2c676248a914571a2fbffd6d425f" => :catalina
+    sha256 "48be3e5215b4ac296ef1f9150b313964112e5c7d04fe20489f336342548656e0" => :mojave
     sha256 "c64920b1989d941d9aa4de7c275cf2e80306cb8bd2ee5d8263e883ddab7ef2e3" => :high_sierra
     sha256 "c64ccf998d9c71d1b73004abe4c96a8c35993cf4c1a899cd6d92bfab82b9272a" => :sierra
     sha256 "3328bcda4649612afba606950e59f4cb0c22e10fe97a4f1e38f190e3e4115800" => :el_capitan

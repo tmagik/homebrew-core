@@ -1,17 +1,16 @@
 class Angband < Formula
   desc "Dungeon exploration game"
-  homepage "http://rephial.org/"
-  url "http://rephial.org/downloads/4.1/angband-4.1.2.tar.gz"
-  sha256 "30bc0979e0845cdc43de2a8f65c4d54d03d24d402b32b8589fbbc368ccfa0e2a"
+  homepage "https://rephial.org/"
+  url "https://rephial.org/downloads/4.2/angband-4.2.0.tar.gz"
+  sha256 "d3e1495c7cc2a4ee66de7b4e612d3b133048072e37504bd2e58a2351ab0fb56d"
   head "https://github.com/angband/angband.git"
 
   bottle do
-    sha256 "1a601dc2d55ebb76c448068c0e324bded5e9791ca0f9775489cee44985a47cbf" => :high_sierra
-    sha256 "a1f526b26f8acf8600eca8ef6299fc8920d42cb00c268e1b9e7d68b3d857fdd6" => :sierra
-    sha256 "332680a711469ba08246a73bfdea5e82ddac47cad0db0cd9dfedc4c93dfcd3ed" => :el_capitan
+    sha256 "3d68682f9905d6f0d829ccebc59f7215c9bdef7e05cde4d88d825d660f22233d" => :catalina
+    sha256 "dc6f1a83a2810d52da345f6612064a2b851071a92a0eec5338ee6f1a933b3186" => :mojave
+    sha256 "611854a1b7d74e879f596ea2a03522eb5cba323cc7db047a918d2affb60c79fd" => :high_sierra
+    sha256 "6330d08684c373c901f25845b838a3ac6c8c6c5ebeae80c7d3f6a63c198af181" => :sierra
   end
-
-  option "with-cocoa", "Install Cocoa app"
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
@@ -29,13 +28,6 @@ class Angband < Formula
                           "--with-ncurses-prefix=#{MacOS.sdk_path}/usr"
     system "make"
     system "make", "install"
-
-    if build.with? "cocoa"
-      cd "src" do
-        system "make", "-f", "Makefile.osx"
-      end
-      prefix.install "Angband.app"
-    end
   end
 
   test do

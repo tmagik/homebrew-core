@@ -1,45 +1,37 @@
 class Efl < Formula
   desc "Enlightenment Foundation Libraries"
   homepage "https://www.enlightenment.org"
-  url "https://download.enlightenment.org/rel/libs/efl/efl-1.20.7.tar.xz"
-  sha256 "b0a9b765bcd7b012f1072da1d491fc8671aa089473f746901d93f5807a2c76fe"
-  revision 1
+  url "https://download.enlightenment.org/rel/libs/efl/efl-1.22.4.tar.xz"
+  sha256 "454002b98922f5590048ff523237c41f93d8ab0a76174be167dea0677c879120"
 
   bottle do
-    sha256 "5a453abe384c76f3b520b8d0f04b31219a83c2d0579a9da6df44d13e6b8c362a" => :high_sierra
-    sha256 "e1fbf2df97b12aa73ccea04156de890c44fb5508c5cbd8702914c9cab99216c0" => :sierra
-    sha256 "4e90744c983e0356b12e7b0bf598f4db741d8df306b72d71f8d9d314db57ca24" => :el_capitan
+    sha256 "d04b2c44f519e791014658b0994f49eee9940ca684ea2de402923bea23db4adc" => :mojave
+    sha256 "6d222b36c6172b11ad731ca15481c31a46ad38544ffed22d0d0a778861e63e85" => :high_sierra
+    sha256 "5e303d498b339b5c248e9167efd68c362013d9198fdf5dbed98138721688a8db" => :sierra
   end
 
-  option "with-docs", "Install development libraries/headers and HTML docs"
-
-  depends_on "doxygen" => :build if build.with? "docs"
-  depends_on "pkg-config" => :build
   depends_on "gettext" => :build
-  depends_on "openssl"
-  depends_on "freetype"
+  depends_on "pkg-config" => :build
+  depends_on "bullet"
+  depends_on "dbus"
   depends_on "fontconfig"
-  depends_on "jpeg"
-  depends_on "libpng"
-  depends_on "luajit"
+  depends_on "freetype"
   depends_on "fribidi"
   depends_on "giflib"
-  depends_on "libtiff"
-  depends_on "gstreamer"
   depends_on "gst-plugins-good"
-  depends_on "dbus"
-  depends_on "pulseaudio"
-  depends_on "bullet"
-  depends_on "libsndfile"
-  depends_on "libspectre"
+  depends_on "gstreamer"
+  depends_on "jpeg"
+  depends_on "libpng"
   depends_on "libraw"
   depends_on "librsvg"
+  depends_on "libsndfile"
+  depends_on "libspectre"
+  depends_on "libtiff"
+  depends_on "luajit"
+  depends_on "openssl@1.1"
   depends_on "poppler"
+  depends_on "pulseaudio"
   depends_on "shared-mime-info"
-  depends_on "webp" => :optional
-  depends_on "glib" => :optional
-
-  needs :cxx11
 
   def install
     ENV.cxx11
@@ -51,7 +43,6 @@ class Efl < Formula
 
     system "./configure", *args
     system "make", "install"
-    system "make", "install-doc" if build.with? "docs"
   end
 
   def post_install

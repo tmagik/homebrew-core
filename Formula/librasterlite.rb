@@ -3,18 +3,19 @@ class Librasterlite < Formula
   homepage "https://www.gaia-gis.it/fossil/librasterlite/index"
   url "https://www.gaia-gis.it/gaia-sins/librasterlite-sources/librasterlite-1.1g.tar.gz"
   sha256 "0a8dceb75f8dec2b7bd678266e0ffd5210d7c33e3d01b247e9e92fa730eebcb3"
-  revision 4
+  revision 6
 
   bottle do
     cellar :any
-    sha256 "65caf1ad410dbec8ab61630fd43051eebdc0a152278ceacb1b9f9c470f7daaf2" => :high_sierra
-    sha256 "c35a4604e8ca5b6bff8368bdf18f42858b7c1e616c2153539d91f92f3d1cba22" => :sierra
-    sha256 "24120f69886a7fcd617896f8b80c4d25648a840eb44b14d3a0ee1457230810e1" => :el_capitan
+    sha256 "a66bb073375cf60241540cedba00415ac85fde9b64106f76a5a052a1da508661" => :catalina
+    sha256 "e50438fe42116fd2206c46ad813bd65ea732513f2993293d5c8211b38c7642e0" => :mojave
+    sha256 "b622c859952b981aea4443d46fc24948a653ed4faaf83184347af82699f2f74e" => :high_sierra
+    sha256 "7605cd6756f69c93737ae300e946b81e559d8c5c697bcdfae1f9c1b80b84f657" => :sierra
   end
 
   depends_on "pkg-config" => :build
-  depends_on "libpng"
   depends_on "libgeotiff"
+  depends_on "libpng"
   depends_on "libspatialite"
   depends_on "sqlite"
 

@@ -1,22 +1,24 @@
 class LibjsonRpcCpp < Formula
   desc "C++ framework for json-rpc"
   homepage "https://github.com/cinemast/libjson-rpc-cpp"
-  url "https://github.com/cinemast/libjson-rpc-cpp/archive/v1.1.0.tar.gz"
-  sha256 "8e699cad9f64e5db5c855ddfb6900dc55e673cc960cb9158818d652b74cb9183"
+  url "https://github.com/cinemast/libjson-rpc-cpp/archive/v1.2.0.tar.gz"
+  sha256 "485556bd27bd546c025d9f9a2f53e89b4460bf820fd5de847ede2539f7440091"
+  revision 2
   head "https://github.com/cinemast/libjson-rpc-cpp.git"
 
   bottle do
     cellar :any
-    sha256 "a0bf45eab53c074d1a7db06b07d208a25eb1f004732fc331854b016af491d757" => :high_sierra
-    sha256 "4202093dd4d26177adf295ec6c7e81df4a32be060f5599de80cbeb24b45640e5" => :sierra
-    sha256 "cfb154a79679e34ec52c03eebf077ebb9d6d81c6bddd4a21d43fb49fee8f812d" => :el_capitan
+    sha256 "d1466807a98b3ffbf6a2b538961e66c95ac3474460a98284583e4c0da058a7d3" => :catalina
+    sha256 "93aabc3290ac1f6f62783c97820a298f32bb6d2eb174eef66ebd26198c8e7f85" => :mojave
+    sha256 "3488b2b28b4b275aea373f5adf4bee029f21e1f59a6e4707b6b51c216d814db5" => :high_sierra
+    sha256 "dfb299c3e6d21e1e2966b61f53e43a462f1daf6beed1245054ed7dc43c26582c" => :sierra
   end
 
   depends_on "cmake" => :build
   depends_on "argtable"
+  depends_on "hiredis"
   depends_on "jsoncpp"
   depends_on "libmicrohttpd"
-  depends_on "hiredis"
 
   def install
     system "cmake", ".", *std_cmake_args

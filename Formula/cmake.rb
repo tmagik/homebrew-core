@@ -1,31 +1,26 @@
 class Cmake < Formula
   desc "Cross-platform make"
   homepage "https://www.cmake.org/"
-  url "https://cmake.org/files/v3.11/cmake-3.11.1.tar.gz"
-  sha256 "57bebc6ca4d1d42c6385249d148d9216087e0fda57a47dc5c858790a70217d0c"
+  url "https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5.tar.gz"
+  sha256 "fbdd7cef15c0ced06bb13024bfda0ecc0dedbcaaaa6b8a5d368c75255243beb4"
   head "https://cmake.org/cmake.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "f46c32faed88dd9753936143c07c44ab11a8a7488c66b37f38cbc37c338aa36a" => :high_sierra
-    sha256 "f5f1b8a9e2d3702b114fadb135d7ae31cacf4ab534de3fa272541358da11f7a5" => :sierra
-    sha256 "d5ba76d921c4924e72080af2480095964f98b2ff7b39eb230fecdf5223589af1" => :el_capitan
+    sha256 "46b47f448f7690bbed70526a42f27bea54aa7562c9eefb86955102fc83d1366d" => :catalina
+    sha256 "ded337f539d87466a83e50c4dee5ccd47356a3a4bc066a0cadbf4c8fc52c7179" => :mojave
+    sha256 "e98220aa1eedd7e97926e160c76424cdb08ea5cfc6866ca65cd25a830605586d" => :high_sierra
   end
 
-  option "without-docs", "Don't build man pages"
-  option "with-completion", "Install Bash completion (Has potential problems with system bash)"
+  depends_on "sphinx-doc" => :build
 
-  depends_on "sphinx-doc" => :build if build.with? "docs"
+  # The completions were removed because of problems with system bash
 
   # The `with-qt` GUI option was removed due to circular dependencies if
   # CMake is built with Qt support and Qt is built with MySQL support as MySQL uses CMake.
   # For the GUI application please instead use `brew cask install cmake`.
 
-  needs :cxx11
-
   def install
-    ENV.cxx11 if MacOS.version < :mavericks
-
     args = %W[
       --prefix=#{prefix}
       --no-system-libs
@@ -33,27 +28,21 @@ class Cmake < Formula
       --datadir=/share/cmake
       --docdir=/share/doc/cmake
       --mandir=/share/man
+      --sphinx-build=#{Formula["sphinx-doc"].opt_bin}/sphinx-build
+      --sphinx-html
+      --sphinx-man
       --system-zlib
       --system-bzip2
       --system-curl
     ]
 
-    if build.with? "docs"
-      # There is an existing issue around macOS & Python locale setting
-      # See https://bugs.python.org/issue18378#msg215215 for explanation
-      ENV["LC_ALL"] = "en_US.UTF-8"
-      args << "--sphinx-man" << "--sphinx-build=#{Formula["sphinx-doc"].opt_bin}/sphinx-build"
-    end
+    # There is an existing issue around macOS & Python locale setting
+    # See https://bugs.python.org/issue18378#msg215215 for explanation
+    ENV["LC_ALL"] = "en_US.UTF-8"
 
     system "./bootstrap", *args, "--", "-DCMAKE_BUILD_TYPE=Release"
     system "make"
     system "make", "install"
-
-    if build.with? "completion"
-      cd "Auxiliary/bash-completion/" do
-        bash_completion.install "ctest", "cmake", "cpack"
-      end
-    end
 
     elisp.install "Auxiliary/cmake-mode.el"
   end

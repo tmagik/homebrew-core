@@ -1,20 +1,22 @@
 class Chapel < Formula
   desc "Emerging programming language designed for parallel computing"
   homepage "https://chapel-lang.org/"
-  url "https://github.com/chapel-lang/chapel/releases/download/1.17.1/chapel-1.17.1.tar.gz"
-  sha256 "f0a4671ca23832d69f831d230ca82264500ad1836d240854ba0835b95137f4f1"
-  head "https://github.com/chapel-lang/chapel.git"
+  url "https://github.com/chapel-lang/chapel/releases/download/1.20.0/chapel-1.20.0.tar.gz"
+  sha256 "08bc86df13e4ad56d0447f52628b0f8e36b0476db4e19a90eeb2bd5f260baece"
 
   bottle do
-    sha256 "1a9a4194ccfe50f46d30aa23d068f4284376778f82e9580dcf11139a107d173d" => :high_sierra
-    sha256 "247b2f6bcfecee70f8fd20ef719fe0518d8f134ad7d3f7fd625e300cba955d86" => :sierra
-    sha256 "2b19ead6fb70346cce7c2dbeb1ec1a64ae68f3044630f30a6a7b495b3548df6f" => :el_capitan
+    sha256 "057e5c71d41f2ff71434f446ffd8f9aa932b553612313729d4651fdc58233650" => :catalina
+    sha256 "8fcaebe6a3c465a29a66e691581b88b2fc9960726e1f94b3f21aa0f53c424044" => :mojave
+    sha256 "4aee5a0ddf8a44897a2f03c458a8e7e70d76b07f04024119ed482fbc06cf330c" => :high_sierra
+    sha256 "34a5eac538de8fb6ac632109a0154e1d14ff8551bc8f4fec8df8359568697338" => :sierra
   end
 
   def install
     libexec.install Dir["*"]
     # Chapel uses this ENV to work out where to install.
     ENV["CHPL_HOME"] = libexec
+    # This is for mason
+    ENV["CHPL_REGEXP"] = "re2"
 
     # Must be built from within CHPL_HOME to prevent build bugs.
     # https://github.com/Homebrew/legacy-homebrew/pull/35166
@@ -22,14 +24,15 @@ class Chapel < Formula
       system "make"
       system "make", "chpldoc"
       system "make", "test-venv"
+      system "make", "mason"
       system "make", "cleanall"
     end
 
     prefix.install_metafiles
 
     # Install chpl and other binaries (e.g. chpldoc) into bin/ as exec scripts.
-    bin.install Dir[libexec/"bin/darwin/*"]
-    bin.env_script_all_files libexec/"bin/darwin/", :CHPL_HOME => libexec
+    bin.install Dir[libexec/"bin/darwin-x86_64/*"]
+    bin.env_script_all_files libexec/"bin/darwin-x86_64/", :CHPL_HOME => libexec
     man1.install_symlink Dir["#{libexec}/man/man1/*.1"]
   end
 

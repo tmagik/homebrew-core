@@ -7,12 +7,14 @@ class Headphones < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "763b172d0d826db56c48f140570dea31e7b0a557116b9adfc50b5f63b387dec1" => :catalina
+    sha256 "e10c9c8639a61bede2b7b765ce56fc72d90949fd822f3bcf870eec78ff51bc59" => :mojave
     sha256 "c22670540bfa23e92a25a0efa6af4fe9f29967a45d4b8c5d8de0b28c060ac9d5" => :high_sierra
     sha256 "d64f16c7ce5484cd9e69902d1b4ea8299e9b093b8837c624ed0ef623aeb748fb" => :sierra
     sha256 "a17c424aac1d91fb570d3e63db548c37b4c64f92ed988bb935cb4fa02c12fc5a" => :el_capitan
   end
 
-  depends_on "python@2"
+  depends_on "python@2" # does not support Python 3
 
   resource "Markdown" do
     url "https://files.pythonhosted.org/packages/b3/73/fc5c850f44af5889192dff783b7b0d8f3fe8d30b65c8e3f78f8f0265fecf/Markdown-2.6.11.tar.gz"
@@ -28,7 +30,7 @@ class Headphones < Formula
     #!/bin/bash
     export PYTHONPATH="#{libexec}/lib/python2.7/site-packages:$PYTHONPATH"
     python "#{libexec}/Headphones.py" --datadir="#{etc}/headphones" "$@"
-    EOS
+  EOS
   end
 
   def install
@@ -71,7 +73,7 @@ class Headphones < Formula
       <true/>
     </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

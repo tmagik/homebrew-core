@@ -1,33 +1,23 @@
-class LsofDownloadStrategy < CurlDownloadStrategy
-  def stage
-    super
-    safe_system "/usr/bin/tar", "xf", "#{name}_#{version}_src.tar"
-    cd "#{name}_#{version}_src"
-  end
-end
-
 class Lsof < Formula
   desc "Utility to list open files"
   homepage "https://people.freebsd.org/~abe/"
-  url "https://mirrorservice.org/sites/lsof.itap.purdue.edu/pub/tools/unix/lsof/lsof_4.89.tar.bz2",
-    :using => LsofDownloadStrategy
-  sha256 "81ac2fc5fdc944793baf41a14002b6deb5a29096b387744e28f8c30a360a3718"
+  url "https://github.com/lsof-org/lsof/archive/4.93.2.tar.gz"
+  sha256 "3df912bd966fc24dc73ddea3e36a61d79270b21b085936a4caabca56e5b486a2"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "553ae69481b898fa1125b5d9d97c51cf49c4c31f11e1fe5d33a86c415a845e8d" => :high_sierra
-    sha256 "2312dceb501fa6d9301fa506370784456937404ac43381354457ce63d99ccd56" => :sierra
-    sha256 "fb14a3aef899327098b92d6d2c283e8978fc34d55b42019b8a54338abe8d4853" => :el_capitan
-    sha256 "8a63b65f74b992e4a70ac3e18a7e4b810a73e183b13086b40f30286256e646e0" => :yosemite
+    sha256 "b50a86c814c6bbc1d1f716cb39b254ad628c55a6850588f907c1792b5dc6fa3f" => :catalina
+    sha256 "3532e9650fc5b836d5584cd8733f83218229d170859bf2c85e62b4abad08d356" => :mojave
+    sha256 "8ebe4f68ada3d1c1984bbfb660437984f5fc9d61c93b3da8024bfd0d797a2172" => :high_sierra
+    sha256 "e07f28fd45b1eae5231393b45360920da4ad4386a83ccb6a256fc7ea26509f59" => :sierra
   end
 
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/c3acbb8/lsof/lsof-489-darwin-compile-fix.patch"
-    sha256 "997d8c147070987350fc12078ce83cd6e9e159f757944879d7e4da374c030755"
-  end
+  keg_only :provided_by_macos
 
   def install
     ENV["LSOF_INCLUDE"] = "#{MacOS.sdk_path}/usr/include"
+    ENV["LSOF_CC"] = ENV.cc
+    ENV["LSOF_CCV"] = ENV.cxx
 
     # Source hardcodes full header paths at /usr/include
     inreplace %w[
@@ -37,10 +27,12 @@ class Lsof < Formula
     ], "/usr/include", "#{MacOS.sdk_path}/usr/include"
 
     mv "00README", "README"
-    system "./Configure", "-n", `uname -s`.chomp.downcase
+    system "./Configure", "-n", "darwin"
+
     system "make"
     bin.install "lsof"
     man8.install "lsof.8"
+    prefix.install_metafiles
   end
 
   test do

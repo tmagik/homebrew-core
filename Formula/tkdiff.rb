@@ -1,8 +1,9 @@
 class Tkdiff < Formula
   desc "Graphical side by side diff utility"
   homepage "https://tkdiff.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/tkdiff/tkdiff/4.2/tkdiff-4.2.tar.gz"
-  sha256 "734bb417184c10072eb64e8d274245338e41b7fdeff661b5ef30e89f3e3aa357"
+  url "https://downloads.sourceforge.net/project/tkdiff/tkdiff/4.3.5/tkdiff-4-3-5.zip"
+  version "4.3.5"
+  sha256 "29d7f0b815d06b0ab6653baa9b6b7c213801ce6a976724ae843bf9735cbbde7e"
 
   bottle :unneeded
 

@@ -1,17 +1,14 @@
 class Remind < Formula
   desc "Sophisticated calendar and alarm"
-  homepage "https://www.roaringpenguin.com/products/remind"
-  url "https://www.roaringpenguin.com/files/download/remind-03.01.15.tar.gz"
-  sha256 "8adab4c0b30a556c34223094c5c74779164d5f3b8be66b8039f44b577e678ec1"
+  homepage "https://dianne.skoll.ca/projects/remind/"
+  url "https://dianne.skoll.ca/projects/remind/download/remind-03.01.17.tar.gz"
+  sha256 "c955c196ffd368720fc4af91823f88d66a47be8d28736f279918ab64a460fe51"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "c0d65b1c0428721038f25d11e4ad00de344b34bca29e23afa5354e4efcfbd955" => :high_sierra
-    sha256 "b89632422362efd9660eb98e53dfe3ca62006003c34a03d3b57bb8698b3a53a1" => :sierra
-    sha256 "c720948c84996b651176968c096492da2242cb6b57226e04e25f9251c782491a" => :el_capitan
-    sha256 "b72ffda6998a1c203686b82b8e07c3132bc380fb9126a2ca22254608d3c418c8" => :yosemite
-    sha256 "958eafdd458799e788457837d01ef387c5368ffee6f9a6b1ce363678a9cbc8a5" => :mavericks
-    sha256 "fb78fa7e3df893822473b56d79d64d48ff5827c7df3ce6d518985262c99d3056" => :mountain_lion
+    sha256 "7d1c2871766946e5341f0103b2880e887e5fe62612d8108ad45856a161434e42" => :catalina
+    sha256 "3e980511c004eb678cc24e9fa083501b470e7dd87dfee99cd4bf483a0de8ec2f" => :mojave
+    sha256 "f9c4efc40e72ee9b6b07cea755de607df275ab9fbb183620410e4f4e347af647" => :high_sierra
   end
 
   conflicts_with "rem", :because => "both install `rem` binaries"
@@ -23,14 +20,12 @@ class Remind < Formula
       s.gsub! "sleep(5);", ""
       s.gsub! /rkrphgvba\(.\);/, ""
     end
-    system "./configure", "--disable-debug", "--disable-dependency-tracking",
-                          "--prefix=#{prefix}"
+    system "./configure", "--prefix=#{prefix}"
     system "make", "install"
   end
 
   test do
-    reminders = "reminders"
-    (testpath/reminders).write "ONCE 2015-01-01 Homebrew Test"
-    assert_equal "Reminders for Thursday, 1st January, 2015:\n\nHomebrew Test\n\n", shell_output("#{bin}/remind #{reminders} 2015-01-01")
+    (testpath/"reminders").write "ONCE 2015-01-01 Homebrew Test"
+    assert_equal "Reminders for Thursday, 1st January, 2015:\n\nHomebrew Test\n\n", shell_output("#{bin}/remind reminders 2015-01-01")
   end
 end

@@ -1,22 +1,23 @@
 class Sdl2Image < Formula
   desc "Library for loading images as SDL surfaces and textures"
   homepage "https://www.libsdl.org/projects/SDL_image/"
-  url "https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.3.tar.gz"
-  sha256 "3510c25da735ffcd8ce3b65073150ff4f7f9493b866e85b83738083b556d2368"
+  url "https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.5.tar.gz"
+  sha256 "bdd5f6e026682f7d7e1be0b6051b209da2f402a2dd8bd1c4bd9c25ad263108d0"
 
   bottle do
     cellar :any
-    sha256 "5e85d55eb46958bfba548130aebcccfab0a98f048063b0074980940851fa59a1" => :high_sierra
-    sha256 "feeb2704291485affd5d3c4dee9842d4fdc006b2c0d8a49ab8010f2393dd2580" => :sierra
-    sha256 "9172af9ae56b649b51f987a2ebee06f0c58ca070d63556fd65260ffbb1f11b76" => :el_capitan
+    sha256 "691d5407fef2bc374ac3b7c2fafbe46a6bc0f9ed609f98812b24fec33ab9bd27" => :catalina
+    sha256 "1b3a464579d9ef25b3bdd9276119efffd0134fda5c5dc27051a35f1b21c00cfd" => :mojave
+    sha256 "55c1f996fb523c2727d2b103f0a5ecfd7a073f55ff9a7230bb609d22bbf5a576" => :high_sierra
+    sha256 "e3c9cf45d97099e818c667d23af8352e6d1bba0e3b609cdddee654f2a9da80cf" => :sierra
   end
 
   depends_on "pkg-config" => :build
+  depends_on "jpeg"
+  depends_on "libpng"
+  depends_on "libtiff"
   depends_on "sdl2"
-  depends_on "jpeg" => :recommended
-  depends_on "libpng" => :recommended
-  depends_on "libtiff" => :recommended
-  depends_on "webp" => :recommended
+  depends_on "webp"
 
   def install
     inreplace "SDL2_image.pc.in", "@prefix@", HOMEBREW_PREFIX

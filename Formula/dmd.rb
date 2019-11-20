@@ -3,29 +3,29 @@ class Dmd < Formula
   homepage "https://dlang.org/"
 
   stable do
-    url "https://github.com/dlang/dmd/archive/v2.080.0.tar.gz"
-    sha256 "bef32e69f73ec2fd8482a3649797d85e4740d2c2019b8e03b37524ba58acec92"
+    url "https://github.com/dlang/dmd/archive/v2.088.1.tar.gz"
+    sha256 "cf73f12981155635f293790377fa82b6d0119535f92cdd33775b151cb4f747a2"
 
     resource "druntime" do
-      url "https://github.com/dlang/druntime/archive/v2.080.0.tar.gz"
-      sha256 "e8b856d0927f3600003dddb049f091a2a50c74ad35182ffd1f88d6faf9079d77"
+      url "https://github.com/dlang/druntime/archive/v2.088.1.tar.gz"
+      sha256 "aaaa379fa505622d30fae48d219c563b19631951325f919679233cd16be494fe"
     end
 
     resource "phobos" do
-      url "https://github.com/dlang/phobos/archive/v2.080.0.tar.gz"
-      sha256 "ec24c2bf3705edcdb33879db4f4ee5bab7d226b77920a29f945bd0665c5b5be4"
+      url "https://github.com/dlang/phobos/archive/v2.088.1.tar.gz"
+      sha256 "82bfccd2a32a17387e354d56d752e0f003301368a93b4189e2b8b8e2242910fa"
     end
 
     resource "tools" do
-      url "https://github.com/dlang/tools/archive/v2.080.0.tar.gz"
-      sha256 "5fa8b58a2686685a1d94bf8d4518f2756a6d60a063daddc7993f9ac8cc58c695"
+      url "https://github.com/dlang/tools/archive/v2.088.1.tar.gz"
+      sha256 "e2eb1afe24985096554c971059916bfad1573b85786529c0394009c8db967139"
     end
   end
 
   bottle do
-    sha256 "79c618dbcf2c252ee60ba8c33c5f1ab7a9ec410a6b12b825cddaf72028644f3d" => :high_sierra
-    sha256 "063a291a26c1a277ebd6a3fa18ead76971708bff3156c28e830ac9414d8c908b" => :sierra
-    sha256 "75496127e9ea51049752d858d217bff35043fa5c1daeedd755948ba89a0e3c7c" => :el_capitan
+    sha256 "63dd323fd5b68377b86336a3a388ed8e629bb748e601467917e3bae396005f5c" => :catalina
+    sha256 "f7db8bcca1c5ce784461b5eaca167d14e43a6d37ed7a1a49885fed1a1fe64dc0" => :mojave
+    sha256 "087179a51d1f58703a9231d653dd9f87f49bfb80d787ef2c8ec8cfae1c41d469" => :high_sierra
   end
 
   head do
@@ -45,9 +45,31 @@ class Dmd < Formula
   end
 
   def install
-    make_args = ["INSTALL_DIR=#{prefix}", "MODEL=#{Hardware::CPU.bits}", "-f", "posix.mak"]
+    # Older DMD version is used for bootstraping itself - unfortunately version used for that
+    # doesn't work on MacOS Catalina due to TLS related APIs missing on the system.
+    # We manually overwrite DMD version used for bootstraping until upstream catches up.
+    old_host_dmd_ver="2.079.1"
+    host_dmd_ver="2.088.0"
 
-    system "make", "SYSCONFDIR=#{etc}", "TARGET_CPU=X86", "AUTO_BOOTSTRAP=1", "RELEASE=1", *make_args
+    make_args = %W[
+      INSTALL_DIR=#{prefix}
+      MODEL=64
+      BUILD=release
+      HOST_DMD_VER=#{host_dmd_ver}
+      -f posix.mak
+    ]
+
+    dmd_make_args = %W[
+      SYSCONFDIR=#{etc}
+      TARGET_CPU=X86
+      AUTO_BOOTSTRAP=1
+      ENABLE_RELEASE=1
+    ]
+
+    # Even though we pass HOST_DMD_VER to makefile, build.d still has version hardcoded.
+    # We manually overwrite it until upstream catches up.
+    inreplace "src/build.d", old_host_dmd_ver, host_dmd_ver
+    system "make", *dmd_make_args, *make_args
 
     make_args.unshift "DMD_DIR=#{buildpath}", "DRUNTIME_PATH=#{buildpath}/druntime", "PHOBOS_PATH=#{buildpath}/phobos"
 

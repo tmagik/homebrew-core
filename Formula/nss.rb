@@ -1,22 +1,15 @@
 class Nss < Formula
   desc "Libraries for security-enabled client and server applications"
   homepage "https://developer.mozilla.org/docs/NSS"
-  url "https://ftp.mozilla.org/pub/security/nss/releases/NSS_3_36_1_RTM/src/nss-3.36.1.tar.gz"
-  sha256 "6025441d528ff6a7f1a4b673b6ee7d3540731ada3f78d5acd5c3b3736b222bff"
+  url "https://ftp.mozilla.org/pub/security/nss/releases/NSS_3_47_RTM/src/nss-3.47.tar.gz"
+  sha256 "6cd0c4438b616bdacc0b5f25ff1506b0d07ee97ea6c95d514c5487200a155fa7"
 
   bottle do
     cellar :any
-    sha256 "20bad77f0d22c62f80d6b441e88c7b809913d029ac0479d9b9441742b99fac92" => :high_sierra
-    sha256 "851017faa2aa4a04ca38e647d8c2b58fa40f3dee8cf06c0138c721fe68e35f71" => :sierra
-    sha256 "4a6aca3ead8d50d7781590c74997d5cd254cf337c364d870f75cde6fbc683b5d" => :el_capitan
+    sha256 "eed21b30ac471a914f9845479cdab779b3ab586f51661c671e3041f9f7d1557f" => :catalina
+    sha256 "c54d6f1f289faf7cd742c47c384a28d40d8cf8cd33e40943f268c9960dca6f9f" => :mojave
+    sha256 "502a309b8b5d490f1ee6bdc6510b15cf554141ab883b435bbdf74aa71c21e021" => :high_sierra
   end
-
-  keg_only <<~EOS
-    Firefox can pick this up instead of the built-in library, resulting in
-    random crashes without meaningful explanation.
-
-    Please see https://bugzilla.mozilla.org/show_bug.cgi?id=1142646 for details
-  EOS
 
   depends_on "nspr"
 
@@ -26,11 +19,12 @@ class Nss < Formula
 
     args = %W[
       BUILD_OPT=1
+      NSS_ALLOW_SSLKEYLOGFILE=1
       NSS_USE_SYSTEM_SQLITE=1
       NSPR_INCLUDE_DIR=#{Formula["nspr"].opt_include}/nspr
       NSPR_LIB_DIR=#{Formula["nspr"].opt_lib}
+      USE_64=1
     ]
-    args << "USE_64=1" if MacOS.prefer_64_bit?
 
     # Remove the broken (for anyone but Firefox) install_name
     inreplace "coreconf/Darwin.mk", "-install_name @executable_path", "-install_name #{lib}"
@@ -85,7 +79,7 @@ class Nss < Formula
       *) exit 1;;
     esac
     pkg-config "$opt" nss
-    EOS
+  EOS
   end
 
   def pc_file; <<~EOS
@@ -100,6 +94,6 @@ class Nss < Formula
     Requires: nspr >= 4.12
     Libs: -L${libdir} -lnss3 -lnssutil3 -lsmime3 -lssl3
     Cflags: -I${includedir}
-    EOS
+  EOS
   end
 end

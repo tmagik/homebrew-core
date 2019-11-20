@@ -1,89 +1,65 @@
 class Node < Formula
   desc "Platform built on V8 to build network applications"
   homepage "https://nodejs.org/"
-  url "https://nodejs.org/dist/v10.0.0/node-v10.0.0.tar.xz"
-  sha256 "e239109020755db8a58e6bcb8b9375439e31cf3bbe92d0670a320a47a4e8ab50"
+  url "https://nodejs.org/dist/v13.1.0/node-v13.1.0.tar.gz"
+  sha256 "df640a2f151f788d02dc25c91d80fffe06b4c3c72fbdee07ab9abd7c6879d6cd"
   head "https://github.com/nodejs/node.git"
 
   bottle do
-    sha256 "6413fac659d9571e07eaef5cba9a2b150e04c6114984fa4ab39b05733065469b" => :high_sierra
-    sha256 "1de8f4c9ebeab4365dc1a26c70565ea8141784e355bc9368fe366984715f51b3" => :sierra
-    sha256 "6343a8becdc0fbd92e7db5aab2075f6513ddbb2f1919394f8c3da1fa30597c2f" => :el_capitan
+    cellar :any
+    sha256 "5863d08b039c44d35a8343179cf93d495e1288efe2c669ccb77704a236e0e17b" => :catalina
+    sha256 "87a9fffbc4d55a0f071a69896494e5b56fc12cd8b45f3b302aaf1e48eb7551c3" => :mojave
+    sha256 "d7f42ee0972136ef49b0908bfe92cd53ca63e536d93f7eb5fd1ee455edc3b65c" => :high_sierra
   end
 
-  option "with-debug", "Build with debugger hooks"
-  option "with-openssl@1.1", "Build against Homebrew's OpenSSL instead of the bundled OpenSSL"
-  option "without-npm", "npm will not be installed"
-  option "without-completion", "npm bash completion will not be installed"
-  option "without-icu4c", "Build with small-icu (English only) instead of system-icu (all locales)"
-
-  deprecated_option "enable-debug" => "with-debug"
-  deprecated_option "with-openssl" => "with-openssl@1.1"
-
-  depends_on "python@2" => :build
   depends_on "pkg-config" => :build
-  depends_on "icu4c" => :recommended
-  depends_on "openssl@1.1" => :optional
-
-  # Per upstream - "Need g++ 4.8 or clang++ 3.4".
-  fails_with :clang if MacOS.version <= :snow_leopard
-  fails_with :gcc_4_0
-  fails_with :gcc
-  ("4.3".."4.7").each do |n|
-    fails_with :gcc => n
-  end
+  depends_on "python" => :build
+  depends_on "icu4c"
 
   # We track major/minor from upstream Node releases.
   # We will accept *important* npm patch releases when necessary.
   resource "npm" do
-    url "https://registry.npmjs.org/npm/-/npm-5.6.0.tgz"
-    sha256 "b1f0de3767136c1d7b4b0f10e6eb2fb3397e2fe11e4c9cddcd0030ad1af9eddd"
+    url "https://registry.npmjs.org/npm/-/npm-6.12.1.tgz"
+    sha256 "a537fc1d5e8d1187deb4c8debb07b580cfdb4a0e5584feb378e2c66f35d85b9a"
+  end
+
+  # apply upstream Python 3 compatibility fix for macOS (remove with next version)
+  patch do
+    url "https://github.com/nodejs/node/commit/0673dfc0d8944a37e17fbaa683022f4b9e035577.patch?full_index=1"
+    sha256 "a682d597fb63861a3ae812345ade7ad2b1125b3362317e247b4fb52ecd7532be"
   end
 
   def install
+    # make sure subprocesses spawned by make are using our Python 3
+    ENV["PYTHON"] = Formula["python"].opt_bin/"python3"
+
     # Never install the bundled "npm", always prefer our
     # installation from tarball for better packaging control.
-    args = %W[--prefix=#{prefix} --without-npm]
-    args << "--debug" if build.with? "debug"
-    args << "--with-intl=system-icu" if build.with? "icu4c"
-    args << "--shared-openssl" if build.with? "openssl@1.1"
+    args = %W[--prefix=#{prefix} --without-npm --with-intl=system-icu]
     args << "--tag=head" if build.head?
 
     system "./configure", *args
     system "make", "install"
 
-    if build.with? "npm"
-      # Allow npm to find Node before installation has completed.
-      ENV.prepend_path "PATH", bin
+    # Allow npm to find Node before installation has completed.
+    ENV.prepend_path "PATH", bin
 
-      bootstrap = buildpath/"npm_bootstrap"
-      bootstrap.install resource("npm")
-      system "node", bootstrap/"bin/npm-cli.js", "install", "-ddd", "--global",
-             "--prefix=#{libexec}", resource("npm").cached_download
+    bootstrap = buildpath/"npm_bootstrap"
+    bootstrap.install resource("npm")
+    system "node", bootstrap/"bin/npm-cli.js", "install", "-ddd", "--global",
+            "--prefix=#{libexec}", resource("npm").cached_download
 
-      # The `package.json` stores integrity information about the above passed
-      # in `cached_download` npm resource, which breaks `npm -g outdated npm`.
-      # This copies back over the vanilla `package.json` to fix this issue.
-      cp bootstrap/"package.json", libexec/"lib/node_modules/npm"
-      # These symlinks are never used & they've caused issues in the past.
-      rm_rf libexec/"share"
+    # The `package.json` stores integrity information about the above passed
+    # in `cached_download` npm resource, which breaks `npm -g outdated npm`.
+    # This copies back over the vanilla `package.json` to fix this issue.
+    cp bootstrap/"package.json", libexec/"lib/node_modules/npm"
+    # These symlinks are never used & they've caused issues in the past.
+    rm_rf libexec/"share"
 
-      # suppress incorrect node 10 incompatibility warning from npm
-      # remove during next npm upgrade (to npm 5.9+ or npm 6.0+)
-      inreplace libexec/"lib/node_modules/npm/lib/utils/unsupported.js",
-        "{ver: '9', min: '9.0.0'}",
-        "{ver: '9', min: '9.0.0'}, {ver: '10', min: '10.0.0'}"
-
-      if build.with? "completion"
-        bash_completion.install \
-          bootstrap/"lib/utils/completion.sh" => "npm"
-      end
-    end
+    bash_completion.install bootstrap/"lib/utils/completion.sh" => "npm"
   end
 
   def post_install
-    return if build.without? "npm"
-
     node_modules = HOMEBREW_PREFIX/"lib/node_modules"
     node_modules.mkpath
     # Kill npm but preserve all other modules across node updates/upgrades.
@@ -110,16 +86,6 @@ class Node < Formula
     (node_modules/"npm/npmrc").atomic_write("prefix = #{HOMEBREW_PREFIX}\n")
   end
 
-  def caveats
-    if build.without? "npm"
-      <<~EOS
-        Homebrew has NOT installed npm. If you later install it, you should supplement
-        your NODE_PATH with the npm module folder:
-          #{HOMEBREW_PREFIX}/lib/node_modules
-      EOS
-    end
-  end
-
   test do
     path = testpath/"test.js"
     path.write "console.log('hello');"
@@ -128,24 +94,21 @@ class Node < Formula
     assert_equal "hello", output
     output = shell_output("#{bin}/node -e 'console.log(new Intl.NumberFormat(\"en-EN\").format(1234.56))'").strip
     assert_equal "1,234.56", output
-    if build.with? "icu4c"
-      output = shell_output("#{bin}/node -e 'console.log(new Intl.NumberFormat(\"de-DE\").format(1234.56))'").strip
-      assert_equal "1.234,56", output
-    end
 
-    if build.with? "npm"
-      # make sure npm can find node
-      ENV.prepend_path "PATH", opt_bin
-      ENV.delete "NVM_NODEJS_ORG_MIRROR"
-      assert_equal which("node"), opt_bin/"node"
-      assert_predicate HOMEBREW_PREFIX/"bin/npm", :exist?, "npm must exist"
-      assert_predicate HOMEBREW_PREFIX/"bin/npm", :executable?, "npm must be executable"
-      npm_args = ["-ddd", "--cache=#{HOMEBREW_CACHE}/npm_cache", "--build-from-source"]
-      system "#{HOMEBREW_PREFIX}/bin/npm", *npm_args, "install", "npm@latest"
-      system "#{HOMEBREW_PREFIX}/bin/npm", *npm_args, "install", "bufferutil" unless head?
-      assert_predicate HOMEBREW_PREFIX/"bin/npx", :exist?, "npx must exist"
-      assert_predicate HOMEBREW_PREFIX/"bin/npx", :executable?, "npx must be executable"
-      assert_match "< hello >", shell_output("#{HOMEBREW_PREFIX}/bin/npx cowsay hello")
-    end
+    output = shell_output("#{bin}/node -e 'console.log(new Intl.NumberFormat(\"de-DE\").format(1234.56))'").strip
+    assert_equal "1.234,56", output
+
+    # make sure npm can find node
+    ENV.prepend_path "PATH", opt_bin
+    ENV.delete "NVM_NODEJS_ORG_MIRROR"
+    assert_equal which("node"), opt_bin/"node"
+    assert_predicate HOMEBREW_PREFIX/"bin/npm", :exist?, "npm must exist"
+    assert_predicate HOMEBREW_PREFIX/"bin/npm", :executable?, "npm must be executable"
+    npm_args = ["-ddd", "--cache=#{HOMEBREW_CACHE}/npm_cache", "--build-from-source"]
+    system "#{HOMEBREW_PREFIX}/bin/npm", *npm_args, "install", "npm@latest"
+    system "#{HOMEBREW_PREFIX}/bin/npm", *npm_args, "install", "bufferutil" unless head?
+    assert_predicate HOMEBREW_PREFIX/"bin/npx", :exist?, "npx must exist"
+    assert_predicate HOMEBREW_PREFIX/"bin/npx", :executable?, "npx must be executable"
+    assert_match "< hello >", shell_output("#{HOMEBREW_PREFIX}/bin/npx cowsay hello")
   end
 end

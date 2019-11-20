@@ -1,46 +1,36 @@
-require "language/go"
-
 class Vegeta < Formula
   desc "HTTP load testing tool and library"
   homepage "https://github.com/tsenart/vegeta"
-  url "https://github.com/tsenart/vegeta/archive/v6.3.0.tar.gz"
-  sha256 "b9eaf9dc748fa58360395641ff50a33e53c805bf8a45ba3d787133d97b2269c6"
+  url "https://github.com/tsenart/vegeta.git",
+      :tag      => "v12.7.0",
+      :revision => "9c95632b3e8562be6df690c639a3f5a6f40d3004"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "db26954bbe7b4daa945ca7dbed49d629579416da33fe16333fd36a6e11bbce0d" => :high_sierra
-    sha256 "47e1b8f045671f42701a959baac1d37e967b6be0196dff6b8c088df5763a2a5f" => :sierra
-    sha256 "aadfb9ec8717221b59cad02eb1eec3464e75e8c05ff3f695f07291b8a9b87fdb" => :el_capitan
-    sha256 "4e449d903b750dbbe063b024cd06ba82edb1490db4774fdda9c4e228df8256be" => :yosemite
+    sha256 "8bcc25e5a17aabc111d71ea916e8433589a9fe9e41bf5f172c77faafdd4285c5" => :catalina
+    sha256 "5b40fdc60f3bb98cb1c922ecbf84ea48748e97a3e31d979378f1abc2b6ea032a" => :mojave
+    sha256 "d72fb9d6d2b987f0f35c0545d806a1ea4626e266641e6e8abecc4ce0be54e4ce" => :high_sierra
+    sha256 "1596ae7a805382e2073fbc92a94c105d4176d75aace961e829c00dedd47b97b9" => :sierra
   end
 
+  depends_on "dep" => :build
   depends_on "go" => :build
-
-  go_resource "github.com/streadway/quantile" do
-    url "https://github.com/streadway/quantile.git",
-        :revision => "b0c588724d25ae13f5afb3d90efec0edc636432b"
-  end
-
-  go_resource "golang.org/x/net" do
-    url "https://go.googlesource.com/net.git",
-        :revision => "a6577fac2d73be281a500b310739095313165611"
-  end
 
   def install
     ENV["GOPATH"] = buildpath
-    ENV["CGO_ENABLED"] = "0"
-
-    (buildpath/"src/github.com/tsenart").mkpath
-    ln_s buildpath, buildpath/"src/github.com/tsenart/vegeta"
-    Language::Go.stage_deps resources, buildpath/"src"
-    system "go", "build", "-ldflags", "-X main.Version=#{version}",
-                          "-o", bin/"vegeta"
+    src = buildpath/"src/github.com/tsenart/vegeta"
+    src.install buildpath.children
+    src.cd do
+      system "make", "vegeta"
+      bin.install "vegeta"
+      prefix.install_metafiles
+    end
   end
 
   test do
     input = "GET https://google.com"
     output = pipe_output("#{bin}/vegeta attack -duration=1s -rate=1", input, 0)
     report = pipe_output("#{bin}/vegeta report", output, 0)
-    assert_match /Success +\[ratio\] +100.00%/, report
+    assert_match(/Success +\[ratio\] +100.00%/, report)
   end
 end

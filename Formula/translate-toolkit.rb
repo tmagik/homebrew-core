@@ -3,18 +3,19 @@ class TranslateToolkit < Formula
 
   desc "Toolkit for localization engineers"
   homepage "https://toolkit.translatehouse.org/"
-  url "https://github.com/translate/translate/releases/download/2.3.0/translate-toolkit-2.3.0.tar.gz"
-  sha256 "763325a419fdf2d5429e24bad42f33bccca7eb58279f57ddd742c4c3ea794ccb"
+  url "https://github.com/translate/translate/archive/2.4.0.tar.gz"
+  sha256 "7f1d6a9566bb512fd88d51bd8bc920f42e379c91a4686761dbe89762f8a3a51d"
   head "https://github.com/translate/translate.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "d9179ae969d140adea6bdfd02400f191fd2252f133d393d48341ae825205a888" => :high_sierra
-    sha256 "51cc9c65abc0b89c0269c81941c5bd62c2500600ec12ecdf0e97829d3ada82f8" => :sierra
-    sha256 "1c23acb3e01f0a3dd6e7755589ad0fa59a2e5d05fde5dba5e723881ec130c671" => :el_capitan
+    sha256 "f4f17c576810fd6b87c8569e37965297655fce06d7bee4538168ec28cbda22aa" => :catalina
+    sha256 "895d0f333b3aba84ff5fa8b39292e0f62d7c1c6e1102e9fb9bbbecdf3b0218e5" => :mojave
+    sha256 "25748d80d983a92f58d888ffda612c5a4f5d63bb3c98b9043a5de5737db035fd" => :high_sierra
+    sha256 "b22388e34bf4e0abdc73502967d6d6242f7c7d17e10f6b6cd55d3561ff696ee6" => :sierra
   end
 
-  depends_on "python@2"
+  depends_on "python"
 
   resource "argparse" do
     url "https://files.pythonhosted.org/packages/18/dd/e617cfc3f6210ae183374cd9f6a26b20514bbb5a792af97949c5aacddf0f/argparse-1.4.0.tar.gz"
@@ -22,13 +23,18 @@ class TranslateToolkit < Formula
   end
 
   resource "diff-match-patch" do
-    url "https://files.pythonhosted.org/packages/22/82/46eaeab04805b4fac17630b59f30c4f2c8860988bcefd730ff4f1992908b/diff-match-patch-20121119.tar.gz"
-    sha256 "9dba5611fbf27893347349fd51cc1911cb403682a7163373adacc565d11e2e4c"
+    url "https://files.pythonhosted.org/packages/f0/2a/5ba07def0e9107d935aba62cf632afbd0f7c723a98af47ccbcab753d2452/diff-match-patch-20181111.tar.gz"
+    sha256 "a809a996d0f09b9bbd59e9bbd0b71eed8c807922512910e05cbd3f9480712ddb"
+  end
+
+  resource "Python-Levenshtein" do
+    url "https://files.pythonhosted.org/packages/42/a9/d1785c85ebf9b7dfacd08938dd028209c34a0ea3b1bcdb895208bd40a67d/python-Levenshtein-0.12.0.tar.gz"
+    sha256 "033a11de5e3d19ea25c9302d11224e1a1898fe5abd23c61c7c360c25195e3eb1"
   end
 
   resource "six" do
-    url "https://files.pythonhosted.org/packages/16/d8/bc6316cf98419719bd59c91742194c111b6f2e85abac88e496adefaf7afe/six-1.11.0.tar.gz"
-    sha256 "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9"
+    url "https://files.pythonhosted.org/packages/dd/bf/4138e7bfb757de47d1f4b6994648ec67a51efe58fa907c1e11e350cddfca/six-1.12.0.tar.gz"
+    sha256 "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"
   end
 
   def install

@@ -1,15 +1,16 @@
 class GitExtras < Formula
   desc "Small git utilities"
   homepage "https://github.com/tj/git-extras"
-  url "https://github.com/tj/git-extras/archive/4.5.0.tar.gz"
-  sha256 "cb099d9e155c3bf863f95dd91c72bcc2e05fb28e3ebce527cd70d1b517402615"
+  url "https://github.com/tj/git-extras/archive/5.0.0.tar.gz"
+  sha256 "7fb70af14c12119d184fe33f5f86046b7ad175ee81fa89e75fb54a5b3aff609a"
   head "https://github.com/tj/git-extras.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "49889ba523c2dcbb773abad6d4ae0cc0d8d2179b9d5872953b1f208e52091571" => :high_sierra
-    sha256 "49889ba523c2dcbb773abad6d4ae0cc0d8d2179b9d5872953b1f208e52091571" => :sierra
-    sha256 "49889ba523c2dcbb773abad6d4ae0cc0d8d2179b9d5872953b1f208e52091571" => :el_capitan
+    sha256 "a59d6c7f60ed7a2904f855bb32cc66f21cd91f03c84c7d85803343cff21c942d" => :catalina
+    sha256 "5bd122f438ebe8d623169f24a5add6a4609a7e33782f15f09e98a9e8e4c5a5fc" => :mojave
+    sha256 "5bd122f438ebe8d623169f24a5add6a4609a7e33782f15f09e98a9e8e4c5a5fc" => :high_sierra
+    sha256 "3e50176046daa936eded6a4f5ac27d56fd05375c145c61889a050fdb3797d596" => :sierra
   end
 
   conflicts_with "git-utils",
@@ -23,7 +24,7 @@ class GitExtras < Formula
   def caveats; <<~EOS
     To load Zsh completions, add the following to your .zschrc:
       source #{opt_pkgshare}/git-extras-completion.zsh
-    EOS
+  EOS
   end
 
   test do

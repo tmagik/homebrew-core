@@ -1,6 +1,7 @@
 class Bitlbee < Formula
   desc "IRC to other chat networks gateway"
   homepage "https://www.bitlbee.org/"
+  revision 1
   head "https://github.com/bitlbee/bitlbee.git"
 
   stable do
@@ -20,26 +21,17 @@ class Bitlbee < Formula
   end
 
   bottle do
-    sha256 "75272001af19553b23bd5d999c76570e9f53c5f0386fe8377f4e8af6e525fb50" => :high_sierra
-    sha256 "a73fcc3ea892e02dff11eda82c9338230f16778d786dbcfecae89802fb0859cb" => :sierra
-    sha256 "f1e4ace83358ed1164d5d8cfbe7ffe239b5698d24211150b86dbf4d4fb589a37" => :el_capitan
-    sha256 "85eebf3ba9ee2e986ef1c54b99a8df958cf48a1d5112f765e5498d9be23b9426" => :yosemite
+    sha256 "fb83f16110761697d99f8c19fc71b0698909afe952c8528257ebce7d2f36a59d" => :catalina
+    sha256 "d098e0cc8717fd8bdac6b0e4fc358d7414193a16df4e14dfe7ee41699afc1c23" => :mojave
+    sha256 "9a0f8d1791dfbfcbd63c833b756be5552db2c6bf961a852ad1973691eef644d4" => :high_sierra
+    sha256 "4649e401630a5b1ed750d1a9a1806b90e3d57bb6f65133755b77ebf254d58dec" => :sierra
   end
-
-  option "with-pidgin", "Use finch/libpurple for all communication with instant messaging networks"
-  option "with-libotr", "Build with otr (off the record) support"
-  option "with-libevent", "Use libevent for the event-loop handling rather than glib."
-
-  deprecated_option "with-finch" => "with-pidgin"
 
   depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "glib"
   depends_on "gnutls"
   depends_on "libgcrypt"
-  depends_on "pidgin" => :optional
-  depends_on "libotr" => :optional
-  depends_on "libevent" => :optional
 
   def install
     args = %W[
@@ -52,10 +44,6 @@ class Bitlbee < Formula
       --config=#{var}/bitlbee/lib/
       --ipsocket=#{var}/bitlbee/run/bitlbee.sock
     ]
-
-    args << "--purple=1" if build.with? "pidgin"
-    args << "--otr=1" if build.with? "libotr"
-    args << "--events=libevent" if build.with? "libevent"
 
     system "./configure", *args
 
@@ -113,7 +101,7 @@ class Bitlbee < Formula
       </dict>
     </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

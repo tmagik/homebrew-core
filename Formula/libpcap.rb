@@ -1,16 +1,15 @@
 class Libpcap < Formula
   desc "Portable library for network traffic capture"
   homepage "https://www.tcpdump.org/"
-  url "https://www.tcpdump.org/release/libpcap-1.8.1.tar.gz"
-  sha256 "673dbc69fdc3f5a86fb5759ab19899039a8e5e6c631749e48dcd9c6f0c83541e"
+  url "https://www.tcpdump.org/release/libpcap-1.9.1.tar.gz"
+  sha256 "635237637c5b619bcceba91900666b64d56ecb7be63f298f601ec786ce087094"
   head "https://github.com/the-tcpdump-group/libpcap.git"
 
   bottle do
     cellar :any
-    sha256 "68a738a006b2226b2de1af999b2914b018aff21d1822a8be27d1cd83cba08eb3" => :high_sierra
-    sha256 "59aa812cdec684990f5b6a4a6243116f728155a52de29ad6b553012b5b4bb75f" => :sierra
-    sha256 "d65185154e1d7d34070c0b61855fb2cec6fcf0b47f679135ad3f7c4105acd52a" => :el_capitan
-    sha256 "cca6e084403fedada146bd162dade2638a6380733c136bb2e65b6657d5c3fe92" => :yosemite
+    sha256 "3a85693ff5d241ccdc689af9fa1281434ddf6ae3d0887cd679d07bbc1730ec29" => :catalina
+    sha256 "57ec7b7a786335d818c7eaca81a834c5ca9f4865a91df78b621d6b5d586cf859" => :mojave
+    sha256 "26028b66ea5395a0eee75ebd5790e9d3a688e83698631aec328224bb7baa6037" => :high_sierra
   end
 
   keg_only :provided_by_macos

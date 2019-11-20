@@ -4,14 +4,15 @@ class Dpkg < Formula
   # Please always keep the Homebrew mirror as the primary URL as the
   # dpkg site removes tarballs regularly which means we get issues
   # unnecessarily and older versions of the formula are broken.
-  url "https://dl.bintray.com/homebrew/mirror/dpkg-1.19.0.5.tar.xz"
-  mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/d/dpkg/dpkg_1.19.0.5.tar.xz"
-  sha256 "818046927a7f77c1bcbbad7d8dbc04cdf0f3e6ec4e1a4f9d313378ecc69d85b5"
+  url "https://dl.bintray.com/homebrew/mirror/dpkg-1.19.7.tar.xz"
+  mirror "https://deb.debian.org/debian/pool/main/d/dpkg/dpkg_1.19.7.tar.xz"
+  sha256 "4c27fededf620c0aa522fff1a48577ba08144445341257502e7730f2b1a296e8"
 
   bottle do
-    sha256 "2625583e8129fb3959591f6d7d430c9451eab4038683dcfa0fc7ae4a25959416" => :high_sierra
-    sha256 "1b4c89505755fcbeef7ac38c11bfdbc15edc4575b3d26bb9e4bfede8b080c3bc" => :sierra
-    sha256 "635a73cdaa0752fe4eb653d4c183286701e6218cac4beba160eb363752fb995e" => :el_capitan
+    sha256 "947ec19c6eac9b3bcc782e3fa532ba68059015f2472201b8a889aa5a8d83f48b" => :catalina
+    sha256 "9fc12bcc3064791a813f0413aedf72ec9e0bfcd7a5dfc447e0d7b70f69db427f" => :mojave
+    sha256 "3f757fd0e875ade3fb35dee8fbb6b82fb53a2e33a350289e593622dcdd6190fe" => :high_sierra
+    sha256 "0f90b16944eeb6064250d8ab476688b559bd8ad5cc57351599db3a532068953d" => :sierra
   end
 
   depends_on "pkg-config" => :build
@@ -27,7 +28,7 @@ class Dpkg < Formula
 
     # Since 1.18.24 dpkg mandates the use of GNU patch to prevent occurrences
     # of the CVE-2017-8283 vulnerability.
-    # http://www.openwall.com/lists/oss-security/2017/04/20/2
+    # https://www.openwall.com/lists/oss-security/2017/04/20/2
     ENV["PATCH"] = Formula["gpatch"].opt_bin/"patch"
 
     # Theoretically, we could reinsert a patch here submitted upstream previously
@@ -65,7 +66,7 @@ class Dpkg < Formula
   def caveats; <<~EOS
     This installation of dpkg is not configured to install software, so
     commands such as `dpkg -i`, `dpkg --configure` will fail.
-    EOS
+  EOS
   end
 
   test do

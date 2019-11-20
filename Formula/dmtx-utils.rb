@@ -1,15 +1,15 @@
 class DmtxUtils < Formula
   desc "Read and write data matrix barcodes"
   homepage "https://github.com/dmtx/dmtx-utils"
-  url "https://github.com/dmtx/dmtx-utils/archive/v0.7.5.tar.gz"
-  sha256 "6fa365cd321609db40800f6b34a2387c0ac56ef4643f6101ac83cb762f5ce9ef"
-  revision 4
+  url "https://github.com/dmtx/dmtx-utils/archive/v0.7.6.tar.gz"
+  sha256 "0d396ec14f32a8cf9e08369a4122a16aa2e5fa1675e02218f16f1ab777ea2a28"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "72b0245d54af619710bfa3550e970715cfbda41d149aeb4bd7e4e288a6560292" => :high_sierra
-    sha256 "a58426de08b02d78e0b8889a69411a138ebed6f0966531f0a1752a14d5b509ed" => :sierra
-    sha256 "9189a9c3db90dda83855437ed1da4a22c0668b0fd38f2cc0d4196826f6d18f94" => :el_capitan
+    sha256 "b769c72ede0c30f8d66fa831a0228e1896a59bee2c1edb833cc983ffad647ff3" => :catalina
+    sha256 "2aa5a9010d8aa229b81b7b571739131420a33643814b93d23de55547ac7c0202" => :mojave
+    sha256 "dc6b4de991219302c6cc12f6bfc4ef867469f76278f77e0b7bed41e07e27f598" => :high_sierra
   end
 
   depends_on "autoconf" => :build

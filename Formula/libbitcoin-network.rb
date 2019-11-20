@@ -1,13 +1,16 @@
 class LibbitcoinNetwork < Formula
   desc "Bitcoin P2P Network Library"
   homepage "https://github.com/libbitcoin/libbitcoin-network"
-  url "https://github.com/libbitcoin/libbitcoin-network/archive/v3.5.0.tar.gz"
-  sha256 "e065bd95f64ad5d7b0f882e8759f6b0f81a5fb08f7e971d80f3592a1b5aa8db4"
+  url "https://github.com/libbitcoin/libbitcoin-network/archive/v3.6.0.tar.gz"
+  sha256 "68d36577d44f7319280c446a5327a072eb20749dfa859c0e1ac768304c9dd93a"
+  revision 1
 
   bottle do
-    sha256 "84059bf2b3557d112a30d5cee534c60c2e852a34ec65bd3e847ef88b118802f0" => :high_sierra
-    sha256 "34f9af49bdbfb835bd917e92aa24aef2a129c587a44188f711c278ed9009eeec" => :sierra
-    sha256 "d83849347ad9b982027380b3777371d9d3703ac9577dc3f2b8abe44a4e3cfdbf" => :el_capitan
+    cellar :any
+    sha256 "7cfd1e7d27efaa5a097c5b9b3a7560504a9b25cb5b65b1d9111ac8312fe16656" => :catalina
+    sha256 "8e4f39b82eb02eaba960d02dd78783e70dbe190566e3b978d4000c95f3b211d8" => :mojave
+    sha256 "4f641ea3e82b0ec336172a3cfb87f4cc5750390f57fcd73fd15c85cbf6a5356f" => :high_sierra
+    sha256 "4619c4f9515111e430c671fd580fdf5c8547a75b82d1ea88ae6c2e250446c242" => :sierra
   end
 
   depends_on "autoconf" => :build
@@ -37,9 +40,10 @@ class LibbitcoinNetwork < Formula
         return 0;
       }
     EOS
-    system ENV.cxx, "-std=c++11", "test.cpp",
-                    "-lbitcoin", "-lbitcoin-network", "-lboost_system",
-                    "-o", "test"
+    system ENV.cxx, "-std=c++11", "test.cpp", "-o", "test",
+                    "-L#{Formula["libbitcoin"].opt_lib}", "-lbitcoin",
+                    "-L#{lib}", "-lbitcoin-network",
+                    "-L#{Formula["boost"].opt_lib}", "-lboost_system"
     system "./test"
   end
 end

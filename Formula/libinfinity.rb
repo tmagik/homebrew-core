@@ -3,19 +3,20 @@ class Libinfinity < Formula
   homepage "https://gobby.github.io"
   url "http://releases.0x539.de/libinfinity/libinfinity-0.6.8.tar.gz"
   sha256 "0c4e7e0e5cb6ad5df4dbe19568de37b100a13e61475cf9d4e0f2a68fcdd2d45b"
-  revision 1
+  revision 2
 
   bottle do
-    sha256 "5a82262c8519af2c73c3ee69c9632031cc6e7cc6bc52c2eef5defe74025b7a24" => :high_sierra
-    sha256 "d9791b732d6a5c1bbba29941cfc8e0847c92bacebc43cdf9aef26799e8bada8f" => :sierra
-    sha256 "ad024ec7122272de003ebfee98ffa2c0518d40061dbf7631627e720ef27ad4e9" => :el_capitan
+    sha256 "4d367978cb9ee0612c37947080939b3006c5bb7972673cc2c6175242c5809c28" => :catalina
+    sha256 "8c9bdd8c7cfb58b1f8c9ce451881c620d574ac749ff0f40e4efa87c0faebba26" => :mojave
+    sha256 "ea90d469694a6da2dd087ceb5f77fc9294b0ce7cee678d135ad466c3a1ae636d" => :high_sierra
+    sha256 "6dd59d33bdc050e1e61d5a7a6efa79a83c0130c237f04c678f7e8fe6a455e4df" => :sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "glib"
-  depends_on "gtk+3"
   depends_on "gnutls"
   depends_on "gsasl"
+  depends_on "gtk+3"
 
   # MacPorts patch to fix pam include. This is still applicable to 0.6.4.
   patch :p0 do

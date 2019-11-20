@@ -1,32 +1,38 @@
 class Gexiv2 < Formula
   desc "GObject wrapper around the Exiv2 photo metadata library"
   homepage "https://wiki.gnome.org/Projects/gexiv2"
-  url "https://download.gnome.org/sources/gexiv2/0.10/gexiv2-0.10.8.tar.xz"
-  sha256 "81c528fd1e5e03577acd80fb77798223945f043fd1d4e06920c71202eea90801"
+  url "https://download.gnome.org/sources/gexiv2/0.12/gexiv2-0.12.0.tar.xz"
+  sha256 "58f539b0386f36300b76f3afea3a508de4914b27e78f58ee4d142486a42f926a"
+  revision 1
 
   bottle do
-    sha256 "c6da6deffd67e16ee41a570d6b2393caa04764c077b972c8b1ab6b5bde040261" => :high_sierra
-    sha256 "ef19b3b862ba328ca17665f974355737389626e72075078a55a8bb00032bb9c9" => :sierra
-    sha256 "be2ec9b0a9a314e982626156bb1b262648332334e57a03bc6c45b4ef14e223a1" => :el_capitan
+    cellar :any
+    sha256 "b8a21bf1ca1b330e8dc95c69d4eb520b170e77c2765743676baf75b46b2d314e" => :catalina
+    sha256 "eb63013a8b8c8a60f0be08862a447bcf0f77dc7fd766087391f2dcec36057701" => :mojave
+    sha256 "59b9ac3558ecab3f9f9e577c2f9bb8c004f2dd828dd02ac581295bfa78192e26" => :high_sierra
+    sha256 "fc5ca44652f5f4fe511036dc73dd9c495aeaa8261b5d9a898077ca5cfabac50b" => :sierra
   end
 
-  depends_on "pkg-config" => :build
   depends_on "gobject-introspection" => :build
-  depends_on "python@2"
-  depends_on "glib"
+  depends_on "meson" => :build
+  depends_on "ninja" => :build
+  depends_on "pkg-config" => :build
+  depends_on "python" => :build
+  depends_on "vala" => :build
   depends_on "exiv2"
+  depends_on "glib"
 
-  # bug report opened on 2017/12/25, closed on 2018/01/05, reopened on 2018/02/06
-  # https://bugzilla.gnome.org/show_bug.cgi?id=791941
+  # submitted upstream as https://gitlab.gnome.org/GNOME/gexiv2/merge_requests/10
   patch :DATA
 
   def install
-    system "./configure", "--disable-debug",
-                          "--disable-dependency-tracking",
-                          "--disable-silent-rules",
-                          "--enable-introspection",
-                          "--prefix=#{prefix}"
-    system "make", "install"
+    pyver = Language::Python.major_minor_version "python3"
+
+    mkdir "build" do
+      system "meson", "--prefix=#{prefix}", "-Dpython3_girdir=#{lib}/python#{pyver}/site-packages/gi/overrides", ".."
+      system "ninja"
+      system "ninja", "install"
+    end
   end
 
   test do
@@ -51,17 +57,43 @@ class Gexiv2 < Formula
 end
 
 __END__
-diff --git a/configure b/configure
-index 8980ac9..aa0872c 100755
---- a/configure
-+++ b/configure
-@@ -18635,7 +18635,7 @@ case "$target_or_host" in
- esac
- { $as_echo "$as_me:${as_lineno-$LINENO}: result: $platform_darwin" >&5
- $as_echo "$platform_darwin" >&6; }
-- if test "$platform_win32" = "yes"; then
-+ if test "$platform_darwin" = "yes"; then
-   PLATFORM_DARWIN_TRUE=
-   PLATFORM_DARWIN_FALSE='#'
- else
+diff --git a/gexiv2/meson.build b/gexiv2/meson.build
+index 196b298..12abf92 100644
+--- a/gexiv2/meson.build
++++ b/gexiv2/meson.build
+@@ -2,6 +2,13 @@ pkg = import('pkgconfig')
 
+ as_version = meson.project_version().split('.')
+
++libversion = '2.0.0'
++libversion_arr = libversion.split('.')
++darwin_version_major = libversion_arr[0].to_int()
++darwin_version_minor = libversion_arr[1].to_int()
++darwin_version_micro = libversion_arr[2].to_int()
++darwin_versions = [darwin_version_major + darwin_version_minor + 1, '@0@.@1@'.format(darwin_version_major + darwin_version_minor + 1, darwin_version_micro)]
++
+ gexiv2_include_dir = join_paths(get_option('includedir'), 'gexiv2')
+
+ config = configuration_data()
+@@ -53,7 +60,8 @@ gexiv2 = library('gexiv2',
+                  [version_header] +
+                  enum_sources,
+                  include_directories : include_directories('..'),
+-                 version: '2.0.0',
++                 version: libversion,
++                 darwin_versions: darwin_versions,
+                  dependencies : [gobject, exiv2, gio],
+                  install : true)
+
+diff --git a/meson.build b/meson.build
+index 601afc1..b84255f 100644
+--- a/meson.build
++++ b/meson.build
+@@ -2,6 +2,7 @@ project(
+     'gexiv2',
+     ['c', 'cpp'],
+     version : '0.12.0',
++    meson_version : '>=0.48',
+     default_options : [
+         'cpp_std=c++11'
+     ]

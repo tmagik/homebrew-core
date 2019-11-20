@@ -1,8 +1,8 @@
 class Fuseki < Formula
   desc "SPARQL server"
   homepage "https://jena.apache.org/documentation/fuseki2/"
-  url "https://www.apache.org/dyn/closer.lua?path=/jena/binaries/apache-jena-fuseki-3.5.0.tar.gz"
-  sha256 "775f1ed01ee7ddb8987b43aaaf7e3f9001e31be12f7a4f50e46b5ebc0708b85d"
+  url "https://www.apache.org/dyn/closer.lua?path=/jena/binaries/apache-jena-fuseki-3.12.0.tar.gz"
+  sha256 "60ae78b13f60b4edc20b2699d7366003e0b7f6e8b5409d731794dcb7491e57c8"
 
   bottle :unneeded
 
@@ -15,7 +15,7 @@ class Fuseki < Formula
                                  :FUSEKI_BASE => var/"fuseki",
                                  :FUSEKI_HOME => libexec,
                                  :FUSEKI_LOGS => var/"log/fuseki",
-                                 :FUSEKI_RUN => var/"run")
+                                 :FUSEKI_RUN  => var/"run")
     end
 
     # Non-symlinked binaries and application files
@@ -50,7 +50,7 @@ class Fuseki < Formula
         </array>
       </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

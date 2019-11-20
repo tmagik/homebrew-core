@@ -3,33 +3,35 @@ class Todoman < Formula
 
   desc "Simple CalDAV-based todo manager"
   homepage "https://todoman.readthedocs.io/"
-  url "https://files.pythonhosted.org/packages/b4/19/9d6fda7af4b17bd75c97efecfbc478f9e39af8c5228d644fc495c646c433/todoman-3.3.0.tar.gz"
-  sha256 "dbbe12195d292b48cde8dd9324a14e695cdcb79f3800ddf5f29c8c71bc133952"
-  revision 2
+  url "https://files.pythonhosted.org/packages/a5/d2/e586d0c8397a5589fa62c85595655bf3d95cbc55c17e901fe8d802976b4f/todoman-3.5.0.tar.gz"
+  sha256 "89032887051b164527b90cfb947eb5162dd8b8bb64d9abf1e906b8c86f933814"
   head "https://github.com/pimutils/todoman.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "a8af8f5c775c47cda27de4b1200c5ef4480c8f8ff3876696945b6920c5efee8e" => :high_sierra
-    sha256 "5596d5202ad900806fb4489163c1f6359afa3d453b3d8c3d5c24901667b14d5e" => :sierra
-    sha256 "1cf06efeedfb07947868b76ae8060c3c35d41df36be515993e309fc84dc37a65" => :el_capitan
+    sha256 "9c26f0412445fe85ad9af21d689a492480efad698c02be8de5f0d897c825697c" => :catalina
+    sha256 "3eb99410e9ca695c43e39957eb01cf796458ba6aba90f9583fc48e2532bd7da2" => :mojave
+    sha256 "6dafbe09ce4cbefa314e91414b3471f9e3ef0f054622ea3b23b69430dc695cda" => :high_sierra
+    sha256 "45f343e8a622f421d7551fab01e3646bf2627395b7faa6a213a6585b5a84f42a" => :sierra
   end
 
   depends_on "python"
 
+  conflicts_with "devtodo", :because => "both install a `todo` binary"
+
   resource "atomicwrites" do
-    url "https://files.pythonhosted.org/packages/a1/e1/2d9bc76838e6e6667fde5814aa25d7feb93d6fa471bf6816daac2596e8b2/atomicwrites-1.1.5.tar.gz"
-    sha256 "240831ea22da9ab882b551b31d4225591e5e447a68c5e188db5b89ca1d487585"
+    url "https://files.pythonhosted.org/packages/ec/0f/cd484ac8820fed363b374af30049adc8fd13065720fd4f4c6be8a2309da7/atomicwrites-1.3.0.tar.gz"
+    sha256 "75a9445bac02d8d058d5e1fe689654ba5a6556a1dfd8ce6ec55a0ed79866cfa6"
   end
 
   resource "click" do
-    url "https://files.pythonhosted.org/packages/95/d9/c3336b6b5711c3ab9d1d3a80f1a3e2afeb9d8c02a7166462f6cc96570897/click-6.7.tar.gz"
-    sha256 "f15516df478d5a56180fbf80e68f206010e6d160fc39fa508b65e035fd75130b"
+    url "https://files.pythonhosted.org/packages/f8/5c/f60e9d8a1e77005f664b76ff8aeaee5bc05d0a91798afd7f53fc998dbc47/Click-7.0.tar.gz"
+    sha256 "5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"
   end
 
   resource "click-log" do
-    url "https://files.pythonhosted.org/packages/31/b7/95ad377ec87570d2e80f90e8ffe574a3d907a97c2b6613a17b6f81e0dda5/click-log-0.2.1.tar.gz"
-    sha256 "493af4fde9999fa3a15696a1c3c7ace394296542a035caaf5854b32140413de4"
+    url "https://files.pythonhosted.org/packages/22/44/3d73579b547f0790a2723728088c96189c8b52bd2ee3c3de8040efc3c1b8/click-log-0.3.2.tar.gz"
+    sha256 "16fd1ca3fc6b16c98cea63acf1ab474ea8e676849dc669d86afafb0ed7003124"
   end
 
   resource "configobj" do
@@ -38,8 +40,8 @@ class Todoman < Formula
   end
 
   resource "future" do
-    url "https://files.pythonhosted.org/packages/00/2b/8d082ddfed935f3608cc61140df6dcbf0edea1bc3ab52fb6c29ae3e81e85/future-0.16.0.tar.gz"
-    sha256 "e39ced1ab767b5936646cedba8bcce582398233d6a627067d4c6a454c90cfedb"
+    url "https://files.pythonhosted.org/packages/90/52/e20466b85000a181e1e144fd8305caf2cf475e2f9674e797b222f8105f5f/future-0.17.1.tar.gz"
+    sha256 "67045236dcfd6816dc439556d009594abf643e5eb48992e36beac09c2ca659b8"
   end
 
   resource "humanize" do
@@ -48,8 +50,8 @@ class Todoman < Formula
   end
 
   resource "icalendar" do
-    url "https://files.pythonhosted.org/packages/96/f5/33e39d653e672d5110af87f4814570e21bdfea82d21cbc91ee34585aa04e/icalendar-4.0.0.tar.gz"
-    sha256 "367a48b779b9d19d3a59f681bd159897507d7013827f91265bfada2bfa48d749"
+    url "https://files.pythonhosted.org/packages/5d/92/647cd84120b8d9c2ac9a03ccff21bb44c267c993b88881a32c1837d250bd/icalendar-4.0.3.tar.gz"
+    sha256 "07c2447a1d44cbb27c90b8c6a5c98e890cc1853c6223e2a52195cddec26c6356"
   end
 
   resource "parsedatetime" do
@@ -58,33 +60,33 @@ class Todoman < Formula
   end
 
   resource "python-dateutil" do
-    url "https://files.pythonhosted.org/packages/54/bb/f1db86504f7a49e1d9b9301531181b00a1c7325dc85a29160ee3eaa73a54/python-dateutil-2.6.1.tar.gz"
-    sha256 "891c38b2a02f5bb1be3e4793866c8df49c7d19baabf9c1bad62547e0b4866aca"
+    url "https://files.pythonhosted.org/packages/ad/99/5b2e99737edeb28c71bcbec5b5dda19d0d9ef3ca3e92e3e925e7c0bb364c/python-dateutil-2.8.0.tar.gz"
+    sha256 "c89805f6f4d64db21ed966fda138f8a5ed7a4fdbc1a8ee329ce1b74e3c74da9e"
   end
 
   resource "pytz" do
-    url "https://files.pythonhosted.org/packages/60/88/d3152c234da4b2a1f7a989f89609ea488225eaea015bc16fbde2b3fdfefa/pytz-2017.3.zip"
-    sha256 "fae4cffc040921b8a2d60c6cf0b5d662c1190fe54d718271db4eb17d44a185b7"
+    url "https://files.pythonhosted.org/packages/df/d5/3e3ff673e8f3096921b3f1b79ce04b832e0100b4741573154b72b756a681/pytz-2019.1.tar.gz"
+    sha256 "d747dd3d23d77ef44c6a3526e274af6efeb0a6f1afd5a69ba4d5be4098c8e141"
   end
 
   resource "pyxdg" do
-    url "https://files.pythonhosted.org/packages/26/28/ee953bd2c030ae5a9e9a0ff68e5912bd90ee50ae766871151cd2572ca570/pyxdg-0.25.tar.gz"
-    sha256 "81e883e0b9517d624e8b0499eb267b82a815c0b7146d5269f364988ae031279d"
+    url "https://files.pythonhosted.org/packages/47/6e/311d5f22e2b76381719b5d0c6e9dc39cd33999adae67db71d7279a6d70f4/pyxdg-0.26.tar.gz"
+    sha256 "fe2928d3f532ed32b39c32a482b54136fe766d19936afc96c8f00645f9da1a06"
   end
 
   resource "six" do
-    url "https://files.pythonhosted.org/packages/16/d8/bc6316cf98419719bd59c91742194c111b6f2e85abac88e496adefaf7afe/six-1.11.0.tar.gz"
-    sha256 "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9"
+    url "https://files.pythonhosted.org/packages/dd/bf/4138e7bfb757de47d1f4b6994648ec67a51efe58fa907c1e11e350cddfca/six-1.12.0.tar.gz"
+    sha256 "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"
   end
 
   resource "tabulate" do
-    url "https://files.pythonhosted.org/packages/12/c2/11d6845db5edf1295bc08b2f488cf5937806586afe42936c3f34c097ebdc/tabulate-0.8.2.tar.gz"
-    sha256 "e4ca13f26d0a6be2a2915428dc21e732f1e44dad7f76d7030b2ef1ec251cf7f2"
+    url "https://files.pythonhosted.org/packages/c2/fd/202954b3f0eb896c53b7b6f07390851b1fd2ca84aa95880d7ae4f434c4ac/tabulate-0.8.3.tar.gz"
+    sha256 "8af07a39377cee1103a5c8b3330a421c2d99b9141e9cc5ddd2e3263fea416943"
   end
 
   resource "urwid" do
-    url "https://files.pythonhosted.org/packages/c9/07/8e1bfc4f6166828e449814681ef57003c36ba7989e7c941e951ca9447f08/urwid-2.0.0.tar.gz"
-    sha256 "2ec42d29cd173a7126817174468614a17bcd9bafc0bdd47918f4e473301b4761"
+    url "https://files.pythonhosted.org/packages/c7/90/415728875c230fafd13d118512bde3184d810d7bf798a631abc05fac09d0/urwid-2.0.1.tar.gz"
+    sha256 "644d3e3900867161a2fc9287a9762753d66bd194754679adb26aede559bcccbc"
   end
 
   def install

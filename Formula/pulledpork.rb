@@ -3,27 +3,22 @@ class Pulledpork < Formula
   homepage "https://github.com/shirkdog/pulledpork"
   url "https://github.com/shirkdog/pulledpork/archive/v0.7.3.tar.gz"
   sha256 "48c66dc9abb7545186d4fba497263c1d1b247c0ea7f0953db4d515e7898461a2"
+  revision 2
   head "https://github.com/shirkdog/pulledpork.git"
 
   bottle do
-    cellar :any
-    sha256 "4e8a01b1531f4b1824358e3a28c968ac04f7c5c78c5c4a878178ae825472b228" => :high_sierra
-    sha256 "33cf47b4c02e4f2ba57f6b34770bafcda115d9b249b1227596e71c3f200c4083" => :sierra
-    sha256 "e17149bd41a6f5f74d796c95c92710996e936dba1c2b1d523e89c3c29bdc2219" => :el_capitan
+    cellar :any_skip_relocation
+    sha256 "addf133e8e7c55f1ef9ecfe045693b90f94bdea684eecd670880faff709e2ab1" => :catalina
+    sha256 "090fa5e477bbb0ff2335db1c18416c9dc42108ff9c7c3b402f67f44dd8a4bd2b" => :mojave
+    sha256 "fd5427bcedfb95ccc79eb984e96b044727ae82bea91ef9c255a0cdb197d867fd" => :high_sierra
+    sha256 "51e5d134f6e9e6ac2085ffb014257b18edce15e2570553ef0ec9167a59d90169" => :sierra
   end
 
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   resource "Switch" do
     url "https://cpan.metacpan.org/authors/id/C/CH/CHORNY/Switch-2.17.tar.gz"
-    mirror "http://search.cpan.org/CPAN/authors/id/C/CH/CHORNY/Switch-2.17.tar.gz"
     sha256 "31354975140fe6235ac130a109496491ad33dd42f9c62189e23f49f75f936d75"
-  end
-
-  resource "Crypt::SSLeay" do
-    url "https://cpan.metacpan.org/authors/id/N/NA/NANIS/Crypt-SSLeay-0.72.tar.gz"
-    mirror "http://search.cpan.org/CPAN/authors/id/N/NA/NANIS/Crypt-SSLeay-0.72.tar.gz"
-    sha256 "f5d34f813677829857cf8a0458623db45b4d9c2311daaebe446f9e01afa9ffe8"
   end
 
   def install

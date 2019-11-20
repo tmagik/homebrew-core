@@ -1,29 +1,32 @@
 class Pgbouncer < Formula
   desc "Lightweight connection pooler for PostgreSQL"
-  homepage "https://wiki.postgresql.org/wiki/PgBouncer"
-  url "https://pgbouncer.github.io/downloads/files/1.8.1/pgbouncer-1.8.1.tar.gz"
-  sha256 "fa8bde2a2d2c8c80d53a859f8e48bc6713cf127e31c77d8f787bbc1d673e8dc8"
+  homepage "https://pgbouncer.github.io/"
+  url "https://pgbouncer.github.io/downloads/files/1.10.0/pgbouncer-1.10.0.tar.gz"
+  sha256 "d8a01442fe14ce3bd712b9e2e12456694edbbb1baedb0d6ed1f915657dd71bd5"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "c6c51632e0c13fcccac322fe8ee11217af80b3bfa02f737b0ad05528511ceeff" => :high_sierra
-    sha256 "8831a6603870ca7e6e2833acaaced55ee1ae89065d0841454ddfc510433bf7fb" => :sierra
-    sha256 "37b2e592b6d012a6b59f69bb7f55187465f0e91771d9cc2aa84b8d78f4c69fa2" => :el_capitan
+    sha256 "4d52e5a09594ca3350df197d2c2ca8ac98943f194cbd476cc187e731139b9c27" => :catalina
+    sha256 "47856e33e4e537ee50b39573d63f1366f332b57d57be21a797bd7da6d19eb11b" => :mojave
+    sha256 "728418195cb273b74d67b791a0e9834cbc7dc9828f928c9dd44fe015e404b117" => :high_sierra
+    sha256 "ec357f9ba0bd22a1f34b0ce1d9174376ba4aedf43904318430cd109f076a4188" => :sierra
   end
 
-  depends_on "asciidoc" => :build
-  depends_on "xmlto" => :build
   depends_on "libevent"
 
   def install
-    ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog"
-
     system "./configure", "--disable-debug",
                           "--with-libevent=#{HOMEBREW_PREFIX}",
                           "--prefix=#{prefix}"
     ln_s "../install-sh", "doc/install-sh"
     system "make", "install"
     bin.install "etc/mkauth.py"
+    inreplace "etc/pgbouncer.ini" do |s|
+      s.gsub! /logfile = .*/, "logfile = #{var}/log/pgbouncer.log"
+      s.gsub! /pidfile = .*/, "pidfile = #{var}/run/pgbouncer.pid"
+      s.gsub! /auth_file = .*/, "auth_file = #{etc}/userlist.txt"
+    end
     etc.install %w[etc/pgbouncer.ini etc/userlist.txt]
   end
 
@@ -34,7 +37,7 @@ class Pgbouncer < Formula
 
     The auth_file option should point to the #{etc}/userlist.txt file which
     can be populated by the #{bin}/mkauth.py script.
-    EOS
+  EOS
   end
 
   plist_options :manual => "pgbouncer -q #{HOMEBREW_PREFIX}/etc/pgbouncer.ini"
@@ -52,7 +55,6 @@ class Pgbouncer < Formula
         <key>ProgramArguments</key>
         <array>
           <string>#{opt_bin}/pgbouncer</string>
-          <string>-d</string>
           <string>-q</string>
           <string>#{etc}/pgbouncer.ini</string>
         </array>

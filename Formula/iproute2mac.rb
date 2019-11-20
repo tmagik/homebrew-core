@@ -1,12 +1,10 @@
 class Iproute2mac < Formula
   desc "CLI wrapper for basic network utilities on macOS - ip command"
   homepage "https://github.com/brona/iproute2mac"
-  url "https://github.com/brona/iproute2mac/releases/download/v1.2.1/iproute2mac-1.2.1.tar.gz"
-  sha256 "26dabecd2cf065c8354984a327784aad730fb019d67561bc2d00b415684ff39f"
+  url "https://github.com/brona/iproute2mac/releases/download/v1.2.3/iproute2mac-1.2.3.tar.gz"
+  sha256 "95ef8d4b0e32e4d3e3d975afa11d7aa0797d59b0f2c21b73a4e26d357bd6f93f"
 
   bottle :unneeded
-
-  depends_on "python@2"
 
   def install
     bin.install "src/ip.py" => "ip"

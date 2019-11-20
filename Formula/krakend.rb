@@ -1,24 +1,21 @@
 class Krakend < Formula
   desc "Ultra-High performance API Gateway built in Go"
-  homepage "http://www.krakend.io/"
-  url "https://github.com/devopsfaith/krakend-ce/archive/0.4.2.tar.gz"
-  sha256 "5243037a757fbdbb0bf1bbfd5ad8e018cf2aad6ece30e6f8a58c7c24f36b19b1"
+  homepage "https://www.krakend.io/"
+  url "https://github.com/devopsfaith/krakend-ce/archive/1.0.0.tar.gz"
+  sha256 "7626cb961c820e4b3b851a4cbd6d5d976288216891591c1be3a0c21d32477199"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "71235262350e1906c25406f4e707f1c3bd9ecfe31b14b5af0ed785c8f274d9cf" => :high_sierra
-    sha256 "74168eb0350f654bafd98d5919cf0c07434543af1f16aa3e7312865cce2e0900" => :sierra
-    sha256 "b49037c17c6f80891ae9fa194424abbfbb92d031205df3cd103fd0f03f69bdbb" => :el_capitan
+    sha256 "2169f9552692bdf17a81705929f8d4fda02a61d409107d7a06820ed96c1b5315" => :catalina
+    sha256 "f2af9a4f455794c0ed9ab63fb85da708b8f76f2aff154c6c6cdb204589ac80a0" => :mojave
+    sha256 "431731a0c27ed6a2dc4b6ef0be3bb73c97153bfd8190d9c62a7cb4a88cf12cc2" => :high_sierra
   end
 
-  depends_on "dep" => :build
   depends_on "go" => :build
 
   def install
-    ENV["GOPATH"] = buildpath
     (buildpath/"src/github.com/devopsfaith/krakend-ce").install buildpath.children
     cd "src/github.com/devopsfaith/krakend-ce" do
-      system "make", "deps"
       system "make", "build"
       bin.install "krakend"
       prefix.install_metafiles
@@ -39,7 +36,7 @@ class Krakend < Formula
         }
       }
     EOS
-    assert_match "Unsupported version", shell_output("#{bin}/krakend check -c krakend_unsupported_version.json 2>&1")
+    assert_match "Unsupported version", shell_output("#{bin}/krakend check -c krakend_unsupported_version.json 2>&1", 1)
 
     (testpath/"krakend_bad_file.json").write <<~EOS
       {
@@ -47,7 +44,7 @@ class Krakend < Formula
         "bad": file
       }
     EOS
-    assert_match "ERROR", shell_output("#{bin}/krakend check -c krakend_incomplete.json 2>&1")
+    assert_match "ERROR", shell_output("#{bin}/krakend check -c krakend_bad_file.json 2>&1", 1)
 
     (testpath/"krakend.json").write <<~EOS
       {

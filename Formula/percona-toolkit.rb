@@ -1,30 +1,37 @@
 class PerconaToolkit < Formula
   desc "Percona Toolkit for MySQL"
   homepage "https://www.percona.com/software/percona-toolkit/"
-  url "https://www.percona.com/downloads/percona-toolkit/3.0.9/source/tarball/percona-toolkit-3.0.9.tar.gz"
-  sha256 "1b66fbd0e3427a189980d4c02897da1444ffd2cf40156142728ee7e5cd97be88"
+  url "https://www.percona.com/downloads/percona-toolkit/3.0.13/source/tarball/percona-toolkit-3.0.13.tar.gz"
+  sha256 "21f68d1c5204a9cad7be716fd1e53f0fe6ff7d995292b56dbc7c55e3979432b1"
+  revision 2
   head "lp:percona-toolkit", :using => :bzr
 
   bottle do
     cellar :any
-    sha256 "feb374fc5c5c3e6c84ae3b4cf04d3ae9df6e4b472e4cabc19d70ee8a1c1ba96d" => :high_sierra
-    sha256 "a42104a8276ea1010d0b66fcf550c794e57cdf6e2713ce52433fed8669b2e12c" => :sierra
-    sha256 "e86ffbdfe686a2f3d7d5d4fd9b7381258fce527b1aa001098c210cf209d32720" => :el_capitan
+    sha256 "e4039124f5a501670a7d625f4af2621c0075673dbe462fbffe955ac5367c15af" => :catalina
+    sha256 "b257017efc776a066319c4c855731c9354f2da80a6a5d884d29b9705f5acc5dd" => :mojave
+    sha256 "581f9d4c2f5cbc87f69c77b8707900122f22370dd4699c857d8225c8a1030ddf" => :high_sierra
   end
 
-  depends_on "mysql"
-  depends_on "openssl"
+  depends_on "mysql-client"
+  depends_on "openssl@1.1"
+
+  # In Mojave, this is not part of the system Perl anymore
+  if MacOS.version >= :mojave
+    resource "DBI" do
+      url "https://cpan.metacpan.org/authors/id/T/TI/TIMB/DBI-1.642.tar.gz"
+      sha256 "3f2025023a56286cebd15cb495e36ccd9b456c3cc229bf2ce1f69e9ebfc27f5d"
+    end
+  end
 
   resource "DBD::mysql" do
     url "https://cpan.metacpan.org/authors/id/C/CA/CAPTTOFU/DBD-mysql-4.046.tar.gz"
-    mirror "http://search.cpan.org/CPAN/authors/id/C/CA/CAPTTOFU/DBD-mysql-4.046.tar.gz"
     sha256 "6165652ec959d05b97f5413fa3dff014b78a44cf6de21ae87283b28378daf1f7"
   end
 
   resource "JSON" do
-    url "https://cpan.metacpan.org/authors/id/I/IS/ISHIGAKI/JSON-2.97001.tar.gz"
-    mirror "http://search.cpan.org/CPAN/authors/id/I/IS/ISHIGAKI/JSON-2.97001.tar.gz"
-    sha256 "e277d9385633574923f48c297e1b8acad3170c69fa590e31fa466040fc6f8f5a"
+    url "https://cpan.metacpan.org/authors/id/I/IS/ISHIGAKI/JSON-4.00.tar.gz"
+    sha256 "c4da1f1075878604b7b1f085ff3963e1073ed1c603c3bc9f0b0591e3831a1068"
   end
 
   def install

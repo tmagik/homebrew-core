@@ -1,22 +1,21 @@
 class Fstrm < Formula
   desc "Frame Streams implementation in C"
   homepage "https://github.com/farsightsec/fstrm"
-  url "https://dl.farsightsecurity.com/dist/fstrm/fstrm-0.3.2.tar.gz"
-  sha256 "2d509999ac904e48c038f88820f47859da85ceb86c06552e4052897082423ec5"
+  url "https://dl.farsightsecurity.com/dist/fstrm/fstrm-0.6.0.tar.gz"
+  sha256 "a7049089eb0861ecaa21150a05613caa6dee4e8545b91191eff2269caa923910"
 
   bottle do
     cellar :any
-    sha256 "dbf4398c411303cfe76ca223b38df090eeabf33e5d613c83e232f96cc9acad0f" => :high_sierra
-    sha256 "fb7031a0e06d718a7d345ab21796b0f9b6da6ebf411d24b1f019ba3e526dbfdc" => :sierra
-    sha256 "45d2c965a757c50c5b65d929082baeedd045a7794eb933618e10a4371cfc0d90" => :el_capitan
-    sha256 "36ec0bf5368fd0bbcfe7b14302b003f543ef4365fe458d2975998993b2b1f0d8" => :yosemite
+    sha256 "e84d0b8f2c27683c16e0d168a94b355cc2dcdfae2b118b943b3853579f85a829" => :catalina
+    sha256 "d20520e5164f271d97214c4645186996ee926c3847d59e8236e6dd643edec13b" => :mojave
+    sha256 "8a373443cef458c2384efa537867eba87a19f58a413f052dcf0ee4c6636a379b" => :high_sierra
   end
 
   head do
     url "https://github.com/farsightsec/fstrm.git"
 
-    depends_on "automake" => :build
     depends_on "autoconf" => :build
+    depends_on "automake" => :build
     depends_on "libtool" => :build
   end
 

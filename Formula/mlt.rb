@@ -1,14 +1,13 @@
 class Mlt < Formula
   desc "Author, manage, and run multitrack audio/video compositions"
   homepage "https://www.mltframework.org/"
-  url "https://github.com/mltframework/mlt/archive/v6.6.0.tar.gz"
-  sha256 "11515546516b3c54719b6b402cacf46e8d5172450d6e9fe2655b237582490315"
-  revision 1
+  url "https://github.com/mltframework/mlt/archive/v6.18.0.tar.gz"
+  sha256 "9ea6775300b9f997460f5d6adde1ea41e525ecfd30a70b987e13800e4c387ddb"
 
   bottle do
-    sha256 "b1f89795c12c4af477f514100b25c021b3eeddcb4a9d1440652aa81d31fad8e0" => :high_sierra
-    sha256 "5b78782553a55cd0b71f0eaeef217e2196e0b96d843b46caa897338cb5ab92d4" => :sierra
-    sha256 "abad78f9330e73451910521f401cbf44c6f60822f9f3ad2f51ce865b0d1a2a6c" => :el_capitan
+    sha256 "a5edb6d726441d05ea1c7f1db7f49739ce6f4305e6227b3a0a5a8d7757f2a092" => :catalina
+    sha256 "ecd5481375de9153bac1acd8a6811639d5bab2afb30fdf4b801db8c334a8eec0" => :mojave
+    sha256 "16921107de0a40396aa5105174989890acee5f4853f6ca6d6de3f045d80177d1" => :high_sierra
   end
 
   depends_on "pkg-config" => :build

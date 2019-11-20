@@ -1,21 +1,11 @@
 class Ant < Formula
   desc "Java build tool"
   homepage "https://ant.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=ant/binaries/apache-ant-1.10.3-bin.tar.xz"
-  sha256 "0b0e09cc25df68b35a750b32d3167f5ed539cf29151636e9f9c260e0c9538ca6"
+  url "https://www.apache.org/dyn/closer.cgi?path=ant/binaries/apache-ant-1.10.7-bin.tar.xz"
+  sha256 "925fa954d82b6edf5cfd51fc66659d6e02cf1a6a082c3c41fe83f604c2d17c02"
   head "https://git-wip-us.apache.org/repos/asf/ant.git"
 
-  bottle do
-    cellar :any_skip_relocation
-    sha256 "7fa99046291828733ec8059c716f31074ddb4cb4ecd20216e1594bb28b801364" => :high_sierra
-    sha256 "7fa99046291828733ec8059c716f31074ddb4cb4ecd20216e1594bb28b801364" => :sierra
-    sha256 "7fa99046291828733ec8059c716f31074ddb4cb4ecd20216e1594bb28b801364" => :el_capitan
-  end
-
-  keg_only :provided_by_macos if MacOS.version < :mavericks
-
-  option "with-ivy", "Install ivy dependency manager"
-  option "with-bcel", "Install Byte Code Engineering Library"
+  bottle :unneeded
 
   depends_on :java => "1.8+"
 
@@ -25,8 +15,8 @@ class Ant < Formula
   end
 
   resource "bcel" do
-    url "https://www.apache.org/dyn/closer.cgi?path=commons/bcel/binaries/bcel-6.2-bin.tar.gz"
-    sha256 "e5963ed50ef1f243f852a27efaf898c050a3b39721d147ccda8418c0b7255955"
+    url "https://archive.apache.org/dist/commons/bcel/binaries/bcel-6.4.0-bin.tar.gz"
+    sha256 "2e7d3c24fabc5a24c482ddc77c031d9f5978c5aa918bae68ad7adcf3e9167d04"
   end
 
   def install
@@ -38,15 +28,13 @@ class Ant < Formula
       #!/bin/sh
       #{libexec}/bin/ant -lib #{HOMEBREW_PREFIX}/share/ant "$@"
     EOS
-    if build.with? "ivy"
-      resource("ivy").stage do
-        (libexec/"lib").install Dir["ivy-*.jar"]
-      end
+
+    resource("ivy").stage do
+      (libexec/"lib").install Dir["ivy-*.jar"]
     end
-    if build.with? "bcel"
-      resource("bcel").stage do
-        (libexec/"lib").install "bcel-#{resource("bcel").version}.jar"
-      end
+
+    resource("bcel").stage do
+      (libexec/"lib").install "bcel-#{resource("bcel").version}.jar"
     end
   end
 

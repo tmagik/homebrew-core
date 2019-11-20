@@ -1,14 +1,15 @@
 class Libfixbuf < Formula
   desc "Implements the IPFIX Protocol as a C library"
   homepage "https://tools.netsa.cert.org/fixbuf/"
-  url "https://tools.netsa.cert.org/releases/libfixbuf-2.0.0.tar.gz"
-  sha256 "12aebe2c4a0524997c473cf17cf24804814008ea31785f03587d792698acd792"
+  url "https://tools.netsa.cert.org/releases/libfixbuf-2.3.1.tar.gz"
+  sha256 "2ba7877c5b09c120a20eb320d5d9e2ac93520c8308624eac3064aaece239bad3"
+  revision 1
 
   bottle do
-    cellar :any
-    sha256 "39c0963ed7c3a456615c91a22d77293ba5f165260a305f88a9f4ba5c358510ec" => :high_sierra
-    sha256 "5dd04829e40c9f4584c8c7ff16326bc469c20410dcd32f18f51a98a30d3036dc" => :sierra
-    sha256 "40d73c34e136143835dead424d662f4f13669c0fd9f3801dd9cb17613a8bdbb8" => :el_capitan
+    sha256 "835aeb4089c8add19f4c9c56be373559f15c7c5134bc555988cab4244c9f9ca4" => :catalina
+    sha256 "72d1509d9b0bea98eb09e2fd2aaaff75a2a8bddbef035ee5c244578ccf247832" => :mojave
+    sha256 "a7bd2c731284fd783a6b1cc74efc0d7b3e3668b6b02afc33ce307aba8a2b3845" => :high_sierra
+    sha256 "cd6ba9552c12bfb738591876977a2470c6132c3fa649d542f9a9a064ffa64488" => :sierra
   end
 
   depends_on "pkg-config" => :build

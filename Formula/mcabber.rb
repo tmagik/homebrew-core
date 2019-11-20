@@ -3,12 +3,13 @@ class Mcabber < Formula
   homepage "https://mcabber.com/"
   url "https://mcabber.com/files/mcabber-1.1.0.tar.bz2"
   sha256 "04fc2c22c36da75cf4b761b5deccd074a19836368f38ab9d03c1e5708b41f0bd"
+  revision 2
 
   bottle do
-    sha256 "c95601a98c1c0a3ee247ccfef25d77b52d49ebd535840761916225571a9c3ebe" => :high_sierra
-    sha256 "b3bdcaf2f025e9b8844fd8b0be4ccbb742b088987658724d1599714fb053b9ca" => :sierra
-    sha256 "221b163a3c4634bad784d29c7590a87984d662de7a38ea1fc2d5fc2ff3306eb4" => :el_capitan
-    sha256 "3bfcbb80e1e4bebe963f88b8045a1dcea0cd3e3bed2e79a62b69d7cafc9c7e21" => :yosemite
+    sha256 "4d9680b14dd136a5b1d70f47d8567fcfa7962eb044e43f2f987bb5797b71c74a" => :catalina
+    sha256 "fe6ea0970c446bab941b3d4f0206e75673e112dff88c55b5ee429d18f0c9fd68" => :mojave
+    sha256 "55b6b38bfe8d3b924f7eb9b707c3e72324e81d312dd589ec99e283aa567b7ba9" => :high_sierra
+    sha256 "4be58f58cf92107259a4cc18cf17480dabbeeb130cfc6a182daca0bf76634ac5" => :sierra
   end
 
   head do
@@ -19,18 +20,13 @@ class Mcabber < Formula
     depends_on "libtool" => :build
   end
 
-  deprecated_option "enable-aspell" => "with-aspell"
-  deprecated_option "enable-enchant" => "with-enchant"
-
   depends_on "pkg-config" => :build
   depends_on "glib"
-  depends_on "loudmouth"
   depends_on "gpgme"
   depends_on "libgcrypt"
-  depends_on "libotr"
   depends_on "libidn"
-  depends_on "aspell" => :optional
-  depends_on "enchant" => :optional
+  depends_on "libotr"
+  depends_on "loudmouth"
 
   def install
     if build.head?
@@ -39,14 +35,10 @@ class Mcabber < Formula
       system "./autogen.sh"
     end
 
-    args = ["--disable-debug", "--disable-dependency-tracking",
-            "--prefix=#{prefix}",
-            "--enable-otr"]
-
-    args << "--enable-aspell" if build.with? "aspell"
-    args << "--enable-enchant" if build.with? "enchant"
-
-    system "./configure", *args
+    system "./configure", "--disable-debug",
+                          "--disable-dependency-tracking",
+                          "--prefix=#{prefix}",
+                          "--enable-otr"
     system "make", "install"
 
     pkgshare.install %w[mcabberrc.example contrib]
@@ -57,7 +49,7 @@ class Mcabber < Formula
       #{opt_pkgshare}/mcabberrc.example
     And there is a Getting Started Guide you will need to setup Mcabber:
       https://wiki.mcabber.com/#index2h1
-    EOS
+  EOS
   end
 
   test do

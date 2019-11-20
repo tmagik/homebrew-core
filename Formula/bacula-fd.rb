@@ -1,17 +1,19 @@
 class BaculaFd < Formula
   desc "Network backup solution"
   homepage "https://www.bacula.org/"
-  url "https://downloads.sourceforge.net/project/bacula/bacula/9.0.7/bacula-9.0.7.tar.gz"
-  sha256 "84e87fcfedb2e6df624c4f1a6281948f7061b22e2a2747cc2aa46d34bf190948"
+  url "https://downloads.sourceforge.net/project/bacula/bacula/9.4.4/bacula-9.4.4.tar.gz"
+  sha256 "0fe37a02ca768a720099d0d03509c364aff2390c05544d663f4819f8e7fc20be"
+  revision 1
 
   bottle do
-    sha256 "159792205dcef2493c4ae2fb7b2359c8ed4ae0b0d985a4535328206bbb21c1a5" => :high_sierra
-    sha256 "788cde919b28276990d1d5802791207080fe24b5a33ccc095b87c208be1dc254" => :sierra
-    sha256 "bcc61675b4c4d3c2801a19357fd426b681a0d598169ce1102a580df5c91cbcd5" => :el_capitan
+    sha256 "7ff69bac02212b3e43d2dfacd2784447e7709d80fff81b554fa229c360d12704" => :catalina
+    sha256 "26091f267000c57d27c038a05172c7249572f0ddfe1834a8eba154fe00c36b75" => :mojave
+    sha256 "4353cbd80b6f4af021f4be1c6ff5b793a8530263c1c2307caaed962dc7ad9b11" => :high_sierra
+    sha256 "707b08f95a9f5a200a6fdedb47fc9a80c25ebd88004606482ac5aa49ef72d1fa" => :sierra
   end
 
+  depends_on "openssl@1.1"
   depends_on "readline"
-  depends_on "openssl"
 
   conflicts_with "bareos-client",
     :because => "Both install a `bconsole` executable."

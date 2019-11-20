@@ -2,20 +2,19 @@ class Mytop < Formula
   desc "Top-like query monitor for MySQL"
   homepage "http://www.mysqlfanboy.com/mytop-3/"
   url "http://www.mysqlfanboy.com/mytop-3/mytop-1.9.1.tar.gz"
-  mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/m/mytop/mytop_1.9.1.orig.tar.gz"
-  mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/m/mytop/mytop_1.9.1.orig.tar.gz"
+  mirror "https://deb.debian.org/debian/pool/main/m/mytop/mytop_1.9.1.orig.tar.gz"
   sha256 "179d79459d0013ab9cea2040a41c49a79822162d6e64a7a85f84cdc44828145e"
-  revision 5
+  revision 8
 
   bottle do
     cellar :any
-    sha256 "2d7ea53b0ae27d33d5106259b5c96fa878b4c2681af002e91d6432d151024918" => :high_sierra
-    sha256 "89536e5cdee657d9ea8a82d1940854ba52bfa4cf3e161aa148b31511f5268b14" => :sierra
-    sha256 "a7a00e844c2adb87eb4379faf0d3dd60443f9383cb295688ae2dac47051f3483" => :el_capitan
+    sha256 "69930f7d5c68b0d6ce75c89820732f269d3b3c6651358875b0db58ae1ead38f0" => :catalina
+    sha256 "ac13ecf239ff9d4bb1d39ad584c46ac9a5c95f3b96b3991bf9108280b30c0a19" => :mojave
+    sha256 "2862de7630947648898e1ef348a8357fdd25622310c9af03450c40ea33fc925c" => :high_sierra
   end
 
-  depends_on "mysql"
-  depends_on "openssl"
+  depends_on "mysql-client"
+  depends_on "openssl@1.1"
 
   conflicts_with "mariadb", :because => "both install `mytop` binaries"
 
@@ -26,21 +25,26 @@ class Mytop < Formula
 
   resource "Config::IniFiles" do
     url "https://cpan.metacpan.org/authors/id/S/SH/SHLOMIF/Config-IniFiles-2.94.tar.gz"
-    mirror "http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/Config-IniFiles-2.94.tar.gz"
     sha256 "d6d38a416da79de874c5f1825221f22e972ad500b6527d190cc6e9ebc45194b4"
+  end
+
+  # In Mojave, this is not part of the system Perl anymore
+  if MacOS.version >= :mojave
+    resource "DBI" do
+      url "https://cpan.metacpan.org/authors/id/T/TI/TIMB/DBI-1.641.tar.gz"
+      sha256 "5509e532cdd0e3d91eda550578deaac29e2f008a12b64576e8c261bb92e8c2c1"
+    end
   end
 
   resource "DBD::mysql" do
     url "https://cpan.metacpan.org/authors/id/C/CA/CAPTTOFU/DBD-mysql-4.046.tar.gz"
-    mirror "http://search.cpan.org/CPAN/authors/id/C/CA/CAPTTOFU/DBD-mysql-4.046.tar.gz"
     sha256 "6165652ec959d05b97f5413fa3dff014b78a44cf6de21ae87283b28378daf1f7"
   end
 
   # Pick up some patches from Debian to improve functionality & fix
   # some syntax warnings when using recent versions of Perl.
   patch do
-    url "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/m/mytop/mytop_1.9.1-2.debian.tar.xz"
-    mirror "https://mirrors.ocf.berkeley.edu/debian/pool/main/m/mytop/mytop_1.9.1-2.debian.tar.xz"
+    url "https://deb.debian.org/debian/pool/main/m/mytop/mytop_1.9.1-2.debian.tar.xz"
     sha256 "9c97b7d2a2d4d169c5f263ce0adb6340b71e3a0afd4cdde94edcead02421489a"
     apply "patches/01_fix_pod.patch",
           "patches/02_remove_db_test.patch",

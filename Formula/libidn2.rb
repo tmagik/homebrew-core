@@ -1,14 +1,16 @@
 class Libidn2 < Formula
   desc "International domain name library (IDNA2008, Punycode and TR46)"
   homepage "https://www.gnu.org/software/libidn/#libidn2"
-  url "https://ftp.gnu.org/gnu/libidn/libidn2-2.0.4.tar.gz"
-  mirror "https://ftpmirror.gnu.org/gnu/libidn/libidn2-2.0.4.tar.gz"
-  sha256 "644b6b03b285fb0ace02d241d59483d98bc462729d8bb3608d5cad5532f3d2f0"
+  url "https://ftp.gnu.org/gnu/libidn/libidn2-2.2.0.tar.gz"
+  mirror "https://ftpmirror.gnu.org/libidn/libidn2-2.2.0.tar.gz"
+  sha256 "fc734732b506d878753ec6606982bf7b936e868c25c30ddb0d83f7d7056381fe"
+  revision 1
 
   bottle do
-    sha256 "e2331d3c771fb283c2e995f33ec65f233d3fa4fe53f68818e94a0813acd9b591" => :high_sierra
-    sha256 "eede4f7d455f28a987941586c3bf01ee0e6d60af6a16bd4ee908af85d67383d7" => :sierra
-    sha256 "5e3e5c3247175111eea66f46a09385adc481bbe1c0c375284dc157c22db8d869" => :el_capitan
+    sha256 "568e8d5ae2ce76c0a56af6793546aaa45fdf3debc08f566e3add3b507eefa970" => :catalina
+    sha256 "96e9b127a4123a1a4ec67f849467bbf9fafe79e7303ef2712c57bfb81b3c95d6" => :mojave
+    sha256 "7c9da2a45d0f59ed9f973de3ca3820c10d55f70c8399496404425f64df1fa3cd" => :high_sierra
+    sha256 "67896b703c38f761d313088af1237e5fc21e7f30aa06e2d6136bdb4758144c3d" => :sierra
   end
 
   head do
@@ -35,6 +37,7 @@ class Libidn2 < Formula
     system "./configure", "--disable-dependency-tracking",
                           "--disable-silent-rules",
                           "--prefix=#{prefix}",
+                          "--with-libintl-prefix=#{Formula["gettext"].opt_prefix}",
                           "--with-packager=Homebrew"
     system "make", "install"
   end

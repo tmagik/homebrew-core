@@ -1,17 +1,25 @@
 class GnuTar < Formula
   desc "GNU version of the tar archiving utility"
   homepage "https://www.gnu.org/software/tar/"
-  url "https://ftp.gnu.org/gnu/tar/tar-1.30.tar.gz"
-  mirror "https://ftpmirror.gnu.org/tar/tar-1.30.tar.gz"
-  sha256 "4725cc2c2f5a274b12b39d1f78b3545ec9ebb06a6e48e8845e1995ac8513b088"
+  url "https://ftp.gnu.org/gnu/tar/tar-1.32.tar.gz"
+  mirror "https://ftpmirror.gnu.org/tar/tar-1.32.tar.gz"
+  sha256 "b59549594d91d84ee00c99cf2541a3330fed3a42c440503326dab767f2fbb96c"
 
   bottle do
-    sha256 "ad87e1488b6d1a2db804c348abf05143b6b7310402c7928f725305c295599708" => :high_sierra
-    sha256 "5a04574acb1ff235b2509e70cb207e6379a8c83191986131bba52717c328fc1b" => :sierra
-    sha256 "1a559b78e6f1a6594b18a9ba2aa2e9828af2736aacc4aec07911fe7638e80e68" => :el_capitan
+    cellar :any_skip_relocation
+    rebuild 1
+    sha256 "158cb67ea9e02435d671013b4d0d7369822758d9f7ff400ce2512a03f2f7f4e4" => :catalina
+    sha256 "1034894e78bb22b0fcf0c8114666d4dc3eb82345a5ca83797ca3bda367d998ac" => :mojave
+    sha256 "3771cead286229786d9d92a7697bc6e0de576ec9cae1f881017884ceb3e24f17" => :high_sierra
   end
 
-  option "with-default-names", "Do not prepend 'g' to the binary"
+  head do
+    url "https://git.savannah.gnu.org/git/tar.git"
+
+    depends_on "autoconf" => :build
+    depends_on "automake" => :build
+    depends_on "gettext" => :build
+  end
 
   def install
     # Work around unremovable, nested dirs bug that affects lots of
@@ -22,41 +30,40 @@ class GnuTar < Formula
     # https://lists.gnu.org/archive/html/bug-tar/2015-10/msg00017.html
     ENV["gl_cv_func_getcwd_abort_bug"] = "no" if MacOS.version == :el_capitan
 
-    args = ["--prefix=#{prefix}", "--mandir=#{man}"]
-    args << "--program-prefix=g" if build.without? "default-names"
+    args = %W[
+      --prefix=#{prefix}
+      --mandir=#{man}
+      --program-prefix=g
+    ]
 
+    # Work around a gnulib issue with macOS Catalina
+    args << "gl_cv_func_ftello_works=yes"
+
+    system "./bootstrap" if build.head?
     system "./configure", *args
     system "make", "install"
 
     # Symlink the executable into libexec/gnubin as "tar"
-    if build.without? "default-names"
-      (libexec/"gnubin").install_symlink bin/"gtar" =>"tar"
-      (libexec/"gnuman/man1").install_symlink man1/"gtar.1" => "tar.1"
-    end
+    (libexec/"gnubin").install_symlink bin/"gtar" =>"tar"
+    (libexec/"gnuman/man1").install_symlink man1/"gtar.1" => "tar.1"
+
+    libexec.install_symlink "gnuman" => "man"
   end
 
-  def caveats
-    if build.without? "default-names" then <<~EOS
-      gnu-tar has been installed as "gtar".
+  def caveats; <<~EOS
+    GNU "tar" has been installed as "gtar".
+    If you need to use it as "tar", you can add a "gnubin" directory
+    to your PATH from your bashrc like:
 
-      If you really need to use it as "tar", you can add a "gnubin" directory
-      to your PATH from your bashrc like:
-
-          PATH="#{opt_libexec}/gnubin:$PATH"
-
-      Additionally, you can access their man pages with normal names if you add
-      the "gnuman" directory to your MANPATH from your bashrc as well:
-
-          MANPATH="#{opt_libexec}/gnuman:$MANPATH"
-
-      EOS
-    end
+        PATH="#{opt_libexec}/gnubin:$PATH"
+  EOS
   end
 
   test do
-    tar = build.with?("default-names") ? bin/"tar" : bin/"gtar"
     (testpath/"test").write("test")
-    system tar, "-czvf", "test.tar.gz", "test"
-    assert_match /test/, shell_output("#{tar} -xOzf test.tar.gz")
+    system bin/"gtar", "-czvf", "test.tar.gz", "test"
+    assert_match /test/, shell_output("#{bin}/gtar -xOzf test.tar.gz")
+
+    assert_match /test/, shell_output("#{opt_libexec}/gnubin/tar -xOzf test.tar.gz")
   end
 end

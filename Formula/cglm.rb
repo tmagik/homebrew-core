@@ -1,14 +1,15 @@
 class Cglm < Formula
   desc "Optimized OpenGL/Graphics Math (glm) for C"
   homepage "https://github.com/recp/cglm"
-  url "https://github.com/recp/cglm/archive/v0.4.4.tar.gz"
-  sha256 "b62dff42202f9302ed1dfbad039134c45ff92c809052598aa1c469aab91a65d3"
+  url "https://github.com/recp/cglm/archive/v0.6.0.tar.gz"
+  sha256 "fa6de3affdd912430a124463c647e2b933570179759366958af856c6c0fe25ca"
 
   bottle do
     cellar :any
-    sha256 "7939f73390ce28ed5427357b0a295eb280c56ce84ca6ecc51446e3c6b8f2c80d" => :high_sierra
-    sha256 "638911a86d22630770d5e0a5ec75a44cf3720a774035349058ff879829c2082d" => :sierra
-    sha256 "182ebed03dc3fb5e1157d764af02fa810d2a7be4f608edaaf989c099616e7c28" => :el_capitan
+    sha256 "68031c36e534159a3c067cadac53e7136e179d4ea66a0531eb58d62a92b673a7" => :catalina
+    sha256 "f2d505388de91d5e39a6b8bdd8b111bcec205eb6233e31c828961006f47824e4" => :mojave
+    sha256 "5832844b2f1c092bcf7858b3d2f001ee6c95c93fbbac2fa2a90faa4637e57df6" => :high_sierra
+    sha256 "d96cad0365653f84496ba57bd460225b14030a99057a510db83d0be0eaecb864" => :sierra
   end
 
   depends_on "autoconf" => :build
@@ -35,7 +36,7 @@ class Cglm < Formula
         vec3 r;
 
         glm_cross(x, y, r);
-        assert(glm_vec_eqv_eps(r, z));
+        assert(glm_vec3_eqv_eps(r, z));
         return 0;
       }
     EOS

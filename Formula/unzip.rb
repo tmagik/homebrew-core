@@ -1,27 +1,26 @@
 class Unzip < Formula
   desc "Extraction utility for .zip compressed archives"
-  homepage "http://www.info-zip.org/pub/infozip/UnZip.html"
+  homepage "https://infozip.sourceforge.io/UnZip.html"
   url "https://downloads.sourceforge.net/project/infozip/UnZip%206.x%20%28latest%29/UnZip%206.0/unzip60.tar.gz"
   version "6.0"
   sha256 "036d96991646d0449ed0aa952e4fbe21b476ce994abc276e49d30e686708bd37"
-  revision 3
+  revision 6
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "c69a3531f5c1c834132c89124e11e580cb052870515875240f035dd471977893" => :high_sierra
-    sha256 "72cf9820bc8fe8c008bdb1cf7b231afbb0bc6b48511f4d40e5e4840f5bb5df65" => :sierra
-    sha256 "8a2bfa62e728c9a9bc44d7acb9f34698e599b47f8200c45290b62502c682a6ec" => :el_capitan
-    sha256 "3c69150f5a9ad6d1d1737eb17c06315dd7d0bc02b9c1a11e02ecb281c1e5f37f" => :yosemite
+    sha256 "178cea56554b0e6b74856203340554c7615c6ed2e122059c78370e35c896f0ce" => :catalina
+    sha256 "f0b95f2d5c664f45686f3aa318384906014ed28939da28020d12138f025aaeb6" => :mojave
+    sha256 "6dd7d0862f5a8b954dd94b3c91378209e0086eec7c5be367af0d8c330bc099da" => :high_sierra
+    sha256 "f4d59c04a44f93a30a23ec403784c73f9c06db9b72f3277679f66b1870a94331" => :sierra
   end
 
   keg_only :provided_by_macos
 
   # Upstream is unmaintained so we use the Debian patchset:
-  # https://packages.debian.org/sid/unzip
+  # https://packages.debian.org/buster/unzip
   patch do
-    url "https://mirrors.ocf.berkeley.edu/debian/pool/main/u/unzip/unzip_6.0-21.debian.tar.xz"
-    mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/u/unzip/unzip_6.0-21.debian.tar.xz"
-    sha256 "8accd9d214630a366476437a3ec1842f2e057fdce16042a7b19ee569c33490a3"
+    url "https://deb.debian.org/debian/pool/main/u/unzip/unzip_6.0-25.debian.tar.xz"
+    sha256 "0783e4d11d755cb43904e3f59a60dbb92ee9c6b08ac54d86bc61f9848216f37b"
     apply %w[
       patches/01-manpages-in-section-1-not-in-section-1l.patch
       patches/02-this-is-debian-unzip.patch
@@ -42,6 +41,11 @@ class Unzip < Formula
       patches/17-restore-unix-timestamps-accurately.patch
       patches/18-cve-2014-9913-unzip-buffer-overflow.patch
       patches/19-cve-2016-9844-zipinfo-buffer-overflow.patch
+      patches/20-cve-2018-1000035-unzip-buffer-overflow.patch
+      patches/21-fix-warning-messages-on-big-files.patch
+      patches/22-cve-2019-13232-fix-bug-in-undefer-input.patch
+      patches/23-cve-2019-13232-zip-bomb-with-overlapped-entries.patch
+      patches/24-cve-2019-13232-do-not-raise-alert-for-misplaced-central-directory.patch
     ]
   end
 

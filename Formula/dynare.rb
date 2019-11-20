@@ -1,14 +1,15 @@
 class Dynare < Formula
   desc "Platform for economic models, particularly DSGE and OLG models"
   homepage "https://www.dynare.org/"
-  url "https://www.dynare.org/release/source/dynare-4.5.4.tar.xz"
-  sha256 "5ee1c30e9a8e0c0ec4f60e83c02beb98271f9e324b9b667d4a5f5b2ee634a7e6"
-  revision 4
+  url "https://www.dynare.org/release/source/dynare-4.5.7.tar.xz"
+  sha256 "9224ec5279d79d55d91a01ed90022e484f66ce93d56ca6d52933163f538715d4"
+  revision 7
 
   bottle do
-    sha256 "1595f5f6fabefe65442832e1c8ab67978d0d6ed8bee7a00b17ab96a5ba8230b6" => :high_sierra
-    sha256 "4e4a7fa53fbeae21dea5ecb441d1b6beffe982904c60efdb182762878f850206" => :sierra
-    sha256 "232d732e7294664bf99fd14ac563587627d16127611fdefcfb2ec7ffd838ab7f" => :el_capitan
+    cellar :any
+    sha256 "1099b6c5697d797b8e0d9e6464e5cf31c625fbbe0fd1642ea10c05d4bb3f9bc0" => :catalina
+    sha256 "52558399745d3774b47395b96fa891408421f86db422fe6ea0cb33b287a47075" => :mojave
+    sha256 "0a743dfda6443744fed3aae2068746c73b8eb4a489107c105b8c98b8bb9942d8" => :high_sierra
   end
 
   head do
@@ -29,14 +30,11 @@ class Dynare < Formula
   depends_on "libmatio"
   depends_on "metis"
   depends_on "octave"
+  depends_on "openblas"
   depends_on "suite-sparse"
-  depends_on "veclibfort"
-
-  needs :cxx11
 
   resource "slicot" do
-    url "https://mirrors.ocf.berkeley.edu/debian/pool/main/s/slicot/slicot_5.0+20101122.orig.tar.gz"
-    mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/s/slicot/slicot_5.0+20101122.orig.tar.gz"
+    url "https://deb.debian.org/debian/pool/main/s/slicot/slicot_5.0+20101122.orig.tar.gz"
     sha256 "fa80f7c75dab6bfaca93c3b374c774fd87876f34fba969af9133eeaea5f39a3d"
   end
 
@@ -66,7 +64,7 @@ class Dynare < Formula
   def caveats; <<~EOS
     To get started with Dynare, open Octave and type
       addpath #{opt_lib}/dynare/matlab
-    EOS
+  EOS
   end
 
   test do

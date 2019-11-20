@@ -1,8 +1,8 @@
 class Pmd < Formula
   desc "Source code analyzer for Java, JavaScript, and more"
   homepage "https://pmd.github.io"
-  url "https://github.com/pmd/pmd/releases/download/pmd_releases/6.3.0/pmd-bin-6.3.0.zip"
-  sha256 "be2310d64ea212126f6a7fb9a4a8d92cc73c0566326b5719bc5604d5dd198c2b"
+  url "https://github.com/pmd/pmd/releases/download/pmd_releases/6.19.0/pmd-bin-6.19.0.zip"
+  sha256 "9f3c1e28e2a005dd6ee195edb980e34cc25c342a559a798d99547a55fac9517b"
 
   bottle :unneeded
 
@@ -17,7 +17,7 @@ class Pmd < Formula
 
   def caveats; <<~EOS
     Run with `pmd` (instead of `run.sh` as described in the documentation).
-    EOS
+  EOS
   end
 
   test do

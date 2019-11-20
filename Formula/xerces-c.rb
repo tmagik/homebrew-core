@@ -1,19 +1,19 @@
 class XercesC < Formula
   desc "Validating XML parser"
   homepage "https://xerces.apache.org/xerces-c/"
-  url "https://www.apache.org/dyn/closer.cgi?path=xerces/c/3/sources/xerces-c-3.2.1.tar.gz"
-  sha256 "6dd4602b8844a9e1ab206e0270935d0c9b5f9d88771026e7f350e429bd2d04a0"
+  url "https://www.apache.org/dyn/closer.cgi?path=xerces/c/3/sources/xerces-c-3.2.2.tar.gz"
+  sha256 "dd6191f8aa256d3b4686b64b0544eea2b450d98b4254996ffdfe630e0c610413"
 
   bottle do
     cellar :any
-    sha256 "4573b8dc10a8a27fd7ec3f90b8461d24374b0e7b6edf0de1320b838e71b857a5" => :high_sierra
-    sha256 "41b0b011bba42bcf10aff5b6eb675d6c43e273cd07ab45487b9fbc8d34358e63" => :sierra
-    sha256 "c57035c626055d274e947b2bb338389d1100951e1545c4f933c74d2ac52dda32" => :el_capitan
+    rebuild 1
+    sha256 "8bcc9b20b0b3df89ec53900e0b3b09ea1bbc3159b4cffc4b8ef4f62413621924" => :catalina
+    sha256 "fab62b22422c24b0218cae42f7f81ad736db316d9bde4218272cdf7b174c313f" => :mojave
+    sha256 "e62fba2c06fd03edf0491b54f753d10c4ca9e73e97c24389b749e655f9199b50" => :high_sierra
+    sha256 "8390cdf10fcc8b65a1f295eacf8b3fec34776d18219b8a8ce565592ee3b03372" => :sierra
   end
 
   depends_on "cmake" => :build
-
-  needs :cxx11
 
   def install
     ENV.cxx11
@@ -23,6 +23,10 @@ class XercesC < Formula
       system "make"
       system "ctest", "-V"
       system "make", "install"
+      system "make", "clean"
+      system "cmake", "..", "-DBUILD_SHARED_LIBS=OFF", *std_cmake_args
+      system "make"
+      lib.install Dir["src/*.a"]
     end
     # Remove a sample program that conflicts with libmemcached
     # on case-insensitive file systems

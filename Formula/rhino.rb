@@ -1,8 +1,8 @@
 class Rhino < Formula
   desc "JavaScript engine"
   homepage "https://www.mozilla.org/rhino/"
-  url "https://github.com/mozilla/rhino/releases/download/Rhino1_7_7_2_Release/rhino-1.7.7.2.zip"
-  sha256 "b223595717dd360061b35aaa7e952271fcbbd6a763a78927283480227aaa0247"
+  url "https://github.com/mozilla/rhino/releases/download/Rhino1_7_11_Release/rhino-1.7.11.zip"
+  sha256 "94c16e4de06fc08b5f7bf492284b8dc94c6357d3f96cc06fc06dcd6ae3f39547"
 
   bottle :unneeded
 

@@ -1,7 +1,7 @@
 class Moc < Formula
   desc "Terminal-based music player"
   homepage "https://moc.daper.net/"
-  revision 4
+  revision 5
 
   stable do
     url "http://ftp.daper.net/pub/soft/moc/stable/moc-2.5.2.tar.bz2"
@@ -37,50 +37,11 @@ class Moc < Formula
   end
 
   bottle do
-    sha256 "a536689c04be421cd2d55851d32b460a888188adb5bea42fcbb57db465e6c87c" => :high_sierra
-    sha256 "c5b44244ca3421ea8eb867f5bffde2be4823d335a960047d1246a8295807ebf9" => :sierra
-    sha256 "6286eeb3b7ca9500ae5ab3c795dcf3ca94fa8440141ccd02ae7fd0107d3950f4" => :el_capitan
-  end
-
-  devel do
-    url "http://ftp.daper.net/pub/soft/moc/unstable/moc-2.6-alpha3.tar.xz"
-    sha256 "a27b8888984cf8dbcd758584961529ddf48c237caa9b40b67423fbfbb88323b1"
-
-    # Patch for clock_gettime issue
-    # https://moc.daper.net/node/1576
-    patch do
-      url "https://raw.githubusercontent.com/Homebrew/patches/78d5908905c6848bb75ae41b70d6bbb46abaa69b/moc/r2936-clock_gettime.patch"
-      sha256 "601b5cdf59db67f180f1aaa6cc90804c1cb69c44cdecb2e8149338782e4f21a8"
-    end
-
-    depends_on "popt"
-
-    # Remove for > 2.6-alpha3; FFmpeg 4.0 compatibility
-    # 01 to 05 below provided 26 Apr 2018 by upstream's John Fitzgerald
-    patch do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/514941c/moc/01-codec.patch"
-      sha256 "c424fcfff8f318896c868ae2e019120b78857f6ef1ccf1000df92fbe571d1f69"
-    end
-
-    patch do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/514941c/moc/02-codecpar.patch"
-      sha256 "4bcc745a484c3ffd4c5cf169fd299b6ab18d387740f77d9cc9eec3f57f5fcf7c"
-    end
-
-    patch do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/514941c/moc/03-defines.patch"
-      sha256 "088596c51f47d5b4a47fb00def2a832536cba2cdb6bb4dc767af5f2edb33164e"
-    end
-
-    patch do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/514941c/moc/04-lockmgr.patch"
-      sha256 "a83d86ac4f0d88afddd0d76516b95071e4b876d51f85ee2c876be9c6f7ce6cc9"
-    end
-
-    patch do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/514941c/moc/05-audio4.patch"
-      sha256 "05d467cc7b1f9529187d0fcf5375ccb2088a606fd5ecd75a8330b8f68676eefc"
-    end
+    sha256 "c2fce2f2fdc2d5eb7efddf393de7dc3d75ca4e387d84ae10029120eb5e2a4e53" => :catalina
+    sha256 "b15db412cd58492ce684fd50a6bec93e18cc42f5543bfd7f45fd6e5636c56291" => :mojave
+    sha256 "8a570805d563e3ee3d4c374eb5a8e5d649b7364286e738f9d8bef864663073e1" => :high_sierra
+    sha256 "fe941dffd41e1485f85b3d9bb28a1a30cccfe27d3cac438cc5b71fb347122003" => :sierra
+    sha256 "9e39666cb49b6fd60c16b1b4535d0b39363fcc655e6495cc17d74923df13ff27" => :el_capitan
   end
 
   head do
@@ -89,7 +50,7 @@ class Moc < Formula
     depends_on "popt"
   end
 
-  # Remove autoconf, automake and gettext when > 2.5.2 and > 2.6-alpha3 come out
+  # Remove autoconf, automake and gettext for > 2.5.2
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "gettext" => :build
@@ -101,7 +62,7 @@ class Moc < Formula
   depends_on "ncurses"
 
   def install
-    # Not needed for stable or devel when > 2.5.2 and > 2.6-alpha3 come out
+    # Not needed for > 2.5.2
     system "autoreconf", "-fvi"
     system "./configure", "--disable-debug", "--prefix=#{prefix}"
     system "make", "install"

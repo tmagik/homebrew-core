@@ -1,15 +1,16 @@
 class Armor < Formula
   desc "Uncomplicated, modern HTTP server"
   homepage "https://github.com/labstack/armor"
-  url "https://github.com/labstack/armor/archive/0.4.10.tar.gz"
-  sha256 "ebe49ecf9b2efa54b871dce8ec6e979c17e9c05789344fd7d55cba646b91fc26"
+  url "https://github.com/labstack/armor/archive/v0.4.14.tar.gz"
+  sha256 "bcaee0eaa1ef29ef439d5235b955516871c88d67c3ec5191e3421f65e364e4b8"
   head "https://github.com/labstack/armor.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "6cdc333e5f32f12a90de41a9e8138f7392d46d57d774a6b8d6d0c09ab5384ca2" => :high_sierra
-    sha256 "a8509afe7e26096b794abd0f313b72c57b9b6b0255efdaa581983da909eabce0" => :sierra
-    sha256 "2316e3a32abcbe3bb18d5d4957bd4c90402de4dae8a39696e092875ce5861a25" => :el_capitan
+    sha256 "4139f14219db0d2a3add488cf1a4d6aa078cb0f773a20e47a2d09248af2d3971" => :catalina
+    sha256 "b3fd4ee9a6827f911adfa84ef9ff3ad76a9519232dfcbdde1065af4928030a85" => :mojave
+    sha256 "47d85443ebd54b3805b6a02ee9e2c872f0068ca6782bc343490cc12812b32236" => :high_sierra
+    sha256 "d4f119fed6f576e3173e1229ad2849682026529afa1d88a1a58053406bc27e9f" => :sierra
   end
 
   depends_on "go" => :build
@@ -26,15 +27,13 @@ class Armor < Formula
   end
 
   test do
-    begin
-      pid = fork do
-        exec "#{bin}/armor"
-      end
-      sleep 1
-      output = shell_output("curl -sI http://localhost:8080")
-      assert_match /200 OK/m, output
-    ensure
-      Process.kill("HUP", pid)
+    pid = fork do
+      exec "#{bin}/armor"
     end
+    sleep 1
+    output = shell_output("curl -sI http://localhost:8080")
+    assert_match(/200 OK/m, output)
+  ensure
+    Process.kill("HUP", pid)
   end
 end

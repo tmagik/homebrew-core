@@ -1,41 +1,40 @@
 class AircrackNg < Formula
   desc "Next-generation aircrack with lots of new features"
   homepage "https://aircrack-ng.org/"
-
-  # We can't update this due to linux-only dependencies in >1.1.
-  # See https://github.com/Homebrew/homebrew/issues/29450
-  url "https://download.aircrack-ng.org/aircrack-ng-1.1.tar.gz"
-  sha256 "b136b549b7d2a2751c21793100075ea43b28de9af4c1969508bb95bcc92224ad"
-  revision 2
+  url "https://download.aircrack-ng.org/aircrack-ng-1.5.2.tar.gz"
+  sha256 "9e592fe7658046220e0ac0a6d05c4026903f3077b248893e0056ccbe4ee88241"
+  revision 1
 
   bottle do
-    rebuild 1
-    sha256 "1330c445bb9560fccc182c8a129cc3999830d5ce9e988bad60b45b43f869be61" => :high_sierra
-    sha256 "07d79311d1480e5fb22c9fc17dbbf9758f02871a518bb3bbc3158a712f2abe9f" => :sierra
-    sha256 "bc1052e5690192346ffe097cf08292dec9f61293e1e928bfcdb485ca71c130d6" => :el_capitan
+    sha256 "17ef7ba95457338d0baab61ce6592211ff231417f37fb2b9b75b1f11e11be780" => :catalina
+    sha256 "772e69403efdced2c6482abb1d118bb848d5d033156f64d6d5807e4205028399" => :mojave
+    sha256 "ef9b3527b33cfdff40e21e8b678921dfbd411d0be586b5fede62a039a0d50d1f" => :high_sierra
+    sha256 "620b3b925934f2a9fdeee038d9f00983c413ae098a65d26552bb61b4411c434c" => :sierra
   end
 
+  depends_on "autoconf" => :build
+  depends_on "automake" => :build
+  depends_on "libtool" => :build
   depends_on "pkg-config" => :build
+  depends_on "openssl@1.1"
+  depends_on "pcre"
   depends_on "sqlite"
-  depends_on "openssl"
 
   # Remove root requirement from OUI update script. See:
   # https://github.com/Homebrew/homebrew/pull/12755
   patch :DATA
 
   def install
-    # Fix incorrect OUI url
-    inreplace "scripts/airodump-ng-oui-update",
-      "http://standards.ieee.org/regauth/oui/oui.txt",
-      "http://standards-oui.ieee.org/oui.txt"
-
-    system "make", "CC=#{ENV.cc}"
-    system "make", "prefix=#{prefix}", "mandir=#{man1}", "install"
+    system "./autogen.sh", "--disable-silent-rules",
+                           "--disable-dependency-tracking",
+                           "--prefix=#{prefix}",
+                           "--with-experimental"
+    system "make", "install"
   end
 
   def caveats; <<~EOS
     Run `airodump-ng-oui-update` install or update the Airodump-ng OUI file.
-    EOS
+  EOS
   end
 
   test do
@@ -46,8 +45,8 @@ end
 __END__
 --- a/scripts/airodump-ng-oui-update
 +++ b/scripts/airodump-ng-oui-update
-@@ -7,25 +7,6 @@
- OUI_PATH="/usr/local/etc/aircrack-ng"
+@@ -20,25 +20,6 @@ fi
+
  AIRODUMP_NG_OUI="${OUI_PATH}/airodump-ng-oui.txt"
  OUI_IEEE="${OUI_PATH}/oui.txt"
 -USERID=""
@@ -59,9 +58,9 @@ __END__
 -	USERID="`id -u 2> /dev/null`"
 -fi
 -
--if [ x$USERID = "x" -a x$UID != "x" ]
+-if [ x$USERID = "x" -a x$(id -ru) != "x" ]
 -then
--	USERID=$UID
+-	USERID=$(id -ru)
 -fi
 -
 -if [ x$USERID != "x" -a x$USERID != "x0" ]
@@ -72,4 +71,3 @@ __END__
  
  if [ ! -d "${OUI_PATH}" ]; then
  	mkdir -p ${OUI_PATH}
-

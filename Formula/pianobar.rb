@@ -1,36 +1,27 @@
 class Pianobar < Formula
   desc "Command-line player for https://pandora.com"
   homepage "https://github.com/PromyLOPh/pianobar/"
-  revision 1
+  url "https://6xq.net/pianobar/pianobar-2018.06.22.tar.bz2"
+  sha256 "946357718a7b5fea661247ad10187e77f94724ef2bb29a2482afeb2d8c8bd4c2"
   head "https://github.com/PromyLOPh/pianobar.git"
-
-  stable do
-    url "https://6xq.net/pianobar/pianobar-2017.08.30.tar.bz2"
-    sha256 "ec14db6cf1a7dbc1d8190b5ca0d256021e970587bcdaeb23904d4bca71a04674"
-
-    # Remove for > 2017.08.30
-    # Upstream commit from 17 Apr 2018: "Remove deprecated header avfiltergraph.h"
-    patch do
-      url "https://github.com/PromyLOPh/pianobar/commit/38b16f9957a7bad74e337100b497ffc04ceb9a54.diff?full_index=1"
-      sha256 "521152c24d63242062dc48c28b7489a540ebcd8a98b0c99c29408e0b58c587fa"
-    end
-  end
 
   bottle do
     cellar :any
-    sha256 "83394d5085f9495f23901731eaf17565589cea6234332d27dad02dbb8ddf330c" => :high_sierra
-    sha256 "a3d622b4b55cbfbb3d1f939e9fe500aa42d8e4a1edb66278288723d2bf41a659" => :sierra
-    sha256 "32db2239d66180b79ea149b5e0121f8b70ccf4fc3d0c13b76218efd3924d4f8d" => :el_capitan
+    sha256 "31acde75d154aab53f18d40901b23466ed5d95a3ab08ccb7e1b8922e85d71c05" => :catalina
+    sha256 "5b542cb16f0ea880c56e9e6a4e3607b5a3b0c99716948b62d01e259a3ad8bd9c" => :mojave
+    sha256 "ae7c37f76393133eb0c89ab71a4d85d3a379a4c83e79fe925627096229218878" => :high_sierra
+    sha256 "2482cbc242c836393dfbbe5a586d33dc58899e572aa3e929c9a371ea557071db" => :sierra
+    sha256 "d7f002bd258a1423a040e6ed1c78e74ade37f3af1e447e37506ba4af9b658718" => :el_capitan
   end
 
   depends_on "pkg-config" => :build
-  depends_on "libao"
-  depends_on "mad"
   depends_on "faad2"
-  depends_on "gnutls"
-  depends_on "libgcrypt"
-  depends_on "json-c"
   depends_on "ffmpeg"
+  depends_on "gnutls"
+  depends_on "json-c"
+  depends_on "libao"
+  depends_on "libgcrypt"
+  depends_on "mad"
 
   def install
     # Discard Homebrew's CFLAGS as Pianobar reportedly doesn't like them

@@ -1,14 +1,14 @@
 class Libjwt < Formula
   desc "JSON Web Token C library"
   homepage "https://github.com/benmcollins/libjwt"
-  url "https://github.com/benmcollins/libjwt/archive/v1.9.0.tar.gz"
-  sha256 "cc694dfc3abe17d1f5cde4bf6714e39dc17f7cbad352a85ffb0fe6418c584076"
+  url "https://github.com/benmcollins/libjwt/archive/v1.11.0.tar.gz"
+  sha256 "61acfce6a514369c76ee1f2ffad74519ae91d5830fde478a253f69dcddb7b0af"
 
   bottle do
     cellar :any
-    sha256 "5d399fa64d2fc9efc33da09ed09bc085ea57202fb32e7240d838f6c826ea926d" => :high_sierra
-    sha256 "38121827b73b037ba806a02f36f8b55f62eee9f317e2a56132f88c685e4f49f1" => :sierra
-    sha256 "3402448d7ec4deb8471c5e5517ba306f766916497f6d1923d4d80030c88e45fd" => :el_capitan
+    sha256 "d893dfc6284b07fd29ee3b7ec71ddd326129d1a88f4f29782abd9d58f8d422e4" => :catalina
+    sha256 "dc5f705b1c774de55294f2171739be110381408cf48c8d0f1ff5c8357c97dcfd" => :mojave
+    sha256 "8f525024b46ad0de83d3b2a4d2f614c9427513c9e9559833beb0c319af6fdd1c" => :high_sierra
   end
 
   depends_on "autoconf" => :build
@@ -16,7 +16,7 @@ class Libjwt < Formula
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on "jansson"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     system "autoreconf", "-fiv"

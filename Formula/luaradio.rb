@@ -1,21 +1,21 @@
 class Luaradio < Formula
   desc "Lightweight, embeddable flow graph signal processing framework for SDR"
   homepage "http://luaradio.io/"
-  url "https://github.com/vsergeev/luaradio/archive/v0.5.0.tar.gz"
-  sha256 "660b995f8fe6e62e2304647565cfecc3dc042472e514a05c1d2c0d1342565908"
+  url "https://github.com/vsergeev/luaradio/archive/v0.5.1.tar.gz"
+  sha256 "723dce178594a6a9a64de6ba7929f04d5fd08d0c9ed57650b22993afdb1ebdf3"
   head "https://github.com/vsergeev/luaradio.git"
 
   bottle do
     cellar :any
-    sha256 "4edb4fe949e790279a47dbb4fff762852baf034c181b50713f431d16c29e6971" => :high_sierra
-    sha256 "9d1b4988ac40cde3ec5c689f1bca02d18829828ddec5e6209be102b576948fde" => :sierra
-    sha256 "4c25ef01c7e0fbd08b924883a0251d6e0808cc23ccd8386d30256675797f4c80" => :el_capitan
-    sha256 "126631069fc04e1a67bae61ca843f1651c80f43c5a47da59c67dba6933278458" => :yosemite
+    rebuild 1
+    sha256 "aea4720401562ca9bed2ec71fa24707fe20b2fa392aab8c7c19c2f563443aff7" => :catalina
+    sha256 "ab2033c7ec9b302782cd4736a7efaf63abb808fc26d56a32d8a68df0b124e309" => :mojave
+    sha256 "4417816f9ee6a53057b81862820dbd15833d455ef5be31908a1f989131e751ac" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
+  depends_on "fftw"
   depends_on "luajit"
-  depends_on "fftw" => :recommended
 
   def install
     cd "embed" do

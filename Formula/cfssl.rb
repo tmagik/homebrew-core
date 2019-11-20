@@ -1,15 +1,16 @@
 class Cfssl < Formula
   desc "CloudFlare's PKI toolkit"
   homepage "https://cfssl.org/"
-  url "https://github.com/cloudflare/cfssl/archive/1.3.1.tar.gz"
-  sha256 "3d0e409d30d41d797974559ae782a11e6823f38f5000544e604058cd43726528"
+  url "https://github.com/cloudflare/cfssl/archive/v1.4.1.tar.gz"
+  sha256 "c8a86ef10cbb0c168f3b597db15b31f98b170edb7958f7154edeb29aee41315e"
   head "https://github.com/cloudflare/cfssl.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "e234b37b5cd985fce65227a810df2ceffd40922155e687e47ec84a470f9efd72" => :high_sierra
-    sha256 "474d8c8a9a28ba8ae217382efcf5161742ca7f992ce3fc40a14bbc9686b036d0" => :sierra
-    sha256 "9c2fc7027b2136c1d228a84f0abd1bfe80c542f89b650ae864f792e9fc63f3fb" => :el_capitan
+    rebuild 1
+    sha256 "e26a083603f36d8ae31b26284f2f4bd477118726645c6f68412f4b00e18eea22" => :catalina
+    sha256 "9041675a2cb1d9dcc4112e18e4e3e94789ab65c91702065cc39f374d9b16d287" => :mojave
+    sha256 "cbf790046b8df80103a42e3e78da7b0be8941efcb9dd9e61e9742685624eddc1" => :high_sierra
   end
 
   depends_on "go" => :build
@@ -19,9 +20,10 @@ class Cfssl < Formula
     ENV["GOPATH"] = buildpath
     cfsslpath = buildpath/"src/github.com/cloudflare/cfssl"
     cfsslpath.install Dir["{*,.git}"]
+    ldflags = "-X github.com/cloudflare/cfssl/cli/version.version=#{version}"
     cd "src/github.com/cloudflare/cfssl" do
-      system "go", "build", "-o", "#{bin}/cfssl", "cmd/cfssl/cfssl.go"
-      system "go", "build", "-o", "#{bin}/cfssljson", "cmd/cfssljson/cfssljson.go"
+      system "go", "build", "-o", "#{bin}/cfssl", "-ldflags", ldflags, "cmd/cfssl/cfssl.go"
+      system "go", "build", "-o", "#{bin}/cfssljson", "-ldflags", ldflags, "cmd/cfssljson/cfssljson.go"
       system "go", "build", "-o", "#{bin}/cfsslmkbundle", "cmd/mkbundle/mkbundle.go"
     end
   end

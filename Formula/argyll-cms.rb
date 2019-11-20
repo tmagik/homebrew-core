@@ -1,16 +1,15 @@
 class ArgyllCms < Formula
   desc "ICC compatible color management system"
   homepage "https://www.argyllcms.com/"
-  url "https://www.argyllcms.com/Argyll_V2.0.0_src.zip"
-  version "2.0.0"
-  sha256 "5492896c040b406892864c467466ad6b50eb62954b5874ef0eb9174d1764ff41"
-  revision 1
+  url "https://www.argyllcms.com/Argyll_V2.1.1_src.zip"
+  version "2.1.1"
+  sha256 "51269bcafc4d95679354b796685c3f0a41b44b78443cbe360cda4a2d72f32acb"
 
   bottle do
     cellar :any
-    sha256 "01c60cb156c926f759f5c57e01a39298d0aea1ccb1b811efc3ee3c5110f2622e" => :high_sierra
-    sha256 "045fc296278fa225916cfafeeb499439b6ddd5a041a630cfd041831687f47819" => :sierra
-    sha256 "edf9250bc28f993481fb89496fbc725e4214e85027ae746bc3c7f4e7fa45dc5d" => :el_capitan
+    sha256 "1051f72544cc48ef2a7ddda49b4dd610000eadeb59a0e06fbdb578fcc212e519" => :mojave
+    sha256 "f6a8c6a464f1293d4e50001824009d932269469e9a262c624e87779ba9c69290" => :high_sierra
+    sha256 "e7ab5c574f61c660626f10c862d865bf19f3d385428e18a0f4a4375f9e811b2f" => :sierra
   end
 
   depends_on "jam" => :build
@@ -23,7 +22,7 @@ class ArgyllCms < Formula
   def install
     # dyld: lazy symbol binding failed: Symbol not found: _clock_gettime
     # Reported 20 Aug 2017 to graeme AT argyllcms DOT com
-    if MacOS.version == :el_capitan && MacOS::Xcode.installed? && MacOS::Xcode.version >= "8.0"
+    if MacOS.version == :el_capitan && MacOS::Xcode.version >= "8.0"
       inreplace "numlib/numsup.c", "CLOCK_MONOTONIC", "UNDEFINED_GIBBERISH"
     end
 

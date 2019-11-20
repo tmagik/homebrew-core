@@ -1,30 +1,24 @@
 class Sundials < Formula
   desc "Nonlinear and differential/algebraic equations solver"
   homepage "https://computation.llnl.gov/casc/sundials/main.html"
-  url "https://computation.llnl.gov/projects/sundials/download/sundials-3.1.0.tar.gz"
-  sha256 "18d52f8f329626f77b99b8bf91e05b7d16b49fde2483d3a0ea55496ce4cdd43a"
-  revision 5
+  url "https://computation.llnl.gov/projects/sundials/download/sundials-5.0.0.tar.gz"
+  sha256 "345141ec01c641d0bdfb3476c478b7e74fd6a7192a478a27cafe75d9da2d7dd3"
 
   bottle do
     cellar :any
-    sha256 "f22fe0eae9cc77cb835c94f70e571cdb762f225f428086589d5f63973ae6cf42" => :high_sierra
-    sha256 "bedad178ac24f40878453f97c077f277d82b76817918bed4238c9549f55cbda3" => :sierra
-    sha256 "e9af5071822e9b90d4a2d78e0a218bddbf05e69db39037d360e7013000f7f5e7" => :el_capitan
+    sha256 "b9bca7d111f7180280b814f452aaca92474b6a923ec229e4c9c93505f668024e" => :catalina
+    sha256 "0446a14944b70fcffab57ea46fc48532c76817fb1e57ca3184231414a3e748c7" => :mojave
+    sha256 "7e6f17174a9d1781fc1cb81e16ffde13213c4f8af2a9027bc348604aa39bde00" => :high_sierra
   end
-
-  option "with-openmp", "Enable OpenMP multithreading"
-  option "without-mpi", "Do not build with MPI"
 
   depends_on "cmake" => :build
   depends_on "gcc" # for gfortran
-  depends_on "open-mpi" if build.with? "mpi"
+  depends_on "open-mpi"
+  depends_on "openblas"
   depends_on "suite-sparse"
-  depends_on "veclibfort"
-
-  fails_with :clang if build.with? "openmp"
 
   def install
-    blas = "-L#{Formula["veclibfort"].opt_lib} -lvecLibFort"
+    blas = "-L#{Formula["openblas"].opt_lib} -lopenblas"
     args = std_cmake_args + %W[
       -DCMAKE_C_COMPILER=#{ENV["CC"]}
       -DBUILD_SHARED_LIBS=ON
@@ -32,10 +26,10 @@ class Sundials < Formula
       -DKLU_LIBRARY_DIR=#{Formula["suite-sparse"].opt_lib}
       -DKLU_INCLUDE_DIR=#{Formula["suite-sparse"].opt_include}
       -DLAPACK_ENABLE=ON
+      -DBLA_VENDOR=OpenBLAS
       -DLAPACK_LIBRARIES=#{blas};#{blas}
+      -DMPI_ENABLE=ON
     ]
-    args << "-DOPENMP_ENABLE=ON" if build.with? "openmp"
-    args << "-DMPI_ENABLE=ON" if build.with? "mpi"
 
     mkdir "build" do
       system "cmake", "..", *args

@@ -2,34 +2,27 @@ class Caf < Formula
   # Renamed from libccpa
   desc "Implementation of the Actor Model for C++"
   homepage "https://actor-framework.org/"
-  url "https://github.com/actor-framework/actor-framework/archive/0.15.7.tar.gz"
-  sha256 "e9fcd46c4e8737b68e320ff653c05e70002967e24fa604f182ede301510f2247"
+  url "https://github.com/actor-framework/actor-framework/archive/0.17.3.tar.gz"
+  sha256 "af235dbb5001a86d716c19f1b597be81bbcf172b87d42e2a38dc3ac97ea3863d"
+  revision 1
   head "https://github.com/actor-framework/actor-framework.git"
 
   bottle do
     cellar :any
-    sha256 "71128b4493b340e1ecaa35bfce84693b1a52a4235332fcbf0d4ef41f6ff546e6" => :high_sierra
-    sha256 "508fde1a3b54beb20decc4a845eb1bac4afd983e8b64c8661dcc80751e9db697" => :sierra
-    sha256 "bd5335016196542d3db596218f9f0669b5392e3c0fc38d1913e9f0a07341c1e9" => :el_capitan
+    sha256 "3dfc237be96a491a0f27b6e03ec0c0d30a0bc29bd446fbfff40b9cf9379f52fd" => :catalina
+    sha256 "6f838279b270a0cbdecc7e6a5bd13aba2e7bbe83b5374b8a1cd880423c7500d9" => :mojave
+    sha256 "4a0c871ff5848389f01c21d85a6d9b59c6b5d73404329bfa408b732d62b5a2bf" => :high_sierra
   end
 
-  needs :cxx11
-
-  option "with-opencl", "build with support for OpenCL actors"
-  option "without-test", "skip unit tests (not recommended)"
-
-  deprecated_option "without-check" => "without-test"
-
   depends_on "cmake" => :build
+  depends_on "openssl@1.1"
 
   def install
-    args = %W[--prefix=#{prefix} --no-examples --build-static]
-    args << "--no-opencl" if build.without? "opencl"
-
-    system "./configure", *args
-    system "make"
-    system "make", "test" if build.with? "test"
-    system "make", "install"
+    system "./configure", "--prefix=#{prefix}", "--no-examples",
+                          "--build-static", "--no-opencl"
+    system "make", "--directory=build"
+    system "make", "--directory=build", "test"
+    system "make", "--directory=build", "install"
   end
 
   test do

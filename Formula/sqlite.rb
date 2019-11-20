@@ -1,133 +1,41 @@
 class Sqlite < Formula
   desc "Command-line interface for SQLite"
   homepage "https://sqlite.org/"
-  url "https://sqlite.org/2018/sqlite-autoconf-3230100.tar.gz"
-  version "3.23.1"
-  sha256 "92842b283e5e744eff5da29ed3c69391de7368fccc4d0ee6bf62490ce555ef25"
+  url "https://sqlite.org/2019/sqlite-autoconf-3300100.tar.gz"
+  version "3.30.1"
+  sha256 "8c5a50db089bd2a1b08dbc5b00d2027602ca7ff238ba7658fabca454d4298e60"
 
   bottle do
     cellar :any
-    sha256 "0b5f0e6d1096fbed10367e53c13c0e1300841f8f47739a0874abba8cc769a6d7" => :high_sierra
-    sha256 "75bf05c73a9b51101ea166742eb9baf285eda857fd98ea1d50a3abf0d81bd978" => :sierra
-    sha256 "2324970c4848106ec567ab4dd1ca06bf528ab9b6318809194edcc532aa3ece93" => :el_capitan
+    sha256 "38c39121f7634ec563bb201b483f66cf567dfe61e02624ffb06f620f11158ab1" => :catalina
+    sha256 "5e6fef2d754e0e4009d502c40ad1846ac46937886b5f3fe89378cb838626d95e" => :mojave
+    sha256 "5331999b520ce7e257a0e263ef0a6d0a1d3d40ce9a1d5759a10e0e21dcd001be" => :high_sierra
   end
 
   keg_only :provided_by_macos, "macOS provides an older sqlite3"
 
-  option "with-docs", "Install HTML documentation"
-  option "without-rtree", "Disable the R*Tree index module"
-  option "with-fts", "Enable the FTS3 module"
-  option "with-fts5", "Enable the FTS5 module (experimental)"
-  option "with-secure-delete", "Defaults secure_delete to on"
-  option "with-unlock-notify", "Enable the unlock notification feature"
-  option "with-icu4c", "Enable the ICU module"
-  option "with-functions", "Enable more math and string functions for SQL queries"
-  option "with-dbstat", "Enable the 'dbstat' virtual table"
-  option "with-json1", "Enable the JSON1 extension"
-  option "with-session", "Enable the session extension"
-  option "with-soundex", "Enable the SOUNDEX function"
-
-  depends_on "readline" => :recommended
-  depends_on "icu4c" => :optional
-
-  resource "functions" do
-    url "https://sqlite.org/contrib/download/extension-functions.c?get=25", :using => :nounzip
-    version "2010-02-06"
-    sha256 "991b40fe8b2799edc215f7260b890f14a833512c9d9896aa080891330ffe4052"
-  end
-
-  resource "docs" do
-    url "https://sqlite.org/2018/sqlite-doc-3230100.zip"
-    version "3.23.1"
-    sha256 "85f936ba6db3540db92f878990d088b10bb453c691fccf05714396a03c813872"
-  end
+  depends_on "readline"
 
   def install
     ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_COLUMN_METADATA=1"
     # Default value of MAX_VARIABLE_NUMBER is 999 which is too low for many
     # applications. Set to 250000 (Same value used in Debian and Ubuntu).
     ENV.append "CPPFLAGS", "-DSQLITE_MAX_VARIABLE_NUMBER=250000"
-    ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_RTREE=1" if build.with? "rtree"
-    ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_FTS3_PARENTHESIS=1" if build.with? "fts"
-    ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_FTS5=1" if build.with? "fts5"
-    ENV.append "CPPFLAGS", "-DSQLITE_SECURE_DELETE=1" if build.with? "secure-delete"
-    ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_UNLOCK_NOTIFY=1" if build.with? "unlock-notify"
-    ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_DBSTAT_VTAB=1" if build.with? "dbstat"
-    ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_JSON1=1" if build.with? "json1"
-    ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_PREUPDATE_HOOK=1 -DSQLITE_ENABLE_SESSION=1" if build.with? "session"
-    ENV.append "CPPFLAGS", "-DSQLITE_SOUNDEX" if build.with? "soundex"
+    ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_RTREE=1"
+    ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_FTS3_PARENTHESIS=1"
+    ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_JSON1=1"
 
-    if build.with? "icu4c"
-      icu4c = Formula["icu4c"]
-      icu4cldflags = `#{icu4c.opt_bin}/icu-config --ldflags`.tr("\n", " ")
-      icu4ccppflags = `#{icu4c.opt_bin}/icu-config --cppflags`.tr("\n", " ")
-      ENV.append "LDFLAGS", icu4cldflags
-      ENV.append "CPPFLAGS", icu4ccppflags
-      ENV.append "CPPFLAGS", "-DSQLITE_ENABLE_ICU=1"
-    end
-
-    args = [
-      "--prefix=#{prefix}",
-      "--disable-dependency-tracking",
-      "--enable-dynamic-extensions",
+    args = %W[
+      --prefix=#{prefix}
+      --disable-dependency-tracking
+      --enable-dynamic-extensions
+      --enable-readline
+      --disable-editline
+      --enable-session
     ]
-    args << "--enable-readline" << "--disable-editline" if build.with? "readline"
 
     system "./configure", *args
     system "make", "install"
-
-    if build.with? "functions"
-      buildpath.install resource("functions")
-      system ENV.cc, "-fno-common",
-                     "-dynamiclib",
-                     "extension-functions.c",
-                     "-o", "libsqlitefunctions.dylib",
-                     *ENV.cflags.to_s.split
-      lib.install "libsqlitefunctions.dylib"
-    end
-    doc.install resource("docs") if build.with? "docs"
-  end
-
-  def caveats
-    s = ""
-    if build.with? "functions"
-      s += <<~EOS
-        Usage instructions for applications calling the sqlite3 API functions:
-
-          In your application, call sqlite3_enable_load_extension(db,1) to
-          allow loading external libraries.  Then load the library libsqlitefunctions
-          using sqlite3_load_extension; the third argument should be 0.
-          See https://sqlite.org/loadext.html.
-          Select statements may now use these functions, as in
-          SELECT cos(radians(inclination)) FROM satsum WHERE satnum = 25544;
-
-        Usage instructions for the sqlite3 program:
-
-          If the program is built so that loading extensions is permitted,
-          the following will work:
-           sqlite> SELECT load_extension('#{lib}/libsqlitefunctions.dylib');
-           sqlite> select cos(radians(45));
-           0.707106781186548
-      EOS
-    end
-    if build.with? "readline"
-      user_history = "~/.sqlite_history"
-      user_history_path = File.expand_path(user_history)
-      if File.exist?(user_history_path) && File.read(user_history_path).include?("\\040")
-        s += <<~EOS
-          Homebrew has detected an existing SQLite history file that was created
-          with the editline library. The current version of this formula is
-          built with Readline. To back up and convert your history file so that
-          it can be used with Readline, run:
-
-            sed -i~ 's/\\\\040/ /g' #{user_history}
-
-          before using the `sqlite` command-line tool again. Otherwise, your
-          history will be lost.
-        EOS
-      end
-    end
-    s
   end
 
   test do

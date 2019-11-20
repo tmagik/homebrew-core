@@ -1,24 +1,25 @@
 class Lammps < Formula
   desc "Molecular Dynamics Simulator"
-  homepage "http://lammps.sandia.gov/"
-  url "http://lammps.sandia.gov/tars/lammps-11Aug17.tar.gz"
+  homepage "https://lammps.sandia.gov/"
+  url "https://lammps.sandia.gov/tars/lammps-7Aug19.tar.gz"
   # lammps releases are named after their release date. We transform it to
   # YYYY-MM-DD (year-month-day) so that we get a sane version numbering.
   # We only track stable releases as announced on the LAMMPS homepage.
-  version "2017-08-11"
-  sha256 "33431329fc735fb12d22ed33399235ef9506ba759a281a24028de538822af104"
-  revision 4
+  version "2019-08-07"
+  sha256 "4e8342b97441deb76c2fddd8a4fd23beb718cb0910779d98e334026391ed3961"
 
   bottle do
-    cellar :any
-    sha256 "6e8a4829a9220e654f46e74033a8adf4fc2f8b6551e0fe8d565e865b7aefcc18" => :high_sierra
-    sha256 "ee741c246d6c76998d682fe28351a76ed4d581a3b7a31443896fa31e035aed22" => :sierra
-    sha256 "ff600c4f0c8e03bc538636552517d128a6eef46c0aa0603209b821b736cf616e" => :el_capitan
+    sha256 "604056c80bb3b36f0a1644388bff26f2bcdc3e2f2541247e9a7ce941b20e9bcc" => :catalina
+    sha256 "e14fbf9e68b16804c9d86f525e92190010c580c479263eaf194ff1e23dd877b1" => :mojave
+    sha256 "eebae98d9606af15a5281f07843ea41aeb94974a52f0023e9734aab3db430406" => :high_sierra
+    sha256 "cd52cb03b501cb8d65f0dcf8baf3857dc13e2a2206016ef559bf5ff3eba31e1d" => :sierra
   end
 
+  depends_on "pkg-config" => :build
   depends_on "fftw"
   depends_on "gcc" # for gfortran
   depends_on "jpeg"
+  depends_on "kim-api"
   depends_on "libpng"
   depends_on "open-mpi"
 
@@ -30,7 +31,7 @@ class Lammps < Formula
 
         # Disable some packages for which we do not have dependencies, that are
         # deprecated or require too much configuration.
-        %w[gpu kim kokkos mscg meam mpiio poems reax voronoi].each do |package|
+        %w[gpu kokkos latte mscg message mpiio poems voronoi].each do |package|
           system "make", "no-#{package}"
         end
 
@@ -39,7 +40,8 @@ class Lammps < Formula
                        "FFT_INC=-DFFT_FFTW3 -I#{Formula["fftw"].opt_include}",
                        "FFT_PATH=-L#{Formula["fftw"].opt_lib}",
                        "FFT_LIB=-lfftw3",
-                       "JPG_INC=-DLAMMPS_JPEG -I#{Formula["jpeg"].opt_include} -DLAMMPS_PNG -I#{Formula["libpng"].opt_include}",
+                       "JPG_INC=-DLAMMPS_JPEG -I#{Formula["jpeg"].opt_include} " \
+                       "-DLAMMPS_PNG -I#{Formula["libpng"].opt_include}",
                        "JPG_PATH=-L#{Formula["jpeg"].opt_lib} -L#{Formula["libpng"].opt_lib}",
                        "JPG_LIB=-ljpeg -lpng"
 

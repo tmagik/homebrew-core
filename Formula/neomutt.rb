@@ -1,14 +1,14 @@
 class Neomutt < Formula
   desc "E-mail reader with support for Notmuch, NNTP and much more"
-  homepage "https://www.neomutt.org/"
-  url "https://github.com/neomutt/neomutt/archive/neomutt-20180323.tar.gz"
-  sha256 "4c498424cd6ded946c940f38df7cd01604a23059f258f05d979b2580eafc678b"
+  homepage "https://neomutt.org/"
+  url "https://github.com/neomutt/neomutt/archive/20191111.tar.gz"
+  sha256 "29b9e9d7293157a8575808eb2ceb62ffb2f31be206405abc64fc37a4425e36f4"
   head "https://github.com/neomutt/neomutt.git"
 
   bottle do
-    sha256 "ae2354a645f5602da74cee42e385815ed58730d95138a73ff25200e77d8fdbd5" => :high_sierra
-    sha256 "30c9faf7758144c6689ce52e18f14002746889635164f423cb05885b370d637b" => :sierra
-    sha256 "92f82210f31bc4667f65bd370750f9ec725535c382084a09771b10b87958ab9d" => :el_capitan
+    sha256 "eb6b23700d5b13a715fc3d31cdf1df8a4f09bc9c63c542bccac05a6dd38d69e3" => :catalina
+    sha256 "694902ef8d32f06c824463701fbe4b9c1b3707f22896a2525e4bdd98b7a36540" => :mojave
+    sha256 "ea0214b73aa7b52e28c617b3d23c856b62d740758061af2a77492a787f6e316e" => :high_sierra
   end
 
   depends_on "docbook-xsl" => :build
@@ -17,25 +17,26 @@ class Neomutt < Formula
   depends_on "libidn"
   depends_on "lmdb"
   depends_on "notmuch"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "tokyo-cabinet"
 
   def install
     ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog"
     system "./configure", "--prefix=#{prefix}",
                           "--enable-gpgme",
+                          "--with-gpgme=#{Formula["gpgme"].opt_prefix}",
                           "--gss",
                           "--lmdb",
                           "--notmuch",
                           "--sasl",
                           "--tokyocabinet",
-                          "--with-ssl=#{Formula["openssl"].opt_prefix}",
+                          "--with-ssl=#{Formula["openssl@1.1"].opt_prefix}",
                           "--with-ui=ncurses"
     system "make", "install"
   end
 
   test do
     output = shell_output("#{bin}/neomutt -F /dev/null -Q debug_level")
-    assert_equal "debug_level=0", output.chomp
+    assert_equal "set debug_level = 0", output.chomp
   end
 end

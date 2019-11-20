@@ -6,21 +6,16 @@ class Libdnet < Formula
 
   bottle do
     cellar :any
-    rebuild 2
-    sha256 "668c5bef84573868ed3510e414b2d3d8cc092e2776f97e0a0d559e4568ff1db2" => :high_sierra
-    sha256 "bfd53f9a4303380ecab6902b181f82a4f229650663443889e1183f4b865d8761" => :sierra
-    sha256 "dc34f5bfbe3385420d7fd482029a3acc3c8328ee145a4fe2fc806f6de22e77f4" => :el_capitan
-    sha256 "09996ef2a4fce855bd5302996000f5ab49fd28d3e6bf6f0d82d3f11d495baef1" => :yosemite
-    sha256 "1b425f04354f60b2c9de0b6e031d50f626d3cda0dc50c892b163107a6eecacb9" => :mavericks
-    sha256 "c8fda878e8ff2a87a3b521ca26a5ebb0d4b9eb82868a92149c723c4bf21f5b79" => :mountain_lion
+    rebuild 4
+    sha256 "f0f94480e8f973b31b39dfbb7f594c678f02c7176559badb1d31d644deb0a34a" => :catalina
+    sha256 "540ccb96d3647a0d71f563e06d08e410d14b7d09c23f6348bc91fd22251e5ff2" => :mojave
+    sha256 "ece250e6792f542e5546ac5e8e5144fe07c76ce3ddb94216181e85092d530e81" => :high_sierra
+    sha256 "bb550ef762ca5d65f87b65575758557afcf8e6b93855be32638cab265540ba6b" => :sierra
   end
-
-  option "without-python", "Build without python support"
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build
-  depends_on "python@2"
 
   def install
     # autoreconf to get '.dylib' extension on shared lib
@@ -29,8 +24,7 @@ class Libdnet < Formula
 
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
-                          "--mandir=#{man}",
-                          "--with-python"
+                          "--mandir=#{man}"
     system "make", "install"
   end
 

@@ -1,21 +1,23 @@
 class Tgui < Formula
   desc "GUI library for use with sfml"
   homepage "https://tgui.eu"
-  url "https://github.com/texus/TGUI/archive/0.7.7.tar.gz"
-  sha256 "7e6d9d4d9ec24fa4227655158c9d382f6b1910f8ef78f5bcfc9f5bafe155836d"
+  url "https://github.com/texus/TGUI/archive/v0.8.5.tar.gz"
+  sha256 "10d3cc3747acc6c5d7e4fd7de2e56fb63c4af6741f51dae825bf69267a3c8479"
 
   bottle do
     cellar :any
-    sha256 "88096b417c5a8b9282cc05a11e2477adf38befa8401869ac84a74cc00f2c7877" => :high_sierra
-    sha256 "07c1e772bd19375796830af0fe28e567b1d05516507ca0a871586afed4eb0b35" => :sierra
-    sha256 "6421f8a014f5246fd3261eef0c3d9b1030139081d02c24dad865ba635e601f25" => :el_capitan
+    sha256 "2915a3f1a9ea5911aa740862361c4b5947c62e673dfd38ae6916821bdb39b63c" => :catalina
+    sha256 "bb4cb1abbe054e3a6111a1b6c6f94542dda6de5ed2a090b5089f1b7248d04aad" => :mojave
+    sha256 "811a11b144eaf8cd53701b61529cfe3429f5d2b25846ff861318375c180f10af" => :high_sierra
+    sha256 "28ccab66f83240703d4778a408576be56b1a212c520419b35bc9330c70ea5cee" => :sierra
   end
 
   depends_on "cmake" => :build
   depends_on "sfml"
 
   def install
-    system "cmake", ".", *std_cmake_args
+    system "cmake", ".", *std_cmake_args,
+                    "-DTGUI_MISC_INSTALL_PREFIX=#{pkgshare}"
     system "make", "install"
   end
 

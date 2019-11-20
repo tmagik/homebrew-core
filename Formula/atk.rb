@@ -1,27 +1,24 @@
 class Atk < Formula
   desc "GNOME accessibility toolkit"
   homepage "https://library.gnome.org/devel/atk/"
-  url "https://download.gnome.org/sources/atk/2.28/atk-2.28.1.tar.xz"
-  sha256 "cd3a1ea6ecc268a2497f0cd018e970860de24a6d42086919d6bf6c8e8d53f4fc"
-  revision 2
+  url "https://download.gnome.org/sources/atk/2.34/atk-2.34.1.tar.xz"
+  sha256 "d4f0e3b3d21265fcf2bc371e117da51c42ede1a71f6db1c834e6976bb20997cb"
 
   bottle do
-    sha256 "2fa9dc887ac9710977281e59a7ae22a571596b234ac738479ee26afedbdaba34" => :high_sierra
-    sha256 "960f53ddcbd54d708f7fb70ea655a8f14a8f315e20121d157e7927354dae4068" => :sierra
-    sha256 "2a03378b3903fbca6caca6811a3e3658fd75914a62dc5dda3a801dd4e16d7a0a" => :el_capitan
+    cellar :any
+    sha256 "01909cda5426d86c09f354fae84bdf29fdc42428b42d07eb799a49452cac7909" => :catalina
+    sha256 "481a81e57b58fd84251bd10a364433c5558802084f2dc4e459515b27703c6abb" => :mojave
+    sha256 "f80df2351f0b557484f7eb7c3b6dbd34e73dfdedd07a8cf0f1fd56be155f615f" => :high_sierra
+    sha256 "ec44e1cc0f0c110579b3e2a339bff88a9455f187cadd4cac3eec420cf2347ffe" => :sierra
   end
 
   depends_on "gobject-introspection" => :build
-  depends_on "meson-internal" => :build
+  depends_on "meson" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "glib"
 
-  patch :DATA
-
   def install
-    ENV.refurbish_args
-
     mkdir "build" do
       system "meson", "--prefix=#{prefix}", ".."
       system "ninja"
@@ -57,21 +54,3 @@ class Atk < Formula
     system "./test"
   end
 end
-
-__END__
-diff --git a/meson.build b/meson.build
-index 7d5a31b..b5c695a 100644
---- a/meson.build
-+++ b/meson.build
-@@ -80,11 +80,6 @@ if host_machine.system() == 'linux'
-   endforeach
- endif
-
--# Maintain compatibility with autotools on macOS
--if host_machine.system() == 'darwin'
--  common_ldflags += [ '-compatibility_version=1', '-current_version=1.0', ]
--endif
--
- # Functions
- checked_funcs = [
-   'bind_textdomain_codeset',

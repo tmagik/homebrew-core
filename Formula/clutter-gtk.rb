@@ -3,20 +3,20 @@ class ClutterGtk < Formula
   homepage "https://wiki.gnome.org/Projects/Clutter"
   url "https://download.gnome.org/sources/clutter-gtk/1.8/clutter-gtk-1.8.4.tar.xz"
   sha256 "521493ec038973c77edcb8bc5eac23eed41645117894aaee7300b2487cb42b06"
-  revision 1
+  revision 3
 
   bottle do
-    sha256 "20e4d6eafb36559b56406f5e26e8989d7d636945cabe9f6d4aa29a1661e46500" => :high_sierra
-    sha256 "2b0b873bc1f679f76216ee07ebc79fa0dffb8a0be3f7239868141f342e2a700e" => :sierra
-    sha256 "ce3e5e2f2a6107b17b521812fe7ab985e8d6e1cf57b8a3aa84a19cb760809e16" => :el_capitan
+    sha256 "2070f5b3fe4a7c8772fa878e3dbf1248e0dfe4d37ed5474aa10d4c27621a7ae3" => :catalina
+    sha256 "dc49dd1f20acd2fe4f0670e3a7d547831a998f5a1660f88b3c16ec45af63c041" => :mojave
+    sha256 "476db379f8fef52caa97c7880f17a0a978bfafad7821856adb8152b57f767abb" => :high_sierra
   end
 
   depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
-  depends_on "glib"
-  depends_on "gdk-pixbuf"
-  depends_on "gtk+3"
   depends_on "clutter"
+  depends_on "gdk-pixbuf"
+  depends_on "glib"
+  depends_on "gtk+3"
 
   def install
     args = %W[
@@ -51,6 +51,7 @@ class ClutterGtk < Formula
     gettext = Formula["gettext"]
     glib = Formula["glib"]
     gtkx3 = Formula["gtk+3"]
+    harfbuzz = Formula["harfbuzz"]
     json_glib = Formula["json-glib"]
     libepoxy = Formula["libepoxy"]
     libpng = Formula["libpng"]
@@ -69,6 +70,7 @@ class ClutterGtk < Formula
       -I#{glib.opt_include}/glib-2.0
       -I#{glib.opt_lib}/glib-2.0/include
       -I#{gtkx3.opt_include}/gtk-3.0
+      -I#{harfbuzz.opt_include}/harfbuzz
       -I#{include}/clutter-gtk-1.0
       -I#{json_glib.opt_include}/json-glib-1.0
       -I#{libepoxy.opt_include}

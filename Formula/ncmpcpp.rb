@@ -3,13 +3,14 @@ class Ncmpcpp < Formula
   homepage "https://rybczak.net/ncmpcpp/"
   url "https://rybczak.net/ncmpcpp/stable/ncmpcpp-0.8.2.tar.bz2"
   sha256 "650ba3e8089624b7ad9e4cc19bc1ac6028edb7523cc111fa1686ea44c0921554"
-  revision 1
+  revision 7
 
   bottle do
     cellar :any
-    sha256 "0d0f6753db53a1244b735d337511549feb336a1d616b11dec253cfffa80d060d" => :high_sierra
-    sha256 "862b17bef067d8ad9467aff89e1fddd18f2128daed8b8ac4cf53bb7ded9d85bb" => :sierra
-    sha256 "f55716214e49a713a0a9c5c341750d34ad8f3f47b16cc76e235c8d7dc8a72c01" => :el_capitan
+    sha256 "a77106eabbfef44dbf38663e8d98d6581459e6caee18496cf4843ce234576245" => :catalina
+    sha256 "2b7a5d50cef5070b97c9ff6ce8eeabb99881356adf20442b46d25f80b33a4dff" => :mojave
+    sha256 "578660663ea2c0376158bed05bb0ccdd4ba4100f9c69bcba6f291e1fdc40aba0" => :high_sierra
+    sha256 "2cbd13d035e4aef1fffca5ef5994bbaa0a1fb058d54870ac4fcc04854b705e51" => :sierra
   end
 
   head do
@@ -20,23 +21,13 @@ class Ncmpcpp < Formula
     depends_on "libtool" => :build
   end
 
-  deprecated_option "outputs" => "with-outputs"
-  deprecated_option "visualizer" => "with-visualizer"
-  deprecated_option "clock" => "with-clock"
-
-  option "with-outputs", "Compile with mpd outputs control"
-  option "with-visualizer", "Compile with built-in visualizer"
-  option "with-clock", "Compile with optional clock tab"
-
   depends_on "pkg-config" => :build
   depends_on "boost"
+  depends_on "fftw"
   depends_on "libmpdclient"
   depends_on "ncurses"
   depends_on "readline"
   depends_on "taglib"
-  depends_on "fftw" if build.with? "visualizer"
-
-  needs :cxx11
 
   def install
     ENV.cxx11
@@ -44,17 +35,16 @@ class Ncmpcpp < Formula
     ENV.append "BOOST_LIB_SUFFIX", "-mt"
     ENV.append "CXXFLAGS", "-D_XOPEN_SOURCE_EXTENDED"
 
-    args = [
-      "--disable-dependency-tracking",
-      "--prefix=#{prefix}",
-      "--with-taglib",
-      "--with-curl",
-      "--enable-unicode",
+    args = %W[
+      --disable-dependency-tracking
+      --prefix=#{prefix}
+      --enable-clock
+      --enable-outputs
+      --enable-unicode
+      --enable-visualizer
+      --with-curl
+      --with-taglib
     ]
-
-    args << "--enable-outputs" if build.with? "outputs"
-    args << "--enable-visualizer" if build.with? "visualizer"
-    args << "--enable-clock" if build.with? "clock"
 
     system "./autogen.sh" if build.head?
     system "./configure", *args

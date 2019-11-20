@@ -1,30 +1,53 @@
 class Caddy < Formula
   desc "Alternative general-purpose HTTP/2 web server"
   homepage "https://caddyserver.com/"
-  url "https://github.com/mholt/caddy/archive/v0.10.14.tar.gz"
-  sha256 "13feb836e85af3525b3e95f42635566f14d171edc9776881f59fbf61fa45d345"
-  head "https://github.com/mholt/caddy.git"
+  url "https://github.com/caddyserver/caddy/archive/v1.0.4.tar.gz"
+  sha256 "bf81245d2b347c89a8e8aa358a224b722d55cb6e1c266bbdffbe6acc54d130a5"
+  head "https://github.com/caddyserver/caddy.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "898e5498690d8951290a80bcb5988f965ef0de03f9371784345abb8fac051467" => :high_sierra
-    sha256 "c732041f4a4e55f9ade4e043eac13c3e7099af21072beba8131d6e82d71e6999" => :sierra
-    sha256 "8ded8ce37d31009d0e5a810ea76320fcb7847cb317ceea2c60eadfff91eea453" => :el_capitan
+    sha256 "d0a61a2b2b722b4bc23be979479785f6da07dd51cf5dff18791d0accdd6e65f1" => :catalina
+    sha256 "a63d911c9dfc6832155bd9c70755185f69d8e238129644b2e9f0fc2436d260f3" => :mojave
+    sha256 "e51157637abfcda12254807018d278ae804827b94d6797b105ee9599f3c2ef6e" => :high_sierra
   end
 
   depends_on "go" => :build
 
   def install
-    ENV["GOPATH"] = buildpath
     ENV["GOOS"] = "darwin"
-    ENV["GOARCH"] = MacOS.prefer_64_bit? ? "amd64" : "386"
+    ENV["GOARCH"] = "amd64"
 
-    (buildpath/"src/github.com/mholt").mkpath
-    ln_s buildpath, "src/github.com/mholt/caddy"
+    (buildpath/"src/github.com/caddyserver").mkpath
+    ln_s buildpath, "src/github.com/caddyserver/caddy"
 
     system "go", "build", "-ldflags",
-           "-X github.com/mholt/caddy/caddy/caddymain.gitTag=#{version}",
-           "-o", bin/"caddy", "github.com/mholt/caddy/caddy"
+           "-X github.com/caddyserver/caddy/caddy/caddymain.gitTag=#{version}",
+           "-o", bin/"caddy", "github.com/caddyserver/caddy/caddy"
+  end
+
+  plist_options :manual => "caddy -conf #{HOMEBREW_PREFIX}/etc/Caddyfile"
+
+  def plist; <<~EOS
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+      <dict>
+        <key>KeepAlive</key>
+        <true/>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_bin}/caddy</string>
+          <string>-conf</string>
+          <string>#{etc}/Caddyfile</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+      </dict>
+    </plist>
+  EOS
   end
 
   test do

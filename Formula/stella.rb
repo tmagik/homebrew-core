@@ -1,25 +1,25 @@
 class Stella < Formula
   desc "Atari 2600 VCS emulator"
   homepage "https://stella-emu.github.io/"
-  url "https://github.com/stella-emu/stella/releases/download/5.1.1/stella-5.1.1-src.tar.xz"
-  sha256 "3de6ad86e4e881d1a23395c36c5453eb8a1160d0f3a021992fe990a009a933da"
+  url "https://github.com/stella-emu/stella/releases/download/6.0.2/stella-6.0.2-src.tar.xz"
+  sha256 "bcbd82294f97d00457fdb727e9b08ff73b685dc7f77704cea1eceb58d8967387"
   head "https://github.com/stella-emu/stella.git"
 
   bottle do
     cellar :any
-    sha256 "20531655187c2cc8137714a7df420a701838192fb7cbd83d587300d1c8691471" => :high_sierra
-    sha256 "2fb238f5b88ab0b154aa97ef9d2a25ca2176e1205702183b27711b928da04007" => :sierra
-    sha256 "9be378753ee161c47391ce91aa9c3476df906062f6f5ad7dd57e2e8eb77d0921" => :el_capitan
+    sha256 "e8ba8548bb9a0eee1cc7ae25ece7a71ec34b659007fd28ed511785d2426f8bd9" => :catalina
+    sha256 "9eb712f39ab97788ee8d7290e866a6bbf002ac31ba72f1e926a2c07831158a4a" => :mojave
+    sha256 "8f9a6e8cfd9c54c78816526fe5050a1d299931ec150af1eead1fed485c1bd0f4" => :high_sierra
   end
 
   depends_on :xcode => :build
-  depends_on "sdl2"
   depends_on "libpng"
+  depends_on "sdl2"
 
   def install
     sdl2 = Formula["sdl2"]
     libpng = Formula["libpng"]
-    cd "src/macosx" do
+    cd "src/macos" do
       inreplace "stella.xcodeproj/project.pbxproj" do |s|
         s.gsub! %r{(\w{24} \/\* SDL2\.framework)}, '//\1'
         s.gsub! %r{(\w{24} \/\* png)}, '//\1'

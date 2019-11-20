@@ -1,24 +1,22 @@
 class Putty < Formula
   desc "Implementation of Telnet and SSH"
   homepage "https://www.chiark.greenend.org.uk/~sgtatham/putty/"
-  url "https://the.earth.li/~sgtatham/putty/0.70/putty-0.70.tar.gz"
-  sha256 "bb8aa49d6e96c5a8e18a057f3150a1695ed99a24eef699e783651d1f24e7b0be"
+  url "https://the.earth.li/~sgtatham/putty/0.73/putty-0.73.tar.gz"
+  sha256 "3db0b5403fb41aecd3aa506611366650d927650b6eb3d839ad4dcc782519df1c"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "832bf75b4d9927e461c853e802a7951724522fd083a0774f0609141965c06c82" => :high_sierra
-    sha256 "b212b6d5db7478c43d0f6883c459373e257219f9bfc4aa24abe2992d82f9294e" => :sierra
-    sha256 "658a1736398dedd1dc5bc1c267c08b126a6bd9b2653fb2ef3b425f401a14f293" => :el_capitan
-    sha256 "ef3e944e9b322ce16da3264e68bce6a23f58a23f45f8d84d27954670a8d71379" => :yosemite
+    sha256 "37ba26e6b965281083a75044df48335b9dd4eb06c2d3893af3c904ce73df633f" => :catalina
+    sha256 "765e7d374a8f98b1d336e5120fd9e9e07cddd75c0f9ac68fe9bdbde577193620" => :mojave
+    sha256 "cdba0d03e5de13733fcf62307656adba84d872ae5b97cdde77034ef97de5e63f" => :high_sierra
   end
 
   head do
     url "https://git.tartarus.org/simon/putty.git"
 
-    depends_on "halibut" => :build
     depends_on "autoconf" => :build
     depends_on "automake" => :build
-    depends_on "gtk+3" => :optional
+    depends_on "halibut" => :build
   end
 
   depends_on "pkg-config" => :build
@@ -37,13 +35,8 @@ class Putty < Formula
       --disable-silent-rules
       --disable-dependency-tracking
       --disable-gtktest
+      --without-gtk
     ]
-
-    if build.head? && build.with?("gtk+3")
-      args << "--with-gtk=3" << "--with-quartz"
-    else
-      args << "--without-gtk"
-    end
 
     system "./configure", *args
 
@@ -51,11 +44,9 @@ class Putty < Formula
     system "make", "VER=-DRELEASE=#{build_version}"
 
     bin.install %w[plink pscp psftp puttygen]
-    bin.install %w[putty puttytel pterm] if build.head? && build.with?("gtk+3")
 
     cd "doc" do
       man1.install %w[plink.1 pscp.1 psftp.1 puttygen.1]
-      man1.install %w[putty.1 puttytel.1 pterm.1] if build.head? && build.with?("gtk+3")
     end
   end
 

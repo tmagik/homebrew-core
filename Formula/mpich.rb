@@ -1,24 +1,19 @@
 class Mpich < Formula
   desc "Implementation of the MPI Message Passing Interface standard"
   homepage "https://www.mpich.org/"
-  url "https://www.mpich.org/static/downloads/3.2.1/mpich-3.2.1.tar.gz"
-  mirror "https://fossies.org/linux/misc/mpich-3.2.1.tar.gz"
-  sha256 "5db53bf2edfaa2238eb6a0a5bc3d2c2ccbfbb1badd79b664a1a919d2ce2330f1"
-  revision 2
+  url "https://www.mpich.org/static/downloads/3.3.2/mpich-3.3.2.tar.gz"
+  mirror "https://fossies.org/linux/misc/mpich-3.3.2.tar.gz"
+  sha256 "4bfaf8837a54771d3e4922c84071ef80ffebddbb6971a006038d91ee7ef959b9"
 
   bottle do
-    sha256 "5c3b8952de7a07098e19a032fc183f7dc5ea27e6cd70d01c2f620fcbb1031ad7" => :high_sierra
-    sha256 "835787746d5851c0e43b19ebf762d1afbcc0e8ad6df38288c3f1bccedd04fd89" => :sierra
-    sha256 "38ceb721bb800c6a375646c186646c0de4e34a270604bf58e87ad6896643a0c4" => :el_capitan
-  end
-
-  devel do
-    url "https://www.mpich.org/static/downloads/3.3b1/mpich-3.3b1.tar.gz"
-    sha256 "f0c822ac48ee01037ec63ec882a945b0730cea6e2f28f262624983e51a983c98"
+    cellar :any
+    sha256 "7d46386dd93ee397ce6dd9f3198aa16aa9e1390699396f3f3b4135087f6ed216" => :catalina
+    sha256 "865e53a39ea105d5d646986b64a0ad9096cdbf4135d7435448062bc458cb6a64" => :mojave
+    sha256 "9d5dc18a7f5a9283f225e117f6ae879f1205249799287150a0e63ef177682077" => :high_sierra
   end
 
   head do
-    url "http://git.mpich.org/mpich.git"
+    url "https://github.com/pmodels/mpich.git"
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build

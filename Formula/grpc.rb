@@ -1,27 +1,27 @@
 class Grpc < Formula
   desc "Next generation open source RPC library and framework"
-  homepage "https://www.grpc.io/"
-  url "https://github.com/grpc/grpc/archive/v1.11.0.tar.gz"
-  sha256 "df9bb06e89d0f904176d4df76f38031711fa369283e5c731da26032526e775f1"
+  homepage "https://grpc.io/"
+  url "https://github.com/grpc/grpc/archive/v1.25.0.tar.gz"
+  sha256 "ffbe61269160ea745e487f79b0fd06b6edd3d50c6d9123f053b5634737cf2f69"
   head "https://github.com/grpc/grpc.git"
 
   bottle do
-    sha256 "7808dce9c2b3c01fb7fa675d6880abfbba3a493c707f901c0843de06e3c53b81" => :high_sierra
-    sha256 "00d8e895e2fbfdb0dba6c89f591984d91ad0d77312482efd5cd0d1d5d140e76c" => :sierra
-    sha256 "bd84b5dca2ddb73532e5ec72515fad27d274af44af7686e19244c2d5ed577c81" => :el_capitan
+    sha256 "95d0cc6709f6a4465e9580937db5fd9a45812cf084f0689c71b69666a5bfd65b" => :catalina
+    sha256 "6cc94b6a248af3cd10daa68b732142de4a1a5d4e5b2eaa73fb7bd537fe57cfc7" => :mojave
+    sha256 "fc1760f5aa11cb91f4d535fb0c236197be7406bcab0caf7d5607a829a58a9c8a" => :high_sierra
   end
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build
   depends_on "c-ares"
-  depends_on "openssl"
-  depends_on "protobuf"
   depends_on "gflags"
+  depends_on "openssl@1.1"
+  depends_on "protobuf"
 
   resource "gtest" do
-    url "https://github.com/google/googletest/archive/release-1.8.0.tar.gz"
-    sha256 "58a6f4277ca2bc8565222b3bbd58a177609e9c488e8a72649359ba51450db7d8"
+    url "https://github.com/google/googletest/archive/release-1.8.1.tar.gz"
+    sha256 "9bf1fe5182a604b4135edc1a425ae356c9ad15e9b23f9f12a02e80184c3a249c"
   end
 
   def install

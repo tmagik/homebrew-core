@@ -3,21 +3,22 @@ class Libmspub < Formula
   homepage "https://wiki.documentfoundation.org/DLP/Libraries/libmspub"
   url "https://dev-www.libreoffice.org/src/libmspub/libmspub-0.1.4.tar.xz"
   sha256 "ef36c1a1aabb2ba3b0bedaaafe717bf4480be2ba8de6f3894be5fd3702b013ba"
-  revision 1
+  revision 4
 
   bottle do
     cellar :any
-    sha256 "476947737c06403e92921a9ecf813fd2cc0d9d2b0c7e8a37607f136279dafe71" => :high_sierra
-    sha256 "25f898033a28e8f110f49b18ec1f178d6164ea81288bdbd1e3824216c040cd10" => :sierra
-    sha256 "c38ab2e4dbe8d780728009be89ad9ad8f82f57f99df5a4e2d8f882bb8238bb81" => :el_capitan
+    sha256 "aee93415583bfd6d1b12ccbb1f18b7bad97579ab9046cfff2d303e1bc7336abf" => :catalina
+    sha256 "93f7e02d005fb22101eab93659f200ed8376130c9a4bad0c24b0cdde51b92f18" => :mojave
+    sha256 "43347c63d9fb4a6746929b2127453241cdad9b13a9fd00ddf82af418d6a175b2" => :high_sierra
+    sha256 "ebf70558240b3cc3c49994e865108d7d29796c45d1129e844ef1c99d8ae510a7" => :sierra
   end
 
-  depends_on "pkg-config" => :build
   depends_on "boost" => :build
   depends_on "libwpg" => :build
-  depends_on "libwpd"
+  depends_on "pkg-config" => :build
   depends_on "icu4c"
   depends_on "librevenge"
+  depends_on "libwpd"
 
   def install
     system "./configure", "--without-docs",

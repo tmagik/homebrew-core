@@ -3,21 +3,19 @@ class Fceux < Formula
   homepage "http://fceux.com"
   url "https://downloads.sourceforge.net/project/fceultra/Source%20Code/2.2.3%20src/fceux-2.2.3.src.tar.gz"
   sha256 "4be6dda9a347f941809a3c4a90d21815b502384adfdd596adaa7b2daf088823e"
-  revision 1
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "b075151a3db5a502f98f6ee8b5fcbd5ffa05064a88c786c99fa9fa908b85eacf" => :high_sierra
-    sha256 "4102c16cb5f5412d36cdcc52f739c98c2f457be7a8d4f0a55aa6f973eeb8c39d" => :sierra
-    sha256 "013d1b9b126426b76e814b56a5424281c348333e6a6e69db87cf603362c25397" => :el_capitan
+    sha256 "67f2f82fd3ebb86f98ce85e958392dd9b1439591e86476eb92964488308904ce" => :catalina
+    sha256 "dc3c25ea5a685c59eced0d705e43ef72cdd42e3cf21cdb48c0ca02ebd2494a64" => :mojave
+    sha256 "86dcccdeb382c68cb9b00393780def76257b27d14b897caffd044ae0f2afba10" => :high_sierra
   end
-
-  deprecated_option "no-gtk" => "without-gtk+3"
 
   depends_on "pkg-config" => :build
   depends_on "scons" => :build
+  depends_on "gtk+3"
   depends_on "sdl"
-  depends_on "gtk+3" => :recommended
 
   # Fix "error: ordered comparison between pointer and zero"
   if DevelopmentTools.clang_build_version >= 900
@@ -32,20 +30,15 @@ class Fceux < Formula
     # https://sourceforge.net/p/fceultra/bugs/755/
     inreplace "src/drivers/sdl/SConscript", "env.ParseConfig(config_string)", ""
 
-    args = []
-    args << "RELEASE=1"
-    args << "GTK=0"
-    args << "GTK3=1" if build.with? "gtk+3"
     # gdlib required for logo insertion, but headers are not detected
     # https://sourceforge.net/p/fceultra/bugs/756/
-    args << "LOGO=0"
-    scons *args
+    system "scons", "RELEASE=1", "GTK=0", "GTK3=1", "LOGO=0"
     libexec.install "src/fceux"
     pkgshare.install ["output/luaScripts", "output/palettes", "output/tools"]
     (bin/"fceux").write <<~EOS
       #!/bin/bash
       LUA_PATH=#{pkgshare}/luaScripts/?.lua #{libexec}/fceux "$@"
-      EOS
+    EOS
   end
 
   test do

@@ -1,19 +1,16 @@
 class Gradle < Formula
-  desc "Build system based on the Groovy language"
+  desc "Open-source build automation tool based on the Groovy and Kotlin DSL"
   homepage "https://www.gradle.org/"
-  url "https://services.gradle.org/distributions/gradle-4.7-all.zip"
-  sha256 "203f4537da8b8075e38c036a6d14cb71b1149de5bf0a8f6db32ac2833a1d1294"
+  url "https://services.gradle.org/distributions/gradle-6.0.1-all.zip"
+  sha256 "6f6cfdbb12a577c3845522a1c7fbfe1295ea05d87edabedd4e23fd2bf02b88b1"
 
   bottle :unneeded
 
-  option "with-all", "Installs Javadoc, examples, and source in addition to the binaries"
-
-  depends_on :java => "1.7+"
+  depends_on :java => "1.8+"
 
   def install
     rm_f Dir["bin/*.bat"]
-    libexec.install %w[bin lib]
-    libexec.install %w[docs media samples src] if build.with? "all"
+    libexec.install %w[bin docs lib samples src]
     (bin/"gradle").write_env_script libexec/"bin/gradle", Language::Java.overridable_java_home_env
   end
 

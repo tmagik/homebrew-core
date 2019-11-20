@@ -1,24 +1,29 @@
 class Pushpin < Formula
   desc "Reverse proxy for realtime web services"
   homepage "https://pushpin.org/"
-  url "https://dl.bintray.com/fanout/source/pushpin-1.17.2.tar.bz2"
-  sha256 "f30c12b147d39c52617403b40f11737a14020dc93f223faa7214d73db8af1d77"
+  url "https://dl.bintray.com/fanout/source/pushpin-1.24.0.tar.bz2"
+  sha256 "456aee8f78cac85864ed0883f7fa93cf6f0ab688ee7ad621af4c061a25b8e7fa"
   head "https://github.com/fanout/pushpin.git"
 
   bottle do
-    sha256 "33219cdbd31298f00209282e5ff588187245f7a5a5652c39263717a372e9b290" => :high_sierra
-    sha256 "2233ed69e470f3cf507ff933bb8eb78783b5e8523673fa9b8ad09418b6426a72" => :sierra
-    sha256 "2ee66b7f78d4b25641651f34151adbd1a07b89441a5e1930796e6337fc56807b" => :el_capitan
+    sha256 "f19f61831d9dbbaba14fcbf25179a6a8bf7ecb6cf28088ea969a6a3630afa864" => :catalina
+    sha256 "c327a37cd5f803fc1cd18b218afa7cbd0b575a36f4eac8fe1685308e1c34e4be" => :mojave
+    sha256 "bac145c7b2138346d9f1c7ad5a89bdd7523485c492d55c4d9ed731380e36da72" => :high_sierra
+    sha256 "41a2d7e65233dcc7a2eee569b824c7be1723aa61002540555ce5ee27a800767b" => :sierra
   end
 
   depends_on "pkg-config" => :build
+  depends_on "mongrel2"
   depends_on "qt"
   depends_on "zeromq"
-  depends_on "mongrel2"
   depends_on "zurl"
 
   def install
-    system "./configure", "--prefix=#{prefix}", "--configdir=#{etc}", "--rundir=#{var}/run", "--logdir=#{var}/log", "--extraconf=QMAKE_MACOSX_DEPLOYMENT_TARGET=#{MacOS.version}"
+    system "./configure", "--prefix=#{prefix}",
+                          "--configdir=#{etc}",
+                          "--rundir=#{var}/run",
+                          "--logdir=#{var}/log",
+                          "--extraconf=QMAKE_MACOSX_DEPLOYMENT_TARGET=#{MacOS.version}"
     system "make"
     system "make", "check"
     system "make", "install"

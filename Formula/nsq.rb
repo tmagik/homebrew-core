@@ -1,28 +1,28 @@
 class Nsq < Formula
   desc "Realtime distributed messaging platform"
   homepage "https://nsq.io/"
-  url "https://github.com/nsqio/nsq/archive/v1.0.0-compat.tar.gz"
-  version "1.0.0"
-  sha256 "c279d339eceb84cad09e2c2bc21e069e37988d0f6b7343d77238374081c9fd29"
-  revision 1
+  url "https://github.com/nsqio/nsq/archive/v1.2.0.tar.gz"
+  sha256 "98e24d748550f01dd8775e5e40f3ae657f5b513f875a15081cdcdc567b745480"
   head "https://github.com/nsqio/nsq.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "bf7029656b4cf5fbefaa252ed1cac50dc49a31139eda7b583165bfcacaec1e42" => :high_sierra
-    sha256 "5bb322677d0bbb1f4f5fa7be1584cafbfcec01e67c0063f6ee14a13933389c6e" => :sierra
-    sha256 "2f04a20ef5c05ddd00893198ca5134a455869d1a231893d7931603c60a4dd497" => :el_capitan
+    sha256 "9cda7f1ff6361ba961adc79886f0d369419ed811e91f22b4b01a692d419a4a39" => :catalina
+    sha256 "dfff1005e1c48d1669aafb79cb903ade485ceb9ebbb748d8a6f85f9f71a6ce7b" => :mojave
+    sha256 "54c31bf18fcb185ca5a4dd0192ed846df8d5e6dccf5564d99252d3960555fe11" => :high_sierra
+    sha256 "bcfcd2d5b6ef1bb767631be70ee5aa72bd5987ba3cc75df1043b24aaa08eac8e" => :sierra
   end
 
   depends_on "go" => :build
-  depends_on "gpm" => :build
 
   def install
     ENV["GOPATH"] = buildpath
-    mkdir_p "src/github.com/nsqio"
-    ln_s buildpath, "src/github.com/nsqio/nsq"
-    system "gpm", "install"
-    system "make", "DESTDIR=#{prefix}", "PREFIX=", "install"
+
+    (buildpath/"src/github.com/nsqio/nsq").install buildpath.children
+    cd "src/github.com/nsqio/nsq" do
+      system "make", "DESTDIR=#{prefix}", "PREFIX=", "install"
+      prefix.install_metafiles
+    end
   end
 
   def post_install
@@ -60,39 +60,37 @@ class Nsq < Formula
   end
 
   test do
-    begin
-      lookupd = fork do
-        exec bin/"nsqlookupd"
-      end
-      sleep 2
-      d = fork do
-        exec bin/"nsqd", "--lookupd-tcp-address=127.0.0.1:4160"
-      end
-      sleep 2
-      admin = fork do
-        exec bin/"nsqadmin", "--lookupd-http-address=127.0.0.1:4161"
-      end
-      sleep 2
-      to_file = fork do
-        exec bin/"nsq_to_file", "--lookupd-http-address=127.0.0.1:4161",
-                                "--output-dir=#{testpath}",
-                                "--topic=test"
-      end
-      sleep 2
-      system "curl", "-d", "hello", "http://127.0.0.1:4151/pub?topic=test"
-      sleep 2
-      dat = File.read(Dir["*.dat"].first)
-      assert_match "test", dat
-      assert_match version.to_s, dat
-    ensure
-      Process.kill(9, lookupd)
-      Process.kill(9, d)
-      Process.kill(9, admin)
-      Process.kill(9, to_file)
-      Process.wait lookupd
-      Process.wait d
-      Process.wait admin
-      Process.wait to_file
+    lookupd = fork do
+      exec bin/"nsqlookupd"
     end
+    sleep 2
+    d = fork do
+      exec bin/"nsqd", "--lookupd-tcp-address=127.0.0.1:4160"
+    end
+    sleep 2
+    admin = fork do
+      exec bin/"nsqadmin", "--lookupd-http-address=127.0.0.1:4161"
+    end
+    sleep 2
+    to_file = fork do
+      exec bin/"nsq_to_file", "--lookupd-http-address=127.0.0.1:4161",
+                              "--output-dir=#{testpath}",
+                              "--topic=test"
+    end
+    sleep 2
+    system "curl", "-d", "hello", "http://127.0.0.1:4151/pub?topic=test"
+    sleep 2
+    dat = File.read(Dir["*.dat"].first)
+    assert_match "test", dat
+    assert_match version.to_s, dat
+  ensure
+    Process.kill(15, lookupd)
+    Process.kill(15, d)
+    Process.kill(15, admin)
+    Process.kill(15, to_file)
+    Process.wait lookupd
+    Process.wait d
+    Process.wait admin
+    Process.wait to_file
   end
 end

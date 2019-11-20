@@ -1,8 +1,8 @@
 class Riemann < Formula
   desc "Event stream processor"
-  homepage "http://riemann.io"
-  url "https://github.com/riemann/riemann/releases/download/0.3.0/riemann-0.3.0.tar.bz2"
-  sha256 "2c4c8f07f90a7b7a5e902380382ddd789864d4af50a6677a83f745382d6a3f94"
+  homepage "https://riemann.io/"
+  url "https://github.com/riemann/riemann/releases/download/0.3.4/riemann-0.3.4.tar.bz2"
+  sha256 "c46aa5e37ebf14fb809fdbd02ff3bb7e7bc92f0c3c675312ddf3569d5f8461b0"
 
   bottle :unneeded
 
@@ -33,7 +33,7 @@ class Riemann < Formula
       riemann-client
       riemann-tools
       riemann-dash
-    EOS
+  EOS
   end
 
   plist_options :manual => "riemann"
@@ -61,7 +61,7 @@ class Riemann < Formula
         <string>#{var}/log/riemann.log</string>
       </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

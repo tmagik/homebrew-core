@@ -1,13 +1,16 @@
 class Trafficserver < Formula
   desc "HTTP/1.1 compliant caching proxy server"
   homepage "https://trafficserver.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=trafficserver/trafficserver-7.1.3.tar.bz2"
-  sha256 "41c7e02ab55cb478222ef2259e918b89e5d1ef9778d7fa1d0ec492b26944d420"
+
+  stable do
+    url "https://archive.apache.org/dist/trafficserver/trafficserver-8.0.5.tar.bz2"
+    sha256 "8ede46ef4b7961b0f53dc3418985f30569725c671ea9e6626dc8bbf0ca46544f"
+  end
 
   bottle do
-    sha256 "34d24867b84b672d3ba4c07066c15b2db0ee3fab29469e916f54728c808f4200" => :high_sierra
-    sha256 "d871b084da0193a97c97ea9e5dd9b81be73ed7719f0185c797044d98951c558f" => :sierra
-    sha256 "5267f82f7a7d59cd592b4ae5351f17a075ad2dc5fb5d6efb7f880cd9024ec232" => :el_capitan
+    sha256 "e6ea637eb779516b21ebae5e0df8ee10b6dfac8a0e710139ec9f5edcc4f6d6c6" => :catalina
+    sha256 "146b8cda24b90b8f8438bd8cd0684ce0324c2fc7ba18de598cc9f151e5fe59a7" => :mojave
+    sha256 "2016f7171e6633dfa7abf86833354c30b63d2517955f0e7695dd3f0bed5b99b1" => :high_sierra
   end
 
   head do
@@ -16,35 +19,34 @@ class Trafficserver < Formula
     depends_on "autoconf" => :build
     depends_on "automake" => :build
     depends_on "libtool"  => :build
+
+    fails_with :clang do
+      build 800
+      cause "needs C++17"
+    end
   end
 
-  option "with-experimental-plugins", "Enable experimental plugins"
-
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
 
-  needs :cxx11
-
   def install
-    ENV.cxx11
+    ENV.cxx11 if build.stable?
 
-    # Needed for OpenSSL headers
-    if MacOS.version <= :lion
-      ENV.append_to_cflags "-Wno-deprecated-declarations"
-    end
+    # Per https://luajit.org/install.html: If MACOSX_DEPLOYMENT_TARGET
+    # is not set then it's forced to 10.4, which breaks compile on Mojave.
+    ENV["MACOSX_DEPLOYMENT_TARGET"] = MacOS.version
 
     args = %W[
       --prefix=#{prefix}
       --mandir=#{man}
       --localstatedir=#{var}
       --sysconfdir=#{etc}/trafficserver
-      --with-openssl=#{Formula["openssl"].opt_prefix}
+      --with-openssl=#{Formula["openssl@1.1"].opt_prefix}
       --with-tcl=#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework
       --with-group=admin
       --disable-silent-rules
+      --enable-experimental-plugins
     ]
-
-    args << "--enable-experimental-plugins" if build.with? "experimental-plugins"
 
     system "autoreconf", "-fvi" if build.head?
     system "./configure", *args

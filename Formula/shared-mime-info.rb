@@ -1,25 +1,26 @@
 class SharedMimeInfo < Formula
   desc "Database of common MIME types"
   homepage "https://wiki.freedesktop.org/www/Software/shared-mime-info"
-  url "https://freedesktop.org/~hadess/shared-mime-info-1.9.tar.xz"
-  sha256 "5c0133ec4e228e41bdf52f726d271a2d821499c2ab97afd3aa3d6cf43efcdc83"
+  url "https://gitlab.freedesktop.org/xdg/shared-mime-info/uploads/b27eb88e4155d8fccb8bb3cd12025d5b/shared-mime-info-1.15.tar.xz"
+  sha256 "f482b027437c99e53b81037a9843fccd549243fd52145d016e9c7174a4f5db90"
 
   bottle do
     cellar :any
-    sha256 "d9874846a89ac41dcc2b95f1c35c4d566ae02ae287b213500c02acd141a9c0bf" => :high_sierra
-    sha256 "a20f07e05094e370bb70ed36eeb1f570a466d8b4b12267659b99bc382cb995cf" => :sierra
-    sha256 "4c81754ed0ea158e77f4f2de100515c4fc4f6f3204e3bf8baf95f8b37f0d7a29" => :el_capitan
+    sha256 "137dfd734f5e7fe9b9ee80d1efa135f95a3ade95ceab83b2f79cd7ca1fd4d313" => :catalina
+    sha256 "1be57687d8aef14d6bc95be0a02a5dfdbce4bf859ea057c93e3ff8545c700fcd" => :mojave
+    sha256 "87ec03b8d25d6c3c455c98dbc8d9ac3569df6abaae0c07ad9444a1cfa462cd06" => :high_sierra
   end
 
   head do
-    url "https://anongit.freedesktop.org/git/xdg/shared-mime-info.git"
-    depends_on "automake" => :build
+    url "https://gitlab.freedesktop.org/xdg/shared-mime-info.git"
     depends_on "autoconf" => :build
+    depends_on "automake" => :build
     depends_on "intltool" => :build
   end
 
-  depends_on "pkg-config" => :build
   depends_on "intltool" => :build
+  depends_on "itstool" => :build
+  depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "glib"
 
@@ -41,10 +42,18 @@ class SharedMimeInfo < Formula
   end
 
   def post_install
-    ln_sf HOMEBREW_PREFIX/"share/mime", share/"mime"
-    (HOMEBREW_PREFIX/"share/mime/packages").mkpath
-    cp (pkgshare/"packages").children, HOMEBREW_PREFIX/"share/mime/packages"
-    system bin/"update-mime-database", HOMEBREW_PREFIX/"share/mime"
+    global_mime = HOMEBREW_PREFIX/"share/mime"
+    cellar_mime = share/"mime"
+
+    if !cellar_mime.exist? || !cellar_mime.symlink?
+      rm_rf cellar_mime
+      ln_sf global_mime, cellar_mime
+    end
+
+    (global_mime/"packages").mkpath
+    cp (pkgshare/"packages").children, global_mime/"packages"
+
+    system bin/"update-mime-database", global_mime
   end
 
   test do

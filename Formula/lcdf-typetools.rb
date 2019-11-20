@@ -1,13 +1,14 @@
 class LcdfTypetools < Formula
   desc "Manipulate OpenType and multiple-master fonts"
   homepage "https://www.lcdf.org/type/"
-  url "https://www.lcdf.org/type/lcdf-typetools-2.107.tar.gz"
-  sha256 "46be885f4623e2e595f786c70e03264b680066de57789833db541f947a8edfdb"
+  url "https://www.lcdf.org/type/lcdf-typetools-2.108.tar.gz"
+  sha256 "fb09bf45d98fa9ab104687e58d6e8a6727c53937e451603662338a490cbbcb26"
 
   bottle do
-    sha256 "bc3f49aef8137633d403aaa90ed1f97e9e0e07ec969b424649fd3a2d8408dd9c" => :high_sierra
-    sha256 "9875de167b838b6ef49eb83400f1b9c306c0374394a33f46cec6e7cceb0ed066" => :sierra
-    sha256 "761612b6522dffab0ea197e1ff27422bc8d34ffaf080518d148249bf7731e3ed" => :el_capitan
+    sha256 "e7ce2d4d16d2b79e482cb862231519653e6d3c09cd5e310573b04f804323e1e3" => :catalina
+    sha256 "0fd983396dbcf027e560753e6f25797500d085762edcf59a1a2034cd55c24cfd" => :mojave
+    sha256 "cdff1c16d03fd920033f85dd2e2180f91791057729fbd26b6f193ac7cd0ce9f4" => :high_sierra
+    sha256 "2bfe28f9e869eec676cada56bcf6efe97024e0e1f93b126a7b26ac2a292db2af" => :sierra
   end
 
   def install
@@ -18,7 +19,7 @@ class LcdfTypetools < Formula
   end
 
   test do
-    assert_match "STIXGeneral-Regular",
-      shell_output("#{bin}/otfinfo -p /Library/Fonts/STIXGeneral.otf")
+    font_name = (MacOS.version >= :catalina) ? "Arial\\ Unicode.ttf" : "Arial.ttf"
+    assert_include shell_output("#{bin}/otfinfo -p /Library/Fonts/#{font_name}"), "Arial"
   end
 end

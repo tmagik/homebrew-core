@@ -1,35 +1,37 @@
 class VowpalWabbit < Formula
   desc "Online learning algorithm"
-  homepage "https://github.com/JohnLangford/vowpal_wabbit"
-  url "https://github.com/JohnLangford/vowpal_wabbit/archive/8.5.0.tar.gz"
-  sha256 "f90167312b0e12e85331e4fdd790268eab508c2a59764ae164bacc7cd6149732"
+  homepage "https://github.com/VowpalWabbit/vowpal_wabbit"
+  # pull from git tag to get submodules
+  url "https://github.com/VowpalWabbit/vowpal_wabbit.git",
+    :tag      => "8.7.0",
+    :revision => "e63abfb6d76d8df9060ecd932dbb3d81216fe338"
+  head "https://github.com/VowpalWabbit/vowpal_wabbit.git"
 
   bottle do
     cellar :any
-    sha256 "aca04f30b22b854907c635cc93f78c51ac37b5da4ccd4cecece365e53cd54d19" => :high_sierra
-    sha256 "7d343e1b5fd2cc0a9510e444b25ba402ae383f7b5b50307408bb3af6436480dd" => :sierra
-    sha256 "46c458b48728a214b102e724dcee15d8c2f6a25c1ec29ac87c5182529564abca" => :el_capitan
+    sha256 "5f22984d18453b7465f088deffb3c1bc0305ad2ad90267217503be542f87a08c" => :mojave
+    sha256 "29789b4489b3b0035174076148023459749ceb47e9fd597b45be42c6affbc8ca" => :high_sierra
+    sha256 "435fa3c4f55b7973a9658d962dabf53fe0190a47fe0434f5f4e67d0884548d14" => :sierra
   end
 
-  depends_on "autoconf" => :build
-  depends_on "automake" => :build
-  depends_on "libtool" => :build
+  depends_on "cmake" => :build
   depends_on "boost"
-
-  needs :cxx11
 
   def install
     ENV.cxx11
-    ENV["AC_PATH"] = "#{HOMEBREW_PREFIX}/share"
-    system "./autogen.sh", "--prefix=#{prefix}",
-                           "--with-boost=#{Formula["boost"].opt_prefix}"
-    system "make"
-    system "make", "install"
+    # The project provides a Makefile, but it is a basic wrapper around cmake
+    # that does not accept *std_cmake_args.
+    # The following should be equivalent, while supporting Homebrew's standard args.
+    mkdir "build" do
+      system "cmake", "..", *std_cmake_args, "-DBUILD_TESTS=OFF"
+      system "make", "install"
+    end
     bin.install Dir["utl/*"]
     rm bin/"active_interactor.py"
     rm bin/"new_version"
     rm bin/"vw-validate.html"
     rm bin/"release.ps1"
+    rm bin/"clang-format"
   end
 
   test do

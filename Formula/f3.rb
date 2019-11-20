@@ -1,25 +1,16 @@
 class F3 < Formula
   desc "Test various flash cards"
   homepage "http://oss.digirati.com.br/f3/"
+  url "https://github.com/AltraMayor/f3/archive/v7.2.tar.gz"
+  sha256 "ba9210a0fc3a42c2595fe19bf13b8114bb089c4f274b4813c8f525a695467f64"
   head "https://github.com/AltraMayor/f3.git"
-
-  stable do
-    url "https://github.com/AltraMayor/f3/archive/v7.0.tar.gz"
-    sha256 "1aaf63cf73869633e7e03a2e12561a9af0b0fbba013a94b94e78d2868f441d71"
-
-    # Set up flags for argp-standalone; will be in the next release.
-    # https://github.com/AltraMayor/f3/commit/5ad4130088f183e61ba90ff38af1eca614d89eb2
-    patch do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/35d20ef38ad66e386c0fee34187f5173226377a7/f3/argp_flags.diff"
-      sha256 "eeeb70616c23e43db0a52b2c6758325aeb52b663117a7684dcb1436d04a24a05"
-    end
-  end
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "d369cb856bab428b9bf17049f0331ad9c1a7154088433887ec141054bb4bab74" => :high_sierra
-    sha256 "e11bf7b13aba7ad198486aca8a3edccae5fbaaedff47d6b51f0147cbac4a5d04" => :sierra
-    sha256 "47474e4cab315cf4f3dd124a133fc17f4547e7cb111d630e79131ea1f572f36f" => :el_capitan
+    sha256 "470b2c09c266e1d53efbb7784bb697a22ee3ba6a24a0c3abdae1445692e41ef9" => :catalina
+    sha256 "5830e81dc3a83ed4ad4b2955d1775e63367d68a815299f99b7556cfe4aca38f7" => :mojave
+    sha256 "725c7f88756ea641e75796949e5c59fa7040a97b5ae6f8fd1e580a77a50cd0b6" => :high_sierra
+    sha256 "04f2d3dee579c8740b23f48f7df4160f2e680d92afb4f887bba65f87b804ed93" => :sierra
   end
 
   depends_on "argp-standalone"

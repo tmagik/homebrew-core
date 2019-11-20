@@ -1,25 +1,29 @@
 class Libchamplain < Formula
   desc "ClutterActor for displaying maps"
   homepage "https://wiki.gnome.org/Projects/libchamplain"
-  url "https://download.gnome.org/sources/libchamplain/0.12/libchamplain-0.12.16.tar.xz"
-  sha256 "4a7e31cf7889669aebf04631543af64435edd989685159b804911c6005db908d"
+  url "https://download.gnome.org/sources/libchamplain/0.12/libchamplain-0.12.19.tar.xz"
+  sha256 "36842e326cdbe3cdbdab818472797eedb661dec842fe0579596a3a8d438b2aa4"
   revision 1
 
   bottle do
-    sha256 "f6164d934f20edac3cce56807031c6398ab4135ac2d1de189fa507d53646d4fe" => :high_sierra
-    sha256 "4cd4422e4ea30fb60d77bee37e96d2a221cf78d5cfbb56c7bd4ddff503dd9e63" => :sierra
-    sha256 "77dc11f2f53f414fb94db5a48c60827eeda2d54f296a6608aface2d7d7adcba2" => :el_capitan
+    sha256 "5340f49b75b21cb28ded727ccfae167191a4e2538f0751035691d8d2339082db" => :catalina
+    sha256 "55012badee88799ca3a3f15a297dfd4475dacb86471ef1fb40d7d9004036bf75" => :mojave
+    sha256 "14aa610600d1116ce0fb91a0ab5a191fc5dc826442a086e29429e8479c48d214" => :high_sierra
+    sha256 "ac423cb379fb5c21e2055d158b91db4abcbac3f6b259d3bfaab7818ec3f252c5" => :sierra
   end
 
+  depends_on "autoconf" => :build
+  depends_on "automake" => :build
+  depends_on "gnome-common" => :build
   depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "clutter"
-  depends_on "libsoup"
-  depends_on "gtk+3"
   depends_on "clutter-gtk"
-  depends_on "vala" => :optional
+  depends_on "gtk+3"
+  depends_on "libsoup"
 
   def install
+    system "./autogen.sh"
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--disable-silent-rules",

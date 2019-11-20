@@ -3,11 +3,13 @@ class Freeling < Formula
   homepage "http://nlp.lsi.upc.edu/freeling/"
   url "https://github.com/TALP-UPC/FreeLing/releases/download/4.1/FreeLing-4.1.tar.gz"
   sha256 "ccb3322db6851075c9419bb5e472aa6b2e32cc7e9fa01981cff49ea3b212247e"
+  revision 3
 
   bottle do
-    sha256 "4e458f9b0144a54786df878de4a3040e1cea6396616e5b4647b0d822e95dfcf5" => :high_sierra
-    sha256 "950011b0a3594fd822c4269a06c4570ac4d9e9f95aba39098eeb3c65caf77fda" => :sierra
-    sha256 "873d3820ac453abdd27bbdd3de92b1f8aa7d22ac224a4f9f37a0cbde0c576219" => :el_capitan
+    sha256 "ef41339b443cbacf31b4e67cfeb8574afcb6d1b180fba12635c351752b4994f8" => :catalina
+    sha256 "3faed316cb8f13fafe70e3d6e838dd9f8ce11b8606a16b9368b348e56a701aac" => :mojave
+    sha256 "8fd91b77f8dfc1aeb5bee785ccf8efa943aa534f993d32d64f800a1e64878c02" => :high_sierra
+    sha256 "a3ec3ea6662f4c7ee75aa77c6fb76d63fcdda6c92d56afbd228807a4bb02f2c4" => :sierra
   end
 
   depends_on "cmake" => :build
@@ -16,8 +18,8 @@ class Freeling < Formula
   conflicts_with "hunspell", :because => "both install 'analyze' binary"
 
   resource "boost" do
-    url "https://dl.bintray.com/boostorg/release/1.67.0/source/boost_1_67_0.tar.bz2"
-    sha256 "2684c972994ee57fc5632e03bf044746f6eb45d4920c343937a465fd67a5adba"
+    url "https://dl.bintray.com/boostorg/release/1.68.0/source/boost_1_68_0.tar.bz2"
+    sha256 "7f6130bc3cf65f56a618888ce9d5ea704fa10b462be126ad053e80e553d6d8b7"
   end
 
   def install
@@ -28,7 +30,6 @@ class Freeling < Formula
       end
 
       bootstrap_args = %W[
-        --without-icu
         --prefix=#{libexec}/boost
         --libdir=#{libexec}/boost/lib
         --with-icu=#{Formula["icu4c"].opt_prefix}

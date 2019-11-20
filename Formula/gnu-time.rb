@@ -7,27 +7,37 @@ class GnuTime < Formula
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "7be7fa7161f1c4256e7fd0427cc70bcb9942516cf087e3a4ce8bf25a8e9bda0e" => :high_sierra
-    sha256 "4340f98cd4edd0512a7462ad52180a3dd4bd282fce7c53cadfe56c45f5367095" => :sierra
-    sha256 "1f81b3521747ff00d913ac9f4c7e7d9ce8f19dd76a67c7d2b05d5dd228561883" => :el_capitan
+    rebuild 2
+    sha256 "9a1d1160f85f46b3022dc4d978dfafe6b3a02fc97446bc51f8b1ae4580b7c69a" => :catalina
+    sha256 "dc007b95e2f9fb0df3380da55d3c9337529b1a4a3cd762972eb88512f567ea1c" => :mojave
+    sha256 "ad5d776c38e43f16fad8976770eeaa18e40562c166fa65fdaa12af61981c7b90" => :high_sierra
+    sha256 "d51ef948a5a87281175fef771cb28469cbdb3085e3c51ad325d780ff921cc013" => :sierra
   end
 
-  option "with-default-names", "Do not prepend 'g' to the binary"
-
   def install
-    args = [
-      "--prefix=#{prefix}",
-      "--mandir=#{man}",
-      "--info=#{info}",
+    args = %W[
+      --prefix=#{prefix}
+      --info=#{info}
+      --program-prefix=g
     ]
-
-    args << "--program-prefix=g" if build.without? "default-names"
 
     system "./configure", *args
     system "make", "install"
+
+    (libexec/"gnubin").install_symlink bin/"gtime" => "time"
+  end
+
+  def caveats; <<~EOS
+    GNU "time" has been installed as "gtime".
+    If you need to use it as "time", you can add a "gnubin" directory
+    to your PATH from your bashrc like:
+
+        PATH="#{opt_libexec}/gnubin:$PATH"
+  EOS
   end
 
   test do
     system bin/"gtime", "ruby", "--version"
+    system opt_libexec/"gnubin/time", "ruby", "--version"
   end
 end

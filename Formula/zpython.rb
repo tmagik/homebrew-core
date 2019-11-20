@@ -1,6 +1,7 @@
 class Zpython < Formula
   desc "Embeds a Python interpreter into zsh"
   homepage "https://bitbucket.org/ZyX_I/zsh"
+  revision 1
   head "https://bitbucket.org/ZyX_I/zsh.git", :branch => "zpython"
 
   stable do
@@ -25,22 +26,22 @@ class Zpython < Formula
   end
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "0c575603cf568eaef05ef7de2a0f5f143a08728c97baebf508fc132926028146" => :high_sierra
-    sha256 "6fd2ca965e862af6ebf0b24e158d34bbe66bafc522854adc96efa70e2a0fdb9b" => :sierra
-    sha256 "aa8efa349bbf477746aee3cb977d1b0c430ec05d1947f2bd33667f054d8692cc" => :el_capitan
-    sha256 "3f469a0820ec250a6875c97fd50626462b94a6d81ea93888d32391ababcf25bf" => :yosemite
-    sha256 "9137eefb79a7a529b016e3c949e24a15d4747e4f35108f91db6ea58441f456a9" => :mavericks
+    cellar :any
+    rebuild 1
+    sha256 "96e60fde74aced3f604a886899bc6ae81a428626d7b98f27c38b15eada389a0e" => :catalina
+    sha256 "0e46595052e37148376385290c0f0f9be7c6ee14bb958632fc264f830a9c8d74" => :mojave
+    sha256 "28224b9114bfc72a79f739a3ca62327a25c22f78d68b8bd6faa46960d21640a0" => :high_sierra
   end
 
-  depends_on "zsh"
   depends_on "autoconf" => :build
+  depends_on "zsh"
 
   def install
     args = %w[
       --disable-gdbm
       --enable-zpython
       --with-tcsetpgrp
+      DL_EXT=bundle
     ]
 
     system "autoreconf"
@@ -50,7 +51,7 @@ class Zpython < Formula
     inreplace "Makefile", "subdir in Src Doc;", "subdir in Src;"
 
     system "make"
-    (lib/"zpython/zsh").install "Src/Modules/zpython.so"
+    (lib/"zpython/zsh").install "Src/Modules/zpython.bundle"
   end
 
   def caveats; <<~EOS
@@ -64,7 +65,7 @@ class Zpython < Formula
 
     After reloading your shell you can test with:
       zmodload zsh/zpython && zpython 'print "hello world"'
-    EOS
+  EOS
   end
 
   test do

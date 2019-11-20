@@ -1,17 +1,19 @@
 class Autojump < Formula
   desc "Shell extension to jump to frequently used directories"
   homepage "https://github.com/wting/autojump"
-  url "https://github.com/wting/autojump/archive/release-v22.5.1.tar.gz"
-  sha256 "765fabda130eb4df70d1c1e5bc172e1d18f8ec22c6b89ff98f1674335292e99f"
+  url "https://github.com/wting/autojump/archive/release-v22.5.3.tar.gz"
+  sha256 "00daf3698e17ac3ac788d529877c03ee80c3790472a85d0ed063ac3a354c37b1"
   head "https://github.com/wting/autojump.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "8e302e0a90b898349749c4b83b3c758f4af76ad415f6ac5e245cc0df9c2c90e6" => :high_sierra
-    sha256 "29d37b9fc31a978d0767c4925e88fa9fe3cebf4a9f9278fa82a96baf5caa0db4" => :sierra
-    sha256 "29d37b9fc31a978d0767c4925e88fa9fe3cebf4a9f9278fa82a96baf5caa0db4" => :el_capitan
-    sha256 "29d37b9fc31a978d0767c4925e88fa9fe3cebf4a9f9278fa82a96baf5caa0db4" => :yosemite
+    sha256 "11ab5e57c200bd21825899a7f2a7792afd0c19f8c065729e56673f5f949a97e7" => :catalina
+    sha256 "5576b3f2b9fcb2a236d6ac22b163af03994edb98b69c997ed5a88db85c8d0a15" => :mojave
+    sha256 "5576b3f2b9fcb2a236d6ac22b163af03994edb98b69c997ed5a88db85c8d0a15" => :high_sierra
+    sha256 "c95107719bd784e0e348be6dbfb3a780240d96f8d76710271c3642335babbd8f" => :sierra
   end
+
+  uses_from_macos "python@2"
 
   def install
     system "./install.py", "-d", prefix, "-z", zsh_completion
@@ -31,7 +33,7 @@ class Autojump < Formula
 
     If you use the Fish shell then add the following line to your ~/.config/fish/config.fish:
       [ -f #{HOMEBREW_PREFIX}/share/autojump/autojump.fish ]; and source #{HOMEBREW_PREFIX}/share/autojump/autojump.fish
-    EOS
+  EOS
   end
 
   test do

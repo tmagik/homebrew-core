@@ -1,36 +1,25 @@
 class Doxygen < Formula
   desc "Generate documentation for several programming languages"
   homepage "http://www.doxygen.org/"
-  url "https://ftp.stack.nl/pub/users/dimitri/doxygen-1.8.14.src.tar.gz"
-  mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/d/doxygen/doxygen_1.8.14.orig.tar.gz"
-  sha256 "d1757e02755ef6f56fd45f1f4398598b920381948d6fcfa58f5ca6aa56f59d4d"
+  url "http://doxygen.nl/files/doxygen-1.8.16.src.tar.gz"
+  mirror "https://downloads.sourceforge.net/project/doxygen/rel-1.8.16/doxygen-1.8.16.src.tar.gz"
+  sha256 "ff981fb6f5db4af9deb1dd0c0d9325e0f9ba807d17bd5750636595cf16da3c82"
   head "https://github.com/doxygen/doxygen.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "a241e29223f4004e69c81be8e01476602866103e1467cbe631b3e4ef0aa3a4af" => :high_sierra
-    sha256 "c7bda918635189eee83c0716503d43f530b4366deb60639f842a7904debc09e3" => :sierra
-    sha256 "c5c177bb4a290f1e35327b03317dcf3034397db46ae544bebec9fadb9241c86f" => :el_capitan
+    sha256 "709545ed8f509c407d1a8ac2f36f396f783bd732c98ed18d79e57aa26e79fd74" => :mojave
+    sha256 "882a5c055350590d2dfa31cbc786dab9760acfd222a05ecbabd7833cd09a66d9" => :high_sierra
+    sha256 "5d002c6ee6d2619c5c5c9752c65537b81a135361f2c99f566a3e178de4f448f8" => :sierra
   end
 
-  option "with-graphviz", "Build with dot command support from Graphviz."
-  option "with-qt", "Build GUI frontend with Qt support."
-  option "with-llvm", "Build with libclang support."
-
-  deprecated_option "with-dot" => "with-graphviz"
-  deprecated_option "with-doxywizard" => "with-qt"
-  deprecated_option "with-libclang" => "with-llvm"
-  deprecated_option "with-qt5" => "with-qt"
-
+  depends_on "bison" => :build
   depends_on "cmake" => :build
-  depends_on "graphviz" => :optional
-  depends_on "qt" => :optional
-  depends_on "llvm" => :optional
 
   def install
-    args = std_cmake_args << "-DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=#{MacOS.version}"
-    args << "-Dbuild_wizard=ON" if build.with? "qt"
-    args << "-Duse_libclang=ON -DLLVM_CONFIG=#{Formula["llvm"].opt_bin}/llvm-config" if build.with? "llvm"
+    args = std_cmake_args + %W[
+      -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=#{MacOS.version}
+    ]
 
     mkdir "build" do
       system "cmake", "..", *args

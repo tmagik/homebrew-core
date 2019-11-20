@@ -1,40 +1,30 @@
 class H2o < Formula
   desc "HTTP server with support for HTTP/1.x and HTTP/2"
   homepage "https://github.com/h2o/h2o/"
-  url "https://github.com/h2o/h2o/archive/v2.2.4.tar.gz"
-  sha256 "ebacf3b15f40958c950e18e79ad5a647f61e989c6dbfdeea858ce943ef5e3cd8"
+  url "https://github.com/h2o/h2o/archive/v2.2.6.tar.gz"
+  sha256 "f8cbc1b530d85ff098f6efc2c3fdbc5e29baffb30614caac59d5c710f7bda201"
+  revision 1
 
   bottle do
-    sha256 "18a5cc03a32ef932ef0ab7da282b493218f552c7d9fb928957dace5ac343119c" => :high_sierra
-    sha256 "2aa8bba21a1ca614e9924a069463710cc48c9a1926300a3e2acd56da0f64974f" => :sierra
-    sha256 "b54f61f4a00bb1a0fe01b8c1525a48ab6a361497d3d8415cc0267d030c53961e" => :el_capitan
+    sha256 "2a76dbab7292c0244c32e6a350f0c39dfb4d9b066de8510f2d8f3a9905c05f54" => :catalina
+    sha256 "4f8f5c326d24dcfc95faf48849ae89721f1e19a407968cfa67efbc99dba33f76" => :mojave
+    sha256 "80eac6a05ba27ce57142ad1a9211495fa3b044433623438b6319109e2852eb55" => :high_sierra
+    sha256 "049e412820e6495cfb0906101cb00cea928543583cfc1b6986e0a52d1d215d0c" => :sierra
   end
-
-  option "with-libuv", "Build the H2O library in addition to the executable"
-  option "without-mruby", "Don't build the bundled statically-linked mruby"
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
-  depends_on "openssl"
-  depends_on "libuv" => :optional
-  depends_on "wslay" => :optional
+  depends_on "openssl@1.1"
+  uses_from_macos "zlib"
 
   def install
     # https://github.com/Homebrew/homebrew-core/pull/1046
     # https://github.com/Homebrew/brew/pull/251
     ENV.delete("SDKROOT")
 
-    args = std_cmake_args
-    args << "-DWITH_BUNDLED_SSL=OFF"
-    args << "-DWITH_MRUBY=OFF" if build.without? "mruby"
-
-    system "cmake", *args
-
-    if build.with? "libuv"
-      system "make", "libh2o"
-      lib.install "libh2o.a"
-    end
-
+    system "cmake", *std_cmake_args,
+                    "-DWITH_BUNDLED_SSL=OFF",
+                    "-DOPENSSL_ROOT_DIR=#{Formula["openssl@1.1"].opt_prefix}"
     system "make", "install"
 
     (etc/"h2o").mkpath
@@ -42,6 +32,7 @@ class H2o < Formula
     # Write up a basic example conf for testing.
     (buildpath/"brew/h2o.conf").write conf_example
     (etc/"h2o").install buildpath/"brew/h2o.conf"
+    pkgshare.install "examples"
   end
 
   # This is simplified from examples/h2o/h2o.conf upstream.
@@ -52,14 +43,14 @@ class H2o < Formula
         paths:
           /:
             file.dir: #{var}/h2o/
-    EOS
+  EOS
   end
 
   def caveats; <<~EOS
     A basic example configuration file has been placed in #{etc}/h2o.
-    You can find fuller, unmodified examples here:
-      https://github.com/h2o/h2o/tree/master/examples/h2o
-    EOS
+
+    You can find fuller, unmodified examples in #{opt_pkgshare}/examples.
+  EOS
   end
 
   plist_options :manual => "h2o"
@@ -83,7 +74,7 @@ class H2o < Formula
         </array>
       </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

@@ -1,24 +1,19 @@
 class Sipp < Formula
   desc "Traffic generator for the SIP protocol"
   homepage "https://sipp.sourceforge.io/"
-  url "https://github.com/SIPp/sipp/releases/download/v3.5.1/sipp-3.5.1.tar.gz"
-  sha256 "56421ba7b43b67e9b04e21894b726502a82a6149fc86ba06df33dfc7252a1891"
+  url "https://github.com/SIPp/sipp/releases/download/v3.6.0/sipp-3.6.0.tar.gz"
+  sha256 "e47e7b11fec0769cf76b30623a66390333bdb20323c66043ca535460858fa1bb"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "9994674701dd3dd16dad079fa7cfe9de0424f489787f9e13cba029db28196e51" => :high_sierra
-    sha256 "b05bdba460b40aa7317696bcabeefcdeea576cf310e6c3f191b2fe26a1c52d40" => :sierra
-    sha256 "5409102b801d5a0a5bc2e79ff5707b231b09e95d0a83b73fd5a279433318d0cd" => :el_capitan
-    sha256 "0e0aaca33a67a4c8b2a371f9f17e46ffb0290633fbda201788ae2f1ba002b10e" => :yosemite
-    sha256 "49ecb15875bba9a9fa926527aad2f18599d3f4f66cd3b207c7bf6118ed7c4fcf" => :mavericks
+    sha256 "6e475cbb06a46ae80606b12897928b601b8280fc16e1467c395687a2a93317b1" => :catalina
+    sha256 "23616329b56c55eb022b055d31dadfdc79fafe5fc224cd342106a1a59afa46dd" => :mojave
+    sha256 "822893f07f76031fcd3c0410e2d682dc743c9ac1a9b438361dd1a6a9b6a767b8" => :high_sierra
+    sha256 "79f72467ed25cb8c6db260a9fa3e8f130058424b980d9daa07f79fce77159296" => :sierra
   end
 
-  depends_on "openssl" => :optional
-
   def install
-    args = ["--with-pcap"]
-    args << "--with-openssl" if build.with? "openssl"
-    system "./configure", *args
+    system "./configure", "--with-pcap"
     system "make", "DESTDIR=#{prefix}"
     bin.install "sipp"
   end

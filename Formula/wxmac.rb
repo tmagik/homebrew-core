@@ -3,26 +3,25 @@ class Wxmac < Formula
   homepage "https://www.wxwidgets.org"
   url "https://github.com/wxWidgets/wxWidgets/releases/download/v3.0.4/wxWidgets-3.0.4.tar.bz2"
   sha256 "96157f988d261b7368e5340afa1a0cad943768f35929c22841f62c25b17bf7f0"
+  revision 2
   head "https://github.com/wxWidgets/wxWidgets.git"
 
   bottle do
     cellar :any
-    sha256 "a097b021a66c4933caa0cfbcb91e7cf64d86c32b8fa8b8ea3ab0b236c52c19c9" => :high_sierra
-    sha256 "44691ee842a15573abd83dd0aa4f66acf97e0b5b536868fd74add1800834a862" => :sierra
-    sha256 "d52dd8b84d6387f38c07771c0b373ababc72d95faeb3f65e1e5b2aedecc629c7" => :el_capitan
+    sha256 "763d404a9adfadf2fa2099df378e6fb360b2b862c86e7e79413df9ed6e0da7a4" => :catalina
+    sha256 "d5dec67eb11005f6eea84a94a9caea3dc20ed23e3295950b4dc3b137c6eccdd3" => :mojave
+    sha256 "ed69e867fa97042726a9434488da30381fb3b4f68f4dc7e4499e7bf0edf6eaaa" => :high_sierra
+    sha256 "691e2e49b33f78d1189386cf969bfe1f292d3644dbfdf67b92a795656e50870a" => :sierra
   end
-
-  devel do
-    url "https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.1/wxWidgets-3.1.1.tar.bz2"
-    sha256 "c925dfe17e8f8b09eb7ea9bfdcfcc13696a3e14e92750effd839f5e10726159e"
-  end
-
-  option "with-stl", "use standard C++ classes for everything"
-  option "with-static", "build static libraries"
 
   depends_on "jpeg"
   depends_on "libpng"
   depends_on "libtiff"
+
+  # Adjust assertion which fails for wxGLCanvas due to changes in macOS 10.14.
+  # Patch taken from upstream WX_3_0_BRANCH:
+  # https://github.com/wxWidgets/wxWidgets/commit/531fdbcb64b265e6f24f1f0cc7469f308b9fb697
+  patch :DATA
 
   def install
     args = [
@@ -47,15 +46,9 @@ class Wxmac < Formula
       "--disable-precomp-headers",
       # This is the default option, but be explicit
       "--disable-monolithic",
-      # Enabling mediactrl leads to wxconfig trying to pull in a non-existent
-      # 64-bit QuickTime framework: https://trac.wxwidgets.org/ticket/17639
-      "--disable-mediactrl",
       # Set with-macosx-version-min to avoid configure defaulting to 10.5
       "--with-macosx-version-min=#{MacOS.version}",
     ]
-
-    args << "--enable-stl" if build.with? "stl"
-    args << (build.with?("static") ? "--disable-shared" : "--enable-shared")
 
     system "./configure", *args
     system "make", "install"
@@ -71,3 +64,29 @@ class Wxmac < Formula
     system bin/"wx-config", "--libs"
   end
 end
+
+__END__
+--- a/src/osx/carbon/dcclient.cpp
++++ b/src/osx/carbon/dcclient.cpp
+@@ -189,10 +189,20 @@ wxPaintDCImpl::wxPaintDCImpl( wxDC *owner )
+ {
+ }
+
++#if wxDEBUG_LEVEL
++static bool IsGLCanvas( wxWindow * window )
++{
++    // If the wx gl library isn't loaded then ciGLCanvas will be NULL.
++    static const wxClassInfo* const ciGLCanvas = wxClassInfo::FindClass("wxGLCanvas");
++    return ciGLCanvas && window->IsKindOf(ciGLCanvas);
++}
++#endif
++
+ wxPaintDCImpl::wxPaintDCImpl( wxDC *owner, wxWindow *window ) :
+     wxWindowDCImpl( owner, window )
+ {
+-    wxASSERT_MSG( window->MacGetCGContextRef() != NULL, wxT("using wxPaintDC without being in a native paint event") );
++    // With macOS 10.14, wxGLCanvas windows have a NULL CGContextRef.
++    wxASSERT_MSG( window->MacGetCGContextRef() != NULL || IsGLCanvas(window), wxT("using wxPaintDC without being in a native paint event") );
+     wxPoint origin = window->GetClientAreaOrigin() ;
+     m_window->GetClientSize( &m_width , &m_height);
+     SetDeviceOrigin( origin.x, origin.y );

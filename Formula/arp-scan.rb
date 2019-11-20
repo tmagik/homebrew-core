@@ -1,29 +1,22 @@
 class ArpScan < Formula
   desc "ARP scanning and fingerprinting tool"
   homepage "https://github.com/royhills/arp-scan"
-  url "https://github.com/royhills/arp-scan/releases/download/1.9/arp-scan-1.9.tar.gz"
-  sha256 "ce908ac71c48e85dddf6dd4fe5151d13c7528b1f49717a98b2a2535bd797d892"
+  url "https://github.com/royhills/arp-scan/archive/1.9.6.tar.gz"
+  sha256 "971b45c3369816467994797fbcd0076eb8f0ffb9c42764ea6dba25ab3fd490da"
+  head "https://github.com/royhills/arp-scan.git"
 
   bottle do
-    rebuild 1
-    sha256 "4e50c7a232cda92445d0c030072e71af84271322edb03d0718d89e92eb76e577" => :high_sierra
-    sha256 "70a15f93ba09a4201352165594b2d69d3537fb55ba7c0180619470c2235bb851" => :sierra
-    sha256 "f0fdab57a9d16dc270b9bedba6c5cca5e99e2b5319268261a320dda86fa5da54" => :el_capitan
-    sha256 "4a26a7bb3c586122b4aad81c17bf8427bc820ec4a4353573ffedf79087000232" => :yosemite
-    sha256 "e0570d20ec6c79c1a43c9925eb5c09d7ab9589fbe9d2ce1579927800ac6c53d5" => :mavericks
+    sha256 "6b6621b80ffaccbbbd1f9942e7279ac786aaa258003980c6111e27d49ab199d5" => :catalina
+    sha256 "d17e1ad7dac154571c7e48fe2d9aac7b0555c10a60c1184ffc8b273e5b1238a7" => :mojave
+    sha256 "e6dbdf4a4c2cc9f42012c76192bf562858aa8838895cda7e507543497b253003" => :high_sierra
   end
 
-  head do
-    url "https://github.com/royhills/arp-scan.git"
-
-    depends_on "automake" => :build
-    depends_on "autoconf" => :build
-  end
-
-  depends_on "libpcap" => :optional
+  depends_on "autoconf" => :build
+  depends_on "automake" => :build
+  depends_on "libpcap"
 
   def install
-    system "autoreconf", "--install" if build.head?
+    system "autoreconf", "-fiv"
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}"
     system "make", "install"

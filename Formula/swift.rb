@@ -1,12 +1,14 @@
 class Swift < Formula
   desc "High-performance system programming language"
   homepage "https://github.com/apple/swift"
-  url "https://github.com/apple/swift/archive/swift-4.1-RELEASE.tar.gz"
-  sha256 "f957f107b8e726b80c66a4902b769b0c3795e7bfde1af2e1c833948f6398acdb"
+  url "https://github.com/apple/swift/archive/swift-4.2.1-RELEASE.tar.gz"
+  sha256 "1e26cf541f7b10b96344fb1c4500ec52ced525cdf7b6bb77425c768cef0b2c5b"
 
   bottle do
     cellar :any
-    sha256 "73984870b76c605c219dbae7f7643471ce712e2c5ee44de2ffc09112d88539cf" => :high_sierra
+    rebuild 1
+    sha256 "eb739a681ff2f5b585422d3b9408dd817724eb7bc0484a31f38db6f7dc387867" => :mojave
+    sha256 "1a82548cd25a4b6a525b7d8a194393e9853843e952c00c2650792141c17a528d" => :high_sierra
   end
 
   keg_only :provided_by_macos, "Apple's CLT package contains Swift"
@@ -16,46 +18,39 @@ class Swift < Formula
 
   # Depends on latest version of Xcode
   # https://github.com/apple/swift#system-requirements
-  depends_on :xcode => ["9.3", :build]
+  depends_on :xcode => ["10.0", :build]
 
   # This formula is expected to have broken/missing linkage to
   # both UIKit.framework and AssetsLibrary.framework. This is
   # simply due to the nature of Swift's SDK Overlays.
   resource "clang" do
-    url "https://github.com/apple/swift-clang/archive/swift-4.1-RELEASE.tar.gz"
-    sha256 "e03c4508f714837c54da39a1c45ce78110c47428d970bbdde3ebc12068c15da2"
+    url "https://github.com/apple/swift-clang/archive/swift-4.2.1-RELEASE.tar.gz"
+    sha256 "cbf22fe2da2e2a19010f6e109ab3f80a8af811d9416c29d031362c02a0e69a66"
   end
 
   resource "cmark" do
-    url "https://github.com/apple/swift-cmark/archive/swift-4.1-RELEASE.tar.gz"
-    sha256 "21fc799d557838cc730e8e4e833cee18fea5e5733bdda6212f75c9331b9461ac"
+    url "https://github.com/apple/swift-cmark/archive/swift-4.2.1-RELEASE.tar.gz"
+    sha256 "0e9f097c26703693a5543667716c2cac7a8847806e850db740ae9f90eaf93793"
   end
 
   resource "compiler-rt" do
-    url "https://github.com/apple/swift-compiler-rt/archive/swift-4.1-RELEASE.tar.gz"
-    sha256 "2110384f8cfa97334d4b9a2a17b1966b286189fb3a1526db8f2382c8872df189"
+    url "https://github.com/apple/swift-compiler-rt/archive/swift-4.2.1-RELEASE.tar.gz"
+    sha256 "6b14737d2d57f3287a5c2d80d8d8ae917d8f7bbe4d78cc6d66a80e68d55cd00f"
   end
 
   resource "llbuild" do
-    url "https://github.com/apple/swift-llbuild/archive/swift-4.1-RELEASE.tar.gz"
-    sha256 "88f2451e8c78a27ea18379b0062eb8e4fc961fca3089b5d485b6ceaeb7f67360"
+    url "https://github.com/apple/swift-llbuild/archive/swift-4.2.1-RELEASE.tar.gz"
+    sha256 "07a02b4314050a66fad460b76379988d794dac1452a56fcf5073d318458fed6e"
   end
 
   resource "llvm" do
-    url "https://github.com/apple/swift-llvm/archive/swift-4.1-RELEASE.tar.gz"
-    sha256 "c8632074d178e04abc9ab3becb40618373c1b6f810053e18ddd7ff91dbbc8a48"
+    url "https://github.com/apple/swift-llvm/archive/swift-4.2.1-RELEASE.tar.gz"
+    sha256 "bcd85a91824dd166fe852ddb7e58c509f52316011c3079010ad59b017a61ad14"
   end
 
   resource "swiftpm" do
-    url "https://github.com/apple/swift-package-manager/archive/swift-4.1-RELEASE.tar.gz"
-    sha256 "fcb4f55349143b9e8ad5ba0a5237beaa93a2bc42844ebb3d85c6df8a01e14142"
-  end
-
-  # According to the official llvm readme, GCC 4.7+ is required
-  fails_with :gcc_4_0
-  fails_with :gcc
-  ("4.3".."4.6").each do |n|
-    fails_with :gcc => n
+    url "https://github.com/apple/swift-package-manager/archive/swift-4.2.1-RELEASE.tar.gz"
+    sha256 "e1a50dc3d264bdb8d0447c264e8c164403e84b0831ffd53d87f15a742bda7fa9"
   end
 
   def install
@@ -69,25 +64,38 @@ class Swift < Formula
     resources.each { |r| r.stage("#{workspace}/#{r.name}") }
 
     mkdir build do
-      system "#{buildpath}/utils/build-script",
+      # List of components to build
+      components = %w[
+        compiler clang-resource-dir-symlink
+        clang-builtin-headers-in-clang-resource-dir stdlib sdk-overlay tools
+        editor-integration testsuite-tools toolchain-dev-tools license
+        sourcekit-xpc-service swift-remote-mirror
+        swift-remote-mirror-headers
+      ]
+
+      system "#{workspace}/swift/utils/build-script",
         "--release", "--assertions",
         "--no-swift-stdlib-assertions",
         "--build-subdir=#{build}",
         "--llbuild", "--swiftpm",
-        "--ios", "--tvos", "--watchos",
         "--",
-        "--workspace=#{workspace}", "--build-args=-j#{ENV.make_jobs}",
-        "--install-destdir=#{prefix}", "--toolchain-prefix=#{toolchain_prefix}",
-        "--install-prefix=#{install_prefix}", "--host-target=macosx-x86_64",
-        "--build-swift-static-stdlib", "--build-swift-dynamic-stdlib",
-        "--build-swift-dynamic-sdk-overlay", "--build-swift-static-sdk-overlay",
-        "--build-swift-stdlib-unittest-extra", "--install-swift",
-        "--swift-install-components=compiler;clang-resource-dir-symlink;"\
-        "clang-builtin-headers-in-clang-resource-dir;stdlib;sdk-overlay;tools;"\
-        "editor-integration;testsuite-tools;toolchain-dev-tools;license;sourcekit-inproc;"\
-        "sourcekit-xpc-service;swift-remote-mirror;swift-remote-mirror-headers",
+        "--workspace=#{workspace}",
+        "--build-args=-j#{ENV.make_jobs}",
+        "--install-destdir=#{prefix}",
+        "--toolchain-prefix=#{toolchain_prefix}",
+        "--install-prefix=#{install_prefix}",
+        "--host-target=macosx-x86_64",
+        "--stdlib-deployment-targets=macosx-x86_64",
+        "--build-swift-static-stdlib",
+        "--build-swift-dynamic-stdlib",
+        "--build-swift-static-sdk-overlay",
+        "--build-swift-dynamic-sdk-overlay",
+        "--build-swift-stdlib-unittest-extra",
+        "--install-swift",
+        "--swift-install-components=#{components.join(";")}",
         "--llvm-install-components=clang;libclang;libclang-headers",
-        "--install-llbuild", "--install-swiftpm"
+        "--install-llbuild",
+        "--install-swiftpm"
     end
   end
 

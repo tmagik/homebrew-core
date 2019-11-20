@@ -1,20 +1,22 @@
 class Snapraid < Formula
   desc "Backup program for disk arrays"
   homepage "https://snapraid.sourceforge.io/"
-  url "https://github.com/amadvance/snapraid/releases/download/v11.2/snapraid-11.2.tar.gz"
-  sha256 "735cdeb7656ac48cbb0b4a89a203dd566505071e465d5effbcc56bcb8fd3a0d7"
+  url "https://github.com/amadvance/snapraid/releases/download/v11.3/snapraid-11.3.tar.gz"
+  sha256 "d35ad92157936db3411e2cf7325665fc59e2d159204f9424895cfa9f33122af1"
 
   bottle do
-    sha256 "a3cdc8a3975bf5f3073e21d089d5e3c067fb809ccf758724f25fc092bebf7b71" => :high_sierra
-    sha256 "eba431c9a6d92f379e0063c3c40cf6a655fa2a29256da707f851569046e7d7c9" => :sierra
-    sha256 "e6be5ae4ae3aa3bffbd4f57c4dab84602d3883673ce9f2b74189a0f39c82b4b2" => :el_capitan
+    cellar :any_skip_relocation
+    rebuild 1
+    sha256 "bcd8a45d4ec8daa99fd20faddf63ec0476239b02deba34755f158cf1e629299d" => :catalina
+    sha256 "44416f365e6c197fe9ba5381ef829d295cf65bbc953c666fb69a84c482c0a793" => :mojave
+    sha256 "2083e11d5d72fee5bc67bb71fca4686e27f49fe7ea837e9aaea0688c53ad7dc1" => :high_sierra
   end
 
   head do
     url "https://github.com/amadvance/snapraid.git"
 
-    depends_on "automake" => :build
     depends_on "autoconf" => :build
+    depends_on "automake" => :build
   end
 
   def install

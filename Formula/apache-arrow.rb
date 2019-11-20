@@ -1,30 +1,54 @@
 class ApacheArrow < Formula
   desc "Columnar in-memory analytics layer designed to accelerate big data"
   homepage "https://arrow.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=arrow/arrow-0.9.0/apache-arrow-0.9.0.tar.gz"
-  sha256 "beb1c684b2f7737f64407a7b19eb7a12061eec8de3b06ef6e8af95d5a30b899a"
+  url "https://www.apache.org/dyn/closer.cgi?path=arrow/arrow-0.15.1/apache-arrow-0.15.1.tar.gz"
+  sha256 "9a2c58c72310eafebb4997244cbeeb8c26696320d0ae3eb3e8512f75ef856fc9"
   revision 1
   head "https://github.com/apache/arrow.git"
 
   bottle do
     cellar :any
-    sha256 "ad46f2697053ace2da654ee4752d022f29e1de12d0f4627c12e1c44b9c911334" => :high_sierra
-    sha256 "5fb9d7f3e9ba08ec3f39e36f1f264ace354fcc521b1527eddb930102d24a14ca" => :sierra
-    sha256 "156b4d5aaa71240da5707376fd4d8f61f9a39f21756dafdadf6180257f9d593f" => :el_capitan
+    sha256 "538c6905fcb5a4fe861a5764a4fd761011afbc925aa28380c4ad6f6b2d35e7a5" => :catalina
+    sha256 "ddf0dff27f33175f81c4f459dbf1896f017006765bb5a78f4befa71f645e3934" => :mojave
+    sha256 "9e44d8f378fea763b719cff21ea78b67e1204430f00861c1079a0401f00580e4" => :high_sierra
   end
 
+  depends_on "autoconf" => :build
   depends_on "cmake" => :build
   depends_on "boost"
-  depends_on "jemalloc"
-
-  needs :cxx11
+  depends_on "brotli"
+  depends_on "double-conversion"
+  depends_on "flatbuffers"
+  depends_on "glog"
+  depends_on "grpc"
+  depends_on "lz4"
+  depends_on "numpy"
+  depends_on "openssl@1.1"
+  depends_on "protobuf"
+  depends_on "python"
+  depends_on "rapidjson"
+  depends_on "snappy"
+  depends_on "thrift"
+  depends_on "zstd"
 
   def install
     ENV.cxx11
+    args = %W[
+      -DARROW_FLIGHT=ON
+      -DARROW_ORC=ON
+      -DARROW_PARQUET=ON
+      -DARROW_PLASMA=ON
+      -DARROW_PROTOBUF_USE_SHARED=ON
+      -DARROW_PYTHON=ON
+      -DARROW_JEMALLOC=OFF
+      -DARROW_INSTALL_NAME_RPATH=OFF
+      -DPYTHON_EXECUTABLE=#{Formula["python"].bin/"python3"}
+    ]
 
-    cd "cpp" do
-      system "cmake", ".", *std_cmake_args
-      system "make", "unittest"
+    mkdir "build"
+    cd "build" do
+      system "cmake", "../cpp", *std_cmake_args, *args
+      system "make"
       system "make", "install"
     end
   end
@@ -32,8 +56,7 @@ class ApacheArrow < Formula
   test do
     (testpath/"test.cpp").write <<~EOS
       #include "arrow/api.h"
-      int main(void)
-      {
+      int main(void) {
         arrow::int64();
         return 0;
       }

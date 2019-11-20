@@ -1,19 +1,15 @@
 class Qwt < Formula
   desc "Qt Widgets for Technical Applications"
   homepage "https://qwt.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/qwt/qwt/6.1.3/qwt-6.1.3.tar.bz2"
-  sha256 "f3ecd34e72a9a2b08422fb6c8e909ca76f4ce5fa77acad7a2883b701f4309733"
-  revision 4
+  url "https://downloads.sourceforge.net/project/qwt/qwt/6.1.4/qwt-6.1.4.tar.bz2"
+  sha256 "1529215329e51fc562e0009505a838f427919a18b362afff441f035b2d9b5bd9"
 
   bottle do
-    sha256 "d91a8d16588cd615df09fc8bdf288c1eea5be8c0ad7e0fe894ad70914eb47488" => :high_sierra
-    sha256 "5e25de79818df25e3dab96795d24c4de066a39ae9d616d77c05f528ace671f6f" => :sierra
-    sha256 "b486e9d7b4a9d15886b51d9536ea6b32a642262d3acff5a7ea6985d7fd88db1a" => :el_capitan
-    sha256 "81fcb45fea416bc89e99b213d991c08ccb3ed34ef7da67346a273f8a1f203293" => :yosemite
+    sha256 "7c6d650a357ff7131f9c079008f6f92ab698673a1b87f43c6617c1be8d9c8d1f" => :catalina
+    sha256 "bbc1c7842159419ae1946cec3dcaa4e4eb645c37ee63249a93ffab255b6eeb25" => :mojave
+    sha256 "290203526a7fb210f43d53301597908172abc107d8b3260b36b1b24f73805c9f" => :high_sierra
+    sha256 "5737738dca1f1c423c45d43440baa652fc87183d6fdffa960f3df9b6b7c40a83" => :sierra
   end
-
-  option "with-qwtmathml", "Build the qwtmathml library"
-  option "without-plugin", "Skip building the Qt Designer plugin"
 
   depends_on "qt"
 
@@ -24,7 +20,6 @@ class Qwt < Formula
   def install
     inreplace "qwtconfig.pri" do |s|
       s.gsub! /^\s*QWT_INSTALL_PREFIX\s*=(.*)$/, "QWT_INSTALL_PREFIX=#{prefix}"
-      s.sub! /\+(=\s*QwtDesigner)/, "-\\1" if build.without? "plugin"
 
       # Install Qt plugin in `lib/qt/plugins/designer`, not `plugins/designer`.
       s.sub! %r{(= \$\$\{QWT_INSTALL_PREFIX\})/(plugins/designer)$},
@@ -32,35 +27,15 @@ class Qwt < Formula
     end
 
     args = ["-config", "release", "-spec"]
-    # On Mavericks we want to target libc++, this requires a unsupported/macx-clang-libc++ flag
-    if ENV.compiler == :clang && MacOS.version >= :mavericks
+    if ENV.compiler == :clang
       args << "macx-clang"
     else
       args << "macx-g++"
     end
 
-    if build.with? "qwtmathml"
-      args << "QWT_CONFIG+=QwtMathML"
-      prefix.install "textengines/mathml/qtmmlwidget-license"
-    end
-
     system "qmake", *args
     system "make"
     system "make", "install"
-  end
-
-  def caveats
-    s = ""
-
-    if build.with? "qwtmathml"
-      s += <<~EOS
-        The qwtmathml library contains code of the MML Widget from the Qt solutions package.
-        Beside the Qwt license you also have to take care of its license:
-        #{opt_prefix}/qtmmlwidget-license
-      EOS
-    end
-
-    s
   end
 
   test do

@@ -1,22 +1,46 @@
 class Log4cplus < Formula
   desc "Logging Framework for C++"
   homepage "https://sourceforge.net/p/log4cplus/wiki/Home/"
-  url "https://downloads.sourceforge.net/project/log4cplus/log4cplus-stable/2.0.0/log4cplus-2.0.0.tar.xz"
-  sha256 "8c85e769c3dbec382ed4db91f15e5bc24ba979f810262723781f2fc596339bf4"
+  url "https://downloads.sourceforge.net/project/log4cplus/log4cplus-stable/2.0.4/log4cplus-2.0.4.tar.xz"
+  sha256 "faf15f3651e2d0f9f9cf2c1bfcb38ec4962f22f4a671410453a27c0976da5e36"
 
   bottle do
     cellar :any
-    sha256 "8f5d5c964260d3d1ce5bd96b2fcd292f12816a20f68c99f27d3790511ff65ff9" => :high_sierra
-    sha256 "a47e18c9074c81f9583c25141b44e5b52ab9b18f85b0610b40207a081bfaca68" => :sierra
-    sha256 "1ba3ad171f57d728ce82b4dfea6e11cac08f8edd8b77c3bfde2658a63cb0c5d6" => :el_capitan
+    sha256 "d64da534eb5d7e5b677eaa92044390c676aa59b253784ffe33507f372b55df50" => :catalina
+    sha256 "8bb0963c5de1a5b6d9f08fbfa7f3a268f96784985d986ce1d016d835fdcda4d9" => :mojave
+    sha256 "59a4c0794e2f300ecbe9e3dddd852af5feb5797cd3d223b810b808032aa9a605" => :high_sierra
+    sha256 "3e00ce73b731f28bd3b1d86895a2b2e5c06cf3354730b638bef2d46cfc238b7b" => :sierra
   end
-
-  needs :cxx11
 
   def install
     ENV.cxx11
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}"
     system "make", "install"
+  end
+
+  test do
+    # https://github.com/log4cplus/log4cplus/blob/65e4c3/docs/examples.md
+    (testpath/"test.cpp").write <<~EOS
+      #include <log4cplus/logger.h>
+      #include <log4cplus/loggingmacros.h>
+      #include <log4cplus/configurator.h>
+      #include <log4cplus/initializer.h>
+
+      int main()
+      {
+        log4cplus::Initializer initializer;
+        log4cplus::BasicConfigurator config;
+        config.configure();
+
+        log4cplus::Logger logger = log4cplus::Logger::getInstance(
+          LOG4CPLUS_TEXT("main"));
+        LOG4CPLUS_WARN(logger, LOG4CPLUS_TEXT("Hello, World!"));
+        return 0;
+      }
+    EOS
+    system ENV.cxx, "-std=c++11", "-I#{include}", "-L#{lib}",
+                    "-llog4cplus", "test.cpp", "-o", "test"
+    assert_match "Hello, World!", shell_output("./test")
   end
 end

@@ -1,15 +1,15 @@
 class Gkrellm < Formula
   desc "Extensible GTK system monitoring application"
   homepage "https://billw2.github.io/gkrellm/gkrellm.html"
-  url "http://gkrellm.srcbox.net/releases/gkrellm-2.3.10.tar.bz2"
-  sha256 "8b9ec8baadcd5830c6aff04ba86dc9ed317a15c1c3787440bd1e680fb2fcd766"
-  revision 1
-  head "https://git.srcbox.net/gkrellm", :using => :git
+  url "http://gkrellm.srcbox.net/releases/gkrellm-2.3.11.tar.bz2"
+  sha256 "1ee0643ed9ed99f88c1504c89d9ccb20780cf29319c904b68e80a8e7c8678c06"
+  revision 2
 
   bottle do
-    sha256 "e84742cdd42e7584a6814c9c4cf2b8d7245d48ae0723b77c236f011354ac71e1" => :high_sierra
-    sha256 "53888d3166533669a8649ef295c28813dcb0c051ed4146a33452f90c860978a8" => :sierra
-    sha256 "7cc7e94022669c80d1035efa738388fb264f50e4edaf0720db216f58b0ad3dab" => :el_capitan
+    sha256 "17b040897e4feebebcca29a8d8f69fdf0cd789f07a3e479b0fe5f5f172436289" => :catalina
+    sha256 "641f4e27054dacd25dd91dc2f6d8d608918321ae06cf06eb17f2d62132125e7a" => :mojave
+    sha256 "71f4e92d308a39b38ac97bf2f06cea12ccee0072cbd27b8443e1d33f11fb7c5b" => :high_sierra
+    sha256 "f90adbb22bdbc169d95c932591d4c5a7c5e869f61c79744bb743c50a4698acc9" => :sierra
   end
 
   depends_on "pkg-config" => :build
@@ -21,8 +21,8 @@ class Gkrellm < Formula
   depends_on "gettext"
   depends_on "glib"
   depends_on "gtk+"
+  depends_on "openssl@1.1"
   depends_on "pango"
-  depends_on "openssl"
 
   def install
     system "make", "INSTALLROOT=#{prefix}", "macosx"

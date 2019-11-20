@@ -1,35 +1,21 @@
 class Nzbget < Formula
   desc "Binary newsgrabber for nzb files"
   homepage "https://nzbget.net/"
-  url "https://github.com/nzbget/nzbget/releases/download/v19.1/nzbget-19.1-src.tar.gz"
-  sha256 "06df42356ac2d63bbc9f7861abe9c3216df56fa06802e09e8a50b05f4ad95ce6"
+  url "https://github.com/nzbget/nzbget/releases/download/v21.0/nzbget-21.0-src.tar.gz"
+  sha256 "65a5d58eb8f301e62cf086b72212cbf91de72316ffc19182ae45119ddd058d53"
+  revision 1
   head "https://github.com/nzbget/nzbget.git", :branch => "develop"
 
   bottle do
-    sha256 "0f508d759d085ea42af708598eba3d2f589614f6025f8ca160b93c6170d5576b" => :high_sierra
-    sha256 "b2b460f1f4a850d282b3faa56a0cdc66d7d9f2072e34528fe1fc875f615e3705" => :sierra
-    sha256 "3aa8bd8510dbde22143fa6d9637d664951c4a48758c840548dcee0ce48f3b95f" => :el_capitan
-    sha256 "f9731421aa1289d62d9f30691c3e643e8548eb066d55c72511ad74d994e826e7" => :yosemite
+    sha256 "d44d1a8dbd26f5cdb307c08f3294bd381ca79d51c48f51df98ae10a19272397e" => :catalina
+    sha256 "1d69e26d929d2a1be4824ea8c2134d543033462302bc5527269d5ca7b1b2c575" => :mojave
+    sha256 "862bd9889d1590b8e3f600419f2bbf84f1ea7582ed55c58eccc024382d6db245" => :high_sierra
+    sha256 "2e174f6c4df74ef3cd5decca500963db0c99d71553da624693ec4e9d085a0a56" => :sierra
   end
 
   depends_on "pkg-config" => :build
-  depends_on "openssl"
-  depends_on "gcc" if MacOS.version <= :mavericks
-
-  needs :cxx11
-
-  fails_with :clang do
-    build 600
-    cause "No compiler with C++14 support was found"
-  end
-
-  fails_with :clang do
-    build 500
-    cause <<~EOS
-      Clang older than 5.1 requires flexible array members to be POD types.
-      More recent versions require only that they be trivially destructible.
-    EOS
-  end
+  depends_on "gcc" if MacOS.version == :mavericks
+  depends_on "openssl@1.1"
 
   def install
     ENV.cxx11
@@ -79,7 +65,7 @@ class Nzbget < Formula
       <true/>
     </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

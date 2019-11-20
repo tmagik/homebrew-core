@@ -1,15 +1,13 @@
 class Travis < Formula
   desc "Command-line client for Travis CI"
   homepage "https://github.com/travis-ci/travis.rb/"
-  url "https://github.com/travis-ci/travis.rb/archive/v1.8.8.tar.gz"
-  sha256 "468158ee2b46c67c1a002a237a9e04472b22e8f4926cb68b1ca49a1a0b2eaf3b"
-  revision 3
+  url "https://github.com/travis-ci/travis.rb/archive/v1.8.10.tar.gz"
+  sha256 "77f43de7c1e686e2b8eca3f467047de9687c4021c4a12f46dcf1e0f3e63a96c3"
 
   bottle do
-    cellar :any
-    sha256 "71e0f841ca71e5a502175c6cc83f0d5c54385b6880e8796e0296edc15255d1e1" => :high_sierra
-    sha256 "478031cb489b5839547ff8a365b8232aa1e3a153b3e4007e32f76fce54e55611" => :sierra
-    sha256 "d5fe17be89c0e6c26422626baaa0ee39bab89cf364d89c94ae6054fbca3aa87b" => :el_capitan
+    rebuild 1
+    sha256 "58794172ef335a7a15c7969257debbb6bb64a35364dbb10293af1a70cc78e5e7" => :catalina
+    sha256 "5f49254c2ad3a135a20299f7c25df27cb1ccb7c9ab7d093b207e5e52c91f6c3a" => :high_sierra
   end
 
   depends_on "ruby" if MacOS.version <= :sierra
@@ -30,8 +28,8 @@ class Travis < Formula
   end
 
   resource "faraday" do
-    url "https://rubygems.org/gems/faraday-0.15.0.gem"
-    sha256 "4a29d584a33d189ea745bb3b3db36661e28f32a035c62632f09b70df3bdb61b7"
+    url "https://rubygems.org/gems/faraday-0.15.2.gem"
+    sha256 "affa23f5e5ee27170cbb5045c580af9b396bac525516c6583661c2bb08038f92"
   end
 
   resource "faraday_middleware" do
@@ -40,8 +38,8 @@ class Travis < Formula
   end
 
   resource "ffi" do
-    url "https://rubygems.org/gems/ffi-1.9.23.gem"
-    sha256 "f993798158e205925aa1b80024f2dae1ce0f043fb0d0c39a531cc9bafdba867f"
+    url "https://rubygems.org/gems/ffi-1.9.25.gem"
+    sha256 "f854f08f08190fec772a12e863f33761d02ad3efea3c3afcdeffc8a06313f54a"
   end
 
   resource "gh" do
@@ -52,6 +50,13 @@ class Travis < Formula
   resource "highline" do
     url "https://rubygems.org/gems/highline-1.7.10.gem"
     sha256 "1e147d5d20f1ad5b0e23357070d1e6d0904ae9f71c3c49e0234cf682ae3c2b06"
+  end
+
+  if MacOS.version <= :sierra
+    resource "json" do
+      url "https://rubygems.org/gems/json-2.1.0.gem"
+      sha256 "b76fd09b881088c6c64a12721a1528f2f747a1c2ee52fab4c1f60db8af946607"
+    end
   end
 
   resource "launchy" do
@@ -90,14 +95,14 @@ class Travis < Formula
   end
 
   resource "websocket" do
-    url "https://rubygems.org/gems/websocket-1.2.5.gem"
-    sha256 "c9de8b82226f9b4647522a9c73be4a1cd60b166b103c993717f94277cb453228"
+    url "https://rubygems.org/gems/websocket-1.2.8.gem"
+    sha256 "1d8155c1cdaab8e8e72587a60e08423c9dd84ee44e4e827358ce3d4c2ccb2138"
   end
 
   def install
     ENV["GEM_HOME"] = libexec
     resources.each do |r|
-      r.verify_download_integrity(r.fetch)
+      r.fetch
       system "gem", "install", r.cached_download, "--ignore-dependencies",
              "--no-document", "--install-dir", libexec
     end
@@ -110,8 +115,6 @@ class Travis < Formula
   test do
     (testpath/".travis.yml").write <<~EOS
       language: ruby
-
-      sudo: true
 
       matrix:
         include:

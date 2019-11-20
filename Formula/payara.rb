@@ -1,8 +1,8 @@
 class Payara < Formula
   desc "Java EE application server forked from GlassFish"
   homepage "https://www.payara.fish"
-  url "https://search.maven.org/remotecontent?filepath=fish/payara/distributions/payara/4.1.2.174/payara-4.1.2.174.zip"
-  sha256 "50460b818a63a25777e5c1514d1c39ecccd7f8170ed9d6a2f1c7c6192173e017"
+  url "https://search.maven.org/remotecontent?filepath=fish/payara/distributions/payara/5.192/payara-5.192.zip"
+  sha256 "272352a4d8a6fd19a0e3e02bde946fb9a860c1206fc6e39a41279a73f43b2995"
 
   bottle :unneeded
 
@@ -68,7 +68,7 @@ class Payara < Formula
     ENV["GLASSFISH_HOME"] = opt_libexec/"glassfish"
     output = shell_output("#{bin}/asadmin list-domains")
     assert_match /^domain1 not running$/, output
-    assert_match /^payaradomain not running$/, output
+    assert_match /^production not running$/, output
     assert_match /^Command list-domains executed successfully\.$/, output
   end
 end

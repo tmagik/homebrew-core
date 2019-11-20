@@ -8,10 +8,10 @@ class ProofGeneral < Formula
 
   bottle do
     cellar :any_skip_relocation
-    rebuild 1
-    sha256 "8da318e9023c99e198d2be9df2d053ef4e60ebbe70d54041e522309f7b258e6e" => :high_sierra
-    sha256 "8da318e9023c99e198d2be9df2d053ef4e60ebbe70d54041e522309f7b258e6e" => :sierra
-    sha256 "8da318e9023c99e198d2be9df2d053ef4e60ebbe70d54041e522309f7b258e6e" => :el_capitan
+    rebuild 3
+    sha256 "ccc115760830d046c9e53277a571f451eb251c9b10c09589c627f146f4a9a4dd" => :catalina
+    sha256 "ccc115760830d046c9e53277a571f451eb251c9b10c09589c627f146f4a9a4dd" => :mojave
+    sha256 "ccc115760830d046c9e53277a571f451eb251c9b10c09589c627f146f4a9a4dd" => :high_sierra
   end
 
   depends_on "texi2html" => :build
@@ -41,7 +41,7 @@ class ProofGeneral < Formula
 
   def caveats; <<~EOS
     HTML documentation is available in: #{HOMEBREW_PREFIX}/share/doc/proof-general
-    EOS
+  EOS
   end
 
   test do

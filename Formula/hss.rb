@@ -1,14 +1,15 @@
 class Hss < Formula
   desc "Interactive parallel SSH client"
   homepage "https://github.com/six-ddc/hss"
-  url "https://github.com/six-ddc/hss/archive/1.6.tar.gz"
-  sha256 "8516f3e24c9908f9c7ac02ee5247ce78f2a344e7fcca8a14081a92949db70049"
+  url "https://github.com/six-ddc/hss/archive/1.8.tar.gz"
+  sha256 "60481274403c551f5b717599c813d619877a009832c4a8a84fcead18e39382fa"
 
   bottle do
     cellar :any
-    sha256 "9a41aa73345f45ad440ae92c188c9ea6ff868d128024fcfd2abe39b2a3aa027a" => :high_sierra
-    sha256 "b16182f23f97fbd1dac75f6b61264e39084c03a7864f37940127bf4460fd76f8" => :sierra
-    sha256 "e65e32761d3d0485a62ff9a8826318ab53a6f92aed084435b5dfe0cd9a09a92b" => :el_capitan
+    sha256 "709da9ba5497dd3d76b8b425f6a74c8b6014e23a0a85b5b1498d6ac0137b15cd" => :catalina
+    sha256 "bc7f0e8a54effd65cae855164b7ea0d287af079ceec01accebb74f476e04c863" => :mojave
+    sha256 "e6b884c0c3f45c0365c39d65f644281c0079899b96d7835ad7fdab6e2e67c338" => :high_sierra
+    sha256 "4d23f98a3af8e2facd71c61616a207bb7c990bb2b9c5c52ca9a772cc6aecd0be" => :sierra
   end
 
   depends_on "readline"

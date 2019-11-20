@@ -3,18 +3,18 @@ class Lsdvd < Formula
   homepage "https://sourceforge.net/projects/lsdvd"
   url "https://downloads.sourceforge.net/project/lsdvd/lsdvd/lsdvd-0.17.tar.gz"
   sha256 "7d2c5bd964acd266b99a61d9054ea64e01204e8e3e1a107abe41b1274969e488"
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "ada8d8a799f6138e42cef34f1592e7ff01278ae6b7c7e3a8e519509db2a24ce6" => :high_sierra
-    sha256 "d64473d3ff0f1b1b7dce0435da6305aa384a374ebca7154498770a9c66297cb7" => :sierra
-    sha256 "eefa4b673d38a87354cdac631ee7e7a1054e69e29e912ff52c2fa84995f7e189" => :el_capitan
-    sha256 "4662e19252627e7f8e344fc0f8b52e83e908f26e9253aad7590eef126ebae7f0" => :yosemite
+    sha256 "cf5b1b4f5291edca2f210f74f391a625c06ef930a00b769aee3cf46e8f2c217c" => :catalina
+    sha256 "0db26707f1960dd5354f14e4ad779ad4a29e3066b124e0b11af0a179b3a36256" => :mojave
+    sha256 "c106839fc9f9378eb0d72ada198a13e279d7ef5afd73bc8bcafd1e99566bf50e" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
+  depends_on "libdvdcss"
   depends_on "libdvdread"
-  depends_on "libdvdcss" => :optional
 
   def install
     system "./configure", "--disable-debug", "--disable-dependency-tracking",

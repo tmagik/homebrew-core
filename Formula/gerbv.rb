@@ -2,14 +2,13 @@ class Gerbv < Formula
   desc "Gerber (RS-274X) viewer"
   homepage "http://gerbv.gpleda.org/"
   # 2.6.1 is the latest official stable release but it is very buggy and incomplete
-  url "https://downloads.sourceforge.net/project/gerbv/gerbv/gerbv-2.6.0/gerbv-2.6.0.tar.gz"
-  sha256 "5c55425c3493bc8407949be8b4e572434a6b378f5727cc0dcef97dc2e7574dd0"
-  revision 2
+  url "https://downloads.sourceforge.net/project/gerbv/gerbv/gerbv-2.7.0/gerbv-2.7.0.tar.gz"
+  sha256 "c5ee808c4230ce6be3ad10ab63c547098386d43022704de25ddb9378e62053b4"
 
   bottle do
-    sha256 "98a3d08ffa212c3a7f2bfb47995492a12b1d4aa81b85d2df588a72bb99ea5b14" => :high_sierra
-    sha256 "3c65545b5750557a964aa4829ff8a78a51899fbc75034f378c0a3b540ea71f06" => :sierra
-    sha256 "504028d3be0a380d8c809a6766abaa6f2e6768be852e20be9638be6a99761699" => :el_capitan
+    sha256 "eb27af6bcb6cfc6203297f617d88851e656c5b72fae84b10593429158d1861d6" => :catalina
+    sha256 "5995b2ff9b132c129e9e2ca08eb205c58883f63e22eec11c4c53e24ec6dfd4e3" => :mojave
+    sha256 "246a26e96d930c979db7bdb533807c71418ac0ad5c74bd12749d0c08b903e409" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
@@ -20,7 +19,8 @@ class Gerbv < Formula
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
-                          "--disable-update-desktop-database"
+                          "--disable-update-desktop-database",
+                          "--disable-schemas-compile"
     system "make", "install"
   end
 
@@ -44,6 +44,7 @@ class Gerbv < Formula
     gettext = Formula["gettext"]
     glib = Formula["glib"]
     gtkx = Formula["gtk+"]
+    harfbuzz = Formula["harfbuzz"]
     libpng = Formula["libpng"]
     pango = Formula["pango"]
     pixman = Formula["pixman"]
@@ -58,7 +59,8 @@ class Gerbv < Formula
       -I#{glib.opt_lib}/glib-2.0/include
       -I#{gtkx.opt_include}/gtk-2.0
       -I#{gtkx.opt_lib}/gtk-2.0/include
-      -I#{include}/gerbv-2.6.0
+      -I#{harfbuzz.opt_include}/harfbuzz
+      -I#{include}/gerbv-2.7.0
       -I#{libpng.opt_include}/libpng16
       -I#{pango.opt_include}/pango-1.0
       -I#{pixman.opt_include}/pixman-1

@@ -4,13 +4,13 @@ class GrOsmosdr < Formula
   url "https://cgit.osmocom.org/gr-osmosdr/snapshot/gr-osmosdr-0.1.4.tar.gz"
   mirror "https://github.com/osmocom/gr-osmosdr/archive/v0.1.4.tar.gz"
   sha256 "bcf9a9b1760e667c41a354e8cd41ef911d0929d5e4a18e0594ccb3320d735066"
-  revision 1
+  revision 8
 
   bottle do
     cellar :any
-    sha256 "c53bb7dca86390de755fd994452bca8b225b628d0467756ba7a77451efd2f378" => :high_sierra
-    sha256 "a4a62d458c37f5a46641a9c66622c079b0168c4e117878ceb0707f28b08fd93b" => :sierra
-    sha256 "ce73204234a4b56739e28fbcdbd6c8ca1c44ada096f30a7b78a56056706811ac" => :el_capitan
+    sha256 "de042fcc5ae37fb7be209ebe983dbabac1bfb5bc9fecf461d6999290033565a7" => :mojave
+    sha256 "b32174cd48394ab6b8b142a9072f2ff6f85732225ddd196702d6aa21121070c2" => :high_sierra
+    sha256 "6e16a8b497d89db6746aa992b85fb1c9e771d555d1a8909c7d7057e9ad268abe" => :sierra
   end
 
   depends_on "cmake" => :build
@@ -43,11 +43,11 @@ class GrOsmosdr < Formula
     (testpath/"test.cpp").write <<~EOS
       #include <osmosdr/device.h>
       int main() {
-        osmosdr::device_t device();
+        osmosdr::device_t device;
         return 0;
       }
     EOS
-    system ENV.cc, "test.cpp", "-L#{lib}", "-lgnuradio-osmosdr", "-o", "test"
+    system ENV.cxx, "test.cpp", "-L#{lib}", "-lgnuradio-osmosdr", "-o", "test"
     system "./test"
   end
 end

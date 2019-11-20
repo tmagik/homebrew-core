@@ -1,24 +1,23 @@
 class Sip < Formula
   desc "Tool to create Python bindings for C and C++ libraries"
   homepage "https://www.riverbankcomputing.com/software/sip/intro"
-  url "https://dl.bintray.com/homebrew/mirror/sip-4.19.8.tar.gz"
-  mirror "https://downloads.sourceforge.net/project/pyqt/sip/sip-4.19.8/sip-4.19.8.tar.gz"
-  sha256 "7eaf7a2ea7d4d38a56dd6d2506574464bddf7cf284c960801679942377c297bc"
+  url "https://www.riverbankcomputing.com/static/Downloads/sip/4.19.19/sip-4.19.19.tar.gz"
+  sha256 "5436b61a78f48c7e8078e93a6b59453ad33780f80c644e5f3af39f94be1ede44"
   revision 3
   head "https://www.riverbankcomputing.com/hg/sip", :using => :hg
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "0f64f23d6558829a95bd2630c864413088ee8d2ef15c443dd7d2af08fa2622b0" => :high_sierra
-    sha256 "867389d87a061d2201160bad2cf640bdc5dd7124cfa4c5e293f869f4a03be984" => :sierra
-    sha256 "3857e4edbd6d86e541c7acf1999f2b3d01d7686637bb44c7f88b473b19dcb0f1" => :el_capitan
+    sha256 "55d3dbbc80a7d87d4c4c4e0644e473edfbfc6ea8c00f96b745c788ed0de16114" => :catalina
+    sha256 "52c3ab51c8754323ef8219e84235214c5cf1f12e6c704d5fe70b2b95372f306e" => :mojave
+    sha256 "3e037042028c83b9329d376ed6663ddfe7ba90f714cc623421ed8ff2e87f90b5" => :high_sierra
   end
 
-  depends_on "python" => :recommended
-  depends_on "python@2" => :recommended
+  depends_on "python"
 
   def install
     ENV.prepend_path "PATH", Formula["python"].opt_libexec/"bin"
+    ENV.delete("SDKROOT") # Avoid picking up /Application/Xcode.app paths
 
     if build.head?
       # Link the Mercurial repository into the download directory so
@@ -28,27 +27,20 @@ class Sip < Formula
       system "python", "build.py", "prepare"
     end
 
-    Language::Python.each_python(build) do |python, version|
-      ENV.delete("SDKROOT") # Avoid picking up /Application/Xcode.app paths
-      system python, "configure.py",
-                     "--deployment-target=#{MacOS.version}",
-                     "--destdir=#{lib}/python#{version}/site-packages",
-                     "--bindir=#{bin}",
-                     "--incdir=#{include}",
-                     "--sipdir=#{HOMEBREW_PREFIX}/share/sip"
-      system "make"
-      system "make", "install"
-      system "make", "clean"
-    end
+    version = Language::Python.major_minor_version "python3"
+    system "python3", "configure.py",
+                      "--deployment-target=#{MacOS.version}",
+                      "--destdir=#{lib}/python#{version}/site-packages",
+                      "--bindir=#{bin}",
+                      "--incdir=#{include}",
+                      "--sipdir=#{HOMEBREW_PREFIX}/share/sip",
+                      "--sip-module", "PyQt5.sip"
+    system "make"
+    system "make", "install"
   end
 
   def post_install
     (HOMEBREW_PREFIX/"share/sip").mkpath
-  end
-
-  def caveats; <<~EOS
-    The sip-dir for Python is #{HOMEBREW_PREFIX}/share/sip.
-  EOS
   end
 
   test do
@@ -80,26 +72,9 @@ class Sip < Formula
         void test();
       };
     EOS
-    (testpath/"generate.py").write <<~EOS
-      from sipconfig import SIPModuleMakefile, Configuration
-      m = SIPModuleMakefile(Configuration(), "test.build")
-      m.extra_libs = ["test"]
-      m.extra_lib_dirs = ["."]
-      m.generate()
-    EOS
-    (testpath/"run.py").write <<~EOS
-      from test import Test
-      t = Test()
-      t.test()
-    EOS
+
     system ENV.cxx, "-shared", "-Wl,-install_name,#{testpath}/libtest.dylib",
                     "-o", "libtest.dylib", "test.cpp"
     system bin/"sip", "-b", "test.build", "-c", ".", "test.sip"
-    Language::Python.each_python(build) do |python, version|
-      ENV["PYTHONPATH"] = lib/"python#{version}/site-packages"
-      system python, "generate.py"
-      system "make", "-j1", "clean", "all"
-      system python, "run.py"
-    end
   end
 end

@@ -1,25 +1,22 @@
 class GitSecret < Formula
   desc "Bash-tool to store the private data inside a git repo"
   homepage "https://sobolevn.github.io/git-secret/"
-  url "https://github.com/sobolevn/git-secret/archive/v0.2.3.tar.gz"
-  sha256 "c821c25865ce7e13a67453debb6d60a8c1730102ecfc4c4b4c4858a02201ab26"
   head "https://github.com/sobolevn/git-secret.git"
+
+  stable do
+    url "https://github.com/sobolevn/git-secret/archive/v0.3.2.tar.gz"
+    sha256 "07b32b096e5ff5b4818096b1858c1f69df4684bb0f256e620514cf88f44ded85"
+  end
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "a8734dbaefc324f280a58a404b44b1acf1d658dfe768f05f16f684a2671163d1" => :high_sierra
-    sha256 "a8734dbaefc324f280a58a404b44b1acf1d658dfe768f05f16f684a2671163d1" => :sierra
-    sha256 "a8734dbaefc324f280a58a404b44b1acf1d658dfe768f05f16f684a2671163d1" => :el_capitan
+    sha256 "2fb53e4162baa1e614c3d73dbb24257604cf8b7864f73deeba21c784c6434193" => :catalina
+    sha256 "2fb53e4162baa1e614c3d73dbb24257604cf8b7864f73deeba21c784c6434193" => :mojave
+    sha256 "2fb53e4162baa1e614c3d73dbb24257604cf8b7864f73deeba21c784c6434193" => :high_sierra
   end
 
   depends_on "gawk"
-  depends_on "gnupg" => :recommended
-
-  # Upstream PR from 13 Jan 2018 "Make checksum command operating system based"
-  patch do
-    url "https://github.com/sobolevn/git-secret/pull/127.patch?full_index=1"
-    sha256 "0f711bb7f2cd91e0770a92371ea50541aa8ae606c0542c164af7fc280dd956db"
-  end
+  depends_on "gnupg"
 
   def install
     system "make", "build"

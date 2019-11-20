@@ -1,23 +1,26 @@
 class UserspaceRcu < Formula
   desc "Library for userspace RCU (read-copy-update)"
-  homepage "https://lttng.org/urcu"
-  url "https://www.lttng.org/files/urcu/userspace-rcu-0.10.1.tar.bz2"
-  sha256 "9c09220be4435dc27fcd22d291707b94b97f159e0c442fbcd60c168f8f79eb06"
+  homepage "https://liburcu.org"
+  url "https://lttng.org/files/urcu/userspace-rcu-0.11.1.tar.bz2"
+  sha256 "92b9971bf3f1c443edd6c09e7bf5ff3b43531e778841f16377a812c8feeb3350"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "9e3e9a7e4615f206faab5567f4eeab37dfa0aad7bdb9113803716df70abb9e0e" => :high_sierra
-    sha256 "a9e38da39a4afa118c7eeb9cadbb0466caea3f77a8525473a6603297b0d32a9f" => :sierra
-    sha256 "e44fe1d83cedac0ccf9e22a406e8efac399ac281fbc858dbc20d7b57fe564503" => :el_capitan
+    sha256 "9775f683e726589140c2c5e7ceb3c0c050ea40315275eb093f25f866501e5626" => :catalina
+    sha256 "2b70670f8a4a37cfd7a60a3a5c46908556ec7fb78f9992dbe73f022154c601fe" => :mojave
+    sha256 "c1923cecf3ed76e60ac2980a703817789dbc82315aec3fd84d49b528ce28da80" => :high_sierra
+    sha256 "70f936b43372e4596cdfa543f1b3a42aa01a4d8ca93fe2a38e0b8e6994aa65de" => :sierra
   end
 
   def install
-    args = ["--disable-dependency-tracking",
-            "--disable-silent-rules",
-            "--prefix=#{prefix}"]
-    # workaround broken upstream detection of build platform
-    # marked as wontfix: https://bugs.lttng.org/issues/578#note-1
-    args << "--build=#{Hardware::CPU.arch_64_bit}" if MacOS.prefer_64_bit?
+    # Enforce --build to work around broken upstream detection
+    # https://bugs.lttng.org/issues/578#note-1
+    args = %W[
+      --disable-dependency-tracking
+      --disable-silent-rules
+      --prefix=#{prefix}
+      --build=x86_64
+    ]
 
     system "./configure", *args
     system "make"

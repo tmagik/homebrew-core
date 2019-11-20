@@ -1,54 +1,52 @@
 class Snort < Formula
   desc "Flexible Network Intrusion Detection System"
   homepage "https://www.snort.org"
-  url "https://www.snort.org/downloads/snort/snort-2.9.11.1.tar.gz"
-  sha256 "9f6b3aeac5a109f55504bd370564ac431cb1773507929dc461626898f33f46cd"
+  url "https://www.snort.org/downloads/snort/snort-2.9.12.tar.gz"
+  mirror "https://distfiles.macports.org/snort/snort-2.9.12.tar.gz"
+  sha256 "7b02e11987c6cb4f6d79d72799ca9ad2b4bd59cc1d96bb7d6c91549f990d99d0"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "ac8a7b3007b307d8368da7e3879e3c6cd6c718746b9443d544f5e8adcb286be6" => :high_sierra
-    sha256 "b152a9869efd30d40e0d3750a0fd12f825360bf7c1d7cb39156320d32381a649" => :sierra
-    sha256 "00de9088a3e7471026430cf17a7cc7d3d9787496398662c2e2c6a7c766c212cd" => :el_capitan
+    rebuild 2
+    sha256 "21333e3b46c2a9e9b64661a891a0d16558c888d9b260b1a713a7583d98e8999c" => :catalina
+    sha256 "a900ea0646b89f1152f16dd0e86df4a5f8bd8de73269653bc4b6629110467bc0" => :mojave
+    sha256 "a69f95c8452769835680ea5410db5c853749539758ebdb7aa38ed5ec1dde2a02" => :high_sierra
   end
 
-  option "with-debug", "Compile Snort with debug options enabled"
-
-  deprecated_option "enable-debug" => "with-debug"
-
   depends_on "pkg-config" => :build
-  depends_on "luajit"
   depends_on "daq"
   depends_on "libdnet"
+  depends_on "libpcap"
+  depends_on "luajit"
+  depends_on "nghttp2"
+  depends_on "openssl@1.1"
   depends_on "pcre"
-  depends_on "openssl"
 
   def install
-    openssl = Formula["openssl"]
+    openssl = Formula["openssl@1.1"]
+    libpcap = Formula["libpcap"]
 
     args = %W[
       --prefix=#{prefix}
       --sysconfdir=#{etc}/snort
+      --disable-debug
       --disable-dependency-tracking
       --disable-silent-rules
+      --enable-active-response
+      --enable-flexresp3
       --enable-gre
       --enable-mpls
-      --enable-targetbased
+      --enable-normalizer
+      --enable-react
+      --enable-reload
       --enable-sourcefire
+      --enable-targetbased
       --with-openssl-includes=#{openssl.opt_include}
       --with-openssl-libraries=#{openssl.opt_lib}
-      --enable-active-response
-      --enable-normalizer
-      --enable-reload
-      --enable-react
-      --enable-flexresp3
+      --with-libpcap-includes=#{libpcap.opt_include}
+      --with-libpcap-libraries=#{libpcap.opt_lib}
     ]
-
-    if build.with? "debug"
-      args << "--enable-debug"
-      args << "--enable-debug-msgs"
-    else
-      args << "--disable-debug"
-    end
 
     system "./configure", *args
     system "make", "install"
@@ -62,7 +60,7 @@ class Snort < Formula
     so that they can be read by non-root users.  This can be done manually using:
         sudo chmod o+r /dev/bpf*
     or you could create a startup item to do this for you.
-    EOS
+  EOS
   end
 
   test do

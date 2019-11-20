@@ -7,17 +7,19 @@ class Wrk < Formula
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "8167375044c6ff20f33e2d94f92fe2977bb25f19f561f1d5f2eb241b0feda62c" => :high_sierra
-    sha256 "1ace345f489c0fc589b619e96a748bf841ff9134a70016b76cde5ae06795369f" => :sierra
-    sha256 "23f7c0c7b86691a810238679dee61662781a70b13db95c6dfee4d469845867c1" => :el_capitan
+    rebuild 2
+    sha256 "65f16f71cfb120d12f0f993044db92b767c728274aa046917bee7ad4deacfd3e" => :mojave
+    sha256 "ccc1cc4303847b70f940b765a9229476e7018328fbf202c02a00d9a13c63919e" => :high_sierra
+    sha256 "82fd1323ac999e23107dcd1cdae9635ff047afd15532f42f8cb4e82dad0db257" => :sierra
   end
 
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   conflicts_with "wrk-trello", :because => "both install `wrk` binaries"
 
   def install
     ENV.deparallelize
+    ENV["MACOSX_DEPLOYMENT_TARGET"] = MacOS.version
     system "make"
     bin.install "wrk"
   end

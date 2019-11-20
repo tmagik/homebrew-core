@@ -1,12 +1,10 @@
 class Artifactory < Formula
   desc "Manages binaries"
   homepage "https://www.jfrog.com/artifactory/"
-  url "https://dl.bintray.com/jfrog/artifactory/jfrog-artifactory-oss-5.11.0.zip"
-  sha256 "8b00705d5ce6b8321fd1a623a80cea24fbf2fd8545672c72778e7c918405b6dc"
+  url "https://dl.bintray.com/jfrog/artifactory/jfrog-artifactory-oss-6.13.1.zip"
+  sha256 "a77415f1adbfec0d574f3a808f1c17c35536a90299a630b96e65b4d698d968c7"
 
   bottle :unneeded
-
-  option "with-low-heap", "Run artifactory with low Java memory options. Useful for development machines. Do not use in production."
 
   depends_on :java => "1.8+"
 
@@ -19,13 +17,6 @@ class Artifactory < Formula
     inreplace "bin/artifactory.sh",
       'export ARTIFACTORY_HOME="$(cd "$(dirname "${artBinDir}")" && pwd)"',
       "export ARTIFACTORY_HOME=#{libexec}"
-
-    if build.with? "low-heap"
-      # Reduce memory consumption for non production use
-      inreplace "bin/artifactory.default",
-        "-server -Xms512m -Xmx2g",
-        "-Xms128m -Xmx768m"
-    end
 
     libexec.install Dir["*"]
 

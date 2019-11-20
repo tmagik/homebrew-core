@@ -1,23 +1,20 @@
 class Gtkmm3 < Formula
   desc "C++ interfaces for GTK+ and GNOME"
   homepage "https://www.gtkmm.org/"
-  url "https://download.gnome.org/sources/gtkmm/3.22/gtkmm-3.22.2.tar.xz"
-  sha256 "91afd98a31519536f5f397c2d79696e3d53143b80b75778521ca7b48cb280090"
-  revision 1
+  url "https://download.gnome.org/sources/gtkmm/3.24/gtkmm-3.24.2.tar.xz"
+  sha256 "6d71091bcd1863133460d4188d04102810e9123de19706fb656b7bb915b4adc3"
 
   bottle do
     cellar :any
-    sha256 "6e468e40dbe7e4ca10361980514d949f45ff770ddd3e68e2c8f4fd6ee6409f14" => :high_sierra
-    sha256 "abd9eac77cbae6970e31119621ac5cd7e57cde621431525984604b4e2bddc851" => :sierra
-    sha256 "ca321d85ad747dc3565acb82ea3c7b2de3b2fcb196b3d093eafd71267496bac2" => :el_capitan
+    sha256 "d35be6a3fa037d282f4b69a2c4ccf7f23a37a8474b630d1b01ed6862786e2a3f" => :catalina
+    sha256 "72650a88c5365ac34924eb731abd08396bbf4a4618d160c272b5f6b26b0b629e" => :mojave
+    sha256 "de16db648405af1cc6f236026437a928a0f3d238c41317106d878ea5fa52bad4" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
+  depends_on "atkmm"
   depends_on "gtk+3"
   depends_on "pangomm"
-  depends_on "atkmm"
-
-  needs :cxx11
 
   def install
     ENV.cxx11
@@ -47,9 +44,10 @@ class Gtkmm3 < Formula
     glib = Formula["glib"]
     glibmm = Formula["glibmm"]
     gtkx3 = Formula["gtk+3"]
+    harfbuzz = Formula["harfbuzz"]
     libepoxy = Formula["libepoxy"]
     libpng = Formula["libpng"]
-    libsigcxx = Formula["libsigc++"]
+    libsigcxx = Formula["libsigc++@2"]
     pango = Formula["pango"]
     pangomm = Formula["pangomm"]
     pixman = Formula["pixman"]
@@ -73,6 +71,7 @@ class Gtkmm3 < Formula
       -I#{gtkx3.opt_include}
       -I#{gtkx3.opt_include}/gtk-3.0
       -I#{gtkx3.opt_include}/gtk-3.0/unix-print
+      -I#{harfbuzz.opt_include}/harfbuzz
       -I#{include}/gdkmm-3.0
       -I#{include}/gtkmm-3.0
       -I#{libepoxy.opt_include}

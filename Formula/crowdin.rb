@@ -1,8 +1,8 @@
 class Crowdin < Formula
   desc "Command-line tool that allows to manage your resources with crowdin.com"
   homepage "https://support.crowdin.com/cli-tool/"
-  url "https://downloads.crowdin.com/cli/v2/crowdin-cli-2.0.22.zip"
-  sha256 "f3967960a4063bf69bf0f5acedceb2417134b1a3e75d304838f9d9fcc90660a5"
+  url "https://downloads.crowdin.com/cli/v2/crowdin-cli-2.0.31.zip"
+  sha256 "93defe16706783e92cbe3b32e528e495ddffa9e2a68471c3b70a2eb6c487e245"
 
   bottle :unneeded
 
@@ -14,6 +14,12 @@ class Crowdin < Formula
   end
 
   test do
-    system bin/"crowdin"
+    generate_output = shell_output("#{bin}/crowdin generate").chomp
+    assert_predicate testpath/"crowdin.yml", :exist?
+    assert_match /^Generates Crowdin CLI configuration skeleton .*crowdin\.yml\'- OK$/, generate_output
+    lint_output = shell_output("#{bin}/crowdin lint", 1).split("\n")
+    lint_output.each do |line|
+      assert_match /^Project [^ ]+ is empty$/, line
+    end
   end
 end

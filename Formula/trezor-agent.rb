@@ -1,16 +1,18 @@
 class TrezorAgent < Formula
   include Language::Python::Virtualenv
 
-  desc "Hardware-based SSH/GPG agent"
+  desc "Hardware SSH/GPG agent for Trezor, Keepkey & Ledger"
   homepage "https://github.com/romanz/trezor-agent"
-  url "https://files.pythonhosted.org/packages/54/89/6de88988f9efa712cb7131cf3123a2a043c7956ee66e725b14a1ea4c27ec/trezor_agent-0.9.2.tar.gz"
-  sha256 "d7756759ab9bb6700007423e58cb20f26effd0271c26f7a43c0a92c0fa487ede"
+  url "https://files.pythonhosted.org/packages/61/33/eb639bced493984170e1ec3cf149b06b9f4cd05886f667a3eb0e1f94396b/trezor_agent-0.10.0.tar.gz"
+  sha256 "e82bf000c1178b1a7612f2a90487eb34c6234d2edb15dc8e310ad875d8298690"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "ff4b2a030026867a0895f99d63a5a1010cf8b1699b093c91e99b92e1d2cd8744" => :high_sierra
-    sha256 "a9c354d429d49c1fabd255f18548f03967f086f136de8ab8a7bef0eb4e7efbb8" => :sierra
-    sha256 "2da90be8d971b100a37ad9b6e64d64e3ced33a86c79a940e2e912f86d1bc4682" => :el_capitan
+    rebuild 1
+    sha256 "00b341a48e752860a7ccc530304c504466877427f7c9d4f537c943f966e72b89" => :catalina
+    sha256 "ebab61a0624369d7c1a0704b683a11403fdd88eb38e89bb2b1d4391679d29974" => :mojave
+    sha256 "18fc1f52a8727b8296c18d1187df0a65898a7e53dc08edc64a09a8d3631e3009" => :high_sierra
+    sha256 "a2094afbbae63c2fcead69c854581720ccf878557ae6346fbb24457772c0e47b" => :sierra
   end
 
   depends_on "libusb"
@@ -37,8 +39,8 @@ class TrezorAgent < Formula
   end
 
   resource "certifi" do
-    url "https://files.pythonhosted.org/packages/15/d4/2f888fc463d516ff7bf2379a4e9a552fef7f22a94147655d9b1097108248/certifi-2018.1.18.tar.gz"
-    sha256 "edbc3f203427eef571f79a7692bb160a2b0f7ccaa31953e99bd17e307cf63f7d"
+    url "https://files.pythonhosted.org/packages/e1/0f/f8d5e939184547b3bdc6128551b831a62832713aa98c2ccdf8c47ecc7f17/certifi-2018.8.24.tar.gz"
+    sha256 "376690d6f16d32f9d1fe8932551d80b23e9d393a8578c5633a2ed39a64861638"
   end
 
   resource "chardet" do
@@ -47,8 +49,13 @@ class TrezorAgent < Formula
   end
 
   resource "click" do
-    url "https://files.pythonhosted.org/packages/95/d9/c3336b6b5711c3ab9d1d3a80f1a3e2afeb9d8c02a7166462f6cc96570897/click-6.7.tar.gz"
-    sha256 "f15516df478d5a56180fbf80e68f206010e6d160fc39fa508b65e035fd75130b"
+    url "https://files.pythonhosted.org/packages/f8/5c/f60e9d8a1e77005f664b76ff8aeaee5bc05d0a91798afd7f53fc998dbc47/Click-7.0.tar.gz"
+    sha256 "5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"
+  end
+
+  resource "construct" do
+    url "https://files.pythonhosted.org/packages/19/c0/f054941fa33d14378de66d2c0477d31f7ad97aa2e298a5771a7b20bc2039/construct-2.9.45.tar.gz"
+    sha256 "2271a0efd0798679dea825ff47e22a4c550456a5db0ba8baa82f7eae0af0118c"
   end
 
   resource "docutils" do
@@ -72,18 +79,28 @@ class TrezorAgent < Formula
   end
 
   resource "idna" do
-    url "https://files.pythonhosted.org/packages/f4/bd/0467d62790828c23c47fc1dfa1b1f052b24efdf5290f071c7a91d0d82fd3/idna-2.6.tar.gz"
-    sha256 "2c6a5de3089009e3da7c5dde64a141dbc8551d5b7f6cf4ed7c2568d0cc520a8f"
+    url "https://files.pythonhosted.org/packages/65/c4/80f97e9c9628f3cac9b98bfca0402ede54e0563b56482e3e6e45c43c4935/idna-2.7.tar.gz"
+    sha256 "684a38a6f903c1d71d6d5fac066b58d7768af4de2b832e426ec79c30daa94a16"
+  end
+
+  resource "keepkey-agent" do
+    url "https://files.pythonhosted.org/packages/65/72/4bf47a7bc8dc93d2ac21672a0db4bc58a78ec5cee3c4bcebd0b4092a9110/keepkey_agent-0.9.0.tar.gz"
+    sha256 "47c85de0c2ffb53c5d7bd2f4d2230146a416e82511259fad05119c4ef74be70c"
+  end
+
+  resource "ledger-agent" do
+    url "https://files.pythonhosted.org/packages/a3/c9/ac7546d6168662af356493231ca8818bdf8ffd05238a68fe5085fd9e6358/ledger_agent-0.9.0.tar.gz"
+    sha256 "2265ba9c6a4594ff798fe480856ea36bfe6d8ae7ba2190b74f9666510530f20f"
   end
 
   resource "libagent" do
-    url "https://files.pythonhosted.org/packages/63/57/39df4b80036657c9d57a17fe94902965a20543569e9bef0bb7cd89e8fa4a/libagent-0.11.2.tar.gz"
-    sha256 "51f36116dacab1df8672a876bb2ddbf08a717e0afc8276406bd23aeda79d5030"
+    url "https://files.pythonhosted.org/packages/9b/13/5e3e78890a66be778f448998368d7a17be704358a2036788a1480fe73f1c/libagent-0.13.1.tar.gz"
+    sha256 "b9afa0851f668612702fcd648cee47af4dc7cfe4f86d4c4a84b1a6b4a4960b41"
   end
 
   resource "libusb1" do
-    url "https://files.pythonhosted.org/packages/ec/5d/4fdac6c53525786fe35cff035c3345452e24e2bee5627893be65d12555cb/libusb1-1.6.4.tar.gz"
-    sha256 "8c930d9c1d037d9c83924c82608aa6a1adcaa01ca0e4a23ee0e8e18d7eee670d"
+    url "https://files.pythonhosted.org/packages/39/c6/a9c8c38e3a8a587cd5c32146a5156375e107e483eb2ccb80284a147921dd/libusb1-1.6.6.tar.gz"
+    sha256 "a49917a2262cf7134396f6720c8be011f14aabfc5cdc53f880cc672c0f39d271"
   end
 
   resource "lockfile" do
@@ -102,33 +119,33 @@ class TrezorAgent < Formula
   end
 
   resource "protobuf" do
-    url "https://files.pythonhosted.org/packages/14/03/ff5279abda7b46e9538bfb1411d42831b7e65c460d73831ed2445649bc02/protobuf-3.5.1.tar.gz"
-    sha256 "95b78959572de7d7fafa3acb718ed71f482932ddddddbd29ba8319c10639d863"
+    url "https://files.pythonhosted.org/packages/1b/90/f531329e628ff34aee79b0b9523196eb7b5b6b398f112bb0c03b24ab1973/protobuf-3.6.1.tar.gz"
+    sha256 "1489b376b0f364bcc6f89519718c057eb191d7ad6f1b395ffd93d1aa45587811"
   end
 
   resource "pyblake2" do
-    url "https://files.pythonhosted.org/packages/cc/a6/3fa4c5cd5c3f590187cc31e5d5089332fb46c3a9912a28d5c44d34268cd4/pyblake2-1.1.0.tar.gz"
-    sha256 "3a850036bf42053c74bfc52c063323ca78e40ba1f326b01777da5750a143631a"
+    url "https://files.pythonhosted.org/packages/a6/ea/559658f48713567276cabe1344a9ef918adcb34a9da417dbf0a2f7477d8e/pyblake2-1.1.2.tar.gz"
+    sha256 "5ccc7eb02edb82fafb8adbb90746af71460fbc29aa0f822526fc976dff83e93f"
   end
 
   resource "python-daemon" do
-    url "https://files.pythonhosted.org/packages/b2/fb/a280d65f81e9d69989c8d6c4e0bb18d7280cdcd6d406a2cc3f4eb47d4402/python-daemon-2.1.2.tar.gz"
-    sha256 "261c859be5c12ae7d4286dc6951e87e9e1a70a882a8b41fd926efc1ec4214f73"
+    url "https://files.pythonhosted.org/packages/99/2a/75fe6aa7086e838570f29899f674e7896a42be26d9fff33f90d990e599d2/python-daemon-2.2.0.tar.gz"
+    sha256 "aca149ebf7e73f10cd554b2df5c95295d49add8666348eff6195053ec307728c"
   end
 
   resource "requests" do
-    url "https://files.pythonhosted.org/packages/b0/e1/eab4fc3752e3d240468a8c0b284607899d2fbfb236a56b7377a329aa8d09/requests-2.18.4.tar.gz"
-    sha256 "9c443e7324ba5b85070c4a818ade28bfabedf16ea10206da1132edaa6dda237e"
+    url "https://files.pythonhosted.org/packages/54/1f/782a5734931ddf2e1494e4cd615a51ff98e1879cbe9eecbdfeaf09aa75e9/requests-2.19.1.tar.gz"
+    sha256 "ec22d826a36ed72a7358ff3fe56cbd4ba69dd7a6718ffd450ff0e9df7a47ce6a"
   end
 
   resource "rlp" do
-    url "https://files.pythonhosted.org/packages/f9/53/922c7a15116e52cd7340f81b83322d5ec9d38668cd78d1a0c7e75dfce8f2/rlp-0.6.0.tar.gz"
-    sha256 "87879a0ba1479b760cee98af165de2eee95258b261faa293199f60742be96f34"
+    url "https://files.pythonhosted.org/packages/01/aa/475f96f82d3d91e6f9e434ad465069e4b031665df048050fab70385ad1c9/rlp-1.0.2.tar.gz"
+    sha256 "040fb5172fa23d27953a886c40cac989fc031d0629db934b5a9edcd2fb28df1e"
   end
 
   resource "semver" do
-    url "https://files.pythonhosted.org/packages/40/56/d1f930872436300b474a447a8042091bd335119f0c58bd8647546d6c3dc0/semver-2.7.9.tar.gz"
-    sha256 "1ffb55fb86a076cf7c161e6b5931f7da59f15abe217e0f24cea96cc8eec50f42"
+    url "https://files.pythonhosted.org/packages/47/13/8ae74584d6dd33a1d640ea27cd656a9f718132e75d759c09377d10d64595/semver-2.8.1.tar.gz"
+    sha256 "5b09010a66d9a3837211bb7ae5a20d10ba88f8cb49e92cb139a69ef90d5060d8"
   end
 
   resource "six" do
@@ -137,13 +154,18 @@ class TrezorAgent < Formula
   end
 
   resource "trezor" do
-    url "https://files.pythonhosted.org/packages/26/46/b78ba738beea1d451a9f88b55edde8d1fac1049b69157aeaf12390ec00b6/trezor-0.9.1.tar.gz"
-    sha256 "a481191011bade98f1e9f1201e7c72a83945050657bbc90dc4ac32dc8b8b46a4"
+    url "https://files.pythonhosted.org/packages/88/9e/9b84a35c3709cda7b35a211dc9617f38740eb2d3a46a20a1087efb795302/trezor-0.11.3.tar.gz"
+    sha256 "c79a500e90d003073c8060d319dceb042caaba9472f13990c77ed37d04a82108"
+  end
+
+  resource "typing-extensions" do
+    url "https://files.pythonhosted.org/packages/fa/aa/229f5c82d17d10d4ef318b5c22a8626a1c78fc97f80d3307035cf696681b/typing_extensions-3.7.2.tar.gz"
+    sha256 "fb2cd053238d33a8ec939190f30cfd736c00653a85a2919415cecf7dc3d9da71"
   end
 
   resource "urllib3" do
-    url "https://files.pythonhosted.org/packages/ee/11/7c59620aceedcc1ef65e156cc5ce5a24ef87be4107c2b74458464e437a5d/urllib3-1.22.tar.gz"
-    sha256 "cc44da8e1145637334317feebd728bd869a35285b93cbb4cca2577da7e62db4f"
+    url "https://files.pythonhosted.org/packages/3c/d2/dc5471622bd200db1cd9319e02e71bc655e9ea27b8e0ce65fc69de0dac15/urllib3-1.23.tar.gz"
+    sha256 "a68ac5e15e76e7e5dd2b8f94007233e01effe3e50e8daddf69acfd81cb686baf"
   end
 
   def install

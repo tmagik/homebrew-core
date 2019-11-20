@@ -1,19 +1,17 @@
 class ConsoleBridge < Formula
   desc "Robot Operating System-independent package for logging"
   homepage "https://wiki.ros.org/console_bridge/"
-  url "https://github.com/ros/console_bridge/archive/0.4.0.tar.gz"
-  sha256 "c78f87a05c1b2f299c0c8cc1aa9e0234c7e761aa521e4223ecf7aebd21874437"
+  url "https://github.com/ros/console_bridge/archive/0.4.4.tar.gz"
+  sha256 "1147af6ad6477fcfd640c543684e17ee540e434aa70d6f31c1d137bc86fb937c"
 
   bottle do
     cellar :any
-    sha256 "e58f4cb5a2e01bd7c014e7bc96b83046bce93bbf3f6664dc51820a49bfc2b012" => :high_sierra
-    sha256 "3dd9b0b3f0171241bf9dea73bd958788f240f51c394b3e7268b677e0df86e962" => :sierra
-    sha256 "adaf8ded297007d29b83556a470fdb24993d56df90defa75dab2a7a32a224c2a" => :el_capitan
+    sha256 "3bb19cb882a45c902423f226a51638dc72db201589a7575c585e8239a41e009d" => :catalina
+    sha256 "aea1327f4b80efdd3fc30396fd4fbb480220f9e685d93a83255806d468ea9ea0" => :mojave
+    sha256 "64532f4b44e228941aca08681dbae1591f189b4d8c9ce7a26c80e1f6cadb3633" => :high_sierra
   end
 
   depends_on "cmake" => :build
-
-  needs :cxx11
 
   def install
     ENV.cxx11

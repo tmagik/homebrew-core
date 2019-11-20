@@ -1,13 +1,14 @@
 class Mmv < Formula
   desc "Move, copy, append, and link multiple files"
   homepage "https://packages.debian.org/unstable/utils/mmv"
-  url "https://mirrors.ocf.berkeley.edu/debian/pool/main/m/mmv/mmv_1.01b.orig.tar.gz"
-  mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/m/mmv/mmv_1.01b.orig.tar.gz"
+  url "https://deb.debian.org/debian/pool/main/m/mmv/mmv_1.01b.orig.tar.gz"
   sha256 "0399c027ea1e51fd607266c1e33573866d4db89f64a74be8b4a1d2d1ff1fdeef"
 
   bottle do
     cellar :any_skip_relocation
     rebuild 1
+    sha256 "51d7db3a7205fc98d83a432261c2f86bc6992a30716fb8bbcb6c60c571cde00f" => :catalina
+    sha256 "d754f546b6e586df4ec307e930c6b2e60dd51b0a0929a0240f3b896177909118" => :mojave
     sha256 "b9076fa267efcabf04184a8ed20d072c1fd33b753ac2f6883495f2f6b4f8a108" => :high_sierra
     sha256 "cce62f0616d060bf803a5bc83d15907a02b90f5ec3faea62422d8fa179982ab2" => :sierra
     sha256 "e22f894e1224e3c0f85257c5b4db11ed1095b5a2117f48f38653b22a3d395fe4" => :el_capitan
@@ -16,8 +17,8 @@ class Mmv < Formula
   end
 
   patch do
-    url "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/m/mmv/mmv_1.01b-15.diff.gz"
-    sha256 "9ad3e3d47510f816b4a18bae04ea75913588eec92248182f85dd09bc5ad2df13"
+    url "https://raw.githubusercontent.com/Homebrew/formula-patches/0f8a80f7b337416d1a63ce453740fbe5bb5d158d/mmv/mmv_1.01b-15.diff"
+    sha256 "76f111f119c3e69e5b543276b3c680f453b9b72a0bfc12b4e95fb40770db60c1"
   end
 
   def install

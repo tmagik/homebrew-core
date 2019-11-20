@@ -1,21 +1,23 @@
 class AppscaleTools < Formula
   desc "Command-line tools for working with AppScale"
   homepage "https://github.com/AppScale/appscale-tools"
-  url "https://github.com/AppScale/appscale-tools/archive/3.5.0.tar.gz"
-  sha256 "0bc6763739bdbeb955d944ed24f9308b3dc803ef96a06bb2cd6f1ff77275b021"
+  url "https://github.com/AppScale/appscale-tools/archive/3.5.3.tar.gz"
+  sha256 "ae3f373626d5d88d38cf17fef8bd5faaf92234bc6421d5f5c49cf5788acbe93a"
+  revision 2
   head "https://github.com/AppScale/appscale-tools.git"
 
   bottle do
     cellar :any
-    sha256 "f353262e215988a11e3f5f46606a71a95974a05072e78cfb5f335f936179f087" => :high_sierra
-    sha256 "242405f2e13f0e80f00d7ce4b7b0c0973d485757d9ca5806ef2387f18f9d0e58" => :sierra
-    sha256 "f13d066fcf3849954e64eb78a387a36710b7c634e8802f840be9e624fea0c1d6" => :el_capitan
+    sha256 "b1ad4360627e9259a48c31e5868a59ce0ad9cb76d7797b287236c40b35f782e9" => :catalina
+    sha256 "1e6fef29c61285ed52a547b8776663c0e8982d840d67b3d827d74c7b9b26d4b1" => :mojave
+    sha256 "428649b456e647599f3c3ee8542efd72751ebcf678f00540a622c35a8cf101c6" => :high_sierra
   end
 
-  depends_on "python@2"
   depends_on "libyaml"
+  depends_on "openssl@1.1"
+  # Uses SOAPPy, which does not support Python 3
+  depends_on "python@2" # does not support Python 3
   depends_on "ssh-copy-id"
-  depends_on "openssl"
 
   resource "retrying" do
     url "https://files.pythonhosted.org/packages/44/ef/beae4b4ef80902f22e3af073397f079c96969c69b2c7d52a57ea9ae61c9d/retrying-1.3.3.tar.gz"
@@ -228,8 +230,8 @@ class AppscaleTools < Formula
   end
 
   resource "asn1crypto" do
-    url "https://files.pythonhosted.org/packages/fc/f1/8db7daa71f414ddabfa056c4ef792e1461ff655c2ae2928a2b675bfed6b4/asn1crypto-0.24.0.tar.gz"
-    sha256 "9d5c20441baf0cb60a4ac34cc447c6c189024b6b4c6cd7877034f4965c464e49"
+    url "https://files.pythonhosted.org/packages/c1/a9/86bfedaf41ca590747b4c9075bc470d0b2ec44fb5db5d378bc61447b3b6b/asn1crypto-1.2.0.tar.gz"
+    sha256 "87620880a477123e01177a1f73d0f327210b43a3cdbd714efcd2fa49a8d7b384"
   end
 
   resource "idna" do

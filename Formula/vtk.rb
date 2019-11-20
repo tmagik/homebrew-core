@@ -1,20 +1,25 @@
 class Vtk < Formula
   desc "Toolkit for 3D computer graphics, image processing, and visualization"
   homepage "https://www.vtk.org/"
-  url "https://www.vtk.org/files/release/8.1/VTK-8.1.0.tar.gz"
-  sha256 "6e269f07b64fb13774f5925161fb4e1f379f4e6a0131c8408c555f6b58ef3cb7"
-  revision 2
+  revision 5
   head "https://github.com/Kitware/VTK.git"
 
-  bottle do
-    sha256 "1e34e131a8519dabf2b632967d84c417b67ef39cfe256af18f6b64b12c4bc5e4" => :high_sierra
-    sha256 "19901a046af52ec69be3287a8a010d3793298b62e729924efae44ffa81199d02" => :sierra
-    sha256 "f0c52d002d318238e9602de43a2e5b91b79841bca6bf10454e502fa0131f5226" => :el_capitan
+  stable do
+    url "https://www.vtk.org/files/release/8.2/VTK-8.2.0.tar.gz"
+    sha256 "34c3dc775261be5e45a8049155f7228b6bd668106c72a3c435d95730d17d57bb"
+
+    # Fix compile issues on Mojave and later
+    patch do
+      url "https://gitlab.kitware.com/vtk/vtk/commit/ca3b5a50d945b6e65f0e764b3138cad17bd7eb8d.diff"
+      sha256 "b9f7a3ebf3c29f3cad4327eb15844ac0ee849755b148b60fef006314de8e822e"
+    end
   end
 
-  option "without-python@2", "Build without python2 support"
-
-  deprecated_option "without-python" => "without-python@2"
+  bottle do
+    sha256 "0de0d37b2e00cfe82e837f66d3bcee631e424ae13cdc9451245ca4089d4d0df5" => :catalina
+    sha256 "512fa561abc7649256693b48bbfae2d5d25ed32d5c136036db6a9b32a588cc6b" => :mojave
+    sha256 "265f4cd7802d57c0cd08202bec0d13e56fc4194cd7fe10b4b89285ebe70ea8bc" => :high_sierra
+  end
 
   depends_on "cmake" => :build
   depends_on "boost"
@@ -24,14 +29,13 @@ class Vtk < Formula
   depends_on "libpng"
   depends_on "libtiff"
   depends_on "netcdf"
-  depends_on "python@2" => :recommended
-  depends_on "python" => :optional
-  depends_on "qt" => :optional
-  depends_on "pyqt" if build.with? "qt"
-
-  needs :cxx11
+  depends_on "pyqt"
+  depends_on "python"
+  depends_on "qt"
 
   def install
+    pyver = Language::Python.major_minor_version "python3"
+    py_prefix = Formula["python3"].opt_frameworks/"Python.framework/Versions/#{pyver}"
     args = std_cmake_args + %W[
       -DBUILD_SHARED_LIBS=ON
       -DBUILD_TESTING=OFF
@@ -50,64 +54,28 @@ class Vtk < Formula
       -DVTK_USE_SYSTEM_PNG=ON
       -DVTK_USE_SYSTEM_TIFF=ON
       -DVTK_USE_SYSTEM_ZLIB=ON
-      -DVTK_WRAP_TCL=ON
+      -DVTK_WRAP_PYTHON=ON
+      -DVTK_PYTHON_VERSION=3
+      -DPYTHON_EXECUTABLE=#{Formula["python"].opt_bin}/python3
+      -DPYTHON_INCLUDE_DIR=#{py_prefix}/include/python#{pyver}m
+      -DPYTHON_LIBRARY=#{py_prefix}/lib/libpython#{pyver}.dylib
+      -DVTK_INSTALL_PYTHON_MODULE_DIR=#{lib}/python#{pyver}/site-packages
+      -DVTK_QT_VERSION:STRING=5
+      -DVTK_Group_Qt=ON
+      -DVTK_WRAP_PYTHON_SIP=ON
+      -DSIP_PYQT_DIR='#{Formula["pyqt5"].opt_share}/sip'
     ]
 
-    unless MacOS::CLT.installed?
-      # We are facing an Xcode-only installation, and we have to keep
-      # vtk from using its internal Tk headers (that differ from OSX's).
-      args << "-DTK_INCLUDE_PATH:PATH=#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Headers"
-      args << "-DTK_INTERNAL_PATH:PATH=#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Headers/tk-private"
-    end
-
     mkdir "build" do
-      if build.with?("python") && build.with?("python@2")
-        # VTK Does not support building both python 2 and 3 versions
-        odie "VTK: Does not support building both python 2 and 3 wrappers"
-      elsif build.with?("python") || build.with?("python@2")
-        python_executable = `which python3`.strip if build.with? "python"
-        python_executable = `which python2.7`.strip if build.with? "python@2"
-
-        python_prefix = `#{python_executable} -c 'import sys;print(sys.prefix)'`.chomp
-        python_include = `#{python_executable} -c 'from distutils import sysconfig;print(sysconfig.get_python_inc(True))'`.chomp
-        python_version = "python" + `#{python_executable} -c 'import sys;print(sys.version[:3])'`.chomp
-        py_site_packages = "#{lib}/#{python_version}/site-packages"
-
-        args << "-DVTK_WRAP_PYTHON=ON"
-        args << "-DPYTHON_EXECUTABLE='#{python_executable}'"
-        args << "-DPYTHON_INCLUDE_DIR='#{python_include}'"
-        # CMake picks up the system's python dylib, even if we have a brewed one.
-        if File.exist? "#{python_prefix}/Python"
-          args << "-DPYTHON_LIBRARY='#{python_prefix}/Python'"
-        elsif File.exist? "#{python_prefix}/lib/lib#{python_version}.a"
-          args << "-DPYTHON_LIBRARY='#{python_prefix}/lib/lib#{python_version}.a'"
-        elsif File.exist? "#{python_prefix}/lib/lib#{python_version}.dylib"
-          args << "-DPYTHON_LIBRARY='#{python_prefix}/lib/lib#{python_version}.dylib'"
-        else
-          odie "No libpythonX.Y.{dylib|a} file found!"
-        end
-        # Set the prefix for the python bindings to the Cellar
-        args << "-DVTK_INSTALL_PYTHON_MODULE_DIR='#{py_site_packages}/'"
-      end
-
-      if build.with? "qt"
-        args << "-DVTK_QT_VERSION:STRING=5" << "-DVTK_Group_Qt=ON"
-        args << "-DVTK_WRAP_PYTHON_SIP=ON"
-        args << "-DSIP_PYQT_DIR='#{Formula["pyqt5"].opt_share}/sip'"
-      end
-
       system "cmake", "..", *args
       system "make"
       system "make", "install"
     end
-  end
 
-  def caveats; <<~EOS
-    Even without the --with-qt option, you can display native VTK render windows
-    from python. Alternatively, you can integrate the RenderWindowInteractor
-    in PyQt5, Tk or Wx at runtime. Read more:
-      import vtk.qt5; help(vtk.qt5) or import vtk.wx; help(vtk.wx)
-    EOS
+    # Avoid hard-coding HDF5's Cellar path
+    inreplace Dir["#{lib}/cmake/**/vtkhdf5.cmake"].first,
+              Formula["hdf5"].prefix.realpath,
+              Formula["hdf5"].opt_prefix
   end
 
   test do

@@ -1,14 +1,14 @@
 class Dartsim < Formula
   desc "Dynamic Animation and Robotics Toolkit"
   homepage "https://dartsim.github.io/"
-  url "https://github.com/dartsim/dart/archive/v6.4.0.tar.gz"
-  sha256 "7a9e6e081d1cb910a7c9c996d76dd48ddca15b798c6d9a3cc7664534e5d28a84"
-  revision 2
+  url "https://github.com/dartsim/dart/archive/v6.9.2.tar.gz"
+  sha256 "7d46d23c04d74d3b78331f9fa7deb5ab32fd4b0c03b93548cd84a2d67771d816"
+  revision 1
 
   bottle do
-    sha256 "a0a44990bd96b2e408b2410b128919733fdba1966562b3fa7aed15eec73d09d6" => :high_sierra
-    sha256 "ca6ca866d2158fcbe371f997d9257a1a6336ab3d8ec93fe26f3d9e52b0ebf92b" => :sierra
-    sha256 "dd250b9e71156da434f950963b63be79febb88fa30cb382543cc32edf3649ff9" => :el_capitan
+    sha256 "0f342bef927315c70aa47218abdd5db8f34de241cffd709781e82cfc8bdc85a1" => :catalina
+    sha256 "a5bb7c6eeacb8377bec5034dd93046b62f5961a1d1210fdec89148086c56be71" => :mojave
+    sha256 "04c6b81f32f44444eaa3a10abecbf1137773b52062708892979590f710998135" => :high_sierra
   end
 
   depends_on "cmake" => :build
@@ -19,7 +19,7 @@ class Dartsim < Formula
   depends_on "eigen"
   depends_on "fcl"
   depends_on "flann"
-  depends_on "freeglut"
+  depends_on "ipopt"
   depends_on "libccd"
   depends_on "nlopt"
   depends_on "ode"
@@ -27,11 +27,12 @@ class Dartsim < Formula
   depends_on "tinyxml2"
   depends_on "urdfdom"
 
-  needs :cxx11
-
   def install
     ENV.cxx11
-    system "cmake", ".", *std_cmake_args
+
+    # Force to link to system GLUT (see: https://cmake.org/Bug/view.php?id=16045)
+    system "cmake", ".", "-DGLUT_glut_LIBRARY=/System/Library/Frameworks/GLUT.framework",
+                         *std_cmake_args
     system "make", "install"
   end
 
@@ -46,7 +47,9 @@ class Dartsim < Formula
     EOS
     system ENV.cxx, "test.cpp", "-I#{Formula["eigen"].include}/eigen3",
                     "-I#{include}", "-L#{lib}", "-ldart",
-                    "-lassimp", "-lboost_system", "-std=c++11", "-o", "test"
+                    "-L#{Formula["assimp"].opt_lib}", "-lassimp",
+                    "-L#{Formula["boost"].opt_lib}", "-lboost_system",
+                    "-std=c++14", "-o", "test"
     system "./test"
   end
 end

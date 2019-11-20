@@ -1,35 +1,16 @@
 class GccAT6 < Formula
   desc "GNU compiler collection"
   homepage "https://gcc.gnu.org"
-  url "https://ftp.gnu.org/gnu/gcc/gcc-6.4.0/gcc-6.4.0.tar.xz"
-  mirror "https://ftpmirror.gnu.org/gcc/gcc-6.4.0/gcc-6.4.0.tar.xz"
-  sha256 "850bf21eafdfe5cd5f6827148184c08c4a0852a37ccf36ce69855334d2c914d4"
+  url "https://ftp.gnu.org/gnu/gcc/gcc-6.5.0/gcc-6.5.0.tar.xz"
+  mirror "https://ftpmirror.gnu.org/gcc/gcc-6.5.0/gcc-6.5.0.tar.xz"
+  sha256 "7ef1796ce497e89479183702635b14bb7a46b53249209a5e0f999bebf4740945"
   revision 2
 
   bottle do
-    sha256 "2d073860c3899b3d61441931ebb230ccb7249e2ac63d957860c408c01ecc081b" => :high_sierra
-    sha256 "c9f0ebfe118e7c43a081e952dd0135e7b6621a9f935426fd08372486fa5ddea9" => :sierra
-    sha256 "cfb7468673433e7ef683f1746fb94ce9719c181e9c7e86f4d70453578c1822cc" => :el_capitan
+    sha256 "50d8452d2d87511d2e6d91b0487064d57b07d38c1022dc19fe0a4ccea7f2209e" => :mojave
+    sha256 "93dc5c5ca44e01b074941cb96216ad948223dca5d04d354b0bfa11c536ff8e45" => :high_sierra
+    sha256 "7737834f564e43eb4eb652accead7405382946bf1113eb10139b4421d385717b" => :sierra
   end
-
-  # GCC's Go compiler is not currently supported on macOS.
-  # See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=46986
-  option "with-java", "Build the gcj compiler"
-  option "with-all-languages", "Enable all compilers and languages, except Ada"
-  option "with-nls", "Build with native language support (localization)"
-  option "with-jit", "Build the jit compiler"
-  option "without-fortran", "Build without the gfortran compiler"
-
-  depends_on "gmp"
-  depends_on "libmpc"
-  depends_on "mpfr"
-  depends_on "isl"
-  depends_on "ecj" if build.with?("java") || build.with?("all-languages")
-
-  fails_with :gcc_4_0
-
-  # GCC bootstraps itself, so it is OK to have an incompatible C++ stdlib
-  cxxstdlib_check :skip
 
   # The bottles are built on systems with the CLT installed, and do not work
   # out of the box on Xcode-only systems due to an incorrect sysroot.
@@ -38,22 +19,21 @@ class GccAT6 < Formula
     satisfy { MacOS::CLT.installed? }
   end
 
-  # Fix for libgccjit.so linkage on Darwin
-  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64089
-  # https://github.com/Homebrew/homebrew-core/issues/1872#issuecomment-225625332
-  # https://github.com/Homebrew/homebrew-core/issues/1872#issuecomment-225626490
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/e9e0ee09389a54cc4c8fe1c24ebca3cd765ed0ba/gcc/6.1.0-jit.patch"
-    sha256 "863957f90a934ee8f89707980473769cff47ca0663c3906992da6afb242fb220"
-  end
+  depends_on "gmp"
+  depends_on "isl"
+  depends_on "libmpc"
+  depends_on "mpfr"
 
-  # Fix parallel build on APFS filesystem
-  # Remove for 6.5.0 and later
-  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81797
-  if MacOS.version >= :high_sierra
+  # GCC bootstraps itself, so it is OK to have an incompatible C++ stdlib
+  cxxstdlib_check :skip
+
+  # Patch for Xcode bug, taken from https://gcc.gnu.org/bugzilla/show_bug.cgi?id=89864#c43
+  # This should be removed in the next release of GCC if fixed by apple; this is an xcode bug,
+  # but this patch is a work around committed to GCC trunk
+  if MacOS::Xcode.version >= "10.2"
     patch do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/df0465c02a/gcc/apfs.patch"
-      sha256 "f7772a6ba73f44a6b378e4fe3548e0284f48ae2d02c701df1be93780c1607074"
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/master/gcc%406/gcc6-xcode10.2.patch"
+      sha256 "0f091e8b260bcfa36a537fad76823654be3ee8462512473e0b63ed83ead18085"
     end
   end
 
@@ -61,19 +41,8 @@ class GccAT6 < Formula
     # GCC will suffer build errors if forced to use a particular linker.
     ENV.delete "LD"
 
-    if build.with? "all-languages"
-      # Everything but Ada, which requires a pre-existing GCC Ada compiler
-      # (gnat) to bootstrap. GCC 4.6.0 adds go as a language option, but it is
-      # currently only compilable on Linux.
-      languages = %w[c c++ objc obj-c++ fortran java jit]
-    else
-      # C, C++, ObjC compilers are always built
-      languages = %w[c c++ objc obj-c++]
-
-      languages << "fortran" if build.with? "fortran"
-      languages << "java" if build.with? "java"
-      languages << "jit" if build.with? "jit"
-    end
+    # C, C++, ObjC, Fortran compilers are always built
+    languages = %w[c c++ objc obj-c++ fortran]
 
     version_suffix = version.to_s.slice(/\d/)
 
@@ -83,10 +52,9 @@ class GccAT6 < Formula
     ENV["gcc_cv_prog_makeinfo_modern"] = "no"
 
     osmajor = `uname -r`.chomp
-    arch = MacOS.prefer_64_bit? ? "x86_64" : "i686"
 
     args = [
-      "--build=#{arch}-apple-darwin#{osmajor}",
+      "--build=x86_64-apple-darwin#{osmajor}",
       "--prefix=#{prefix}",
       "--libdir=#{lib}/gcc/#{version_suffix}",
       "--enable-languages=#{languages.join(",")}",
@@ -106,37 +74,25 @@ class GccAT6 < Formula
       "--disable-werror",
       "--with-pkgversion=Homebrew GCC #{pkg_version} #{build.used_options*" "}".strip,
       "--with-bugurl=https://github.com/Homebrew/homebrew-core/issues",
+      "--disable-nls",
     ]
 
-    # The pre-Mavericks toolchain requires the older DWARF-2 debugging data
-    # format to avoid failure during the stage 3 comparison of object files.
-    # See: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=45248
-    args << "--with-dwarf2" if MacOS.version <= :mountain_lion
-
-    args << "--disable-nls" if build.without? "nls"
-
-    if build.with?("java") || build.with?("all-languages")
-      args << "--with-ecj-jar=#{Formula["ecj"].opt_share}/java/ecj.jar"
-    end
-
-    if MacOS.prefer_64_bit?
-      args << "--enable-multilib"
-    else
-      args << "--disable-multilib"
-    end
-
-    args << "--enable-host-shared" if build.with?("jit") || build.with?("all-languages")
+    # Xcode 10 dropped 32-bit support
+    args << "--disable-multilib" if DevelopmentTools.clang_build_version >= 1000
 
     # Ensure correct install names when linking against libgcc_s;
     # see discussion in https://github.com/Homebrew/homebrew/pull/34303
     inreplace "libgcc/config/t-slibgcc-darwin", "@shlib_slibdir@", "#{HOMEBREW_PREFIX}/lib/gcc/#{version_suffix}"
 
     mkdir "build" do
-      unless MacOS::CLT.installed?
-        # For Xcode-only systems, we need to tell the sysroot path.
-        # "native-system-headers" will be appended
+      if !MacOS::CLT.installed?
+        # For Xcode-only systems, we need to tell the sysroot path
         args << "--with-native-system-header-dir=/usr/include"
         args << "--with-sysroot=#{MacOS.sdk_path}"
+      elsif MacOS.version >= :mojave
+        # System headers are no longer located in /usr/include
+        args << "--with-native-system-header-dir=/usr/include"
+        args << "--with-sysroot=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
       end
 
       system "../configure", *args
@@ -182,21 +138,19 @@ class GccAT6 < Formula
     system "#{bin}/g++-6", "-o", "hello-cc", "hello-cc.cc"
     assert_equal "Hello, world!\n", `./hello-cc`
 
-    if build.with?("fortran") || build.with?("all-languages")
-      fixture = <<~EOS
-        integer,parameter::m=10000
-        real::a(m), b(m)
-        real::fact=0.5
+    fixture = <<~EOS
+      integer,parameter::m=10000
+      real::a(m), b(m)
+      real::fact=0.5
 
-        do concurrent (i=1:m)
-          a(i) = a(i) + fact*b(i)
-        end do
-        print *, "done"
-        end
-      EOS
-      (testpath/"in.f90").write(fixture)
-      system "#{bin}/gfortran-6", "-o", "test", "in.f90"
-      assert_equal "done", `./test`.strip
-    end
+      do concurrent (i=1:m)
+        a(i) = a(i) + fact*b(i)
+      end do
+      print *, "done"
+      end
+    EOS
+    (testpath/"in.f90").write(fixture)
+    system "#{bin}/gfortran-6", "-o", "test", "in.f90"
+    assert_equal "done", `./test`.strip
   end
 end

@@ -1,39 +1,28 @@
 class Qemu < Formula
   desc "x86 and PowerPC Emulator"
   homepage "https://www.qemu.org/"
-  url "https://download.qemu.org/qemu-2.12.0.tar.bz2"
-  sha256 "c9f4a147bc915d24df9784affc611a115f42d24720a89210b479f1ba7a3f679c"
+  url "https://download.qemu.org/qemu-4.1.1.tar.xz"
+  sha256 "ed6fdbbdd272611446ff8036991e9b9f04a2ab2e3ffa9e79f3bab0eb9a95a1d2"
   head "https://git.qemu.org/git/qemu.git"
 
   bottle do
-    sha256 "ef4da4274e0e582cff223d46736d386ea78444e7943bcb47f4541bec9e6b7786" => :high_sierra
-    sha256 "c896fa77d0b63a9c7fc5e7ad9ee64ab72c3d0995cc1031ef9326b41a3d189240" => :sierra
-    sha256 "95a8d1f152c57161dee4f0f36a7409ff413631d0ca5afb7fe5d986b13abaf0ae" => :el_capitan
+    sha256 "890eddb62299cf2e7ed2c405c7f43ac49dcfdc31c8b9b207d33759d5d7a3f8da" => :catalina
+    sha256 "975c6eb024395d1b1dd599bf9e449f21000948097a361f1a2823e9adadc4d05a" => :mojave
+    sha256 "baac31721aba99ae068b3d9a76d7212a395124f791eee3bcb3cdf882ae41e829" => :high_sierra
   end
 
-  depends_on "pkg-config" => :build
   depends_on "libtool" => :build
-  depends_on "jpeg"
-  depends_on "gnutls"
+  depends_on "pkg-config" => :build
   depends_on "glib"
+  depends_on "gnutls"
+  depends_on "jpeg"
+  depends_on "libpng"
+  depends_on "libssh"
+  depends_on "libusb"
+  depends_on "lzo"
   depends_on "ncurses"
   depends_on "pixman"
-  depends_on "libpng" => :recommended
-  depends_on "vde" => :optional
-  depends_on "sdl2" => :optional
-  depends_on "gtk+" => :optional
-  depends_on "libssh2" => :optional
-  depends_on "libusb" => :optional
-
-  deprecated_option "with-sdl" => "with-sdl2"
-
-  fails_with :gcc_4_0 do
-    cause "qemu requires a compiler with support for the __thread specifier"
-  end
-
-  fails_with :gcc do
-    cause "qemu requires a compiler with support for the __thread specifier"
-  end
+  depends_on "vde"
 
   # 820KB floppy disk image file of FreeDOS 1.2, used to test QEMU
   resource "test-image" do
@@ -51,20 +40,19 @@ class Qemu < Formula
       --disable-bsd-user
       --disable-guest-agent
       --enable-curses
+      --enable-libssh
+      --enable-vde
       --extra-cflags=-DNCURSES_WIDECHAR=1
+      --enable-cocoa
+      --disable-sdl
+      --disable-gtk
     ]
-
-    # Cocoa and SDL2/GTK+ UIs cannot both be enabled at once.
-    if build.with?("sdl2") || build.with?("gtk+")
-      args << "--disable-cocoa"
-    else
-      args << "--enable-cocoa"
-    end
-
-    args << (build.with?("vde") ? "--enable-vde" : "--disable-vde")
-    args << (build.with?("sdl2") ? "--enable-sdl" : "--disable-sdl")
-    args << (build.with?("gtk+") ? "--enable-gtk" : "--disable-gtk")
-    args << (build.with?("libssh2") ? "--enable-libssh2" : "--disable-libssh2")
+    # Sharing Samba directories in QEMU requires the samba.org smbd which is
+    # incompatible with the macOS-provided version. This will lead to
+    # silent runtime failures, so we set it to a Homebrew path in order to
+    # obtain sensible runtime errors. This will also be compatible with
+    # Samba installations from external taps.
+    args << "--smbd=#{HOMEBREW_PREFIX}/sbin/samba-dot-org-smbd"
 
     system "./configure", *args
     system "make", "V=1", "install"

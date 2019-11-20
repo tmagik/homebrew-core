@@ -1,19 +1,15 @@
 class Libmagic < Formula
   desc "Implementation of the file(1) command"
   homepage "https://www.darwinsys.com/file/"
-  url "ftp://ftp.astron.com/pub/file/file-5.33.tar.gz"
-  mirror "https://fossies.org/linux/misc/file-5.33.tar.gz"
-  sha256 "1c52c8c3d271cd898d5511c36a68059cda94036111ab293f01f83c3525b737c6"
+  url "https://astron.com/pub/file/file-5.37.tar.gz"
+  sha256 "e9c13967f7dd339a3c241b7710ba093560b9a33013491318e88e6b8b57bae07f"
 
   bottle do
-    sha256 "bd5083a984a62056a9aa0e47997b8c02110e4c8c3cc5114a56fce6c02434c2db" => :high_sierra
-    sha256 "4231cdb08d5090c66aa226aa618c9befaa29687e732e1ebd48a930096187daf5" => :sierra
-    sha256 "02553f09e8f751547aaf5c98fd0210055472680840a86f9377bbd3712aea6096" => :el_capitan
+    sha256 "e654f30906f89acee7a71bafc464d27876024fd795bbcbe0535285afce215ff0" => :catalina
+    sha256 "d4bef4ec5fd234cd4fdc0650d7a2dba51fa9e5d421669db9fa8d2d466e20c98c" => :mojave
+    sha256 "14eb5417f36b7ae1813a290c6004c880bd2c50498bc470a48dd9fb8cb489aa4e" => :high_sierra
+    sha256 "c5cacee5081c405d14caa39c8e3768c6112c8f154c9e1ebbeabd081fff88f44b" => :sierra
   end
-
-  deprecated_option "with-python" => "with-python@2"
-
-  depends_on "python@2" => :optional
 
   def install
     system "./configure", "--disable-dependency-tracking",
@@ -22,13 +18,7 @@ class Libmagic < Formula
                           "--enable-fsect-man5",
                           "--enable-static"
     system "make", "install"
-    (share+"misc/magic").install Dir["magic/Magdir/*"]
-
-    if build.with? "python@2"
-      cd "python" do
-        system "python", *Language::Python.setup_install_args(prefix)
-      end
-    end
+    (share/"misc/magic").install Dir["magic/Magdir/*"]
 
     # Don't dupe this system utility
     rm bin/"file"

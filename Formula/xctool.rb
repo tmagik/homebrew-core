@@ -1,21 +1,27 @@
 class Xctool < Formula
   desc "Drop-in replacement for xcodebuild with a few extra features"
   homepage "https://github.com/facebook/xctool"
-  url "https://github.com/facebook/xctool/archive/0.3.4.tar.gz"
-  sha256 "e760d6e846f9547487b4238391debf3bfc11e5a41f7bb9a1dafb9d51b1d99295"
+  url "https://github.com/facebook/xctool/archive/0.3.6.tar.gz"
+  sha256 "9c9135b2d447134c706c6dbdb8dfa6af148e8aa01811f14e92861b5825578b55"
   head "https://github.com/facebook/xctool.git"
 
   bottle do
     cellar :any
-    sha256 "5ae94ec75e7d99216d1813fa1ee3a8912da3b4acace28969be3ba33ebaa4a162" => :high_sierra
-    sha256 "cd4e7895c40b15d12c5e55d206a29e88b22e5a8dea6107a25b50234fe1710ff0" => :sierra
-    sha256 "cfd03ef1008a4a01b923e72fb7e79209d021d88ffe8bb89ac22307ba6af0cce0" => :el_capitan
+    sha256 "80fd9400d09b4263c403752c171dc6bb512a85121bcf15d71e5bf0a1f8edd884" => :mojave
+    sha256 "6a49ea600c94ef2c294966b5d921266eeeea0f7e36d0dcefc187233a4681b36e" => :high_sierra
+    sha256 "3af550733cfaa53e47402bf6153a1a4d711f4b0b4ed80009bd1548c41ae25fbc" => :sierra
   end
 
   depends_on :xcode => "7.0"
 
   def install
-    system "./scripts/build.sh", "XT_INSTALL_ROOT=#{libexec}", "-IDECustomDerivedDataLocation=#{buildpath}"
+    xcodebuild "-workspace", "xctool.xcworkspace",
+               "-scheme", "xctool",
+               "-configuration", "Release",
+               "SYMROOT=build",
+               "-IDEBuildLocationStyle=Custom",
+               "-IDECustomDerivedDataLocation=#{buildpath}",
+               "XT_INSTALL_ROOT=#{libexec}"
     bin.install_symlink "#{libexec}/bin/xctool"
   end
 

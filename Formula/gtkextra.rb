@@ -3,13 +3,15 @@ class Gtkextra < Formula
   homepage "https://gtkextra.sourceforge.io/"
   url "https://downloads.sourceforge.net/project/gtkextra/3.3/gtkextra-3.3.4.tar.gz"
   sha256 "651b738a78edbd5d6ccb64f5a256c39ec35fbbed898e54a3ab7e6cf8fd82f1d6"
-  revision 1
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "dccb6576a9313eec96b7b7c7abd6e9411959b351b996f19592021c7c2348d518" => :high_sierra
-    sha256 "74d2f3a62c9a008d18f68e40aec68e94f6054ce0b94f5d0e5f67c79d88610411" => :sierra
-    sha256 "3bd2f9a0bfc2296316e69702a126b23dc126a513192ce709b6d8d5120bc16904" => :el_capitan
+    rebuild 1
+    sha256 "06663d6dcee70c6a18e9b29a32df23a6ac513c071f109ca190bc5ec3b7c2d0dd" => :catalina
+    sha256 "c38010856fc21985142ce72c0b07be8aba4d8b2d24e7a29fee497383d131efbc" => :mojave
+    sha256 "a18ed1a1fe359d9572ac5f334b522b175c0309168dbe1274f25884f9d062282e" => :high_sierra
+    sha256 "021592c075825331cf707f79c010fa75f1e688f821acfe167543236f8cdcc556" => :sierra
   end
 
   depends_on "pkg-config" => :build
@@ -41,6 +43,7 @@ class Gtkextra < Formula
     gettext = Formula["gettext"]
     glib = Formula["glib"]
     gtkx = Formula["gtk+"]
+    harfbuzz = Formula["harfbuzz"]
     libpng = Formula["libpng"]
     pango = Formula["pango"]
     pixman = Formula["pixman"]
@@ -55,6 +58,7 @@ class Gtkextra < Formula
       -I#{glib.opt_lib}/glib-2.0/include
       -I#{gtkx.opt_include}/gtk-2.0
       -I#{gtkx.opt_lib}/gtk-2.0/include
+      -I#{harfbuzz.opt_include}/harfbuzz
       -I#{include}/gtkextra-3.0
       -I#{libpng.opt_include}/libpng16
       -I#{pango.opt_include}/pango-1.0

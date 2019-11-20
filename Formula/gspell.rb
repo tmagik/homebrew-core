@@ -1,14 +1,14 @@
 class Gspell < Formula
   desc "Flexible API to implement spellchecking in GTK+ applications"
   homepage "https://wiki.gnome.org/Projects/gspell"
-  url "https://download.gnome.org/sources/gspell/1.8/gspell-1.8.0.tar.xz"
-  sha256 "1b7fc2c5b84ede43bc52d513f0601238af92b572a42b19363da6d067fb529345"
-  revision 1
+  url "https://download.gnome.org/sources/gspell/1.8/gspell-1.8.2.tar.xz"
+  sha256 "bb9195c3a95bacf556d0203e9691f7489e0d3bc5ae1e5a440c89b2f2435d3ed6"
+  revision 2
 
   bottle do
-    sha256 "93988c5f834bb7485e0e1e9aa394b31a42e38e6d5f915fc3e3a06eb92d63a99a" => :high_sierra
-    sha256 "e704f22fa44a09aff7554fe5c21496586069034c8a8a913f2394032214db5305" => :sierra
-    sha256 "b7ed4c9b5c87e732b3e12836e26c7857bc9bae6b16ee32ba4925d70bf3799c0a" => :el_capitan
+    sha256 "deba67191c1c4825ab89bade5bf15dd9d66abbc01973c75b74b3e2b5a6f01d92" => :catalina
+    sha256 "e6ec433b39fea3fa6ac56ed5ca2b935d298df7497c917997f25258fd3904bcc6" => :mojave
+    sha256 "b284a4fb840f0ee9077d02d54b88f8ca3e4fb64205e1a8ff3631cc0751b41891" => :high_sierra
   end
 
   depends_on "autoconf" => :build
@@ -20,12 +20,12 @@ class Gspell < Formula
   depends_on "gtk+3"
   depends_on "gtk-mac-integration"
   depends_on "iso-codes"
-  depends_on "vala" => :recommended
+  depends_on "vala"
 
   patch :DATA
 
   def install
-    system "autoreconf", "-i"
+    system "autoreconf", "-if"
     system "./configure", "--disable-dependency-tracking",
                           "--disable-silent-rules",
                           "--prefix=#{prefix}"
@@ -100,7 +100,8 @@ class Gspell < Formula
       -lpangocairo-1.0
     ]
     system ENV.cc, "test.c", "-o", "test", *flags
-    system "./test"
+    ENV["G_DEBUG"] = "fatal-warnings"
+    system "./test" # This test will fail intentionally when iso-codes gets updated. Resolve by revbumping this formula.
   end
 end
 

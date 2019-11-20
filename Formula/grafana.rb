@@ -1,19 +1,19 @@
 class Grafana < Formula
   desc "Gorgeous metric visualizations and dashboards for timeseries databases"
   homepage "https://grafana.com"
-  url "https://github.com/grafana/grafana/archive/v5.1.0.tar.gz"
-  sha256 "1d69f50f2e37421783b5fe0945429fb35df91f3c75411c333214146202de5b04"
+  url "https://github.com/grafana/grafana/archive/v6.4.4.tar.gz"
+  sha256 "fad788bb4f8c4cef776a906603e5277955b6f63e150d34928980892abc5cc651"
   head "https://github.com/grafana/grafana.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "e4553650e512ba846399916434fbe9a53a7243f51b607d3bb7d1f3f6c0326351" => :high_sierra
-    sha256 "64c271f1e23aa33a1dff581c72e5dce3cac87d9c7c746556e992c9844a17e0f0" => :sierra
-    sha256 "78f04afe0710d461e26b0f92589e4ee0adb61e8baa3047b0e85a73e403975251" => :el_capitan
+    sha256 "43d7922f548665368c27aa56c8fa1a6b3698e3be8502876b5d448c8d15cb0fc2" => :catalina
+    sha256 "f62579607d03134a4ed8dbceff747edc99a3f8d1b166d19c16d5f28c55ce9a63" => :mojave
+    sha256 "7dcfbda62970e8effcbe83a3246603ae1d98024f1cfeaeeeff82877d69a9aac8" => :high_sierra
   end
 
-  depends_on "go" => :build
-  depends_on "node" => :build
+  depends_on "go@1.12" => :build
+  depends_on "node@10" => :build
   depends_on "yarn" => :build
 
   def install
@@ -26,13 +26,10 @@ class Grafana < Formula
 
       system "yarn", "install", "--ignore-engines"
 
-      args = ["build"]
-      # Avoid PhantomJS error "unrecognized selector sent to instance"
-      args << "--force" unless build.bottle?
-      system "node_modules/grunt-cli/bin/grunt", *args
+      system "node_modules/grunt-cli/bin/grunt", "build"
 
-      bin.install "bin/grafana-cli"
-      bin.install "bin/grafana-server"
+      bin.install "bin/darwin-amd64/grafana-cli"
+      bin.install "bin/darwin-amd64/grafana-server"
       (etc/"grafana").mkpath
       cp("conf/sample.ini", "conf/grafana.ini.example")
       etc.install "conf/sample.ini" => "grafana/grafana.ini"
@@ -47,7 +44,7 @@ class Grafana < Formula
     (var/"lib/grafana/plugins").mkpath
   end
 
-  plist_options :manual => "grafana-server --config=#{HOMEBREW_PREFIX}/etc/grafana/grafana.ini --homepath #{HOMEBREW_PREFIX}/share/grafana cfg:default.paths.logs=#{HOMEBREW_PREFIX}/var/log/grafana cfg:default.paths.data=#{HOMEBREW_PREFIX}/var/lib/grafana cfg:default.paths.plugins=#{HOMEBREW_PREFIX}/var/lib/grafana/plugins"
+  plist_options :manual => "grafana-server --config=#{HOMEBREW_PREFIX}/etc/grafana/grafana.ini --homepath #{HOMEBREW_PREFIX}/share/grafana --packaging=brew cfg:default.paths.logs=#{HOMEBREW_PREFIX}/var/log/grafana cfg:default.paths.data=#{HOMEBREW_PREFIX}/var/lib/grafana cfg:default.paths.plugins=#{HOMEBREW_PREFIX}/var/lib/grafana/plugins"
 
   def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
@@ -68,6 +65,7 @@ class Grafana < Formula
           <string>#{etc}/grafana/grafana.ini</string>
           <string>--homepath</string>
           <string>#{opt_pkgshare}</string>
+          <string>--packaging=brew</string>
           <string>cfg:default.paths.logs=#{var}/log/grafana</string>
           <string>cfg:default.paths.data=#{var}/lib/grafana</string>
           <string>cfg:default.paths.plugins=#{var}/lib/grafana/plugins</string>
@@ -87,7 +85,7 @@ class Grafana < Formula
         </dict>
       </dict>
     </plist>
-   EOS
+  EOS
   end
 
   test do
@@ -120,7 +118,7 @@ class Grafana < Formula
     listening = Timeout.timeout(5) do
       li = false
       r.each do |l|
-        if l =~ /Initializing HTTP Server/
+        if /Initializing HTTPServer/.match?(l)
           li = true
           break
         end

@@ -1,24 +1,18 @@
 class Botan < Formula
   desc "Cryptographic algorithms and formats library in C++"
   homepage "https://botan.randombit.net/"
-  url "https://botan.randombit.net/releases/Botan-2.6.0.tgz"
-  sha256 "c1f261555bba702c73608dde7bd743ef2d6377a41a1c295915b25c5babaf5cc5"
+  url "https://botan.randombit.net/releases/Botan-2.12.1.tar.xz"
+  sha256 "7e035f142a51fca1359705792627a282456d49749bf62a37a8e48375d41baaa9"
   head "https://github.com/randombit/botan.git"
 
   bottle do
-    sha256 "5c173d12f563c782ea7f66b334b83202e5e07401ca11eb4b3f991f06b168a262" => :high_sierra
-    sha256 "81697f0f4796105afbe523422505180d8192576495e841e39f1fd645c0a39002" => :sierra
-    sha256 "0de1a4dbee4c5b0b0a50279ac288f3b0d9263739f7ea440d0db5402c843139d4" => :el_capitan
+    sha256 "6e014274755eea746204793b4f6a1bbe1e338af984c23f9eedf51f2d631d17eb" => :catalina
+    sha256 "b014bfa6f440a8d06d2da28261e575b68e15cd1c2a34d42ae37777e97ce15827" => :mojave
+    sha256 "605df5ce325dcea0c6cb00349cf016b154f122e90fb1f7fcb791de9e6b0e48ae" => :high_sierra
   end
 
-  option "with-debug", "Enable debug build of Botan"
-
-  deprecated_option "enable-debug" => "with-debug"
-
   depends_on "pkg-config" => :build
-  depends_on "openssl"
-
-  needs :cxx11
+  depends_on "openssl@1.1"
 
   def install
     ENV.cxx11
@@ -33,8 +27,6 @@ class Botan < Formula
       --with-zlib
       --with-bzip2
     ]
-
-    args << "--enable-debug" if build.with? "debug"
 
     system "./configure.py", *args
     system "make", "install"

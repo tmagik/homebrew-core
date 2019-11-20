@@ -1,24 +1,26 @@
 class Wpscan < Formula
   desc "Black box WordPress vulnerability scanner"
   homepage "https://wpscan.org"
-  url "https://github.com/wpscanteam/wpscan/archive/2.9.3.tar.gz"
-  sha256 "1bacc03857cca5a2fdcda060886bf51dbf73b129abbb7251b8eb95bc874e5376"
-  revision 5
-
+  url "https://github.com/wpscanteam/wpscan/archive/2.9.4.tar.gz"
+  sha256 "ad066b48565e82208d5e0451891366f6a9b9a3648d149d14c83d00f4712094d3"
+  revision 1
   head "https://github.com/wpscanteam/wpscan.git"
 
   bottle do
-    sha256 "ea51c46528b302bc1b59fd81788a0d5d65b7c348aebd8f10af2df8c620678a8d" => :high_sierra
-    sha256 "f1a32f7ad9b41c5f395f7e04ae2afff8cdf5d2a4ded2cc61bdf4dd8db1242992" => :sierra
-    sha256 "adbc31b9065ad979247623476b4d0fe22db78e85f6237b9f1a4d22f61880462d" => :el_capitan
+    cellar :any
+    sha256 "5a0603a1779b01a55688497b2443ddd639feed2e73e65ae176ce75ba6828ee38" => :catalina
+    sha256 "e26e73927d6b65a6ea754407b398afc408737585281840304f6fdca40e32af66" => :mojave
+    sha256 "3b73076297580ca90725175015d8ac4ce26caa557f0f2cbbe0392b67ec090905" => :high_sierra
+    sha256 "7289430447efb7be22a729ef3d2147702c770984e4b96b61607a06aea8e40ef3" => :sierra
   end
 
   depends_on "ruby"
 
   def install
     inreplace "lib/common/common_helper.rb" do |s|
-      s.gsub! "ROOT_DIR, 'cache'", "'#{var}/cache/wpscan'"
-      s.gsub! "ROOT_DIR, 'log.txt'", "'#{var}/log/wpscan/log.txt'"
+      s.gsub! "File.join(USER_DIR, '.wpscan/cache')", "'#{var}/cache/wpscan'"
+      s.gsub! "File.join(USER_DIR, '.wpscan/data')", "'#{var}/wpscan/data'"
+      s.gsub! "File.join(USER_DIR, '.wpscan/log.txt')", "'#{var}/log/wpscan/log.txt'"
     end
 
     system "unzip", "-o", "data.zip"
@@ -33,8 +35,9 @@ class Wpscan < Formula
 
     (bin/"wpscan").write <<~EOS
       #!/bin/bash
-      GEM_HOME=#{libexec} BUNDLE_GEMFILE=#{libexec}/Gemfile \
-        exec #{bundle} exec ruby #{libexec}/wpscan.rb "$@"
+      GEM_HOME="#{libexec}" BUNDLE_GEMFILE="#{libexec}/Gemfile" \\
+        exec "#{bundle}" exec "#{Formula["ruby"].opt_bin}/ruby" \\
+        "#{libexec}/wpscan.rb" "$@"
     EOS
   end
 
@@ -46,7 +49,7 @@ class Wpscan < Formula
 
   def caveats; <<~EOS
     Logs are saved to #{var}/cache/wpscan/log.txt by default.
-    EOS
+  EOS
   end
 
   test do

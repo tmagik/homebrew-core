@@ -3,13 +3,14 @@ class CeresSolver < Formula
   homepage "http://ceres-solver.org/"
   url "http://ceres-solver.org/ceres-solver-1.14.0.tar.gz"
   sha256 "4744005fc3b902fed886ea418df70690caa8e2ff6b5a90f3dd88a3d291ef8e8e"
+  revision 9
   head "https://ceres-solver.googlesource.com/ceres-solver.git"
 
   bottle do
     cellar :any
-    sha256 "57b5eae9c2ef9234d359cbf97fc47a3068b0a1e46eb83777e9814192d91e711a" => :high_sierra
-    sha256 "9e3b53ba2aa1b27a5cc7d134d6d707882bb82f2072751774afce73d90ea16e9c" => :sierra
-    sha256 "ca6e39f97b1a41ddb3ba7d1135b389825ab68daaf3763fefa7887b59a23317f6" => :el_capitan
+    sha256 "bcb62ffd7aa47f0adeb6f37d2b2b64766a33eeb772760a46183795d39589cf23" => :catalina
+    sha256 "2d80fd1f9345d6888e7d2d213b2f895edc89884a5940a118f463d3f203edb94a" => :mojave
+    sha256 "e18c6c5354fc100459de419785410af47ec12c39dc865ebf8d7f8243be0ae949" => :high_sierra
   end
 
   depends_on "cmake"
@@ -25,7 +26,8 @@ class CeresSolver < Formula
                     "-DEIGEN_INCLUDE_DIR=#{Formula["eigen"].opt_include}/eigen3",
                     "-DMETIS_LIBRARY=#{Formula["metis"].opt_lib}/libmetis.dylib",
                     "-DGLOG_INCLUDE_DIR_HINTS=#{Formula["glog"].opt_include}",
-                    "-DGLOG_LIBRARY_DIR_HINTS=#{Formula["glog"].opt_lib}"
+                    "-DGLOG_LIBRARY_DIR_HINTS=#{Formula["glog"].opt_lib}",
+                    "-DTBB=OFF"
     system "make"
     system "make", "install"
     pkgshare.install "examples", "data"
@@ -45,6 +47,6 @@ class CeresSolver < Formula
 
     system "cmake", "-DCeres_DIR=#{share}/Ceres", "."
     system "make"
-    assert_match "CONVERGENCE", shell_output("./helloworld", 0)
+    assert_match "CONVERGENCE", shell_output("./helloworld")
   end
 end

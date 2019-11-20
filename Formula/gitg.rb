@@ -1,41 +1,43 @@
 class Gitg < Formula
   desc "GNOME GUI client to view git repositories"
   homepage "https://wiki.gnome.org/Apps/Gitg"
-  url "https://download.gnome.org/sources/gitg/3.26/gitg-3.26.0.tar.xz"
-  sha256 "26730d437d6a30d6e341b9e8da99d2134dce4b96022c195609f45062f82b54d5"
-  revision 4
+  url "https://download.gnome.org/sources/gitg/3.32/gitg-3.32.1.tar.xz"
+  sha256 "24a4aabf8a42aa2e783e1fb5996ebb3c2a82a01b9689269f1329517ef124ef5a"
+  revision 1
 
   bottle do
-    sha256 "cba645da392eb236781a1d0cd27016ff9bf3b8f14af4bbc517367d430435e1a9" => :high_sierra
-    sha256 "c1a1d0b07991fbccda16bbef128d6113be858bdcd2942c3c0bde0e6b70510e5e" => :sierra
-    sha256 "8f5741a6c698eea4b46b9996a4a8f69072dc2e66e9a1a37eb6a7eeac4268b501" => :el_capitan
+    sha256 "8bce5e2f13c07040a0e4ac5c1404105f2b8a1b7da26f0d7f136ef130a1a922b3" => :catalina
+    sha256 "eb48ec4df5e053dbe2835222c151efe3101690c8ed333be5f6fd1d9debf20b1a" => :mojave
+    sha256 "e03115f035ba323b2393c51e50a915daf07f497ef880cfb2c0320f4033fe5a7c" => :high_sierra
   end
 
+  depends_on "intltool" => :build
+  depends_on "meson" => :build
+  depends_on "ninja" => :build
   depends_on "pkg-config" => :build
   depends_on "vala" => :build
-  depends_on "intltool" => :build
-  depends_on "gtksourceview3"
+  depends_on "adwaita-icon-theme"
   depends_on "gobject-introspection"
-  depends_on "libgit2"
-  depends_on "libgit2-glib"
-  depends_on "gsettings-desktop-schemas"
-  depends_on "libgee"
-  depends_on "json-glib"
-  depends_on "libsecret"
-  depends_on "libpeas"
-  depends_on "libsoup"
+  depends_on "gtk+3"
+  depends_on "gtksourceview3"
   depends_on "gtkspell3"
   depends_on "hicolor-icon-theme"
-  depends_on "adwaita-icon-theme"
+  depends_on "libdazzle"
+  depends_on "libgee"
+  depends_on "libgit2"
+  depends_on "libgit2-glib"
+  depends_on "libpeas"
+  depends_on "libsecret"
+  depends_on "libsoup"
 
   def install
-    system "./configure", "--disable-debug",
-                          "--disable-dependency-tracking",
-                          "--disable-silent-rules",
-                          "--prefix=#{prefix}",
-                          "--disable-schemas-compile",
-                          "--disable-python"
-    system "make", "install"
+    ENV["DESTDIR"] = "/"
+
+    mkdir "build" do
+      system "meson", "--prefix=#{prefix}", "-Dpython=false", ".."
+      system "ninja"
+      system "ninja", "install"
+    end
   end
 
   def post_install
@@ -68,7 +70,7 @@ class Gitg < Formula
     libepoxy = Formula["libepoxy"]
     libffi = Formula["libffi"]
     libgee = Formula["libgee"]
-    libgit2 = Formula["libgit2-glib"].opt_libexec/"libgit2"
+    libgit2 = Formula["libgit2"]
     libgit2_glib = Formula["libgit2-glib"]
     libpng = Formula["libpng"]
     libsoup = Formula["libsoup"]
@@ -107,7 +109,7 @@ class Gitg < Formula
       -L#{gobject_introspection.opt_lib}
       -L#{gtkx3.opt_lib}
       -L#{libgee.opt_lib}
-      -L#{libgit2}/lib
+      -L#{libgit2.opt_lib}
       -L#{libgit2_glib.opt_lib}
       -L#{libsoup.opt_lib}
       -L#{lib}

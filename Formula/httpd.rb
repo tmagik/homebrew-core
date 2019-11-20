@@ -1,21 +1,24 @@
 class Httpd < Formula
   desc "Apache HTTP server"
   homepage "https://httpd.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=httpd/httpd-2.4.33.tar.bz2"
-  sha256 "de02511859b00d17845b9abdd1f975d5ccb5d0b280c567da5bf2ad4b70846f05"
+  url "https://www.apache.org/dyn/closer.cgi?path=/httpd/httpd-2.4.41.tar.bz2"
+  sha256 "133d48298fe5315ae9366a0ec66282fa4040efa5d566174481077ade7d18ea40"
+  revision 1
 
   bottle do
-    sha256 "12d16378423a5fca0b8c66ba279722cbaa18474d90d150373fae6e75e4b1d304" => :high_sierra
-    sha256 "06954b169feaa6aa64e92a3c3e3224594fe3c62f1797b6da9bdbef1458ae4b96" => :sierra
-    sha256 "4366077aded14e42705c50fd4d0c859641db3b2fdc9d5f027a79c3a82886db7b" => :el_capitan
+    sha256 "c532f46853817d18cfaeadecf1ec4e7b47a57b80eee3d01272aaa99a16c93bf6" => :catalina
+    sha256 "9f9969abde4a61949b0279f68d6fcc616d1546dd2c1b4fd61012bde1f5d27ee8" => :mojave
+    sha256 "143af690fd1f26f07e79009da6e674a0cb56c190f6fb486f9e61f82a5ab36a0a" => :high_sierra
+    sha256 "9a085a0b728b5bc75bda265d7d4c5360187038eb339c43a681d789599b814dcf" => :sierra
   end
 
   depends_on "apr"
   depends_on "apr-util"
   depends_on "brotli"
   depends_on "nghttp2"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "pcre"
+  uses_from_macos "zlib"
 
   def install
     # fixup prefix references in favour of opt_prefix references
@@ -58,10 +61,15 @@ class Httpd < Formula
                           "--with-apr=#{Formula["apr"].opt_prefix}",
                           "--with-apr-util=#{Formula["apr-util"].opt_prefix}",
                           "--with-brotli=#{Formula["brotli"].opt_prefix}",
+                          "--with-libxml2=#{MacOS.sdk_path_if_needed}/usr",
                           "--with-mpm=prefork",
                           "--with-nghttp2=#{Formula["nghttp2"].opt_prefix}",
-                          "--with-ssl=#{Formula["openssl"].opt_prefix}",
-                          "--with-pcre=#{Formula["pcre"].opt_prefix}"
+                          "--with-ssl=#{Formula["openssl@1.1"].opt_prefix}",
+                          "--with-pcre=#{Formula["pcre"].opt_prefix}",
+                          "--with-z=#{MacOS.sdk_path_if_needed}/usr",
+                          "--disable-lua",
+                          "--disable-luajit"
+    system "make"
     system "make", "install"
 
     # suexec does not install without root
@@ -131,10 +139,15 @@ class Httpd < Formula
       <true/>
     </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do
+    # Ensure modules depending on zlib and xml2 have been compiled
+    assert_predicate lib/"httpd/modules/mod_deflate.so", :exist?
+    assert_predicate lib/"httpd/modules/mod_proxy_html.so", :exist?
+    assert_predicate lib/"httpd/modules/mod_xml2enc.so", :exist?
+
     begin
       require "socket"
 

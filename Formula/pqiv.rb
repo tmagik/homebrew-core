@@ -1,25 +1,25 @@
 class Pqiv < Formula
   desc "Powerful image viewer with minimal UI"
   homepage "https://github.com/phillipberndt/pqiv"
-  url "https://github.com/phillipberndt/pqiv/archive/2.10.4.tar.gz"
-  sha256 "58ddd18748e0b597aa126b7715f54f10b4ef54e7cd02cf64f7b83a23a6f5a14b"
-  revision 1
+  url "https://github.com/phillipberndt/pqiv/archive/2.11.tar.gz"
+  sha256 "ea1f8b6bcb58dee19e2d8168ef4efd01e222c653eabbd3109aad57a870cc8c9b"
+  revision 3
   head "https://github.com/phillipberndt/pqiv.git"
 
   bottle do
     cellar :any
-    sha256 "37e2305810ca1657383410f180cd5e6209e51f7b10569e7e9baea410c75ed12c" => :high_sierra
-    sha256 "f7fa682d101cc54c677a7ecbbba92186f305f4ed420b81e74e040c9dccd1267d" => :sierra
-    sha256 "c9d3102cc677cdfa8b9bb631621374ccde5e555d3468246494aa87a2875d5f1f" => :el_capitan
+    sha256 "6f1fac22db64a533a018f7a17969f7f1c860ae4c98353950a6aa9a60170b66c1" => :catalina
+    sha256 "a9e56dbc25a1654cb12f1f4d1241008dbfcbac11d24105b50b382d3bc48e682e" => :mojave
+    sha256 "556e01ad1e9c2bf9c3001fe2ed79c635a1395a2cc38e0c6525e94f6d6767e93f" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "gtk+3"
-  depends_on "libspectre" => :recommended
-  depends_on "poppler" => :recommended
-  depends_on "imagemagick" => :recommended
-  depends_on "libarchive" => :recommended
-  depends_on "webp" => :recommended
+  depends_on "imagemagick"
+  depends_on "libarchive"
+  depends_on "libspectre"
+  depends_on "poppler"
+  depends_on "webp"
 
   def install
     system "./configure", "--prefix=#{prefix}"

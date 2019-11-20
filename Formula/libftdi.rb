@@ -3,22 +3,20 @@ class Libftdi < Formula
   homepage "https://www.intra2net.com/en/developer/libftdi"
   url "https://www.intra2net.com/en/developer/libftdi/download/libftdi1-1.4.tar.bz2"
   sha256 "ec36fb49080f834690c24008328a5ef42d3cf584ef4060f3a35aa4681cb31b74"
+  revision 1
 
   bottle do
     cellar :any
-    rebuild 1
-    sha256 "a28c4f481c8174edfb845492c4155511cac868082fd65cce625b55a82f3b54c0" => :high_sierra
-    sha256 "ef603f79c7791bac035bf1afe21dcea4b6323372140a246f9aa52031b3631f6b" => :sierra
-    sha256 "c023c826c533fd60e664a8f604f54017f84b356e625bbbafb8e5365e4319fa7a" => :el_capitan
-    sha256 "7fc5addb888f58fbbd2a2e2e414ead4819a48b7fff4f6b0ebed274b499a38a40" => :yosemite
+    sha256 "37e829f5dfd5bb27398ed4c2744b6ce35f8338b0e4994d4981b3e6a915b80872" => :catalina
+    sha256 "1ab6dc2e9827ee83b319996ab3e90d10b4dbeb8b474ef06649832b00b857223a" => :mojave
+    sha256 "111b0b0e9798795eebe44154610bfe022b288c2461a63d8c7f1656c148eba568" => :high_sierra
+    sha256 "f4e880f83165a30696f49be0915ff22dbd1b27f1c04a903f9bcec49b9985c4c4" => :sierra
   end
 
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
   depends_on "swig" => :build
   depends_on "libusb"
-  depends_on "boost" => :optional
-  depends_on "confuse" => :optional
 
   def install
     mkdir "libftdi-build" do

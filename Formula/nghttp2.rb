@@ -1,50 +1,32 @@
 class Nghttp2 < Formula
   desc "HTTP/2 C Library"
   homepage "https://nghttp2.org/"
-  url "https://github.com/nghttp2/nghttp2/releases/download/v1.31.1/nghttp2-1.31.1.tar.xz"
-  sha256 "65b9c83ae95a7760a14410aeefa9d441c34453027bc938df7a2272520f32e103"
+  url "https://github.com/nghttp2/nghttp2/releases/download/v1.40.0/nghttp2-1.40.0.tar.xz"
+  sha256 "09fc43d428ff237138733c737b29fb1a7e49d49de06d2edbed3bc4cdcee69073"
 
   bottle do
-    sha256 "776d4bda15c834ce38880ba49e2c7351aa6c7be51c817d3cc65b93a47c1a8839" => :high_sierra
-    sha256 "362ee9d8c0a93e48c903ec66337ce957cdf51ba8f08145faadd28820a377c3aa" => :sierra
-    sha256 "086cb6979e10c7e27f19d053eb7a1910c2862fbe854a7143e612c8a90d810cf5" => :el_capitan
+    sha256 "7d8e5ffd4a51ee4c511f19b37d0285880d27239e0880113b6ad1412432aa9d11" => :catalina
+    sha256 "82a8630c924aecc9e22712b700cede3129cdd77765e1dfc95977a5779d6a4dd1" => :mojave
+    sha256 "77185d4ed48a5a8d00f486a0e7d09797db76ac0e280ae2aed0772dad271d4990" => :high_sierra
   end
 
   head do
     url "https://github.com/nghttp2/nghttp2.git"
 
-    depends_on "automake" => :build
     depends_on "autoconf" => :build
+    depends_on "automake" => :build
     depends_on "libtool" => :build
   end
 
-  option "with-examples", "Compile and install example programs"
-  option "with-python", "Build python3 bindings"
-
-  deprecated_option "with-python3" => "with-python"
-
-  depends_on "python" => :optional
-  depends_on "sphinx-doc" => :build
-  depends_on "libxml2" if MacOS.version <= :lion
-  depends_on "pkg-config" => :build
   depends_on "cunit" => :build
+  depends_on "pkg-config" => :build
+  depends_on "sphinx-doc" => :build
   depends_on "c-ares"
-  depends_on "libev"
-  depends_on "openssl"
-  depends_on "libevent"
   depends_on "jansson"
-  depends_on "boost"
-  depends_on "jemalloc" => :recommended
-
-  resource "Cython" do
-    url "https://files.pythonhosted.org/packages/be/08/bb5ffd1c32a951cbc26011ecb8557e59dc7a0a4975f0ad98b2cd7446f7dd/Cython-0.28.1.tar.gz"
-    sha256 "152ee5f345012ca3bb7cc71da2d3736ee20f52cd8476e4d49e5e25c5a4102b12"
-  end
-
-  # https://github.com/tatsuhiro-t/nghttp2/issues/125
-  # Upstream requested the issue closed and for users to use gcc instead.
-  # Given this will actually build with Clang with cxx11, just use that.
-  needs :cxx11
+  depends_on "jemalloc"
+  depends_on "libev"
+  depends_on "libevent"
+  depends_on "openssl@1.1"
 
   def install
     ENV.cxx11
@@ -53,44 +35,18 @@ class Nghttp2 < Formula
       --prefix=#{prefix}
       --disable-silent-rules
       --enable-app
-      --with-boost=#{Formula["boost"].opt_prefix}
-      --enable-asio-lib
       --disable-python-bindings
+      --with-xml-prefix=/usr
     ]
 
-    args << "--enable-examples" if build.with? "examples"
-    args << "--with-xml-prefix=/usr" if MacOS.version > :lion
-    args << "--without-jemalloc" if build.without? "jemalloc"
+    # requires thread-local storage features only available in 10.11+
+    args << "--disable-threads" if MacOS.version < :el_capitan
 
     system "autoreconf", "-ivf" if build.head?
     system "./configure", *args
     system "make"
     system "make", "check"
-
-    # Currently this is not installed by the make install stage.
-    if build.with? "docs"
-      system "make", "html"
-      doc.install Dir["doc/manual/html/*"]
-    end
-
     system "make", "install"
-    libexec.install "examples" if build.with? "examples"
-
-    if build.with? "python"
-      pyver = Language::Python.major_minor_version "python3"
-      ENV["PYTHONPATH"] = cythonpath = buildpath/"cython/lib/python#{pyver}/site-packages"
-      cythonpath.mkpath
-      ENV.prepend_create_path "PYTHONPATH", lib/"python#{pyver}/site-packages"
-
-      resource("Cython").stage do
-        system "python3", *Language::Python.setup_install_args(buildpath/"cython")
-      end
-
-      cd "python" do
-        system buildpath/"cython/bin/cython", "nghttp2.pyx"
-        system "python3", *Language::Python.setup_install_args(prefix)
-      end
-    end
   end
 
   test do

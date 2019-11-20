@@ -1,32 +1,22 @@
 class Sdcc < Formula
   desc "ANSI C compiler for Intel 8051, Maxim 80DS390, and Zilog Z80"
   homepage "https://sdcc.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/sdcc/sdcc/3.7.0/sdcc-src-3.7.0.tar.bz2"
-  sha256 "854d47094698b06142df3d5fc646bb540d497ab4073ad2f051b8ec2141df948e"
-
+  url "https://downloads.sourceforge.net/project/sdcc/sdcc/3.9.0/sdcc-src-3.9.0.tar.bz2"
+  sha256 "94ecae73faf7f3feee307f89dfe3cef2d7866293c7909ea05b3b33c88d67c036"
   head "https://svn.code.sf.net/p/sdcc/code/trunk/sdcc"
 
   bottle do
-    sha256 "b80bbd646be2fe3f66a46e616537b385211b03b3f22b16fdf85ab92d64dba88e" => :high_sierra
-    sha256 "c9b31ad24400562817d0ec03fd88051e62d1ba434f0f4750388cd1143afb1547" => :sierra
-    sha256 "560804d50e214be12ce4417fd5edc5137d2d987c3d1617d4659284d8b614a1bf" => :el_capitan
+    sha256 "91714d5a605eeff62a35e63aac856be74e35016302fa13dab181bb5422ebe7aa" => :catalina
+    sha256 "a4cfec7484f490988b439426b05310c4ddcd155a16f6d95967b0265e62b82a6c" => :mojave
+    sha256 "79f6440540864bb4fdbe3a30619c3dec35e5daa9ae012c979882e9e95c27d088" => :high_sierra
+    sha256 "129e06c6cab2f160d8eb9da70030443d9ffb783bd346be52a05b1af4b95d22ba" => :sierra
   end
 
-  option "with-avr-port", "Enables the AVR port (UNSUPPORTED, MAY FAIL)"
-  option "with-xa51-port", "Enables the xa51 port (UNSUPPORTED, MAY FAIL)"
-
-  deprecated_option "enable-avr-port" => "with-avr-port"
-  deprecated_option "enable-xa51-port" => "with-xa51-port"
-
-  depends_on "gputils"
   depends_on "boost"
+  depends_on "gputils"
 
   def install
-    args = %W[--prefix=#{prefix}]
-    args << "--enable-avr-port" if build.with? "avr-port"
-    args << "--enable-xa51-port" if build.with? "xa51-port"
-
-    system "./configure", *args
+    system "./configure", "--prefix=#{prefix}"
     system "make", "all"
     system "make", "install"
     rm Dir["#{bin}/*.el"]

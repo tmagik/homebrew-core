@@ -1,29 +1,26 @@
 class Latexml < Formula
   desc "LaTeX to XML/HTML/MathML Converter"
   homepage "https://dlmf.nist.gov/LaTeXML/"
-  url "https://dlmf.nist.gov/LaTeXML/releases/LaTeXML-0.8.2.tar.gz"
-  sha256 "3d41a3012760d31d721b569d8c1b430cde1df2b68fcc3c66f41ec640965caabf"
+  url "https://dlmf.nist.gov/LaTeXML/releases/LaTeXML-0.8.4.tar.gz"
+  sha256 "92599b45fb587ac14b2ba9cc84b85d9ddc2deaf1cbdc2e89e7a6559e1fbb34cc"
   head "https://github.com/brucemiller/LaTeXML.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "bbbeb393b7ed0258fdbf875e103a6f2f82103a6c19fce6b77ce5dd99fde9dc72" => :high_sierra
-    sha256 "3d995988dc683269f6949f8071148ceaf7454e8e7eb37cd8d391a1eb4467fc76" => :sierra
-    sha256 "5ae3ca257610559471ea0e1bbc9d5ff8f122790564a8e7027841e5b2356b6f8f" => :el_capitan
-    sha256 "5205887f374d4bd15905f5f13b4c661c5a6cb2725fc631836cff0668e34085b5" => :yosemite
-    sha256 "884426eb041a9fa05ba6ebc64c64f4ce76f7c10cab3c5c1b98bcce201831c9d2" => :mavericks
+    sha256 "89177de9fcad665602e176c80095dc52ad5faebe5db384348ac7afaa67a37aab" => :catalina
+    sha256 "e7c78acf6bb580fdb949777719972a806c1d7d349d9e826b338572bedde6cf5c" => :mojave
+    sha256 "388dbf99df85e55879cccfa48eed9b6ef362d13f3ffe83dbfd09b1e7fb12fa1f" => :high_sierra
+    sha256 "b911ac9897012edcc7c32d96785e4ca3830ce8cbddff78da0942263c7fb0d0bb" => :sierra
   end
 
   resource "Image::Size" do
     url "https://cpan.metacpan.org/authors/id/R/RJ/RJRAY/Image-Size-3.300.tar.gz"
-    mirror "http://search.cpan.org/CPAN/authors/id/R/RJ/RJRAY/Image-Size-3.300.tar.gz"
     sha256 "53c9b1f86531cde060ee63709d1fda73cabc0cf2d581d29b22b014781b9f026b"
   end
 
   resource "Text::Unidecode" do
-    url "https://cpan.metacpan.org/authors/id/S/SB/SBURKE/Text-Unidecode-1.27.tar.gz"
-    mirror "http://search.cpan.org/CPAN/authors/id/S/SB/SBURKE/Text-Unidecode-1.27.tar.gz"
-    sha256 "11876a90f0ce858d31203e80d62900383bb642ed8a470c67539b607f2a772d02"
+    url "https://cpan.metacpan.org/authors/id/S/SB/SBURKE/Text-Unidecode-1.30.tar.gz"
+    sha256 "6c24f14ddc1d20e26161c207b73ca184eed2ef57f08b5fb2ee196e6e2e88b1c6"
   end
 
   def install
@@ -41,6 +38,7 @@ class Latexml < Formula
     doc.install "manual.pdf"
     (libexec+"bin").find.each do |path|
       next if path.directory?
+
       program = path.basename
       (bin+program).write_env_script("#{libexec}/bin/#{program}", :PERL5LIB => ENV["PERL5LIB"])
     end

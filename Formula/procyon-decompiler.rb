@@ -1,8 +1,8 @@
 class ProcyonDecompiler < Formula
   desc "Modern decompiler for Java 5 and beyond"
   homepage "https://bitbucket.org/mstrobel/procyon/wiki/Java%20Decompiler"
-  url "https://bitbucket.org/mstrobel/procyon/downloads/procyon-decompiler-0.5.30.jar"
-  sha256 "cd9a2177f72f490842b0b84909f58b5548614a78ecd135ce28b833f93429e5a0"
+  url "https://bitbucket.org/mstrobel/procyon/downloads/procyon-decompiler-0.5.36.jar"
+  sha256 "74f9f1537113207521a075fafe64bd8265c47a9c73574bbf9fa8854bbf7126bc"
 
   bottle :unneeded
 

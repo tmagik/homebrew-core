@@ -4,25 +4,23 @@ class DhallJson < Formula
   include Language::Haskell::Cabal
 
   desc "Dhall to JSON compiler and a Dhall to YAML compiler"
-  homepage "https://github.com/Gabriel439/Haskell-Dhall-JSON-Library"
-  url "https://hackage.haskell.org/package/dhall-json-1.1.0/dhall-json-1.1.0.tar.gz"
-  sha256 "87e54afd44d3796ffeec42a149697e65b985e3297297bcc26e1fc9d77eb0ca8d"
-  head "https://github.com/Gabriel439/Haskell-Dhall-JSON-Library.git"
+  homepage "https://github.com/dhall-lang/dhall-haskell/tree/master/dhall-json"
+  url "https://hackage.haskell.org/package/dhall-json-1.5.0/dhall-json-1.5.0.tar.gz"
+  sha256 "4dbbf809376f8097d6f87abd0e96dbe770b0f7396da15ff092cdf44566b822f7"
+  head "https://github.com/dhall-lang/dhall-haskell.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "dcfbce52a79175254dc6fb3846aaca822e2c7023546f806a897ad67308488291" => :high_sierra
-    sha256 "ffc6e7a92a58d7658eb5b7f316cb93db0b66142b634b31946b083f4dccf11100" => :sierra
-    sha256 "4d7cc8f1aba216afe12140dd27ce221e5e6458868cb8597b7b32b87c207cae44" => :el_capitan
+    sha256 "44f2fd4edb57e9445f5b760376de6b42f6d4c6b9b40baddb755e1afbc6f1e80a" => :catalina
+    sha256 "5c1391980cfa180301c8d1979bab120326e7a27f3e3e8bea094eb88f4dd74e31" => :mojave
+    sha256 "0eb531fc4cb6ab29034d4d1903d90bd1f6c5c6f3955e6389af6ff6142bc4df03" => :high_sierra
   end
 
   depends_on "cabal-install" => :build
-  depends_on "ghc" => :build
+  depends_on "ghc@8.6" => :build
 
   def install
-    # Remove explicit dhall constraint for > 1.1.0
-    # Upstream issue 28 Apr 2018 https://github.com/dhall-lang/dhall-json/issues/24
-    install_cabal_package "--constraint", "dhall >= 1.13.0"
+    install_cabal_package
   end
 
   test do

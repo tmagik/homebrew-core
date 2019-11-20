@@ -1,55 +1,43 @@
 class ClangFormat < Formula
   desc "Formatting tools for C, C++, Obj-C, Java, JavaScript, TypeScript"
   homepage "https://clang.llvm.org/docs/ClangFormat.html"
-  version "2018-01-11"
+  version "2019-05-14"
 
   stable do
-    if MacOS.version >= :sierra
-      url "https://llvm.org/svn/llvm-project/llvm/tags/google/stable/2018-01-11/", :using => :svn
-    else
-      url "http://llvm.org/svn/llvm-project/llvm/tags/google/stable/2018-01-11/", :using => :svn
-    end
+    depends_on "subversion" => :build
+    url "https://llvm.org/svn/llvm-project/llvm/tags/google/stable/2019-05-14/", :using => :svn
 
     resource "clang" do
-      if MacOS.version >= :sierra
-        url "https://llvm.org/svn/llvm-project/cfe/tags/google/stable/2018-01-11/", :using => :svn
-      else
-        url "http://llvm.org/svn/llvm-project/cfe/tags/google/stable/2018-01-11/", :using => :svn
-      end
+      url "https://llvm.org/svn/llvm-project/cfe/tags/google/stable/2019-05-14/", :using => :svn
+    end
+
+    resource "libcxx" do
+      url "https://releases.llvm.org/9.0.0/libcxx-9.0.0.src.tar.xz"
+      sha256 "3c4162972b5d3204ba47ac384aa456855a17b5e97422723d4758251acf1ed28c"
     end
   end
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "a8a1eb007f7828790a1605d2647e6848e1f9617c26c8d31bfcf56a075a20bafb" => :high_sierra
-    sha256 "b4db7e4f2623195adaa475b0d5567de7fe3c1bb70449b35888aea69136c66931" => :sierra
-    sha256 "30767fb6f85073ac7fc58a2d80135c52623d76c9f594087b489164e0df6f901c" => :el_capitan
+    sha256 "811e557c5b540317ff532959f3b074d6b9763abfb58186f3a1cbeb10acfb3358" => :catalina
+    sha256 "beb4842dafb9092fe56ba4dc94030b581d3ae85ae914b2c2a37ae872c88dbd34" => :mojave
+    sha256 "dcea54b1734a2385a7275deb7b7fe9970cf06387d9051103476a0082614849f0" => :high_sierra
   end
 
   head do
-    if MacOS.version >= :sierra
-      url "https://llvm.org/svn/llvm-project/llvm/trunk/", :using => :svn
-    else
-      url "http://llvm.org/svn/llvm-project/llvm/trunk/", :using => :svn
-    end
+    url "https://git.llvm.org/git/llvm.git"
 
     resource "clang" do
-      if MacOS.version >= :sierra
-        url "https://llvm.org/svn/llvm-project/cfe/trunk/", :using => :svn
-      else
-        url "http://llvm.org/svn/llvm-project/cfe/trunk/", :using => :svn
-      end
+      url "https://git.llvm.org/git/clang.git"
+    end
+
+    resource "libcxx" do
+      url "https://git.llvm.org/git/libcxx.git"
     end
   end
 
   depends_on "cmake" => :build
   depends_on "ninja" => :build
-  depends_on "subversion" => :build
-
-  resource "libcxx" do
-    url "https://releases.llvm.org/5.0.0/libcxx-5.0.0.src.tar.xz"
-    sha256 "eae5981e9a21ef0decfcac80a1af584ddb064a32805f95a57c7c83a5eb28c9b1"
-  end
 
   def install
     (buildpath/"projects/libcxx").install resource("libcxx")

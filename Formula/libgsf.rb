@@ -1,13 +1,15 @@
 class Libgsf < Formula
   desc "I/O abstraction library for dealing with structured file formats"
   homepage "https://developer.gnome.org/gsf/"
-  url "https://download.gnome.org/sources/libgsf/1.14/libgsf-1.14.43.tar.xz"
-  sha256 "12944e3d6d9a6e4071e89dbf58348e1e93544f5f9266dd1a107a28d8001cee16"
+  url "https://download.gnome.org/sources/libgsf/1.14/libgsf-1.14.46.tar.xz"
+  sha256 "ea36959b1421fc8e72caa222f30ec3234d0ed95990e2bf28943a85f33eadad2d"
+  revision 1
 
   bottle do
-    sha256 "31ec48d4eb908d85fda219299f442548997ce4600a5d46dab0889dbbe2a37097" => :high_sierra
-    sha256 "7c7ca0aae4be13b4f7a12fcdf6cfa528ff10de2b67c477246123e88e4aaac78b" => :sierra
-    sha256 "625687aaed0be8749b5bfd39160e760cecd8fe7fe51ecc24b60dcf32d620f91a" => :el_capitan
+    sha256 "1a1cfea4de83f58bc0b21040700f980033f679c83d752377a3fc4e31b37b4d19" => :catalina
+    sha256 "e4ce2838b44594d27c99dac9d17ad1f7d2752bd7cf33d514fce0a54e94542efe" => :mojave
+    sha256 "8016acb38bd84a9d659a2c938b52e84128a242e54bf0c44236da9d875ae5de92" => :high_sierra
+    sha256 "7534eb511218574e344d0c5ebc4ebdb110e6c476d6a2936277f9d584b88f765a" => :sierra
   end
 
   head do
@@ -22,7 +24,6 @@ class Libgsf < Formula
   depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "glib"
-  depends_on "gdk-pixbuf" => :optional
 
   def install
     args = %W[--disable-dependency-tracking --prefix=#{prefix}]

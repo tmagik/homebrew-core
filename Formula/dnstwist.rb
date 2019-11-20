@@ -1,74 +1,98 @@
 class Dnstwist < Formula
+  include Language::Python::Virtualenv
+
   desc "Test domains for typo squatting, phishing and corporate espionage"
   homepage "https://github.com/elceef/dnstwist"
-  url "https://github.com/elceef/dnstwist/archive/v1.02.tar.gz"
-  sha256 "f53bc7e8676c2e89f26ef76faefcdd2a7de1c4b18601a5db1710f37e63d856d7"
+  url "https://github.com/elceef/dnstwist/archive/20190706.tar.gz"
+  sha256 "d1192a3aca209b537f54274471398ad4cd8b040551eb0469011d0231ee53520a"
 
   bottle do
     cellar :any
-    sha256 "0b0b3cdb216228cf3b666f393b9f3964906486d4e77e6ded8ea1f8ef11301525" => :high_sierra
-    sha256 "c64ccf688eca59bad28d3df047cb987ad4911416be945e33cba9d0b5e68f0131" => :sierra
-    sha256 "c4a4ede766163bf4dc8acc41f968198b574f6527d687a547ece0c227845488c1" => :el_capitan
-    sha256 "6ec5b4eded505da0cbc5a37ea12c720293510ba5f05f12a2e0067d4257bbb8c5" => :yosemite
-    sha256 "22426190a5dad132035572a609f3f612716837b050f7ec68707bd5aee87b7418" => :mavericks
+    sha256 "a15738df1be85f96cafaf7bea481911e9a34a71e24582b8b8582fdbd82e4b37f" => :catalina
+    sha256 "b48530ee9287f78c6b0fc0fd2f8566292b950ff10552e954f1729036d0b59682" => :mojave
+    sha256 "da539cbdea76bb9a1226e91d05bfd45e2f4cfa43c54880933f4e7e6b9b99c5ab" => :high_sierra
+    sha256 "bb6f91f9958e7b389a607912ac336670fd1f8808c5418a95d83d1bab78c7ce8f" => :sierra
   end
 
-  depends_on "python@2"
-  depends_on "ssdeep"
   depends_on "geoip"
-
-  resource "dnspython" do
-    url "https://files.pythonhosted.org/packages/source/d/dnspython/dnspython-1.12.0.zip"
-    sha256 "63bd1fae61809eedb91f84b2185816fac1270ae51494fbdd36ea25f904a8502f"
-  end
+  depends_on "python"
+  depends_on "ssdeep"
 
   resource "GeoIP" do
-    url "https://files.pythonhosted.org/packages/source/G/GeoIP/GeoIP-1.3.2.tar.gz"
+    url "https://files.pythonhosted.org/packages/f2/7b/a463b7c3df8ef4b9c92906da29ddc9e464d4045f00c475ad31cdb9a97aae/GeoIP-1.3.2.tar.gz"
     sha256 "a890da6a21574050692198f14b07aa4268a01371278dfc24f71cd9bc87ebf0e6"
   end
 
-  resource "whois" do
-    url "https://files.pythonhosted.org/packages/source/w/whois/whois-0.7.tar.gz"
-    sha256 "788ba4fa4986d06351c1572f63ef1576d26f3cd5ecf5d999934421540c87021c"
-  end
-
-  resource "requests" do
-    url "https://files.pythonhosted.org/packages/source/r/requests/requests-2.8.0.tar.gz"
-    sha256 "b2f003589b60924909c0acde472590c5ea83906986a7a25b6f7929eb20923b7b"
+  resource "certifi" do
+    url "https://files.pythonhosted.org/packages/c5/67/5d0548226bcc34468e23a0333978f0e23d28d0b3f0c71a151aef9c3f7680/certifi-2019.6.16.tar.gz"
+    sha256 "945e3ba63a0b9f577b1395204e13c3a231f9bc0223888be653286534e5873695"
   end
 
   resource "cffi" do
-    url "https://files.pythonhosted.org/packages/source/c/cffi/cffi-1.3.0.tar.gz"
-    sha256 "9daa53aff0b5cf64c85c10eab7ce6776880d0ee71b78cedeae196ae82b6734e9"
+    url "https://files.pythonhosted.org/packages/93/1a/ab8c62b5838722f29f3daffcc8d4bd61844aa9b5f437341cc890ceee483b/cffi-1.12.3.tar.gz"
+    sha256 "041c81822e9f84b1d9c401182e174996f0bae9991f33725d059b771744290774"
+  end
+
+  resource "chardet" do
+    url "https://files.pythonhosted.org/packages/fc/bb/a5768c230f9ddb03acc9ef3f0d4a3cf93462473795d18e9535498c8f929d/chardet-3.0.4.tar.gz"
+    sha256 "84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae"
+  end
+
+  resource "dnspython" do
+    url "https://files.pythonhosted.org/packages/ec/c5/14bcd63cb6d06092a004793399ec395405edf97c2301dfdc146dfbd5beed/dnspython-1.16.0.zip"
+    sha256 "36c5e8e38d4369a08b6780b7f27d790a292b2b08eea01607865bf0936c558e01"
+  end
+
+  resource "idna" do
+    url "https://files.pythonhosted.org/packages/ad/13/eb56951b6f7950cadb579ca166e448ba77f9d24efc03edd7e55fa57d04b7/idna-2.8.tar.gz"
+    sha256 "c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407"
   end
 
   resource "pycparser" do
-    url "https://files.pythonhosted.org/packages/source/p/pycparser/pycparser-2.14.tar.gz"
-    sha256 "7959b4a74abdc27b312fed1c21e6caf9309ce0b29ea86b591fd2e99ecdf27f73"
+    url "https://files.pythonhosted.org/packages/68/9e/49196946aee219aead1290e00d1e7fdeab8567783e83e1b9ab5585e6206a/pycparser-2.19.tar.gz"
+    sha256 "a988718abfad80b6b157acce7bf130a30876d27603738ac39f140993246b25b3"
+  end
+
+  resource "requests" do
+    url "https://files.pythonhosted.org/packages/01/62/ddcf76d1d19885e8579acb1b1df26a852b03472c0e46d2b959a714c90608/requests-2.22.0.tar.gz"
+    sha256 "11e007a8a2aa0323f5a921e9e6a2d7e4e67d9877e85773fba9ba6419025cbeb4"
+  end
+
+  resource "six" do
+    url "https://files.pythonhosted.org/packages/dd/bf/4138e7bfb757de47d1f4b6994648ec67a51efe58fa907c1e11e350cddfca/six-1.12.0.tar.gz"
+    sha256 "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"
   end
 
   resource "ssdeep" do
-    url "https://files.pythonhosted.org/packages/source/s/ssdeep/ssdeep-3.1.1.tar.gz"
-    sha256 "a6c66309e6b540d5c8ba08c018675dabaef2172f2cc6f6351b67395ba7bf2ddd"
+    url "https://files.pythonhosted.org/packages/96/54/15b2e0b6e5042b67eb648e3d0e5d10105e6797353fe0a63579b74bf5eeee/ssdeep-3.3.tar.gz"
+    sha256 "255de1f034652b3ed21920221017e70e570b1644f9436fea120ae416175f4ef5"
+  end
+
+  resource "urllib3" do
+    url "https://files.pythonhosted.org/packages/4c/13/2386233f7ee40aa8444b47f7463338f3cbdf00c316627558784e3f542f07/urllib3-1.25.3.tar.gz"
+    sha256 "dbe59173209418ae49d485b87d1681aefa36252ee85884c31346debd19463232"
+  end
+
+  resource "whois" do
+    url "https://files.pythonhosted.org/packages/5a/b0/c08d2d3dcd35f10ddf51b072c471872a1f426025045eb361feeac5c7e5a6/whois-0.8.tar.gz"
+    sha256 "078298e68dee9ba0d6a2bc58a6987d9f4151e09ae0ea3b4c8c8d3dac0e7a709b"
   end
 
   def install
-    ENV.prepend_create_path "PYTHONPATH", libexec/"vendor/lib/python2.7/site-packages"
-    resources.each do |r|
-      r.stage do
-        system "python", *Language::Python.setup_install_args(libexec/"vendor")
-      end
-    end
+    ENV.append "CPPFLAGS", "-I#{MacOS.sdk_path}/usr/include/ffi"
 
-    bin.install "dnstwist.py" => "dnstwist"
+    venv = virtualenv_create(libexec, "python3")
+    venv.pip_install resources
+
+    (libexec/"bin").install "dnstwist.py" => "dnstwist"
     (libexec/"bin/database").install "database/GeoIP.dat", "database/effective_tld_names.dat"
-    bin.env_script_all_files(libexec/"bin", :PYTHONPATH => ENV["PYTHONPATH"])
+    bin.write_exec_script libexec/"bin/dnstwist"
   end
 
   test do
     output = shell_output("#{bin}/dnstwist github.com")
 
-    assert_match /#{version}/, output
+    assert_match version.to_s, output
     assert_match /Processing \d+ domain variants/, output
   end
 end

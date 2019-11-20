@@ -1,23 +1,22 @@
 class Icecast < Formula
   desc "Streaming MP3 audio server"
-  homepage "http://www.icecast.org/"
+  homepage "https://icecast.org/"
   url "https://downloads.xiph.org/releases/icecast/icecast-2.4.3.tar.gz"
   sha256 "c85ca48c765d61007573ee1406a797ae6cb31fb5961a42e7f1c87adb45ddc592"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "da71d730b60e2dd85a9be89974ec9e7418ae594644bc4652e4ee273cb3739dd6" => :high_sierra
-    sha256 "f3660f43ecaab1b126d38916d1bbb4644f395301130e05f80855c3923729fa5a" => :sierra
-    sha256 "6904fc3c70e67be98bd73a0cd362f7ae7960b0a8beab1cd924ab84ae42a782a3" => :el_capitan
-    sha256 "bfaa0aaec3dec64fdd933bf21913cdfa5883acdc79b58f542072eefb29f12fbf" => :yosemite
+    sha256 "801fe26cf88ab2ec80acd3d4ecdc4590fcdc7f056f5c33da9237d3c61a523bc5" => :catalina
+    sha256 "ac73db76265cce7244bf2e0c5b16de50c94a5161ce34e24062e3e135ccf8b1bb" => :mojave
+    sha256 "8b1366feb5df71dd1702a6ebcf990e15b32c0b0220a23a8c8336cf0244c7dfac" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
-  depends_on "libogg" => :optional
-  depends_on "theora" => :optional
-  depends_on "speex"  => :optional
-  depends_on "openssl"
   depends_on "libvorbis"
+  depends_on "openssl@1.1"
+  uses_from_macos "curl"
+  uses_from_macos "libxslt"
 
   def install
     system "./configure", "--disable-dependency-tracking",

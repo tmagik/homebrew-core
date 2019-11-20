@@ -1,15 +1,15 @@
 class Doctl < Formula
   desc "Command-line tool for DigitalOcean"
   homepage "https://github.com/digitalocean/doctl"
-  url "https://github.com/digitalocean/doctl/archive/v1.8.0.tar.gz"
-  sha256 "061cb88758d20a3736161716b6846fbf1973efba804849b4f829c749a23afa0e"
+  url "https://github.com/digitalocean/doctl/archive/v1.34.0.tar.gz"
+  sha256 "21dc7370b812989582012180d99d908b12192129149295db63faa7c234e0cc06"
   head "https://github.com/digitalocean/doctl.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "e6c8a1363871602fd03f687061c3832431b0c34573fc28532b6a94ab3bc5061b" => :high_sierra
-    sha256 "64a0c9ec87233d7cc9ea8f62d2e1b5affbaa5dc3cf016eae42e57579019c058e" => :sierra
-    sha256 "cd850c8e9e8302dcd68d6dae577ead99fe4c693e0f6f4fab11e83deb93345746" => :el_capitan
+    sha256 "07158b1290338cbd4ac75b6e802979b57065149e8276f115093e946445a8b965" => :catalina
+    sha256 "fe9848231ab2d1a1db9e769211d62e7e936c2d405c6c0c68a1d1e1e5334997a5" => :mojave
+    sha256 "ef07a00403432d55036283b41f6b574bcd2f98671efd10adf932d68d24e471e6" => :high_sierra
   end
 
   depends_on "go" => :build
@@ -17,22 +17,23 @@ class Doctl < Formula
   def install
     ENV["GOPATH"] = buildpath
 
-    mkdir_p buildpath/"src/github.com/digitalocean/"
-    ln_sf buildpath, buildpath/"src/github.com/digitalocean/doctl"
-
     doctl_version = version.to_s.split(/\./)
-    base_flag = "-X github.com/digitalocean/doctl"
-    ldflags = %W[
-      #{base_flag}.Major=#{doctl_version[0]}
-      #{base_flag}.Minor=#{doctl_version[1]}
-      #{base_flag}.Patch=#{doctl_version[2]}
-      #{base_flag}.Label=release
-    ].join(" ")
-    system "go", "build", "-ldflags", ldflags, "github.com/digitalocean/doctl/cmd/doctl"
-    bin.install "doctl"
+
+    src = buildpath/"src/github.com/digitalocean/doctl"
+    src.install buildpath.children
+    src.cd do
+      base_flag = "-X github.com/digitalocean/doctl"
+      ldflags = %W[
+        #{base_flag}.Major=#{doctl_version[0]}
+        #{base_flag}.Minor=#{doctl_version[1]}
+        #{base_flag}.Patch=#{doctl_version[2]}
+        #{base_flag}.Label=release
+      ].join(" ")
+      system "go", "build", "-ldflags", ldflags, "-o", bin/"doctl", "github.com/digitalocean/doctl/cmd/doctl"
+    end
 
     (bash_completion/"doctl").write `#{bin}/doctl completion bash`
-    (zsh_completion/"doctl").write `#{bin}/doctl completion zsh`
+    (zsh_completion/"_doctl").write `#{bin}/doctl completion zsh`
   end
 
   test do

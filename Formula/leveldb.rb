@@ -8,38 +8,27 @@ class Leveldb < Formula
 
   bottle do
     cellar :any
-#    sha256 "429fe042688a6c7bab742fd73e518336b4c656af562797e8b3a08b21d4a5453b" => :sierra
-#    sha256 "161dbb44dada171246c6c00efe96822621cfa366ce8057eac18ec464d20ce072" => :el_capitan
-#    sha256 "556dd6f11381e5fa8685b79f73ebc602e83d0412af5d8c5f196abd4d2e12be6e" => :yosemite
+#    sha256 "908fb99544bbc0906134bc9677fbd91c6948324c4de6cd1315fc7e5e6f6634cc" => :catalina
+#    sha256 "22e4a129bedd5030525f749a5b5ec978bf6da0a9b0625fe829da482a5ab85755" => :mojave
+#    sha256 "b1cf697cad28caac418d2e0ef49bc90863f389402185d3cc0f1f7079516d02c2" => :high_sierra
+#    sha256 "810dbeba5e3f7d72d4772b9eff4d9022a1240c0abc6235afbd343c199741e6f7" => :sierra
   end
 
-  option "with-test", "Verify the build with make check"
-
+  depends_on "cmake" => :build
   depends_on "gperftools"
   depends_on "snappy"
 
   def install
-    system "make", "INSTALL_PATH=#{prefix}"
-    system "make", "check" if build.bottle? || build.with?("test")
+    mkdir "build" do
+      system "cmake", "..", *std_cmake_args, "-DBUILD_SHARED_LIBS=ON"
+      system "make", "install"
+      bin.install "leveldbutil"
 
-    include.install "include/leveldb"
-    include.install "helpers/memenv" => "leveldb/helpers"
-    bin.install "out-static/leveldbutil"
-    lib.install "out-static/libleveldb.a"
-    lib.install "out-shared/libleveldb.dylib.1.20" => "libleveldb.dylib.1.20"
-    lib.install_symlink lib/"libleveldb.dylib.1.20" => "libleveldb.dylib"
-    lib.install_symlink lib/"libleveldb.dylib.1.20" => "libleveldb.dylib.1"
-    #lib.install_symlink lib/"libleveldb.1.20.dylib" => "libleveldb.dylib"
-    #lib.install_symlink lib/"libleveldb.1.20.dylib" => "libleveldb.1.dylib"
-    lib.install "out-static/libmemenv.a"
-    lib.install "out-shared/libmemenv.dylib.1.20" => "libmemenv.dylib.1.20"
-    lib.install_symlink lib/"libmemenv.dylib.1.20" => "libmemenv.dylib"
-    lib.install_symlink lib/"libmemenv.dylib.1.20" => "libmemenv.dylib.1"
-    #lib.install_symlink lib/"libmemenv.1.20.dylib" => "libmemenv.dylib"
-    #lib.install_symlink lib/"libmemenv.1.20.dylib" => "libmemenv.1.dylib"
-   
-    #MachO::Tools.change_dylib_id("#{lib}/libleveldb.1.dylib", "#{lib}/libleveldb.1.20.dylib")
-    #MachO::Tools.change_dylib_id("#{lib}/libmemenv.1.dylib", "#{lib}/libmemenv.1.20.dylib")
+      system "make", "clean"
+      system "cmake", "..", *std_cmake_args, "-DBUILD_SHARED_LIBS=OFF"
+      system "make"
+      lib.install "libleveldb.a"
+    end
   end
 
   test do

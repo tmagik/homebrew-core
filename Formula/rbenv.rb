@@ -1,19 +1,19 @@
 class Rbenv < Formula
   desc "Ruby version manager"
   homepage "https://github.com/rbenv/rbenv#readme"
-  url "https://github.com/rbenv/rbenv/archive/v1.1.1.tar.gz"
-  sha256 "41f1a60714c55eceb21d692a469aee1ec4f46bba351d0dfcb0c660ff9cf1a1c9"
+  url "https://github.com/rbenv/rbenv/archive/v1.1.2.tar.gz"
+  sha256 "80ad89ffe04c0b481503bd375f05c212bbc7d44ef5f5e649e0acdf25eba86736"
   head "https://github.com/rbenv/rbenv.git"
 
   bottle do
     cellar :any
-    sha256 "ffafe9cbf0f10545e0c7db8a5ea0ed3056226441391911d2992b2373de94afe3" => :high_sierra
-    sha256 "a99c9b4ba77938ce03b8e06e0e4d7670c611214b07b78d2b5e1bc9a7571f9186" => :sierra
-    sha256 "9d1a7da30fb133b43b243e562167ffdde6c125f054c3fde7a866a0b15173f269" => :el_capitan
-    sha256 "e3e0e0b32a1bb337178d915a91ac7f552153cbf351973f9ef1692d9644824f61" => :yosemite
+    sha256 "503ed6d818502f00f031b9f49461934e252b9bfba2876e90a326fc27bb1052d6" => :catalina
+    sha256 "d1019098dee8d037587069398e5ad04e6d736f834dc44ae73943bec46b10b260" => :mojave
+    sha256 "b5984102794a9d39388ca1f6ec77965aeea29b971cc00cb5af8ede8ee6c926d6" => :high_sierra
+    sha256 "873175a851e5aa4f5b3438072030b945c252f08a9a07760c64dc045e2cce4724" => :sierra
   end
 
-  depends_on "ruby-build" => :recommended
+  depends_on "ruby-build"
 
   def install
     inreplace "libexec/rbenv" do |s|

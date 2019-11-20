@@ -1,15 +1,16 @@
 class Hunspell < Formula
   desc "Spell checker and morphological analyzer"
   homepage "https://hunspell.github.io"
-  url "https://github.com/hunspell/hunspell/archive/v1.6.2.tar.gz"
-  sha256 "3cd9ceb062fe5814f668e4f22b2fa6e3ba0b339b921739541ce180cac4d6f4c4"
+  url "https://github.com/hunspell/hunspell/archive/v1.7.0.tar.gz"
+  sha256 "bb27b86eb910a8285407cf3ca33b62643a02798cf2eef468c0a74f6c3ee6bc8a"
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "e220d787540d49550dae83b7f6fb1c439b2aa1a559a718d7d9453f6be2bed373" => :high_sierra
-    sha256 "2b6cae66f0659142df3993cd30c4d22caf0ec8de61f038727eaf7d06d64d38cc" => :sierra
-    sha256 "8b4bdf6b04972cf041748ae8e3d68f6a15dede6c830683a127badcba725d003d" => :el_capitan
-    sha256 "1c19690997d3c77923691a779553e9277d9fc52fd075d79768d70e74c25cc2a4" => :yosemite
+    sha256 "3b7a02908774fa50dafee913969963ce223a09de100b62269fdb0fd71cd09115" => :catalina
+    sha256 "30927ed74597ba96c52ec0c1e9380aaaadee2adadf2e17414e1b494bfd8066b3" => :mojave
+    sha256 "4ada0a39e041b9e6676b4cd68e95c6523725043088f3555d1cac1216c8f91944" => :high_sierra
+    sha256 "65b1d0fc54a0de1fc7e8520aaee4dbe192a2f441757002c7b305b0fb93e3e341" => :sierra
   end
 
   depends_on "autoconf" => :build
@@ -39,7 +40,7 @@ class Hunspell < Formula
     provides no dictionaries for Hunspell, but you can download
     compatible dictionaries from other sources, such as
     https://wiki.openoffice.org/wiki/Dictionaries .
-    EOS
+  EOS
   end
 
   test do

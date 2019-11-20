@@ -1,38 +1,25 @@
 class PostgresqlAT95 < Formula
   desc "Object-relational database system"
   homepage "https://www.postgresql.org/"
-  url "https://ftp.postgresql.org/pub/source/v9.5.12/postgresql-9.5.12.tar.bz2"
-  sha256 "02e86f5c66467731bbec18fde96e0daf38c13c9141d8e7d41be663ab6fa6f698"
+  url "https://ftp.postgresql.org/pub/source/v9.5.19/postgresql-9.5.19.tar.bz2"
+  sha256 "960caa26612bca8a3791d1c0bdc5c6d24b3d15841becb617470424edbc5e1bb3"
+  revision 1
 
   bottle do
-    sha256 "1ed23f0045effafaf07e70fd2b6be4e208442b3e7d5e1ccd41c5fe646a7ca015" => :high_sierra
-    sha256 "ad1e29a3e881ee32d80f97160dbf02f7d622bd810fc0884042fdd90eff5d58a7" => :sierra
-    sha256 "bf4406afae1d3ab106f16290122fce0c32ed237da44bf07da60b482b7840027d" => :el_capitan
+    sha256 "29628327adfa7a60be419b3e66befbe64d7669f40d1d657e86521f32d2a4983f" => :catalina
+    sha256 "b452721c1d4c4307da0531e4f21a20be3222c9e449f1f67ab3bf7a6203c1bf06" => :mojave
+    sha256 "e165bf3d617cf38bb20a6319ae03d60f3a5b2ed73c06c9e9e75702462a515779" => :high_sierra
+    sha256 "7e710fd52bedb37ffec44fa9b578da336b2d3ba59e13a4ab380c3a6f88cee645" => :sierra
   end
 
   keg_only :versioned_formula
 
-  option "without-perl", "Build without Perl support"
-  option "without-tcl", "Build without Tcl support"
-  option "with-dtrace", "Build with DTrace support"
-  option "with-python", "Build with Python3 (incompatible with --with-python@2)"
-  option "with-python@2", "Build with Python2 (incompatible with --with-python)"
-
-  deprecated_option "with-python3" => "with-python"
-
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "readline"
-  depends_on "python" => :optional
-  depends_on "python@2" => :optional
-
-  fails_with :clang do
-    build 211
-    cause "Miscompilation resulting in segfault on queries"
-  end
 
   def install
-    ENV.prepend "LDFLAGS", "-L#{Formula["openssl"].opt_lib} -L#{Formula["readline"].opt_lib}"
-    ENV.prepend "CPPFLAGS", "-I#{Formula["openssl"].opt_include} -I#{Formula["readline"].opt_include}"
+    ENV.prepend "LDFLAGS", "-L#{Formula["openssl@1.1"].opt_lib} -L#{Formula["readline"].opt_lib}"
+    ENV.prepend "CPPFLAGS", "-I#{Formula["openssl@1.1"].opt_include} -I#{Formula["readline"].opt_include}"
 
     # avoid adding the SDK library directory to the linker search path
     ENV["XML2_CONFIG"] = "xml2-config --exec-prefix=/usr"
@@ -48,41 +35,57 @@ class PostgresqlAT95 < Formula
       --with-bonjour
       --with-gssapi
       --with-ldap
-      --with-openssl
-      --with-pam
       --with-libxml
       --with-libxslt
+      --with-openssl
+      --with-pam
+      --with-perl
+      --with-uuid=e2fs
     ]
-
-    args << "--with-perl" if build.with? "perl"
-
-    which_python = nil
-    if build.with?("python") && build.with?("python@2")
-      odie "Cannot provide both --with-python and --with-python@2"
-    elsif build.with?("python") || build.with?("python@2")
-      args << "--with-python"
-      which_python = which(build.with?("python") ? "python3" : "python2.7")
-    end
-    ENV["PYTHON"] = which_python
 
     # The CLT is required to build Tcl support on 10.7 and 10.8 because
     # tclConfig.sh is not part of the SDK
-    if build.with?("tcl") && (MacOS.version >= :mavericks || MacOS::CLT.installed?)
-      args << "--with-tcl"
-
-      if File.exist?("#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework/tclConfig.sh")
-        args << "--with-tclconfig=#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework"
-      end
+    args << "--with-tcl"
+    if File.exist?("#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework/tclConfig.sh")
+      args << "--with-tclconfig=#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework"
     end
 
-    args << "--enable-dtrace" if build.with? "dtrace"
-    args << "--with-uuid=e2fs"
+    # As of Xcode/CLT 10.x the Perl headers were moved from /System
+    # to inside the SDK, so we need to use `-iwithsysroot` instead
+    # of `-I` to point to the correct location.
+    # https://www.postgresql.org/message-id/153558865647.1483.573481613491501077%40wrigleys.postgresql.org
+    if DevelopmentTools.clang_build_version >= 1000
+      inreplace "configure",
+                "-I$perl_archlibexp/CORE",
+                "-iwithsysroot $perl_archlibexp/CORE"
+      inreplace "contrib/hstore_plperl/Makefile",
+                "$(perl_archlibexp)/CORE",
+                "-iwithsysroot $(perl_archlibexp)/CORE"
+      inreplace "src/pl/plperl/GNUmakefile",
+                "$(perl_archlibexp)/CORE",
+                "-iwithsysroot $(perl_archlibexp)/CORE"
+    end
 
     system "./configure", *args
     system "make"
-    system "make", "install-world", "datadir=#{pkgshare}",
-                                    "libdir=#{lib}",
-                                    "pkglibdir=#{lib}"
+
+    dirs = %W[datadir=#{pkgshare} libdir=#{lib} pkglibdir=#{lib}]
+
+    # Temporarily disable building/installing the documentation.
+    # Postgresql seems to "know" the build system has been altered and
+    # tries to regenerate the documentation when using `install-world`.
+    # This results in the build failing:
+    #  `ERROR: `osx' is missing on your system.`
+    # Attempting to fix that by adding a dependency on `open-sp` doesn't
+    # work and the build errors out on generating the documentation, so
+    # for now let's simply omit it so we can package Postgresql for Mojave.
+    if DevelopmentTools.clang_build_version >= 1000
+      system "make", "all"
+      system "make", "-C", "contrib", "install", "all", *dirs
+      system "make", "install", "all", *dirs
+    else
+      system "make", "install-world", *dirs
+    end
   end
 
   def post_install
@@ -106,7 +109,7 @@ class PostgresqlAT95 < Formula
 
       You will need your previous PostgreSQL installation from brew to perform `pg_upgrade`.
       Do not run `brew cleanup postgresql@9.5` until you have performed the migration.
-    EOS
+  EOS
   end
 
   plist_options :manual => "pg_ctl -D #{HOMEBREW_PREFIX}/var/postgresql@9.5 start"
@@ -134,7 +137,7 @@ class PostgresqlAT95 < Formula
       <string>#{var}/log/#{name}.log</string>
     </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

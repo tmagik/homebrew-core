@@ -1,30 +1,28 @@
 class Openblas < Formula
   desc "Optimized BLAS library"
   homepage "https://www.openblas.net/"
-  url "https://github.com/xianyi/OpenBLAS/archive/v0.2.20.tar.gz"
-  sha256 "5ef38b15d9c652985774869efd548b8e3e972e1e99475c673b25537ed7bcf394"
-  revision 2
+  url "https://github.com/xianyi/OpenBLAS/archive/v0.3.7.tar.gz"
+  sha256 "bde136122cef3dd6efe2de1c6f65c10955bbb0cc01a520c2342f5287c28f9379"
   head "https://github.com/xianyi/OpenBLAS.git", :branch => "develop"
 
   bottle do
     cellar :any
-    sha256 "57577356cefd497527bf2424ffb812469e96f516c653fcf7332af1348f4727f6" => :high_sierra
-    sha256 "8bd8b0cec1d6bbe27f96e47b23816e1281c7d8bf9bd41bc4b7f19ec800ba6105" => :sierra
-    sha256 "ac9ca44c22039bb242990db8e7c4181a85b674c424d1d66f03efe20649ad3753" => :el_capitan
+    sha256 "58b74b20463a5ab0cf0ae418e14cc6bed41f3fb26369c82abe001bfbd6a51b9f" => :catalina
+    sha256 "463a7d63d2f6e5f38b86f91925549424ac3c7ce07d9c29450534c949f422954b" => :mojave
+    sha256 "532b75aa999f42dfdacab3458a3a6e473cc603476906d4a44dd2bf77394bc41c" => :high_sierra
+    sha256 "eb7ee78a2cb04296541006294740a78c952ff969d26840c21a3e9eb0924d7d08" => :sierra
   end
 
   keg_only :provided_by_macos,
            "macOS provides BLAS and LAPACK in the Accelerate framework"
 
-  option "with-openmp", "Enable parallel computations with OpenMP"
-
   depends_on "gcc" # for gfortran
-
-  fails_with :clang if build.with? "openmp"
+  fails_with :clang
 
   def install
-    ENV["DYNAMIC_ARCH"] = "1" if build.bottle?
-    ENV["USE_OPENMP"] = "1" if build.with? "openmp"
+    ENV["DYNAMIC_ARCH"] = "1"
+    ENV["USE_OPENMP"] = "1"
+    ENV["NO_AVX512"] = "1"
 
     # Must call in two steps
     system "make", "CC=#{ENV.cc}", "FC=gfortran", "libs", "netlib", "shared"

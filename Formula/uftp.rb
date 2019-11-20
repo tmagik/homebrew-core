@@ -1,20 +1,22 @@
 class Uftp < Formula
   desc "Secure, reliable, efficient multicast file transfer program"
   homepage "https://uftp-multicast.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/uftp-multicast/source-tar/uftp-4.9.6.tar.gz"
-  sha256 "5f032b55ab17edd265fdfb76503c012be83f7e84d9d88ebfa462c4349c3bcf2f"
+  url "https://downloads.sourceforge.net/project/uftp-multicast/source-tar/uftp-4.10.tar.gz"
+  sha256 "91ba8aae80c7c9ccaf04600b628cbeca4699ed48268fe43d2bf539a41083f292"
 
   bottle do
     cellar :any
-    sha256 "62519412679c2827daad4c60a524515af4c137f3445d2891d97f3b57f98806a5" => :high_sierra
-    sha256 "b670abbf7c7e885cd59f2c4a79531e43d4acdc25dbdbc6fb641ad5db6c91cbef" => :sierra
-    sha256 "9f1dc36bee2fcf4e0f67b33d4075cb3c7bc360fd577cff00c35ac771d5a53bc7" => :el_capitan
+    rebuild 1
+    sha256 "ea98ef798ec24178eb774bae4c532198032b5839b2412f2b7e934de5ead5d358" => :catalina
+    sha256 "7a3fba8e55b2dc2eed95d3922ee849b158c97eb65b5bcd333d5b70bdaa198f51" => :mojave
+    sha256 "2a9dca5eeafa7a9b3ecc2fbe989e107dcc88609529e298c903a1cbdfc4cfeb76" => :high_sierra
+    sha256 "a8f42a5f05adb4566f7179c2798f2e93b46f937508fa70f1d91cb8d192096765" => :sierra
   end
 
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
-    system "make", "OPENSSL=#{Formula["openssl"].opt_prefix}", "DESTDIR=#{prefix}", "install"
+    system "make", "OPENSSL=#{Formula["openssl@1.1"].opt_prefix}", "DESTDIR=#{prefix}", "install"
     # the makefile installs into DESTDIR/usr/..., move everything up one and remove usr
     # the project maintainer was contacted via sourceforge on 12-Feb, he responded WONTFIX on 13-Feb
     prefix.install Dir["#{prefix}/usr/*"]
@@ -43,7 +45,7 @@ class Uftp < Formula
       <string>#{var}</string>
     </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

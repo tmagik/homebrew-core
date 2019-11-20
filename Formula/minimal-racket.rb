@@ -1,13 +1,14 @@
 class MinimalRacket < Formula
   desc "Modern programming language in the Lisp/Scheme family"
   homepage "https://racket-lang.org/"
-  url "https://mirror.racket-lang.org/installers/6.12/racket-minimal-6.12-src-builtpkgs.tgz"
-  sha256 "295a422d60af2a3186a18783d033c167eeed07b936c79f404d25123a0209d683"
+  url "https://mirror.racket-lang.org/installers/7.3/racket-minimal-7.3-src-builtpkgs.tgz"
+  sha256 "40286b2de8aaeed70d2dbebcbbb89f1be55be00fd55f4522635b7a51a58d6dc2"
 
   bottle do
-    sha256 "f863ac881446d44be42d60a5e829210fb7f9b120b9814c21494d49005e57f1c4" => :high_sierra
-    sha256 "af1e60551ecb5b89671af7520089fae9e748c1e4f7d17787e936011868ee87da" => :sierra
-    sha256 "2646b2e1bbb97bc7af8f16d30f17ac4e3df0bbc61a460feac6a4278f66cf8311" => :el_capitan
+    cellar :any
+    sha256 "54682774edc9d7818bb3f13b24b782c351876c2f44573a1d5c0b042d1b17c5c9" => :mojave
+    sha256 "b88127d2552cf2d11ade45f6e7deffd871cd27c1bf5937dae571dc8ba931c98b" => :high_sierra
+    sha256 "e76979bfea6f2c0549e4393af622a6d73b174b6323320d253873022643bab4c2" => :sierra
   end
 
   # these two files are amended when (un)installing packages
@@ -23,8 +24,6 @@ class MinimalRacket < Formula
         --man=#{man}
         --sysconfdir=#{etc}
       ]
-
-      args << "--disable-mac64" unless MacOS.prefer_64_bit?
 
       system "./configure", *args
       system "make"
@@ -52,7 +51,7 @@ class MinimalRacket < Formula
 
     The full Racket distribution is available as a cask:
       brew cask install racket
-    EOS
+  EOS
   end
 
   test do

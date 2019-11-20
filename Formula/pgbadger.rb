@@ -1,17 +1,15 @@
 class Pgbadger < Formula
   desc "Log analyzer for PostgreSQL"
-  homepage "https://dalibo.github.io/pgbadger/"
-  url "https://github.com/dalibo/pgbadger/archive/v9.2.tar.gz"
-  sha256 "2107466309a409fb9e40f11bb77cac1f9ba7910d5328e7b2e08eb7a1c6d760ec"
-
-  head "https://github.com/dalibo/pgbadger.git"
+  homepage "https://pgbadger.darold.net/"
+  url "https://github.com/darold/pgbadger/archive/v11.1.tar.gz"
+  sha256 "188ac6c794b08abc8b3ded24f310d4edfedc0202e8954aae9dc2558f98c6635f"
+  head "https://github.com/darold/pgbadger.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "a481b5c37d9517b2329493447798188e722f354a4d0309dbecc505f1b0e9bbdf" => :high_sierra
-    sha256 "d67b1d85810ffbcd8b638b44cbcce14744e6aff9f72f2e3085047897f3cad0d3" => :sierra
-    sha256 "d67b1d85810ffbcd8b638b44cbcce14744e6aff9f72f2e3085047897f3cad0d3" => :el_capitan
-    sha256 "d67b1d85810ffbcd8b638b44cbcce14744e6aff9f72f2e3085047897f3cad0d3" => :yosemite
+    sha256 "3738113af92e8830126eb376b23650e6da86de99f1d475cbb468f4d976be1483" => :catalina
+    sha256 "3738113af92e8830126eb376b23650e6da86de99f1d475cbb468f4d976be1483" => :mojave
+    sha256 "50dd1d8fce4933490a489f2a5a94cd4a25900dea447a2e415897d703ae82a4a7" => :high_sierra
   end
 
   def install
@@ -39,7 +37,7 @@ class Pgbadger < Formula
       log_lock_waits = on
       log_temp_files = 0
       lc_messages = 'C'
-    EOS
+  EOS
   end
 
   test do

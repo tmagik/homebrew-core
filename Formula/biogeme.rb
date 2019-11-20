@@ -3,16 +3,18 @@ class Biogeme < Formula
   homepage "https://biogeme.epfl.ch/"
   url "https://biogeme.epfl.ch/distrib/biogeme-2.6a.tar.gz"
   sha256 "f6de0ea12f83ed183f31a41b9a56d1ec7226d2305549fb89ea7b1de8273ede49"
-  revision 3
+  revision 5
 
   bottle do
-    sha256 "0de544ac15c321308098429f277db189a94e724cb2d18595fb982826de542432" => :high_sierra
-    sha256 "f2d4a89247012c1870d9b042523075c0762c3f3bfe904dcd98bffbb53b44c49a" => :sierra
-    sha256 "db6dcc0c3c0433de7189d570b871e7d63c484da4a8c4733caac025ccbc2ef179" => :el_capitan
+    cellar :any
+    sha256 "78b929e88aa59e057b7c4cc65a17ae1f9d3a88f5a521ea3709d0c8c82f9aa097" => :catalina
+    sha256 "669b97da46ec4e508169b764b6c801682f9282702ec6f17d32f9e4b7426cf8dc" => :mojave
+    sha256 "b90e3f0d203a5ad33d2ad1f70e12503a93784bb4a97d78b284c0d4c746666ea5" => :high_sierra
+    sha256 "cad38740685b800f07bece9dd13238b900427155697582fc689bd3eee42e8c38" => :sierra
   end
 
-  depends_on "python"
   depends_on "gtkmm3"
+  depends_on "python"
 
   def install
     system "./configure", "--prefix=#{prefix}"

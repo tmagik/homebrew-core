@@ -1,22 +1,23 @@
 class PamU2f < Formula
   desc "Provides an easy way to use U2F-compliant authenticators with PAM"
   homepage "https://developers.yubico.com/pam-u2f/"
-  url "https://developers.yubico.com/pam-u2f/Releases/pam_u2f-1.0.6.tar.gz"
-  sha256 "101409455aa3257c8bb0968508a90f7ae58166e8ccb1d097e5fe9b541259ed3a"
+  url "https://developers.yubico.com/pam-u2f/Releases/pam_u2f-1.0.8.tar.gz"
+  sha256 "52a203a6fab6160e06c1369ff104afed62007ca3ffbb40c297352232fa975c99"
   head "https://github.com/Yubico/pam-u2f.git"
 
   bottle do
     cellar :any
-    sha256 "afca2620432c6409c74c05964351b689d0ef531bf3f92c03ac4e550fc54841fb" => :high_sierra
-    sha256 "5b8df58d53948ff20dd7f6284a6d830f0e4087e573ba210adc526a3b9273ca1c" => :sierra
-    sha256 "ddfb23e7cddf6b47e78c889a8041690aab670d7724ebfcc27ca60018d780d127" => :el_capitan
+    sha256 "bf854539fa332aaa19f524dec3603f1cdbdfccb714081147b0c6845a6a9cfe24" => :catalina
+    sha256 "5284e43e79ed3e1031484265ef76eb5f02dfd4782de5752f336927feae235750" => :mojave
+    sha256 "07e3f722d932e932de1af8e871940b90fe1340c1332274d1cbc6cceb2e981bda" => :high_sierra
+    sha256 "aba234dff72d3e2c9f51484e294776ca51bc7e03fe390f80539aa5b3e759d1a1" => :sierra
   end
 
-  depends_on "pkg-config" => :build
-  depends_on "libtool" => :build
+  depends_on "asciidoc" => :build
   depends_on "autoconf" => :build
   depends_on "automake" => :build
-  depends_on "asciidoc" => :build
+  depends_on "libtool" => :build
+  depends_on "pkg-config" => :build
   depends_on "libu2f-host"
   depends_on "libu2f-server"
 
@@ -35,7 +36,7 @@ class PamU2f < Formula
 
     For further installation instructions, please visit
     https://developers.yubico.com/pam-u2f/#installation.
-    EOS
+  EOS
   end
 
   test do

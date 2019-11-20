@@ -1,7 +1,7 @@
 class Audacious < Formula
   desc "Free and advanced audio player based on GTK+"
   homepage "https://audacious-media-player.org/"
-  revision 2
+  revision 4
 
   stable do
     url "https://distfiles.audacious-media-player.org/audacious-3.9.tar.bz2"
@@ -21,9 +21,11 @@ class Audacious < Formula
   end
 
   bottle do
-    sha256 "facd97bdfb3935149d7c51035b38e3a1f7f3c7b705074eb75a1a795844bf739a" => :high_sierra
-    sha256 "1acf6566b58d9ab31e088ed8e3f30aba30e171a32e0121f46f0f954a3871f7e9" => :sierra
-    sha256 "c9238f08f8f9328ca7b427e2616698d6bea975b33fbcbe2e52c8a2f4b8f5b009" => :el_capitan
+    rebuild 1
+    sha256 "9dbef45b266c5978d4b5ef08eaf5ab48d91b927cf6e25976ff67de031b0b76aa" => :catalina
+    sha256 "a3cc36beec2b0456f1cc2e5640bf127867820ae574a7a4b3a417bbc8cd5ce1d8" => :mojave
+    sha256 "4cc10fd5a8a28cf497c637a90ee4af7f835aa7d8e46cab02de1073a49d143699" => :high_sierra
+    sha256 "effe340c0314c54baf2aab58ce010e16e720f75fe199bac6acbf895ceb4fc28e" => :sierra
   end
 
   head do
@@ -33,8 +35,8 @@ class Audacious < Formula
       url "https://github.com/audacious-media-player/audacious-plugins.git"
     end
 
-    depends_on "automake" => :build
     depends_on "autoconf" => :build
+    depends_on "automake" => :build
     depends_on "libtool" => :build
   end
 
@@ -55,25 +57,20 @@ class Audacious < Formula
   depends_on "libvorbis"
   depends_on "mpg123"
   depends_on "neon"
+  depends_on "python@2"
+  depends_on "qt"
   depends_on "sdl2"
   depends_on "wavpack"
-  depends_on "python@2"
-  depends_on "qt" => :recommended
-  depends_on "gtk+" => :optional
-  depends_on "jack" => :optional
-  depends_on "libmms" => :optional
-  depends_on "libmodplug" => :optional
 
   def install
     args = %W[
       --prefix=#{prefix}
       --disable-coreaudio
-      --enable-mac-media-keys
+      --disable-gtk
       --disable-mpris2
+      --enable-mac-media-keys
+      --enable-qt
     ]
-
-    args << "--enable-qt" if build.with? "qt"
-    args << "--disable-gtk" if build.without? "gtk+"
 
     system "./autogen.sh" if build.head?
     system "./configure", *args
@@ -95,7 +92,7 @@ class Audacious < Formula
     audtool does not work due to a broken dbus implementation on macOS, so is not built
     coreaudio output has been disabled as it does not work (Fails to set audio unit input property.)
     GTK+ gui is not built by default as the QT gui has better integration with macOS, and when built, the gtk gui takes precedence
-    EOS
+  EOS
   end
 
   test do

@@ -1,11 +1,11 @@
 class YoutubeDl < Formula
   desc "Download YouTube videos from the command-line"
-  homepage "https://rg3.github.io/youtube-dl/"
-  url "https://github.com/rg3/youtube-dl/releases/download/2018.05.01/youtube-dl-2018.05.01.tar.gz"
-  sha256 "362cae0c99c0d685ae7a1fa368b42c475eb2945233488aac35aadc287dc3fed6"
+  homepage "https://ytdl-org.github.io/youtube-dl/"
+  url "https://github.com/ytdl-org/youtube-dl/releases/download/2019.11.05/youtube-dl-2019.11.05.tar.gz"
+  sha256 "05ad24f831e915b65520f6abfa1c1d52be4aad6cc9603b24a67a804062302489"
 
   head do
-    url "https://github.com/rg3/youtube-dl.git"
+    url "https://github.com/ytdl-org/youtube-dl.git"
     depends_on "pandoc" => :build
   end
 
@@ -22,6 +22,6 @@ class YoutubeDl < Formula
 
   test do
     system "#{bin}/youtube-dl", "--simulate", "https://www.youtube.com/watch?v=he2a4xK8ctk"
-    system "#{bin}/youtube-dl", "--simulate", "--yes-playlist", "https://www.youtube.com/watch?v=AEhULv4ruL4&list=PLZdCLR02grLrl5ie970A24kvti21hGiOf"
+    system "#{bin}/youtube-dl", "--simulate", "--yes-playlist", "https://www.youtube.com/watch?v=iCkYw3cRwLo&list=LLnHXLLNHjNAnDQ50JANLG1g"
   end
 end

@@ -1,14 +1,14 @@
 class Gstreamer < Formula
   desc "Development framework for multimedia applications"
   homepage "https://gstreamer.freedesktop.org/"
-  url "https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.14.0.tar.xz"
-  sha256 "fc361367f0d4b780a868a8833f9f30b9c9f4ac9faea4e6b251db8b4b0398466e"
-  revision 1
+  url "https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.16.1.tar.xz"
+  sha256 "02211c3447c4daa55919c5c0f43a82a6fbb51740d57fc3af0639d46f1cf4377d"
 
   bottle do
-    sha256 "2af22666adee2d820aac856533480addf8dd66df2bf55371c0eee31cf14e783e" => :high_sierra
-    sha256 "46baf72db10d85bca89a77a09e6ab1a282567eeda2caf6b668ee5ddd74988f5c" => :sierra
-    sha256 "b07be5444e34e6916635c598514ebe5ee4ca11ff29374cdf7614c520bccd678f" => :el_capitan
+    sha256 "48c4b4960f11989dc272c6fa7e55bddfc5cda3372c6f7a0d518e0364eba4f573" => :catalina
+    sha256 "e94719e78d99cfd0f65c34597328203b1e862cbce420aa8405070d289d3fea70" => :mojave
+    sha256 "bf2bed7f060f56039fccaf3ca6a0569a29d5f9b0fc5a1749fd12c2f59a08fcf8" => :high_sierra
+    sha256 "e1b716279d7c161d7163ccf19863e33435db37eb29485611fca8d68c7a08ad9a" => :sierra
   end
 
   head do
@@ -19,11 +19,11 @@ class Gstreamer < Formula
     depends_on "libtool" => :build
   end
 
+  depends_on "bison" => :build
   depends_on "gobject-introspection" => :build
   depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "glib"
-  depends_on "bison"
 
   def install
     args = %W[
@@ -60,7 +60,7 @@ class Gstreamer < Formula
 
     The gst-plugins-* packages contain gstreamer-video-1.0, gstreamer-audio-1.0,
     and other components needed by most gstreamer applications.
-    EOS
+  EOS
   end
 
   test do

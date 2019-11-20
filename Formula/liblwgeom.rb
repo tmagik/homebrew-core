@@ -1,31 +1,30 @@
 class Liblwgeom < Formula
   desc "Allows SpatiaLite to support ST_MakeValid() like PostGIS"
   homepage "https://postgis.net/"
-  url "https://download.osgeo.org/postgis/source/postgis-2.4.4.tar.gz"
-  sha256 "0663efb589210d5048d95c817e5cf29552ec8180e16d4c6ef56c94255faca8c2"
+  url "https://download.osgeo.org/postgis/source/postgis-2.5.2.tar.gz"
+  sha256 "b6cb286c5016029d984f8c440947bf9178da72e1f6f840ed639270e1c451db5e"
+  revision 1
+  head "https://svn.osgeo.org/postgis/trunk/"
 
   bottle do
     cellar :any
-    sha256 "86937c9288bc3954f3884c6cc73bd4289bf0a74aa7da7a84c08d7a4cd50827d8" => :high_sierra
-    sha256 "0cf13878c767f7126b61844990317cb3c30898ca9cb52fba966a9b0f065f9c65" => :sierra
-    sha256 "94f3335645bf48cadb4069bb57c1c08ec734e8c23dbbe36ec64bcb695807406c" => :el_capitan
-  end
-
-  head do
-    url "https://svn.osgeo.org/postgis/trunk/"
+    sha256 "eb57429e1015f7d99ac3ddcf529168d7b8ed205c9b27845532bd1dcf9988d139" => :catalina
+    sha256 "ae9c29245251a22f8a93b751ae13ebb756e32f29f3fcfc18f1908db22fec534d" => :mojave
+    sha256 "7fb25efd9d5c9066478b3bfa37eb20fe9067dde08a68d5d0ab71906f16c9b934" => :high_sierra
+    sha256 "5f4e4b2b89b59da69a7b0274b6a5db86b14b007a46ad985193fc173f8926ec9e" => :sierra
   end
 
   keg_only "conflicts with PostGIS, which also installs liblwgeom.dylib"
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
+  depends_on "gpp" => :build
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
-  depends_on "gpp" => :build
 
-  depends_on "proj"
   depends_on "geos"
   depends_on "json-c"
+  depends_on "proj"
 
   def install
     # See postgis.rb for comments about these settings
@@ -37,7 +36,7 @@ class Liblwgeom < Formula
       "--disable-dependency-tracking",
       "--disable-nls",
 
-      "--with-projdir=#{HOMEBREW_PREFIX}",
+      "--with-projdir=#{Formula["proj"].opt_prefix}",
       "--with-jsondir=#{Formula["json-c"].opt_prefix}",
 
       # Disable extraneous support

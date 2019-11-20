@@ -1,31 +1,25 @@
 class Osslsigncode < Formula
-  desc "Authenticode signing of PE(EXE/SYS/DLL/etc), CAB and MSI files"
-  homepage "https://sourceforge.net/projects/osslsigncode/"
-  url "https://downloads.sourceforge.net/project/osslsigncode/osslsigncode/osslsigncode-1.7.1.tar.gz"
-  sha256 "f9a8cdb38b9c309326764ebc937cba1523a3a751a7ab05df3ecc99d18ae466c9"
+  desc "OpenSSL based Authenticode signing for PE/MSI/Java CAB files"
+  homepage "https://github.com/mtrojnar/osslsigncode"
+  url "https://github.com/mtrojnar/osslsigncode/archive/2.0.tar.gz"
+  sha256 "5a60e0a4b3e0b4d655317b2f12a810211c50242138322b16e7e01c6fbb89d92f"
 
   bottle do
     cellar :any
-    sha256 "4e079298b889a8ff8b629bc97323852b7f9e342de55ab74e601c995e6ad585f1" => :high_sierra
-    sha256 "898333a70f9700c159c8a29b7452c210f61004b23f39b0637131f7257f9250ec" => :sierra
-    sha256 "ed69f3ff0b8144a10a66cbe0a1986717a5564415768530110ae66749777f3490" => :el_capitan
-    sha256 "5f3799537630936f8d7954e9ec28f191fff6e1713f6b209aa94b2b665e5eaf88" => :yosemite
-    sha256 "59da5261972c8d26f0238c6ea42f5b247489d41e7ce6525c703675a22e260cfa" => :mavericks
-    sha256 "49a6dd76e78c82062041e5025ed1e7d71f1c53b51ef0e314a5e6938a07b6e49d" => :mountain_lion
+    sha256 "958b10ce3d64f94b1beb5f9f9d25d9252a059d35306b22e6c816bdaa38a331b0" => :catalina
+    sha256 "372930dce3e97d7ff42ceb60c21996b98bc05eeab16c4badf7d224ae9c3bc3b2" => :mojave
+    sha256 "77be2ee5af3ae642658118eac2fad889b48995fcfb183ff0602462467ba0cb22" => :high_sierra
+    sha256 "a430c3f1cdb8e9be02aa18c89483309431e77ae4daf3b8288e1680fe60e129c8" => :sierra
   end
 
-  head do
-    url "https://git.code.sf.net/p/osslsigncode/osslsigncode.git"
-    depends_on "automake" => :build
-  end
-
-  depends_on "pkg-config" => :build
   depends_on "autoconf" => :build
-  depends_on "openssl"
-  depends_on "libgsf" => :optional
+  depends_on "automake" => :build
+  depends_on "libtool" => :build
+  depends_on "pkg-config" => :build
+  depends_on "openssl@1.1"
 
   def install
-    system "autoreconf", "-ivf" if build.head?
+    system "./autogen.sh"
     system "./configure", "--prefix=#{prefix}"
     system "make", "install"
   end

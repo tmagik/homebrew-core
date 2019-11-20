@@ -4,13 +4,16 @@
 class Mu < Formula
   desc "Tool for searching e-mail messages stored in the maildir-format"
   homepage "https://www.djcbsoftware.nl/code/mu/"
-  url "https://github.com/djcb/mu/releases/download/v1.0/mu-1.0.tar.xz"
-  sha256 "966adc4db108f8ddf162891f9c3c24ba27f78c31f86575a0e05fbf14e857a513"
+  url "https://github.com/djcb/mu/releases/download/1.2/mu-1.2.0.tar.xz"
+  sha256 "f634c7f244dc6844ff71dc3c3e1893e48e193caa9e0e747eba616309775f053a"
+  revision 1
 
   bottle do
-    sha256 "d6d58dc0b9fc5d5454c0bf68230f6f8fb8cb973821de3e41ec267ce2614d8ec3" => :high_sierra
-    sha256 "0a818cbcfa365710bd48a97092218042dc8d00afd73b3f781c0982f8668a8410" => :sierra
-    sha256 "588ebfb6e7d577e8efd4a38ca1ae598998c8e015dd1101db8785641bdea17f6a" => :el_capitan
+    cellar :any
+    sha256 "c2b2f55ab9d1743afcece35be56a8dece9dbc8a970c19fdd15c36da2c5581dc9" => :catalina
+    sha256 "a8c766c5cfa0951ea3a683ddac460e2c66daa231fb586c2b73f91ddabccdb798" => :mojave
+    sha256 "b005381a23edee1bd9a7f02d5dae3cf4bb4e3bdfb494c17e0b44a817af40dd3a" => :high_sierra
+    sha256 "3cdc7db8c5adafc23cdce44aa0592afe203d770d4c1e226a5bf9e6243b9ed3ff" => :sierra
   end
 
   head do
@@ -21,31 +24,16 @@ class Mu < Formula
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
+  depends_on "emacs" => :build
+  depends_on "libgpg-error" => :build
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
-  depends_on "libgpg-error" => :build
   depends_on "gettext"
   depends_on "glib"
+  depends_on "gmime"
   depends_on "xapian"
-  depends_on "emacs" => :optional
-
-  # Currently requires gmime 2.6.x
-  resource "gmime" do
-    url "https://download.gnome.org/sources/gmime/2.6/gmime-2.6.23.tar.xz"
-    sha256 "7149686a71ca42a1390869b6074815106b061aaeaaa8f2ef8c12c191d9a79f6a"
-  end
 
   def install
-    resource("gmime").stage do
-      system "./configure", "--prefix=#{prefix}/gmime", "--disable-introspection"
-      system "make", "install"
-      ENV.append_path "PKG_CONFIG_PATH", "#{prefix}/gmime/lib/pkgconfig"
-    end
-
-    # Explicitly tell the build not to include emacs support as the version
-    # shipped by default with macOS is too old.
-    ENV["EMACS"] = "no" if build.without? "emacs"
-
     system "autoreconf", "-ivf"
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
@@ -58,7 +46,7 @@ class Mu < Formula
     Existing mu users are recommended to run the following after upgrading:
 
       mu index --rebuild
-    EOS
+  EOS
   end
 
   # Regression test for:

@@ -1,18 +1,17 @@
 class Mtools < Formula
   desc "Tools for manipulating MSDOS files"
   homepage "https://www.gnu.org/software/mtools/"
-  url "https://ftp.gnu.org/gnu/mtools/mtools-4.0.18.tar.gz"
-  mirror "https://ftpmirror.gnu.org/mtools/mtools-4.0.18.tar.gz"
-  sha256 "30d408d039b4cedcd04fbf824c89b0ff85dcbb6f71f13d2d8d65abb3f58cacc3"
+  url "https://ftp.gnu.org/gnu/mtools/mtools-4.0.23.tar.gz"
+  mirror "https://ftpmirror.gnu.org/mtools/mtools-4.0.23.tar.gz"
+  sha256 "110881884bb447b6243471dab4def937a344267a05ccc60a13503065ac992c39"
 
   bottle do
-    rebuild 1
-    sha256 "6f51a942eb679aabcad3e9a14ee2afe687421d7837aba20f4f69ca3a296acedb" => :high_sierra
-    sha256 "9038497db92b296b077c375fb23c56faccd1879877c13088cd5e4c9f17ceaeab" => :sierra
-    sha256 "29b49f7ac62634261b8e9de9ecd1459d0a9d298a525dbe09091aa8e015b72e7a" => :el_capitan
+    cellar :any_skip_relocation
+    sha256 "2ac51535ed5eafba74ec14886735ea2cd79768d72c688d97fc1a49d8f5b73fce" => :catalina
+    sha256 "541d3f5c8c8059dade3f91871f71c97c9ceff2987e97c95f4fefb57a8b55fc44" => :mojave
+    sha256 "402e30be30bc720b3bc8249da0ce56e7378f6e6f62ea68ddae27d558e438bca7" => :high_sierra
+    sha256 "c3fea7a5246d365ef2d4466b0722102afaf39a362b5127ffbe084de03b7afcf0" => :sierra
   end
-
-  depends_on :x11 => :optional
 
   conflicts_with "multimarkdown", :because => "both install `mmd` binaries"
 
@@ -30,13 +29,8 @@ class Mtools < Formula
       --disable-debug
       --prefix=#{prefix}
       --sysconfdir=#{etc}
+      --without-x
     ]
-
-    if build.with? "x11"
-      args << "--with-x"
-    else
-      args << "--without-x"
-    end
 
     system "./configure", *args
     system "make"

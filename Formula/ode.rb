@@ -1,42 +1,29 @@
 class Ode < Formula
   desc "Simulating articulated rigid body dynamics"
-  homepage "http://www.ode.org/"
-  url "https://bitbucket.org/odedevs/ode/downloads/ode-0.15.2.tar.gz"
-  sha256 "2eaebb9f8b7642815e46227956ca223806f666acd11e31708bd030028cf72bac"
-  revision 1
+  homepage "https://www.ode.org/"
+  url "https://bitbucket.org/odedevs/ode/downloads/ode-0.16.tar.gz"
+  sha256 "4ba3b76f9c1314160de483b3db92b0569242a07452cbb25b368e75deb3cabf27"
   head "https://bitbucket.org/odedevs/ode/", :using => :hg
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "d392aba8c14119ee6072c2677835e928d9a9cca95d4b3c0ef0b82aedf1bc0147" => :high_sierra
-    sha256 "34670979e3b841475cbbef0038203bae036baa753a6c03af179a0aff7b27d168" => :sierra
-    sha256 "4f2986f5867bd16da6836dc9a580f1ca2a01f4d7177fd3308b4fcea41443ac7e" => :el_capitan
+    sha256 "e5b71e7f775b1d5d17e80cda8d174e72cd8b0b99c75bc266f198abd8a42bb134" => :catalina
+    sha256 "ea4f04cfd28205dfa4215c96342046a9b89e7c13731159aecd5788a791d07ec2" => :mojave
+    sha256 "eb5e88678caee617bee029a5d90ec2e2344b1d4ff1ac28d4953549e9dd4f6dcf" => :high_sierra
+    sha256 "8a5ab1cb46e5454379dcbc090d012b42cdc0b3dba9b81475af7fda8abc7b93a0" => :sierra
   end
-
-  option "with-double-precision", "Compile ODE with double precision"
-  option "with-shared", "Compile ODE with shared library support"
-  option "with-x11", "Build the drawstuff library and demos"
-
-  deprecated_option "enable-double-precision" => "with-double-precision"
-  deprecated_option "enable-shared" => "with-shared"
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on "libccd"
-  depends_on :x11 => :optional
 
   def install
-    args = ["--prefix=#{prefix}", "--enable-libccd"]
-    args << "--enable-double-precision" if build.with? "double-precision"
-    args << "--enable-shared" if build.with? "shared"
-    args << "--with-demos" if build.with? "x11"
-
     inreplace "bootstrap", "libtoolize", "glibtoolize"
     system "./bootstrap"
 
-    system "./configure", *args
+    system "./configure", "--prefix=#{prefix}", "--enable-libccd"
     system "make"
     system "make", "install"
   end
@@ -50,7 +37,8 @@ class Ode < Formula
         return 0;
       }
     EOS
-    system ENV.cc, "test.cpp", "-I#{include}/ode", "-L#{lib}", "-lode", "-lccd",
+    system ENV.cc, "test.cpp", "-I#{include}/ode", "-L#{lib}", "-lode",
+                   "-L#{Formula["libccd"].opt_lib}", "-lccd",
                    "-lc++", "-o", "test"
     system "./test"
   end

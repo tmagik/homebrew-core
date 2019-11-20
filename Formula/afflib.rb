@@ -1,35 +1,31 @@
 class Afflib < Formula
   desc "Advanced Forensic Format"
   homepage "https://github.com/sshock/AFFLIBv3"
-  url "https://github.com/sshock/AFFLIBv3/archive/v3.7.16.tar.gz"
-  sha256 "9c0522941a24a3aafa027e510c6add5ca9f4defd2d859da3e0b536ad11b6bf72"
+  url "https://github.com/sshock/AFFLIBv3/archive/v3.7.18.tar.gz"
+  sha256 "5481cd5d8dbacd39d0c531a68ae8afcca3160c808770d66dcbf5e9b5be3e8199"
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "7a5a2cdf54e81089aeda288185c13dd947af90dab3c32f5ce3017d5251f8ea28" => :high_sierra
-    sha256 "0a69dea1576c68720739308a0aa66e83c24de8e6b88303f0d3fe371db2f932d4" => :sierra
-    sha256 "923868f49a8245403e9e2207780d3a9234e29ea12d9861a671fe5675e1fea046" => :el_capitan
-    sha256 "bbebd8159a1a187405374c9fd34a9fad999c44c9c4af60d7c763b97f99f95ae6" => :yosemite
+    sha256 "d755c6c85ac762ab789d95d93f2ec5c34f8267ccab2e043e5c999868ddc261ca" => :catalina
+    sha256 "be3ae1c09576d63d8a9fbe6b76ae5bdf5d41d6dd8f0d477736878804fb6a8af7" => :mojave
+    sha256 "14f7321c3bb680c0410728900fd4dd9fc5a967aed144482fad403d9df1c01393" => :high_sierra
+    sha256 "f412d6e0ae58fb1225efe89b9453586fa7cff3ec7bfd8291bd9cda36dd630b02" => :sierra
   end
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
-  depends_on "openssl"
-  depends_on "python@2"
-  depends_on :osxfuse => :optional
+  depends_on "openssl@1.1"
+  depends_on "python"
 
   def install
-    args = ["--enable-s3", "--enable-python"]
-
-    if build.with? "osxfuse"
-      ENV.append "CPPFLAGS", "-I/usr/local/include/osxfuse"
-      ENV.append "LDFLAGS", "-L/usr/local/lib"
-      args << "--enable-fuse"
-    else
-      args << "--disable-fuse"
-    end
+    args = %w[
+      --enable-s3
+      --enable-python
+      --disable-fuse
+    ]
 
     system "autoreconf", "-fiv"
     system "./configure", "--disable-dependency-tracking",

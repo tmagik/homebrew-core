@@ -1,19 +1,20 @@
 class Dateutils < Formula
   desc "Tools to manipulate dates with a focus on financial data"
   homepage "https://www.fresse.org/dateutils/"
-  url "https://bitbucket.org/hroptatyr/dateutils/downloads/dateutils-0.4.3.tar.xz"
-  sha256 "b0d579062bc957823fb7efcb2c520fb6fb43ab79a352026402b06ecfc4c58f1a"
+  url "https://github.com/hroptatyr/dateutils/releases/download/v0.4.6/dateutils-0.4.6.tar.xz"
+  sha256 "26a071317ae5710f226a3e6ba9a54d3764cd9efe3965aecc18e75372088757cd"
 
   bottle do
-    sha256 "21e481eb6f462bc525ac1b37dd816ea63f8d56fba328f34540c10a8a2d367dfd" => :high_sierra
-    sha256 "e0f523c86070087139383d3ab86ae25abcae2904148478b71e343bec101eb62b" => :sierra
-    sha256 "89d36dc29ffa59f15ce4a8d16d6dc981590efe8e4989633d9748e95baade4a98" => :el_capitan
+    sha256 "d7a2e5a20d955be7a23c8fcbb3de9a3b83743243501340fcd57a8f3b8c6118b4" => :catalina
+    sha256 "14c0bba42d725f246b116e5818ee421b8747b605aa4cc02dfaf00c863f821173" => :mojave
+    sha256 "efcf8e592b8a3f76d73bcc0b4478323631f16554003c84ada8af2f92e5592dbc" => :high_sierra
+    sha256 "c612ebbb2baffa30db4c1ba51afb635e406acd29cb0afec3329efbdf6dd419ae" => :sierra
   end
 
   head do
     url "https://github.com/hroptatyr/dateutils.git"
-    depends_on "automake" => :build
     depends_on "autoconf" => :build
+    depends_on "automake" => :build
     depends_on "libtool" => :build
   end
 
@@ -26,6 +27,7 @@ class Dateutils < Formula
   end
 
   test do
-    assert_equal "2012-03-01-00", shell_output("#{bin}/dconv 2012-03-04 -f \"%Y-%m-%c-%w\"").strip
+    output = shell_output("#{bin}/dconv 2012-03-04 -f \"%Y-%m-%c-%w\"").strip
+    assert_equal "2012-03-01-00", output
   end
 end

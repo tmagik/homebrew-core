@@ -1,16 +1,15 @@
 class Flac < Formula
   desc "Free lossless audio codec"
   homepage "https://xiph.org/flac/"
-  url "https://downloads.xiph.org/releases/flac/flac-1.3.2.tar.xz"
-  mirror "https://downloads.sourceforge.net/project/flac/flac-src/flac-1.3.2.tar.xz"
-  sha256 "91cfc3ed61dc40f47f050a109b08610667d73477af6ef36dcad31c31a4a8d53f"
+  url "https://downloads.xiph.org/releases/flac/flac-1.3.3.tar.xz"
+  sha256 "213e82bd716c9de6db2f98bcadbc4c24c7e2efe8c75939a1a84e28539c4e1748"
 
   bottle do
     cellar :any
-    sha256 "844fb2d7f9884f3e2f56c8578a985b14f0fc7159c189a048733d593d17d807b6" => :high_sierra
-    sha256 "332f6f0968ceb21ea233140d59d01c63bd7f40de2c2a612e4ae1719f8ecf7801" => :sierra
-    sha256 "720aebe4647f462b7d5202d38b499b0bbe507236e16111ff81ebf549738d43d9" => :el_capitan
-    sha256 "74a964ef7aa1d2f0d774c71ea894a0ab972d08280032042e4ab6b73836bdf824" => :yosemite
+    sha256 "c33809e09990a272cff9d0aae609eab10f605bae909b6d4c14e5af5096e3b0c9" => :catalina
+    sha256 "ef7f0557e79c99a79814f4ed29120719eea153f12b774a207e19d9b61658660f" => :mojave
+    sha256 "bd5a61be6c9f3b75f5012f56b2db4bf351d991675dd8f6ddb18c74e7c985d0fb" => :high_sierra
+    sha256 "aa3dc4ddf9802576ea7f3ef73bf7276c54720de3378c7b4d0a708707644c2089" => :sierra
   end
 
   head do
@@ -22,12 +21,7 @@ class Flac < Formula
   end
 
   depends_on "pkg-config" => :build
-  depends_on "libogg" => :optional
-
-  fails_with :clang do
-    build 500
-    cause "Undefined symbols ___cpuid and ___cpuid_count"
-  end
+  depends_on "libogg"
 
   def install
     args = %W[
@@ -36,10 +30,6 @@ class Flac < Formula
       --prefix=#{prefix}
       --enable-static
     ]
-
-    args << "--disable-asm-optimizations" if Hardware::CPU.is_32_bit?
-    args << "--without-ogg" if build.without? "libogg"
-
     system "./autogen.sh" if build.head?
     system "./configure", *args
     system "make", "install"

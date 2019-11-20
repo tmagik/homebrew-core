@@ -1,19 +1,19 @@
 class Gosu < Formula
   desc "Pragmatic language for the JVM"
-  homepage "http://gosu-lang.org/"
-  url "https://github.com/gosu-lang/gosu-lang/archive/v1.14.9.tar.gz"
-  sha256 "69398d9cfdc8d95f5825c032f484c9220b94d25eb8921816e17e824dc5f3dd1a"
+  homepage "https://gosu-lang.github.io/"
+  url "https://github.com/gosu-lang/gosu-lang/archive/v1.14.15.tar.gz"
+  sha256 "a1189f44713823ae189500630c5ecfccaee3931617544243f4da5400edb8dde5"
   head "https://github.com/gosu-lang/gosu-lang.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "fa07776764aae075fe40b7fff041cdf2102f12ecf915f18d4e4331f4e67e4094" => :high_sierra
-    sha256 "cf97bd3669d2960b8017f15858660169ea8c339152e4d46fefa211fdfa6c685e" => :sierra
-    sha256 "d0ffb9d7696f493ffe514199c57ddefba7d14e1cec2dc8065f371d3fb60ed17a" => :el_capitan
+    sha256 "0ea77190343c4ca60f3e07485e6bf53c508d154da74e59513ab3c47f809de6d2" => :catalina
+    sha256 "b19609d890ddbf73a957475fd75f95e6cb7aa44d3ed9926a9a98be871f805687" => :mojave
+    sha256 "f8dd37026105b216b0252fb4118c3761576f55379a31f6ddb985b06d33d46d73" => :high_sierra
   end
 
-  depends_on :java => "1.8"
   depends_on "maven" => :build
+  depends_on :java => "1.8"
 
   skip_clean "libexec/ext"
 

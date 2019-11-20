@@ -1,21 +1,19 @@
 class IsoCodes < Formula
   desc "Provides lists of various ISO standards"
-  homepage "https://pkg-isocodes.alioth.debian.org/"
-  url "https://pkg-isocodes.alioth.debian.org/downloads/iso-codes-3.77.tar.xz"
-  sha256 "21cd73a4c6f95d9474ebfcffd4e065223857720f24858e564f4409b19f7f0d90"
-  revision 2
-  head "https://anonscm.debian.org/git/pkg-isocodes/iso-codes.git"
+  homepage "https://salsa.debian.org/iso-codes-team/iso-codes"
+  url "https://deb.debian.org/debian/pool/main/i/iso-codes/iso-codes_4.4.orig.tar.xz"
+  sha256 "5124ba64e5ce6e1a73c24d1a1cdc42f6a2d0db038791b28ac77aafeb07654e86"
+  head "https://salsa.debian.org/iso-codes-team/iso-codes.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "cee71f875da473301679858f6a32032bf6f1b78a8b857565ac0ae4c50237b9c9" => :high_sierra
-    sha256 "cee71f875da473301679858f6a32032bf6f1b78a8b857565ac0ae4c50237b9c9" => :sierra
-    sha256 "cee71f875da473301679858f6a32032bf6f1b78a8b857565ac0ae4c50237b9c9" => :el_capitan
+    sha256 "36f4fe5b5c79b4ca8fa0cbf3817fde2003a7ec3b33ce7aab6fc845352ec1ddaf" => :catalina
+    sha256 "36f4fe5b5c79b4ca8fa0cbf3817fde2003a7ec3b33ce7aab6fc845352ec1ddaf" => :mojave
+    sha256 "36f4fe5b5c79b4ca8fa0cbf3817fde2003a7ec3b33ce7aab6fc845352ec1ddaf" => :high_sierra
   end
 
   depends_on "gettext" => :build
-  depends_on "python"
-  depends_on "pkg-config"
+  depends_on "python" => :build
 
   def install
     system "./configure", "--prefix=#{prefix}"
@@ -25,8 +23,7 @@ class IsoCodes < Formula
   end
 
   test do
-    pkg_config = Formula["pkg-config"].opt_bin/"pkg-config"
-    output = shell_output("#{pkg_config} --variable=domains iso-codes")
+    output = shell_output("grep domains #{share}/pkgconfig/iso-codes.pc")
     assert_match "iso_639-2 iso_639-3 iso_639-5 iso_3166-1", output
   end
 end

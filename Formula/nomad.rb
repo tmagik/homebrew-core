@@ -1,41 +1,37 @@
 class Nomad < Formula
   desc "Distributed, Highly Available, Datacenter-Aware Scheduler"
   homepage "https://www.nomadproject.io"
-  url "https://github.com/hashicorp/nomad/archive/v0.8.3.tar.gz"
-  sha256 "af1aee7bd182a656c846a710b262318b7a10bb31671843697f302606a758fe04"
+  url "https://github.com/hashicorp/nomad/archive/v0.10.1.tar.gz"
+  sha256 "034ddcab650a40ac6b5e037caa63da38429c299f5393de6f63573ad620086aa9"
   head "https://github.com/hashicorp/nomad.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "ca31c4ffe06992ed2e20ae5450b663c295e9996966cee3bdc58c596e06010e12" => :high_sierra
-    sha256 "1ce7c627de4b3ea61b05a750cf7264d7cbb6f51b0a6dde9df9a0153dbb013845" => :sierra
-    sha256 "86038847277661309c15d6edc9be8f01b02a22af7c866ef227ce7e1a33c8f243" => :el_capitan
+    sha256 "e51d4fdfce6b5412b19b43c88fbf1fcf2722bbf30e6ee37c1b6b25ca228135ab" => :catalina
+    sha256 "0c9184e36e1b4953ed3c2f74aadad6f84a2622a58531f7639e9e382034744a4b" => :mojave
+    sha256 "979dbd553041ca8e556718c08ff56324fc2ac00e76cda88f0eb14877448e1e90" => :high_sierra
   end
-
-  option "with-dynamic", "Build dynamic binary with CGO_ENABLED=1"
 
   depends_on "go" => :build
 
   def install
     ENV["GOPATH"] = buildpath
-    (buildpath/"src/github.com/hashicorp/nomad").install buildpath.children
-    cd "src/github.com/hashicorp/nomad" do
-      ENV["CGO_ENABLED"] = "1" if build.with? "dynamic"
+    src = buildpath/"src/github.com/hashicorp/nomad"
+    src.install buildpath.children
+    src.cd do
       system "go", "build", "-tags", "ui", "-o", bin/"nomad"
       prefix.install_metafiles
     end
   end
 
   test do
-    begin
-      pid = fork do
-        exec "#{bin}/nomad", "agent", "-dev"
-      end
-      sleep 10
-      ENV.append "NOMAD_ADDR", "http://127.0.0.1:4646"
-      system "#{bin}/nomad", "node-status"
-    ensure
-      Process.kill("TERM", pid)
+    pid = fork do
+      exec "#{bin}/nomad", "agent", "-dev"
     end
+    sleep 10
+    ENV.append "NOMAD_ADDR", "http://127.0.0.1:4646"
+    system "#{bin}/nomad", "node-status"
+  ensure
+    Process.kill("TERM", pid)
   end
 end

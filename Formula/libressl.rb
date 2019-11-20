@@ -2,25 +2,26 @@ class Libressl < Formula
   desc "Version of the SSL/TLS protocol forked from OpenSSL"
   homepage "https://www.libressl.org/"
   # Please ensure when updating version the release is from stable branch.
-  url "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-2.7.2.tar.gz"
-  mirror "https://mirrorservice.org/pub/OpenBSD/LibreSSL/libressl-2.7.2.tar.gz"
-  sha256 "917a8779c342177ff3751a2bf955d0262d1d8916a4b408930c45cef326700995"
+  url "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-3.0.2.tar.gz"
+  mirror "https://mirrorservice.org/pub/OpenBSD/LibreSSL/libressl-3.0.2.tar.gz"
+  sha256 "df7b172bf79b957dd27ef36dcaa1fb162562c0e8999e194aa8c1a3df2f15398e"
 
   bottle do
-    sha256 "c94862d720fb74d8abdd52ccc978bcf4e39ef72d368591d0bb4bba55a473d979" => :high_sierra
-    sha256 "546be1e176392db3d44c537b9ebe55f04026eaaa18e89520116a359a1d52b028" => :sierra
-    sha256 "1056a555641a1199fdf53efb217c46c6a4ef5ca997187a9ed0df5ceef928edb0" => :el_capitan
+    sha256 "531debda97ed07c4aa1df7f1cbf7a26d91f4aba53ba7326398a7e133fac5eb29" => :catalina
+    sha256 "b550466fa288be9fa60713747c3727da994e01083ff4fd9fad8b233791e4055c" => :mojave
+    sha256 "adc627acb1c044b5a993aa976af23039ce5988b7be7725982070ee9fe0bf9810" => :high_sierra
   end
 
   head do
     url "https://github.com/libressl-portable/portable.git"
 
-    depends_on "automake" => :build
     depends_on "autoconf" => :build
+    depends_on "automake" => :build
     depends_on "libtool" => :build
   end
 
-  keg_only "LibreSSL is not linked to prevent conflict with the system OpenSSL"
+  keg_only :provided_by_macos,
+    "LibreSSL is not linked to prevent conflict with the system OpenSSL"
 
   def install
     args = %W[
@@ -70,7 +71,7 @@ class Libressl < Formula
 
     and run
       #{opt_bin}/openssl certhash #{etc}/libressl/certs
-    EOS
+  EOS
   end
 
   test do

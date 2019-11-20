@@ -1,15 +1,15 @@
 class Stubby < Formula
   desc "DNS privacy enabled stub resolver service based on getdns"
   homepage "https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby"
-  url "https://github.com/getdnsapi/stubby/archive/v0.2.2.tar.gz"
-  sha256 "d1418d2c4df3b2f32fac668423630f07dbfb38f6f8d402ddfda9304f16263b03"
-  revision 1
+  url "https://github.com/getdnsapi/stubby/archive/v0.2.6.tar.gz"
+  sha256 "634b0b9fb8f36416e210fa65800a6c1672bcf9f4f276a042ccf89567ad8ef781"
   head "https://github.com/getdnsapi/stubby.git", :branch => "develop"
 
   bottle do
-    sha256 "b5bd281d34b4d50884c1c02de667d9eb0e0be97f6c8605950b8c5996372ce2bb" => :high_sierra
-    sha256 "be244926aa3a00bcba605e7f99fa62e82f52ee532b8d74d0c1e75ba05cc898b0" => :sierra
-    sha256 "72723b5aa058b5ccd165cab74f472ac726b8ce860b6a9544542778853b9cf0f3" => :el_capitan
+    rebuild 1
+    sha256 "c7e9b790cdc0cdafba63e1856369698182d028b0e050879b47451100ba7974cf" => :catalina
+    sha256 "ab22feeb762899b728ae55a2c702fd622ebdb2edaf776e11c0af2c9f2cddba0c" => :mojave
+    sha256 "02913e7695ae6ff3120a4f676490f6cdeeb10b92192537718ac2a23742d43276" => :high_sierra
   end
 
   depends_on "autoconf" => :build
@@ -31,7 +31,7 @@ class Stubby < Formula
 
   def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-/Apple/DTD PLIST 1.0/EN" "http:/www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
       <dict>
         <key>Label</key>
@@ -45,15 +45,10 @@ class Stubby < Formula
           <string>#{opt_bin}/stubby</string>
           <string>-C</string>
           <string>#{etc}/stubby/stubby.yml</string>
-          <string>-l</string>
         </array>
-        <key>StandardErrorPath</key>
-        <string>#{var}/log/stubby/stubby.log</string>
-        <key>StandardOutPath</key>
-        <string>#{var}/log/stubby/stubby.log</string>
       </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

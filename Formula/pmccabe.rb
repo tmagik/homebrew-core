@@ -1,13 +1,14 @@
 class Pmccabe < Formula
   desc "Calculate McCabe-style cyclomatic complexity for C/C++ code"
   homepage "https://packages.debian.org/sid/pmccabe"
-  url "https://mirrors.ocf.berkeley.edu/debian/pool/main/p/pmccabe/pmccabe_2.6.tar.gz"
-  mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/p/pmccabe/pmccabe_2.6.tar.gz"
+  url "https://deb.debian.org/debian/pool/main/p/pmccabe/pmccabe_2.6.tar.gz"
   sha256 "e490fe7c9368fec3613326265dd44563dc47182d142f579a40eca0e5d20a7028"
 
   bottle do
     cellar :any_skip_relocation
     rebuild 1
+    sha256 "c9509bbb9d642f0245364a542f5b89dded2101968358d352e892564371f1ffd4" => :catalina
+    sha256 "660ae3ce966863082ba287ba9e52c0772c41e1d58571e02c3d898b71ac4682a5" => :mojave
     sha256 "054dd89d0934715b169875d8d0bcce39db919550752eab9cadc083eab0e148cf" => :high_sierra
     sha256 "220285c0f0ae07835785574504d1d7730fb2abc06ddacfb76e1fe73f999d2cc1" => :sierra
     sha256 "d6189f6ae7341da933653c687adec0bb8952b14ed8a2883b19aec4db90b65eea" => :el_capitan

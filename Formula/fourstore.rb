@@ -3,19 +3,19 @@ class Fourstore < Formula
   homepage "https://github.com/4store/4store"
   url "https://github.com/4store/4store/archive/v1.1.6.tar.gz"
   sha256 "a0c8143fcceeb2f1c7f266425bb6b0581279129b86fdd10383bf1c1e1cab8e00"
+  revision 1
 
   bottle do
-    sha256 "413841f69291b5a871c9fefc96f8bd439348cbb5fe35e03e6670ac74cbe89771" => :high_sierra
-    sha256 "8f9626f161e1b3f063672cd07cc0d62d476eeaed5ca420aee90882d5efb9424f" => :sierra
-    sha256 "e19d98e6be69d8f75483403714a639cf21976a9d21b1c10252f5798049690581" => :el_capitan
-    sha256 "ce5b35020141bbe67afde2d1882ba39cdb00da479d64a833004d0688e9537581" => :yosemite
-    sha256 "b2ad54ba983117388e256212e55ea67e4f9548c0c7d0d1c1b8a420ac025b5f10" => :mavericks
+    sha256 "e8414af069796d108f66d9676366de2cb6f82d4dbb694a7cbc8ede58e5c646ff" => :catalina
+    sha256 "9743086b58984f5b97820b6c591edcbf551f60ae49c9f655c577f7ca50e3de23" => :mojave
+    sha256 "abfb1051513308bda54e9e7a6c3e62dad74feafa46e6b739fb33405efb0153e4" => :high_sierra
+    sha256 "7a89fcec9a355a501880289ab072d95219e760aad3102f9332a2e7310346155f" => :sierra
   end
 
-  depends_on "pkg-config" => :build
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build
+  depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "glib"
   depends_on "pcre"
@@ -48,7 +48,7 @@ class Fourstore < Formula
         4s-httpd -p 8000 -D mydb
 
     See https://4store.danielknoell.de/trac/wiki/Documentation/ for more information.
-    EOS
+  EOS
   end
 
   test do

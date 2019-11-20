@@ -2,27 +2,24 @@ class TelegramCli < Formula
   desc "Command-line interface for Telegram"
   homepage "https://github.com/vysheng/tg"
   url "https://github.com/vysheng/tg.git",
-      :tag => "1.3.1",
+      :tag      => "1.3.1",
       :revision => "5935c97ed05b90015418b5208b7beeca15a6043c"
-  revision 1
+  revision 4
   head "https://github.com/vysheng/tg.git"
 
   bottle do
-    sha256 "938c36ae945666dc88be1aec3e714a79a71d42f9daa1010d0e73206b61f9a635" => :high_sierra
-    sha256 "e9ff00dd7a4983b41b08519f0a756990a0aa30bc2263b6e262f72ee3e9b23ce2" => :sierra
-    sha256 "caabf1d19eb2b5b04560e9dc15583eb7dc3c0b0a733c732d73da09abf51dbbaf" => :el_capitan
+    rebuild 1
+    sha256 "4c1a9d233c3b46d75badb6e89e007ff9763e55071474ce11d0e109e7ee24aefe" => :catalina
+    sha256 "da9d09f1f4a317ed14c97e67fc2def18c4cd728a7023ab80424a8d548437ee74" => :mojave
+    sha256 "410b56cc04620c7a1f495b500b41fa61339cc68444c1c65939bb4fb0c4cc96ef" => :high_sierra
   end
 
-  deprecated_option "with-python" => "with-python@2"
-
   depends_on "pkg-config" => :build
-  depends_on "readline"
-  depends_on "libevent"
-  depends_on "openssl"
-  depends_on "libconfig"
   depends_on "jansson"
-  depends_on "lua" => :optional
-  depends_on "python@2" => :optional
+  depends_on "libconfig"
+  depends_on "libevent"
+  depends_on "openssl@1.1"
+  depends_on "readline"
 
   # Look for the configuration file under /usr/local/etc rather than /etc on OS X.
   # Pull Request: https://github.com/vysheng/tg/pull/1306
@@ -31,16 +28,20 @@ class TelegramCli < Formula
     sha256 "1cdaa1f3e1f7fd722681ea4e02ff31a538897ed9d704c61f28c819a52ed0f592"
   end
 
+  # Patch for OpenSSL 1.1 compatibility
+  patch do
+    url "https://raw.githubusercontent.com/Homebrew/formula-patches/129507e4ee3dc314156e179902ac375abd00c7fa/telegram-cli/openssl-1.1.diff"
+    sha256 "eb6243e1861c0b1595e8bdee705d1acdd2678e854f0919699d4b26c159e30b5e"
+  end
+
   def install
     args = %W[
       --prefix=#{prefix}
       CFLAGS=-I#{Formula["readline"].include}
       CPPFLAGS=-I#{Formula["readline"].include}
       LDFLAGS=-L#{Formula["readline"].lib}
+      --disable-liblua
     ]
-
-    args << "--disable-liblua" if build.without? "lua"
-    args << "--disable-python" if build.without? "python@2"
 
     system "./configure", *args
     system "make"

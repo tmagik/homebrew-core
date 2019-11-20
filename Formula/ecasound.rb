@@ -1,27 +1,35 @@
 class Ecasound < Formula
   desc "Multitrack-capable audio recorder and effect processor"
   homepage "https://www.eca.cx/ecasound/"
-  url "https://ecasound.seul.org/download/ecasound-2.9.1.tar.gz"
-  sha256 "39fce8becd84d80620fa3de31fb5223b2b7d4648d36c9c337d3739c2fad0dcf3"
+  url "https://ecasound.seul.org/download/ecasound-2.9.2.tar.gz"
+  sha256 "c14991dfc77eb5f7e3851aaeaf71290b21dcd451b65c63b4db8e0bec90d02c97"
 
   bottle do
-    sha256 "cc433f924ea12f9450d064be622a290cab97bdad35e83ed98658335ae61f47c0" => :high_sierra
-    sha256 "789fd275a49c7017ee25d1f5e00a802b3c5f2baa5d54db3753c566e04cd335c2" => :sierra
-    sha256 "a0bfadb79c1b81c2764290a4cc6e2eae09bae34e4ec54f06e6d4d669bceed331" => :el_capitan
-    sha256 "087b99f6242cfb60eaf73b8f79643d3a78ea53dffccddeb2f89757c3835380bd" => :yosemite
-    sha256 "e1230a9513d1011c60a51569fa8cee5671dc79867c75c8b548005b5949984a7f" => :mavericks
+    sha256 "1968bbbd93c0a1b0e9d4a69c983993f8449af6dc9b4ec11771509b9448fddaa0" => :catalina
+    sha256 "9bd0c3a15f5efa4ac0a97350ac54ea363ccca4b6d213dc961d8490276a69552a" => :mojave
+    sha256 "e9f0021e07723fc2e5a4d4cb3b5a27cecafd52fefce3255c488183122d0d718d" => :high_sierra
+    sha256 "05131605c2721fe09dca3699c9662d2dec290f8640a6e3daef1d2ac84b9f51d4" => :sierra
   end
 
-  option "with-ruby", "Compile with ruby support"
+  depends_on "jack"
+  depends_on "libsamplerate"
+  depends_on "libsndfile"
 
   def install
     args = %W[
       --disable-debug
       --disable-dependency-tracking
       --prefix=#{prefix}
+      --enable-rubyecasound=no
+      --enable-sys-readline=no
     ]
-    args << "--enable-rubyecasound=" + (build.with?("ruby") ? "yes" : "no")
     system "./configure", *args
     system "make", "install"
+  end
+
+  test do
+    fixture = test_fixtures("test.wav")
+    system bin/"ecasound", "-i", "resample,auto,#{fixture}", "-o", testpath/"test.cdr"
+    assert_predicate testpath/"test.cdr", :exist?
   end
 end

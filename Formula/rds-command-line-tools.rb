@@ -1,7 +1,7 @@
 class RdsCommandLineTools < Formula
   desc "Amazon RDS command-line toolkit"
   homepage "https://aws.amazon.com/developertools/2928"
-  url "https://s3.amazonaws.com/rds-downloads/RDSCli-1.19.004.zip"
+  url "https://rds-downloads.s3.amazonaws.com/RDSCli-1.19.004.zip"
   sha256 "298c15ccd04bd91f1be457645d233455364992e7dd27e09c48230fbc20b5950c"
 
   bottle :unneeded
@@ -15,8 +15,10 @@ class RdsCommandLineTools < Formula
     libexec.install Dir["*"]
     Pathname.glob("#{libexec}/bin/*") do |file|
       next if file.directory?
+
       basename = file.basename
       next if basename.to_s == "service"
+
       (bin/basename).write_env_script file, env
     end
   end

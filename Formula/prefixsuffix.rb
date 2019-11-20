@@ -3,19 +3,17 @@ class Prefixsuffix < Formula
   homepage "https://github.com/murraycu/prefixsuffix"
   url "https://download.gnome.org/sources/prefixsuffix/0.6/prefixsuffix-0.6.9.tar.xz"
   sha256 "fc3202bddf2ebbb93ffd31fc2a079cfc05957e4bf219535f26e6d8784d859e9b"
-  revision 1
+  revision 4
 
   bottle do
-    sha256 "0a0937d3ebef51cf2c39007ea99e31f75490c07f7b6b441f64f7a87bbda54a7c" => :high_sierra
-    sha256 "68a7a15fe3b8ea30c1f09e90dfbf8d95348367f74e497b9c1b31ac1795e71211" => :sierra
-    sha256 "48cc4b33c63c410b4d5827f689ccf6ea59608deee4735f84edea90c2ddc394f1" => :el_capitan
+    sha256 "48603e67c0d43035c166ba203fd9f615ba35280f06f8827b98597da67f4d2c62" => :catalina
+    sha256 "9a9b7ba884860fa4a3534e05118d08e0501e5b195b84a9baa476b49516d2b0a2" => :mojave
+    sha256 "41422acfc4dfd9a6948623ad544174e70648d2644d763b22f3219bd832f28a7d" => :high_sierra
   end
 
-  depends_on "pkg-config" => :build
   depends_on "intltool" => :build
+  depends_on "pkg-config" => :build
   depends_on "gtkmm3"
-
-  needs :cxx11
 
   def install
     ENV.cxx11

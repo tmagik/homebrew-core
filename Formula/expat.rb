@@ -1,22 +1,32 @@
 class Expat < Formula
   desc "XML 1.0 parser"
   homepage "https://libexpat.github.io/"
-  url "https://downloads.sourceforge.net/project/expat/expat/2.2.5/expat-2.2.5.tar.bz2"
-  sha256 "d9dc32efba7e74f788fcc4f212a43216fc37cf5f23f4c2339664d473353aedf6"
-  head "https://github.com/libexpat/libexpat.git"
+  url "https://github.com/libexpat/libexpat/releases/download/R_2_2_9/expat-2.2.9.tar.xz"
+  sha256 "1ea6965b15c2106b6bbe883397271c80dfa0331cdf821b2c319591b55eadc0a4"
 
   bottle do
     cellar :any
-    sha256 "0ef65624ae99120f21c4ef319a8a056697db296efd9bbd662529334711c7bc15" => :high_sierra
-    sha256 "653edd989854be055f50853486a4945d68e49cc8f6e944776bf2be67b51ac304" => :sierra
-    sha256 "618683020e64ef1ca99d0c2f388262cf32117d93d7f047bf8251461d8af3f04e" => :el_capitan
+    sha256 "202ebb6d7a1eb01066263128fe34ebbbc806e5ee35b283510fa1074b674c3739" => :catalina
+    sha256 "7440c3d35a2bd7d27bb6364a5d8c2f206509d6ebe09bd507039b701c133bb45d" => :mojave
+    sha256 "5c51e4a42af80a11bf3f2c697a36aedc6df21b03bed3b51c3127472660b042b3" => :high_sierra
+  end
+
+  head do
+    url "https://github.com/libexpat/libexpat.git"
+    depends_on "autoconf" => :build
+    depends_on "automake" => :build
+    depends_on "docbook2x" => :build
+    depends_on "libtool" => :build
   end
 
   keg_only :provided_by_macos
 
   def install
-    system "./configure", "--prefix=#{prefix}",
-                          "--mandir=#{man}"
+    cd "expat" if build.head?
+    system "autoreconf", "-fiv" if build.head?
+    args = ["--prefix=#{prefix}", "--mandir=#{man}"]
+    args << "--with-docbook" if build.head?
+    system "./configure", *args
     system "make", "install"
   end
 

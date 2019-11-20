@@ -3,20 +3,18 @@ class Gtksourceviewmm3 < Formula
   homepage "https://developer.gnome.org/gtksourceviewmm/"
   url "https://download.gnome.org/sources/gtksourceviewmm/3.18/gtksourceviewmm-3.18.0.tar.xz"
   sha256 "51081ae3d37975dae33d3f6a40621d85cb68f4b36ae3835eec1513482aacfb39"
-  revision 1
+  revision 4
 
   bottle do
     cellar :any
-    sha256 "ccb5f2ea996f30d6f2e441f3fd53e41253c46201af2b790a6f004a9db05512ea" => :high_sierra
-    sha256 "66a25ab58e6bf7ae30014d4081b2d25f6160a4323eb7b9dadeaee975fb24bed3" => :sierra
-    sha256 "a48149e166ef1dd135c004d1e4ac78fba00f0301791d7f34f0ea4e6f70f438e0" => :el_capitan
+    sha256 "2c82a7c2975e465a30e351ffdd860a1edabe5fbc50a84ff6fe6db66a112e3036" => :catalina
+    sha256 "55fdb6b622005ee3040b1721e5b8689d7b7f32f1ff6a6e357903d3e3abec95f0" => :mojave
+    sha256 "59e1bfd42443eea4c9dbf05f15503f9e16eada52ccd19f27e2b925303cae3626" => :high_sierra
   end
 
-  depends_on "gtksourceview3"
   depends_on "pkg-config" => :build
   depends_on "gtkmm3"
-
-  needs :cxx11
+  depends_on "gtksourceview3"
 
   def install
     ENV.cxx11
@@ -47,9 +45,10 @@ class Gtksourceviewmm3 < Formula
     gtkx3 = Formula["gtk+3"]
     gtkmm3 = Formula["gtkmm3"]
     gtksourceview3 = Formula["gtksourceview3"]
+    harfbuzz = Formula["harfbuzz"]
     libepoxy = Formula["libepoxy"]
     libpng = Formula["libpng"]
-    libsigcxx = Formula["libsigc++"]
+    libsigcxx = Formula["libsigc++@2"]
     pango = Formula["pango"]
     pangomm = Formula["pangomm"]
     pixman = Formula["pixman"]
@@ -77,6 +76,7 @@ class Gtksourceviewmm3 < Formula
       -I#{gtksourceview3.opt_include}/gtksourceview-3.0
       -I#{gtkx3.opt_include}/gtk-3.0
       -I#{gtkx3.opt_include}/gtk-3.0/unix-print
+      -I#{harfbuzz.opt_include}/harfbuzz
       -I#{include}/gtksourceviewmm-3.0
       -I#{libepoxy.opt_include}
       -I#{libpng.opt_include}/libpng16

@@ -3,13 +3,14 @@ class Field3d < Formula
   homepage "https://sites.google.com/site/field3d/"
   url "https://github.com/imageworks/Field3D/archive/v1.7.2.tar.gz"
   sha256 "8f7c33ecb4489ed626455cf3998d911a079b4f137f86814d9c37c5765bf4b020"
-  revision 5
+  revision 9
 
   bottle do
     cellar :any
-    sha256 "bba6ea534e9cbc76abec76aaa2bfeed7f1fd4e2e11aa24f7110deaf32f0be0e8" => :high_sierra
-    sha256 "58adcfa66e1517f2f2ad093c22c595db7eb637750de7e63bc677764016bcf427" => :sierra
-    sha256 "d111333cf909b0045ae6b9682ab585455d8a6406064fcf218c781fc01bf67230" => :el_capitan
+    sha256 "e9bc286abc81f4d9e9a548d12052cb5983f97be7c71ba48fea596ca20a6299a3" => :catalina
+    sha256 "5a309ce2f4638c73a6de3739bdfebcf95d1dc58b35ea3e788a7fd2aef86202c5" => :mojave
+    sha256 "46dd1e449ac494a9fe2b16eee139915151aee504293492120b2d1bf4b8a74490" => :high_sierra
+    sha256 "59d48d1f4975d7f86214169f3dad2c0fa5bfc3168ce659275518ff5c48504f9f" => :sierra
   end
 
   depends_on "scons" => :build
@@ -18,7 +19,7 @@ class Field3d < Formula
   depends_on "ilmbase"
 
   def install
-    scons
+    system "scons"
     include.install Dir["install/**/**/release/include/*"]
     lib.install Dir["install/**/**/release/lib/*"]
     man1.install "man/f3dinfo.1"

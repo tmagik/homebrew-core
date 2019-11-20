@@ -2,34 +2,38 @@ require "language/haskell"
 
 class ElmFormat < Formula
   include Language::Haskell::Cabal
+
   desc "Elm source code formatter, inspired by gofmt"
   homepage "https://github.com/avh4/elm-format"
   url "https://github.com/avh4/elm-format.git",
-      :tag => "0.6.1-alpha",
-      :revision => "24cbc66245289dd3ca5c08a14e86358dc039fcf3"
-  version "0.6.1-alpha"
+      :tag      => "0.8.2",
+      :revision => "ab3627cce01e5556b3fe8c2b5e3d92b80bfc74af"
   head "https://github.com/avh4/elm-format.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "d63d07ef26edd91e1b10c4b1286dd271ac7f2958eb5e92aa78bb62ec49f4802a" => :high_sierra
-    sha256 "0d803f1ba6449fc85db9edac0bf55f14c9358868b015559ec2836c799bdf9cb4" => :sierra
-    sha256 "034a1da2a60646992a7571e1879f6ff31ebc43c3f43250689d4b6d6f1c12286d" => :el_capitan
-    sha256 "964df8c9e60c3ab2968fa6d6304beee5d0eefd993001a35e26da279b54e2e543" => :yosemite
+    sha256 "31144028047fc2d4abf834bafcc2db54f20c516984c151ea5fba94371b28d4c7" => :mojave
+    sha256 "be14a5786096c3c76b60eb87160359230b78be1de602c859d4b35a422275e981" => :high_sierra
+    sha256 "81499738a7d79d0cd2b4aa2645f4f8b450b6da9e3e293d9f595bc5f082ca9e08" => :sierra
   end
 
   depends_on "cabal-install" => :build
   depends_on "ghc" => :build
 
-  def install
-    (buildpath/"elm-format").install Dir["*"]
+  def build_elm_format_conf
+    <<~EOS
+      module Build_elm_format where
 
-    # GHC 8.4.1 compat
-    # Reported upstream 21 Mar 2018 https://github.com/avh4/elm-format/issues/464
-    (buildpath/"cabal.config").write <<~EOS
-      allow-newer: elm-format:free, elm-format:optparse-applicative
-      constraints: free < 6, optparse-applicative < 0.15
+      gitDescribe :: String
+      gitDescribe = "#{version}"
     EOS
+  end
+
+  def install
+    defaults = buildpath/"generated/Build_elm_format.hs"
+    defaults.write(build_elm_format_conf)
+
+    (buildpath/"elm-format").install Dir["*"]
 
     cabal_sandbox do
       cabal_sandbox_add_source "elm-format"
@@ -45,6 +49,7 @@ class ElmFormat < Formula
       main = text "Hello, world!"
     EOS
 
-    system bin/"elm-format-0.17", testpath/"Hello.elm", "--yes"
+    system bin/"elm-format", "--elm-version=0.18", testpath/"Hello.elm", "--yes"
+    system bin/"elm-format", "--elm-version=0.19", testpath/"Hello.elm", "--yes"
   end
 end

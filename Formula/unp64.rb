@@ -1,20 +1,22 @@
 class Unp64 < Formula
   desc "Generic C64 prg unpacker,"
   homepage "http://iancoog.altervista.org/"
-  url "http://iancoog.altervista.org/C/unp64_234.7z"
-  version "2.34"
-  sha256 "86968afaa13b6c17fac7577041d5e3f3cc51cb534d818b5f360fddf41a05eaad"
+  url "http://iancoog.altervista.org/C/unp64_236_src.tar.bz2"
+  version "2.36"
+  sha256 "55126d9cd6d3bb0d77aeba3c9bd5d9e16805b098c66de92b33f44814425c39e1"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "cb2f615c3909bbf88db626681db7b07c22f94c72bb51a9dbb9ddc8b37c117202" => :high_sierra
-    sha256 "f5ad308ae7daacc0419de6e9f131f78431b07a63a882078c7deded097065d4ff" => :sierra
-    sha256 "730e5e71632110da2e1220001c63b86e29a302cb2ed2762f988625f4afa9722f" => :el_capitan
+    sha256 "2bcb692303d870dec60ae2e5c664ffca2ff8d6e46365700c0701ae0e7b19e23d" => :catalina
+    sha256 "966cbf5ee30ed72e472df6fa40c80adc623a18c3ab9764e22185cb0b48da4e46" => :mojave
+    sha256 "d84f3af986ace7e131687c719d399212ca7c8e5bb4fc5f7bc9d0910db4116132" => :high_sierra
+    sha256 "60f32f5261a3a7cf7f0b7058a53163267a026fb03886875403c7ebae12eb0b34" => :sierra
   end
 
   def install
-    system "make", "-C", "unp64_234/src", "unp64"
-    bin.install "unp64_234/src/Release/unp64"
+    cd "src"
+    system "make", "unp64"
+    bin.install "Release/unp64"
   end
 
   test do

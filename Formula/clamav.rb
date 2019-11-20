@@ -1,29 +1,29 @@
 class Clamav < Formula
   desc "Anti-virus software"
   homepage "https://www.clamav.net/"
-  url "https://www.clamav.net/downloads/production/clamav-0.100.0.tar.gz"
-  sha256 "c5c5edaf75a3c53ac0f271148fd6447310bce53f448ec7e6205124a25918f65c"
-  revision 1
+  url "https://www.clamav.net/downloads/production/clamav-0.102.0.tar.gz"
+  mirror "https://fossies.org/linux/misc/clamav-0.102.0.tar.gz"
+  sha256 "48fe188c46c793c2d0cb5c81c106e4690251aff6dc8aa6575dc688343291bee1"
 
   bottle do
-    sha256 "8b13c6dc87bb7ac7fa174000219003416d54afa40b65aa9b972075bc427bfcb2" => :high_sierra
-    sha256 "76181827f686178ce1126d14e198389612bff286dda50418f507dde10df2d93e" => :sierra
-    sha256 "139d2858a08fdca1c015d8bea1f824c9d82212d1687aa108ef68e59bdcf5603c" => :el_capitan
+    sha256 "4e78b3649f40ff746343f6593074cca1df281d480323e31e9d08e6cdda77e48a" => :catalina
+    sha256 "e0ca454c1ef225dcaf647a3f709819b73b28c66861256159b6718c80098f8a70" => :mojave
+    sha256 "887186bdbadcb1c2aec51a4152c8a244b4ee767fd162786f4625d2017fc97d2f" => :high_sierra
   end
 
   head do
     url "https://github.com/Cisco-Talos/clamav-devel.git"
 
-    depends_on "automake" => :build
     depends_on "autoconf" => :build
+    depends_on "automake" => :build
     depends_on "libtool" => :build
   end
 
   depends_on "pkg-config" => :build
-  depends_on "openssl"
-  depends_on "pcre" => :recommended
-  depends_on "yara" => :optional
-  depends_on "json-c" => :optional
+  depends_on "json-c"
+  depends_on "openssl@1.1"
+  depends_on "pcre"
+  depends_on "yara"
 
   skip_clean "share/clamav"
 
@@ -35,15 +35,12 @@ class Clamav < Formula
       --libdir=#{lib}
       --sysconfdir=#{etc}/clamav
       --disable-zlib-vcheck
-      --with-openssl=#{Formula["openssl"].opt_prefix}
       --enable-llvm=no
+      --with-libjson=#{Formula["json-c"].opt_prefix}
+      --with-openssl=#{Formula["openssl@1.1"].opt_prefix}
+      --with-pcre=#{Formula["pcre"].opt_prefix}
+      --with-zlib=#{MacOS.sdk_path_if_needed}/usr
     ]
-
-    args << (build.with?("json-c") ? "--with-libjson=#{Formula["json-c"].opt_prefix}" : "--without-libjson")
-    args << "--with-pcre=#{Formula["pcre"].opt_prefix}" if build.with? "pcre"
-    args << "--disable-yara" if build.without? "yara"
-    args << "--without-pcre" if build.without? "pcre"
-    args << "--with-zlib=#{MacOS.sdk_path}/usr" unless MacOS::CLT.installed?
 
     pkgshare.mkpath
     system "autoreconf", "-fvi" if build.head?
@@ -54,7 +51,7 @@ class Clamav < Formula
   def caveats; <<~EOS
     To finish installation & run clamav you will need to edit
     the example conf files at #{etc}/clamav/
-    EOS
+  EOS
   end
 
   test do

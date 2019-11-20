@@ -3,27 +3,37 @@ require "language/go"
 class Charm < Formula
   desc "Tool for managing Juju Charms"
   homepage "https://github.com/juju/charmstore-client"
-  url "https://github.com/juju/charmstore-client/archive/2.2.3.tar.gz"
-  sha256 "1b6342577fbdebadc01e3b63739fb4c55dcf3321740119486d4886ba308963f2"
+  url "https://github.com/juju/charmstore-client/archive/v2.4.0.tar.gz"
+  sha256 "02f5b9c5211467353dbcf9589ecf70d6e7debf16e3a8b85fa870084525466731"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "d2d00519f4268e0a280c566a8c7f8802c9665fdcbc1a1cad601b764dc2a708d0" => :high_sierra
-    sha256 "76bdfc5df35c1502e0f8453c5421c93e81477e081edb0b08cbfef96ea8ea2ae0" => :sierra
-    sha256 "96b09b4ac7951ba465dc7322b680168c03828cb69443d84b5013df74ed7f4771" => :el_capitan
+    sha256 "8fceac06a83052ab1a67a5845ebc910438105e543677756c774c05b3a03a81c8" => :mojave
+    sha256 "0b0552a903e6a0a29fbf38c1d2110263df22fd5a12599e36cd60b22bc1dab71e" => :high_sierra
+    sha256 "1e3250586c714b629398dc02cd1b8168fe0cfe70a8a067d700b8b425f16d2ffa" => :sierra
   end
 
-  depends_on "go" => :build
   depends_on "bazaar" => :build
+  depends_on "go" => :build
 
   go_resource "github.com/kisielk/gotool" do
     url "https://github.com/kisielk/gotool.git",
-        :revision => "d6ce6262d87e3a4e153e86023ff56ae771554a41"
+        :revision => "80517062f582ea3340cd4baf70e86d539ae7d84d"
+  end
+
+  go_resource "github.com/pelletier/go-toml" do
+    url "https://github.com/pelletier/go-toml.git",
+        :revision => "603baefff989777996bf283da430d693e78eba3a"
+  end
+
+  go_resource "golang.org/x/tools" do
+    url "https://go.googlesource.com/tools.git",
+        :revision => "fd2d2c45eb2dff7b87eab4303a1016b4dbf95e81"
   end
 
   go_resource "github.com/rogpeppe/godeps" do
     url "https://github.com/rogpeppe/godeps.git",
-        :revision => "e444a191d9b826975e788bb3c95511447393706d"
+        :revision => "404a7e748cd352bb0d7449dedc645546eebbfc6e"
   end
 
   def install

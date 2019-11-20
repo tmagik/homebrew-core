@@ -1,21 +1,20 @@
 class Openldap < Formula
   desc "Open source suite of directory software"
   homepage "https://www.openldap.org/software/"
-  url "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-2.4.46.tgz"
-  sha256 "9a90dcb86b99ae790ccab93b7585a31fbcbeec8c94bf0f7ab0ca0a87ea0c4b2d"
+  url "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-2.4.48.tgz"
+  sha256 "d9523ffcab5cd14b709fcf3cb4d04e8bc76bb8970113255f372bc74954c6074d"
+  revision 1
 
   bottle do
-    sha256 "2094541bf0f0b265e6cc1518aa5ac223b75834f0aa12bec8e00b6c9469e9b5d9" => :high_sierra
-    sha256 "f8912be8188c34e398b61ff7c1f922eb1d4294b21555de55b0763f8424cd0eaa" => :sierra
-    sha256 "9fe6bd03378eb760c4253a36d3f41f5403e117fa8abe4e263a0190310f65a6de" => :el_capitan
+    sha256 "644e0ba997bdc81cddd8906cb7eee96bd44ed7e6ad4a586db6313f13e251b0e2" => :catalina
+    sha256 "9094f2a881c3ceebec82e0be185a684ffbed08b05ddca3d6a87c7b730021b351" => :mojave
+    sha256 "910f65142bf5df01cc618a8896b51b1cd925e162078afc599256232e2804eb71" => :high_sierra
+    sha256 "2f8144b9e6930366b005469d4cc33f57d80048d402a60b3c1f3bf4783139ddd0" => :sierra
   end
 
   keg_only :provided_by_macos
 
-  option "with-sssvlv", "Enable server side sorting and virtual list view"
-
-  depends_on "berkeley-db@4" => :optional
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     args = %W[
@@ -25,11 +24,13 @@ class Openldap < Formula
       --localstatedir=#{var}
       --enable-accesslog
       --enable-auditlog
+      --enable-bdb=no
       --enable-constraint
       --enable-dds
       --enable-deref
       --enable-dyngroup
       --enable-dynlist
+      --enable-hdb=no
       --enable-memberof
       --enable-ppolicy
       --enable-proxycache
@@ -41,12 +42,9 @@ class Openldap < Formula
       --enable-valsort
     ]
 
-    args << "--enable-bdb=no" << "--enable-hdb=no" if build.without? "berkeley-db@4"
-    args << "--enable-sssvlv=yes" if build.with? "sssvlv"
-
     system "./configure", *args
     system "make", "install"
-    (var+"run").mkpath
+    (var/"run").mkpath
 
     # https://github.com/Homebrew/homebrew-dupes/pull/452
     chmod 0755, Dir[etc/"openldap/*"]

@@ -1,15 +1,15 @@
 class Quex < Formula
   desc "Generate lexical analyzers"
-  homepage "http://quex.org/"
-  url "https://downloads.sourceforge.net/project/quex/DOWNLOAD/quex-0.68.2.tar.gz"
-  sha256 "b6a9325f92110c52126fec18432d0d6c9bd8a7593bde950db303881aac16a506"
+  homepage "https://quex.sourceforge.io/"
+  url "https://downloads.sourceforge.net/project/quex/quex-0.70.0.tar.gz"
+  sha256 "761b68d68255862001d1fe8bf8876ba3d35586fd1927a46a667aea11511452cd"
   head "https://svn.code.sf.net/p/quex/code/trunk"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "e5d0e22c8d988408e52ddabcd0b1ddd7e858c6256b1449b919a83f8da5934354" => :high_sierra
-    sha256 "e5d0e22c8d988408e52ddabcd0b1ddd7e858c6256b1449b919a83f8da5934354" => :sierra
-    sha256 "e5d0e22c8d988408e52ddabcd0b1ddd7e858c6256b1449b919a83f8da5934354" => :el_capitan
+    sha256 "f3d39a7468e8c529ce1c0d6ab5b2d028f50771304993e9f2e996490f846c4b6c" => :catalina
+    sha256 "f3d39a7468e8c529ce1c0d6ab5b2d028f50771304993e9f2e996490f846c4b6c" => :mojave
+    sha256 "f3d39a7468e8c529ce1c0d6ab5b2d028f50771304993e9f2e996490f846c4b6c" => :high_sierra
   end
 
   def install
@@ -30,7 +30,7 @@ class Quex < Formula
   end
 
   test do
-    system bin/"quex", "-i", doc/"demo/C/01-Trivial/simple.qx", "-o", "tiny_lexer"
+    system bin/"quex", "-i", doc/"demo/C/01-Trivial/easy.qx", "-o", "tiny_lexer"
     assert_predicate testpath/"tiny_lexer", :exist?
   end
 end

@@ -1,25 +1,27 @@
 class Aide < Formula
   desc "File and directory integrity checker"
-  homepage "https://aide.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/aide/aide/0.16/aide-0.16.tar.gz"
-  sha256 "a81c53a131c4fd130b169b3a26ac35386a2f6e1e014f12807524cc273ed97345"
+  homepage "https://aide.github.io/"
+  url "https://github.com/aide/aide/releases/download/v0.16.2/aide-0.16.2.tar.gz"
+  sha256 "17f998ae6ae5afb9c83578e4953115ab8a2705efc50dee5c6461cef3f521b797"
 
   bottle do
-    rebuild 1
-    sha256 "c9429f028f2627c8ae1b76737b26741cecc4c18507139b02bcc6c487bc5e15a7" => :high_sierra
-    sha256 "71d151f2f389cbbc5884eff30261d0691d020c0983411962c1ba42927d0ae052" => :sierra
-    sha256 "2860850684659f15f8d5dc01127a7a9f2bfc21f773d99c4a8897585b4542723d" => :el_capitan
+    cellar :any
+    sha256 "8cf98b716cfdc2e06e059b5c0f780db5940c4fda116c3b0543f8e19bd76a9817" => :catalina
+    sha256 "bb68fa349609a0221b2138e3596ceb803242862b771bb0b76440057e31201050" => :mojave
+    sha256 "fff1a3e469346d9181f73d8c3d734801b900c765308f3c36495b1801fb3ad897" => :high_sierra
+    sha256 "77aef168355fa73b01b0967d80058582f7387997ba2c7f7b7aad0eb335939488" => :sierra
   end
 
   head do
-    url "https://git.code.sf.net/p/aide/code.git"
-    depends_on "automake" => :build
+    url "https://github.com/aide/aide.git"
     depends_on "autoconf" => :build
+    depends_on "automake" => :build
   end
 
   depends_on "libgcrypt"
   depends_on "libgpg-error"
   depends_on "pcre"
+  uses_from_macos "curl"
 
   def install
     system "sh", "./autogen.sh" if build.head?

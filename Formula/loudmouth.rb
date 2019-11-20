@@ -3,14 +3,14 @@ class Loudmouth < Formula
   homepage "https://mcabber.com"
   url "https://mcabber.com/files/loudmouth/loudmouth-1.5.3.tar.bz2"
   sha256 "54329415cb1bacb783c20f5f1f975de4fc460165d0d8a1e3b789367b5f69d32c"
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "de1687c8bd82b179438305fc27af9b1d15e7a5ed88b4aa4275a78251c5589687" => :high_sierra
-    sha256 "7496e86f5ebae132e5e3a8ff93edff5286c571325f17be7d3cac89e4215df1fb" => :sierra
-    sha256 "53889a88701be6fe002a01116ec82318bef831da9612b9d18c80415a6ae04838" => :el_capitan
-    sha256 "cbb202d52194ab9e27a7879fe82c0eec3704e27906b7765103370ae710bdbc88" => :yosemite
-    sha256 "d6a2f38aa092c260e00ef7f370c8ceb826268ec59ace265e52788284b70402d8" => :mavericks
+    sha256 "88dfcc04d5dec8056ce00c91d881a31b01044f5eb4084da599df451b5a700471" => :catalina
+    sha256 "43052aa18cefe00338ba03fe866badd2b2f17cb6766ae2a1203bdcd54cf2ca6b" => :mojave
+    sha256 "28635ff511d03492181d4b2c9f4cfe5b65600f512bc4ed8dc02611ff1c4b1b56" => :high_sierra
+    sha256 "72854a1ff4e2492f0b90d1f435c523ae3801e1ea60d65e033909043081004db0" => :sierra
   end
 
   head do
@@ -22,10 +22,10 @@ class Loudmouth < Formula
   end
 
   depends_on "pkg-config" => :build
-  depends_on "glib"
-  depends_on "libidn"
-  depends_on "gnutls"
   depends_on "gettext"
+  depends_on "glib"
+  depends_on "gnutls"
+  depends_on "libidn"
 
   def install
     system "./autogen.sh", "-n" if build.head?

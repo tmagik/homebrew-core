@@ -1,13 +1,15 @@
 class Maxima < Formula
   desc "Computer algebra system"
   homepage "https://maxima.sourceforge.io/"
-  url "https://downloads.sourceforge.net/project/maxima/Maxima-source/5.41.0-source/maxima-5.41.0.tar.gz"
-  sha256 "daf8254600f4c7d9f079a0084178aaf036bd97a63b1e77b945f4120d7e401674"
+  url "https://downloads.sourceforge.net/project/maxima/Maxima-source/5.43.0-source/maxima-5.43.0.tar.gz"
+  sha256 "dcfda54511035276fd074ac736e97d41905171e43a5802bb820914c3c885ca77"
 
   bottle do
-    sha256 "557d50c32c4af36b4e0328678e57eccb5c90a4f926d47df1e9943821c933e90a" => :high_sierra
-    sha256 "5ae7804b062b9bdaf3d8983e90f6370509558158ed5a7b5fec9e7ea9516be3bd" => :sierra
-    sha256 "3a5894e1ff75af2e3bc1a6fdbb277bc17fa90d05f23d782f4c5b879dc6c9f48c" => :el_capitan
+    cellar :any_skip_relocation
+    sha256 "7e0dd3068febc291a3806eacb7501e739dbff8c26abbfb126388e0c61b4984c2" => :catalina
+    sha256 "aa7bf5470e9e6dc540338417bab19f9f30cce70d6d9c337e9277d7c1ff8162a0" => :mojave
+    sha256 "a1d945ec5aed4fe25d784cfdf0982cd5ebca17ea677a8b3c60685e0438932c66" => :high_sierra
+    sha256 "60ea4ce05f296dc1ffd595224eba11dabf13f7692ffb53289606241d80fc76fb" => :sierra
   end
 
   depends_on "sbcl" => :build
@@ -23,6 +25,7 @@ class Maxima < Formula
                           "--enable-gettext",
                           "--enable-sbcl",
                           "--enable-sbcl-exec",
+                          "--with-emacs-prefix=#{share}/emacs/site-lisp/#{name}",
                           "--with-sbcl=#{Formula["sbcl"].opt_bin}/sbcl"
     system "make"
     system "make", "install"

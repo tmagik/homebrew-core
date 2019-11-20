@@ -1,19 +1,19 @@
 class Tundra < Formula
   desc "Code build system that tries to be fast for incremental builds"
   homepage "https://github.com/deplinenoise/tundra"
-  url "https://github.com/deplinenoise/tundra/archive/v2.06.tar.gz"
-  sha256 "c805882b2a469c46b19c4cf4964b614c840dd914db24066930a83ec61edd24f5"
+  url "https://github.com/deplinenoise/tundra/archive/v2.11.tar.gz"
+  sha256 "004965754e87dcaeb31df757ba3c745b641d1331bbab10e6a96df428bf836c11"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "7449f31d23d9cbd91191d25a38384a6bb01c4126c3fbbee7b01659c644d8fc32" => :high_sierra
-    sha256 "26cfd885d1bab667f9751adb36e5bf0fba2099dfae101fc6f5ebe4b75cbf8eb3" => :sierra
-    sha256 "f6548611e9052ef53ffcaffc4c55e323dadad23d7c7fed56d77fa1100b6b1397" => :el_capitan
+    sha256 "6f944a354f01edf79823e2a9f14fc5710b9241f406a1af3e960d986dad456851" => :catalina
+    sha256 "2079d743c9a0e55aaef16899c93351236f354799dc9ce07ce7108b2293435faf" => :mojave
+    sha256 "cb071edaa1cac9f6176d045ddb87644f10977864539f15b673a59b6c2239c9fe" => :high_sierra
   end
 
   resource "gtest" do
-    url "https://github.com/google/googletest/archive/release-1.8.0.tar.gz"
-    sha256 "58a6f4277ca2bc8565222b3bbd58a177609e9c488e8a72649359ba51450db7d8"
+    url "https://github.com/google/googletest/archive/release-1.10.0.tar.gz"
+    sha256 "9dc9157a9a1551ec7a7e43daea9a694a0bb5fb8bec81235d8a1e6ef64c716dcb"
   end
 
   def install

@@ -2,29 +2,23 @@ class AwsSdkCpp < Formula
   desc "AWS SDK for C++"
   homepage "https://github.com/aws/aws-sdk-cpp"
   # aws-sdk-cpp should only be updated every 10 releases on multiples of 10
-  url "https://github.com/aws/aws-sdk-cpp/archive/1.4.40.tar.gz"
-  sha256 "bcb510eb9c9c61b0a417246537e48175f64fac92c12408d13390a8922c4ae7a1"
+  url "https://github.com/aws/aws-sdk-cpp/archive/1.7.230.tar.gz"
+  sha256 "7cf77c3dd830590a877c0155107e607cc8dbe4083e8b909254636f439f8c627a"
   head "https://github.com/aws/aws-sdk-cpp.git"
 
   bottle do
     cellar :any
-    sha256 "e13c7805787af269eedc96d7e85f0a097105d908445ed3e3b61d71bdea0932a9" => :high_sierra
-    sha256 "e7e5759e102698efa8b89deb1f5399c3a8fa8c5326f4476204508ac4914e82a4" => :sierra
-    sha256 "6c227c852904d30fcf9bd089fe64c79871bad4a23c0a60d18dd3a02b84bea01f" => :el_capitan
+    sha256 "cb73463283304d9e4ea89800bab02d1dadb418d607a4030b851c77b37c83c961" => :catalina
+    sha256 "ebd00236853fc1a6968665a7a18a8ba968ab4c48f02623fcd95da005cfea2bad" => :mojave
+    sha256 "15beb512e28d0552b0304bb9d7ba5d83537130f71df52d1f3ca543e4d69802b2" => :high_sierra
   end
 
-  option "with-static", "Build with static linking"
-  option "without-http-client", "Don't include the libcurl HTTP client"
-
   depends_on "cmake" => :build
+  uses_from_macos "curl"
 
   def install
-    args = std_cmake_args
-    args << "-DSTATIC_LINKING=1" if build.with? "static"
-    args << "-DNO_HTTP_CLIENT=1" if build.without? "http-client"
-
     mkdir "build" do
-      system "cmake", "..", *args
+      system "cmake", "..", *std_cmake_args
       system "make"
       system "make", "install"
     end
@@ -42,7 +36,8 @@ class AwsSdkCpp < Formula
           return 0;
       }
     EOS
-    system ENV.cxx, "test.cpp", "-o", "test", "-L#{lib}", "-laws-cpp-sdk-core"
+    system ENV.cxx, "-std=c++11", "test.cpp", "-L#{lib}", "-laws-cpp-sdk-core",
+           "-o", "test"
     system "./test"
   end
 end

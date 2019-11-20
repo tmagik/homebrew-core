@@ -1,37 +1,24 @@
 class Gpsbabel < Formula
   desc "Converts/uploads GPS waypoints, tracks, and routes"
   homepage "https://www.gpsbabel.org/"
-  url "https://github.com/gpsbabel/gpsbabel/archive/gpsbabel_1_5_4.tar.gz"
-  sha256 "8cd740db0b92610abff71e942e8a987df58cd6ca5f25cca86e15f2b00e190704"
-  revision 1
+  url "https://github.com/gpsbabel/gpsbabel/archive/gpsbabel_1_6_0.tar.gz"
+  sha256 "ad56796f725dcdb7f52d9a9509d4922f11198c382fe10fc2d6c9efa8159f2090"
 
   bottle do
-    sha256 "e93459121437da0a431110d2328b797e0c0f08c6ad0d8868a8fc54eacad113f8" => :high_sierra
-    sha256 "6beb905104938716330e3c08a8369844ea31a9fbdc91fca3efc2e218ea9ba9a4" => :sierra
-    sha256 "b99754ca018e38fd12b8604ca9ad249590e363586b9fe48dd416b02b93d0c8be" => :el_capitan
+    sha256 "685947e84880f27a16a442c10456990f9ede1efa8adf723fa217ba7ac5123ff7" => :catalina
+    sha256 "0d5fa17f760e4ff0ebf88bf4b461c1fba6498278edd57ab77caee7576f5c4609" => :mojave
+    sha256 "e147b5217a57fdf32a8073f53718e6423f227e967f9d495cb3a0bc38b5e2ad3a" => :high_sierra
+    sha256 "e982a298816049c9094762699799f238cfc8d7804cf5d72f6816ebd0e8aa414e" => :sierra
   end
 
+  depends_on "libusb"
   depends_on "qt"
-  depends_on "libusb" => :optional
-
-  # Fix build with Xcode 9, remove for next version
-  patch do
-    url "https://github.com/gpsbabel/gpsbabel/commit/b7365b93.patch?full_index=1"
-    sha256 "e949182def36fef99889e43ba4bc4d61e36d6b95badc74188a8cd3da5156d341"
-  end
-
-  # Upstream fix to build with Qt 5.10, remove for next version
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/ca4c4730/gpsbabel/qt5.10.patch"
-    sha256 "09efe405f43ae26570d6b5fcb7c5bcc7e0c8bc9a9ad6700d3901bcdcc43c33cf"
-  end
 
   def install
     ENV.cxx11
-    args = ["--disable-debug", "--disable-dependency-tracking",
-            "--prefix=#{prefix}"]
-    args << "--without-libusb" if build.without? "libusb"
-    system "./configure", *args
+    system "./configure", "--disable-debug",
+                          "--disable-dependency-tracking",
+                          "--prefix=#{prefix}"
     system "make", "install"
   end
 

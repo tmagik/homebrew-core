@@ -7,6 +7,8 @@ class Normalize < Formula
   bottle do
     cellar :any
     rebuild 1
+    sha256 "363ac4a56ccb75ff32f3af3ef42a6cf5d74f24b977939bb08c14fddc30ff2ef5" => :catalina
+    sha256 "8e1ac6ecbf84164c27a804b158201b75ddaabd3237e5826d7ffc78fbe8ee7377" => :mojave
     sha256 "e4dd195c639807e3e2e25fee6c5c6f3c4263a37a4c7f8f25ab656a96395faeaf" => :high_sierra
     sha256 "1165de2721e8b4d7f373b9ad10f52c2cd49c44a24cd8fddab5ba51983164cefe" => :sierra
     sha256 "052ab2e8b1f6a2aa1e634a30749612d927b5cee5cc9302e057bd02c599a1c256" => :el_capitan
@@ -14,9 +16,7 @@ class Normalize < Formula
     sha256 "9c12615d384a706feb8ddb693dadacfc5bfc48827e5722dd6476325bbe5e90b9" => :mavericks
   end
 
-  option "without-mad", "Compile without MP3 support"
-
-  depends_on "mad" => :recommended
+  depends_on "mad"
 
   conflicts_with "num-utils", :because => "both install `normalize` binaries"
 
@@ -27,7 +27,6 @@ class Normalize < Formula
       --prefix=#{prefix}
       --mandir=#{man}
     ]
-    args << "--without-mad" if build.without? "mad"
 
     system "./configure", *args
     system "make", "install"

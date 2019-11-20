@@ -1,23 +1,14 @@
 class TomcatAT8 < Formula
   desc "Implementation of Java Servlet and JavaServer Pages"
   homepage "https://tomcat.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=tomcat/tomcat-8/v8.5.28/bin/apache-tomcat-8.5.28.tar.gz"
-  mirror "https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.28/bin/apache-tomcat-8.5.28.tar.gz"
-  sha256 "f2da60969b942ef60d12bda2fab6580be18895e34e3dce0ddd70f0fdaaed1a07"
+  url "https://www.apache.org/dyn/closer.cgi?path=tomcat/tomcat-8/v8.5.47/bin/apache-tomcat-8.5.47.tar.gz"
+  sha256 "dd08cf2675675d012f87127701794f767eaa1ddfa2734c143381f39bef611761"
 
   bottle :unneeded
 
   keg_only :versioned_formula
 
-  option "with-fulldocs", "Install full documentation locally"
-
   depends_on :java => "1.7+"
-
-  resource "fulldocs" do
-    url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-8/v8.5.28/bin/apache-tomcat-8.5.28-fulldocs.tar.gz"
-    mirror "https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.28/bin/apache-tomcat-8.5.28-fulldocs.tar.gz"
-    sha256 "4ca9a62864a1d423b349947c2403dc3951aefb5404010484a0af6345bcdaf100"
-  end
 
   def install
     # Remove Windows scripts
@@ -27,8 +18,6 @@ class TomcatAT8 < Formula
     prefix.install %w[NOTICE LICENSE RELEASE-NOTES RUNNING.txt]
     libexec.install Dir["*"]
     bin.install_symlink "#{libexec}/bin/catalina.sh" => "catalina"
-
-    (pkgshare/"fulldocs").install resource("fulldocs") if build.with? "fulldocs"
   end
 
   plist_options :manual => "catalina run"
@@ -51,7 +40,7 @@ class TomcatAT8 < Formula
         <true/>
       </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

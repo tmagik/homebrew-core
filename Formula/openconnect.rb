@@ -1,15 +1,15 @@
 class Openconnect < Formula
   desc "Open client for Cisco AnyConnect VPN"
-  homepage "http://www.infradead.org/openconnect.html"
-  url "ftp://ftp.infradead.org/pub/openconnect/openconnect-7.08.tar.gz"
-  sha256 "1c44ec1f37a6a025d1ca726b9555649417f1d31a46f747922b84099ace628a03"
-  revision 1
+  homepage "https://www.infradead.org/openconnect/"
+  url "ftp://ftp.infradead.org/pub/openconnect/openconnect-8.05.tar.gz"
+  mirror "https://fossies.org/linux/privat/openconnect-8.05.tar.gz"
+  sha256 "335c2952d0cb36822acb112eaaf5e3b4acffc6874985fb614fec0b76c4c12992"
 
   bottle do
-    sha256 "ebc3bc520522b80f49ad28fb9055242a93f4e9ee1abf49a8be9858c4f2c13b92" => :high_sierra
-    sha256 "82f6f4b72fba93ee972a8455ebd6f9d9dfb607cd4bdd06c4b0bf068c5dbc4547" => :sierra
-    sha256 "41230a870a365a76eebd77a6a2255aa4e8f93eedc56c42546cd493967221f7c2" => :el_capitan
-    sha256 "207b75663d9f34b99a0cb2f7c4b7eccd665a98f88b7e9d736928dd4b65b658ca" => :yosemite
+    sha256 "75337e3ef5910b8236bddb38c949bdcb0b8032716f24a67ae0f05c5a563b86ed" => :catalina
+    sha256 "440a031dc0467ba3928fc2ab380e50c0c8b64042c109885856061f03f8bf5d86" => :mojave
+    sha256 "3a4cf289c1c8c57d5a83b2993791b1a64a5af25b655ba15ff70b9a8ddd9b8bbc" => :high_sierra
+    sha256 "ffd8c90ee9cc4d69f7f6efbeb57727b2e87c910b9920786ae9055d2177e8600c" => :sierra
   end
 
   head do
@@ -22,12 +22,11 @@ class Openconnect < Formula
   depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "gnutls"
-  depends_on "oath-toolkit" => :optional
-  depends_on "stoken" => :optional
+  depends_on "stoken"
 
   resource "vpnc-script" do
-    url "http://git.infradead.org/users/dwmw2/vpnc-scripts.git/blob_plain/6e04e0bbb66c0bf0ae055c0f4e58bea81dbb5c3c:/vpnc-script"
-    sha256 "48b1673e1bfaacbfa4e766c41e15dd8458726cca8f3e07991d078d0d5b7c55e9"
+    url "http://git.infradead.org/users/dwmw2/vpnc-scripts.git/blob_plain/c84fb8e5a523a647a01a1229a9104db934e19f00:/vpnc-script"
+    sha256 "20f05baf2857cb48073aca8b90d84ddc523f09b9700a5986a2f7e60e76917385"
   end
 
   def install
@@ -51,6 +50,6 @@ class Openconnect < Formula
   end
 
   test do
-    assert_match "AnyConnect VPN", pipe_output("#{bin}/openconnect 2>&1")
+    assert_match "Open client for multiple VPN protocols", pipe_output("#{bin}/openconnect 2>&1")
   end
 end

@@ -1,26 +1,27 @@
 class Rocksdb < Formula
   desc "Embeddable, persistent key-value store for fast storage"
   homepage "https://rocksdb.org/"
-  url "https://github.com/facebook/rocksdb/archive/v5.12.4.tar.gz"
-  sha256 "6e8d0844adc37da331844ac4b21ae33ba1f5265d8914c745760d9209a57e9cc9"
+  url "https://github.com/facebook/rocksdb/archive/v6.4.6.tar.gz"
+  sha256 "540bbf9369a31e0891fcb4056a36ffa439c59fc179aa0b1f46e3478417f97643"
 
   bottle do
     cellar :any
-    sha256 "51bfc992203681ea1c797d54ddfed850a8f636144ffed2baf51095b0f0cd5d81" => :high_sierra
-    sha256 "f8acbf443e79406a7d39923360a9960179b748a27b034f771fcd5b783c017cf7" => :sierra
-    sha256 "df75d4898fc368444a3fcb4b0cc169f22a5201c60d35912f5c0740bf792bf082" => :el_capitan
+    sha256 "bdc1dfc33bac8fd7dccb4cc509fbf72a7862e9bcd185c97b527cf582730a3ffa" => :catalina
+    sha256 "c78058e32338dfbc80d2edc43598d959640ae26f82b8998cbf21531de8f923c0" => :mojave
+    sha256 "ae2484553609e262a0090c5e84007c574b2a43e9e349e826f7a7489dd46f62a9" => :high_sierra
   end
 
-  needs :cxx11
-  depends_on "snappy"
-  depends_on "lz4"
   depends_on "gflags"
+  depends_on "lz4"
+  depends_on "snappy"
+  depends_on "zstd"
 
   def install
     ENV.cxx11
-    ENV["PORTABLE"] = "1" if build.bottle?
+    ENV["PORTABLE"] = "1"
     ENV["DEBUG_LEVEL"] = "0"
     ENV["USE_RTTI"] = "1"
+    ENV["ROCKSDB_DISABLE_ALIGNED_NEW"] = "1" if MacOS.version <= :sierra
     ENV["DISABLE_JEMALLOC"] = "1" # prevent opportunistic linkage
 
     # build regular rocksdb
@@ -65,7 +66,8 @@ class Rocksdb < Formula
                                 "-lz", "-lbz2",
                                 "-L#{lib}", "-lrocksdb_lite",
                                 "-L#{Formula["snappy"].opt_lib}", "-lsnappy",
-                                "-L#{Formula["lz4"].opt_lib}", "-llz4"
+                                "-L#{Formula["lz4"].opt_lib}", "-llz4",
+                                "-L#{Formula["zstd"].opt_lib}", "-lzstd"
     system "./db_test"
 
     assert_match "sst_dump --file=", shell_output("#{bin}/rocksdb_sst_dump --help 2>&1", 1)

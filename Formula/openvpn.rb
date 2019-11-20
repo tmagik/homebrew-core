@@ -1,44 +1,27 @@
 class Openvpn < Formula
   desc "SSL/TLS VPN implementing OSI layer 2 or 3 secure network extension"
   homepage "https://openvpn.net/index.php/download/community-downloads.html"
-  url "https://swupdate.openvpn.org/community/releases/openvpn-2.4.6.tar.xz"
-  mirror "https://build.openvpn.net/downloads/releases/openvpn-2.4.6.tar.xz"
-  sha256 "4f6434fa541cc9e363434ea71a16a62cf2615fb2f16af5b38f43ab5939998c26"
+  url "https://swupdate.openvpn.org/community/releases/openvpn-2.4.8.tar.xz"
+  mirror "https://build.openvpn.net/downloads/releases/openvpn-2.4.8.tar.xz"
+  sha256 "fb8ca66bb7807fff595fbdf2a0afd085c02a6aa47715c9aa3171002f9f1a3f91"
 
   bottle do
-    sha256 "47aff9000b9a23736bec4d1a58cafa8eb1511ffc85043b5eee2124735f073cd2" => :high_sierra
-    sha256 "9e23d0e6089f209c7bbac93594107741a1418bd71e65f4047355d1b1b2c71917" => :sierra
-    sha256 "6fd9609026d5f56b688f15856f19a5774f868262251cb1c8b6599a11c41a2fa1" => :el_capitan
+    sha256 "5d765e9c0b189897133a930ab956c4a861bf36532a225b7d11a4f19cfba91a26" => :catalina
+    sha256 "c4216f771502095c9ef56440c4c6061d907100ad9530bd4f3e9ac8beb98a743e" => :mojave
+    sha256 "3be2664f28a1df4bd39f4f70b68274efa08d02338572aa857820692a0f50f116" => :high_sierra
   end
+
+  depends_on "pkg-config" => :build
+  depends_on "lz4"
+  depends_on "lzo"
 
   # Requires tuntap for < 10.10
   depends_on :macos => :yosemite
 
-  depends_on "pkg-config" => :build
-  depends_on "lzo"
-  depends_on "lz4"
-  depends_on "openssl"
-
-  resource "pkcs11-helper" do
-    url "https://github.com/OpenSC/pkcs11-helper/releases/download/pkcs11-helper-1.22/pkcs11-helper-1.22.tar.bz2"
-    sha256 "fbc15f5ffd5af0200ff2f756cb4388494e0fb00b4f2b186712dce6c48484a942"
-  end
+  depends_on "openssl@1.1"
+  depends_on "pkcs11-helper"
 
   def install
-    vendor = buildpath/"brew_vendor"
-
-    resource("pkcs11-helper").stage do
-      system "./configure", "--disable-debug",
-                            "--disable-dependency-tracking",
-                            "--prefix=#{vendor}/pkcs11-helper",
-                            "--disable-threading",
-                            "--disable-slotevent",
-                            "--disable-shared"
-      system "make", "install"
-    end
-
-    ENV.prepend_path "PKG_CONFIG_PATH", vendor/"pkcs11-helper/lib/pkgconfig"
-
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--disable-silent-rules",
@@ -91,7 +74,7 @@ class Openvpn < Formula
       <string>#{etc}/openvpn</string>
     </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

@@ -1,7 +1,7 @@
 class W3m < Formula
   desc "Pager/text based browser"
   homepage "https://w3m.sourceforge.io/"
-  revision 5
+  revision 6
   head "https://github.com/tats/w3m.git"
 
   stable do
@@ -11,28 +11,29 @@ class W3m < Formula
     # Upstream is effectively Debian https://github.com/tats/w3m at this point.
     # The patches fix a pile of CVEs
     patch do
-      url "https://mirrors.ocf.berkeley.edu/debian/pool/main/w/w3m/w3m_0.5.3-36.debian.tar.xz"
-      mirror "https://mirrorservice.org/sites/ftp.debian.org/debian/pool/main/w/w3m/w3m_0.5.3-36.debian.tar.xz"
-      sha256 "e7f41ac222c55830ce121e1c50e67ab04b292837b9bb1ece2eae2689c82147ec"
+      url "https://deb.debian.org/debian/pool/main/w/w3m/w3m_0.5.3-37.debian.tar.xz"
+      sha256 "625f5b0cb71bf29b67ad3bb9c316420922877473a6e94e6c7bcc337cb22ce1eb"
       apply "patches/010_upstream.patch",
             "patches/020_debian.patch"
     end
   end
 
   bottle do
-    sha256 "4b0be4259e778c1c7df97d43b9e176e019e6de5d7bdeceec89baa34bdc0392db" => :high_sierra
-    sha256 "1e2305cc1e1e717648d331a44d3f0867ad20e63a50fbdd0d824e4482e4d8a6f7" => :sierra
-    sha256 "745f4a07f511c4a9ecbf4cb12bba58eac9c36a92291945134cbebe4fe03dc747" => :el_capitan
+    rebuild 1
+    sha256 "274f48d738d351b3c6a07ada24b866a485c49d400f36108d904a6d2a8835a660" => :catalina
+    sha256 "c2a4f7208e98f575eadaff6af3dc9a93305008b93d2f069c53d687ba61b85d64" => :mojave
+    sha256 "bc46bb9b70d7149058d2c757aa0b8ea68c7c6836faee26da0b697d81cca0927d" => :high_sierra
+    sha256 "809a34cb2c14b98827cfe9f18008b0ebc545e359c5f8c1279e71948ac336bdd1" => :sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "bdw-gc"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     system "./configure", "--prefix=#{prefix}",
                           "--disable-image",
-                          "--with-ssl=#{Formula["openssl"].opt_prefix}"
+                          "--with-ssl=#{Formula["openssl@1.1"].opt_prefix}"
     system "make", "install"
   end
 

@@ -1,24 +1,25 @@
 class Mdk < Formula
   desc "GNU MIX development kit"
   homepage "https://www.gnu.org/software/mdk/mdk.html"
-  url "https://ftp.gnu.org/gnu/mdk/v1.2.9/mdk-1.2.9.tar.gz"
-  mirror "https://ftpmirror.gnu.org/mdk/v1.2.9/mdk-1.2.9.tar.gz"
-  sha256 "6c265ddd7436925208513b155e7955e5a88c158cddda72c32714ccf5f3e74430"
-  revision 3
+  url "https://ftp.gnu.org/gnu/mdk/v1.2.10/mdk-1.2.10.tar.gz"
+  mirror "https://ftpmirror.gnu.org/mdk/v1.2.10/mdk-1.2.10.tar.gz"
+  sha256 "b0f4323a607a3346769499b00fdd6d4748af5a61dd8a24511867ef5d96c08ce7"
+  revision 1
 
   bottle do
-    sha256 "2182d170320ab65c99e6ae1cadb466226102aa0efa061688f3ea91cac4a60765" => :high_sierra
-    sha256 "a3be192cba5f0eee43813911d6204235358a478c64a4f3c4bdd8f083a2abba82" => :sierra
-    sha256 "89057b07b4bd94ba0b18d0f3c8e22c4b27bf1ba70ab1d7c2f34c0bbb656ecb9d" => :el_capitan
+    sha256 "ca512acbb302831a59136fe510dafbf2076ca6be8aceeeaa151bc27021d96249" => :catalina
+    sha256 "6d9fee5bb70d9423735a441343d8db3c827b495ef1e66c82929fc1048f21231c" => :mojave
+    sha256 "250dbb25d43d7e6c6e92096cc679dd62c4025194e4c9d80f084bf9307ac3c71b" => :high_sierra
+    sha256 "fdf93789019c0c275ab52e509fc0a3d43048aba6caba3258822451f0126a17ba" => :sierra
   end
 
   depends_on "intltool" => :build
   depends_on "pkg-config" => :build
-  depends_on "gtk+"
-  depends_on "libglade"
-  depends_on "glib"
   depends_on "flex"
+  depends_on "glib"
+  depends_on "gtk+"
   depends_on "guile"
+  depends_on "libglade"
   depends_on "readline"
 
   def install

@@ -6,29 +6,17 @@ class BoostPythonAT159 < Formula
   revision 1
 
   bottle do
-    cellar :any
-    sha256 "3aeba5e1e8a29f40ee518787d06323762c8fed8dff7510d71e075d744c2e529a" => :high_sierra
-    sha256 "00434235b9857114ec0d23f0023190f40b3e541b7b7448eb09363d293c03b648" => :sierra
-    sha256 "df22f5aa11aaf8b39915be0f5bb45bc22878c77755ba1e99a393151b62c289a0" => :el_capitan
+    rebuild 1
+    sha256 "41234d5b67b98b22b823c701b88874caaca57053e18f7069f3a40e308e882a2c" => :mojave
+    sha256 "ab4e76cbdd45a69200580916a736c1aa9d0b76d25ecedd72f3e017804375d43b" => :high_sierra
+    sha256 "50b61de8e17320c4bd1d095a165cbacb6505631b825133135e4517999079488e" => :sierra
+    sha256 "79d9b0b2a2af2ddf37af79cc611d27733b3dbba6c5ca5bb86868a5521e9e37dd" => :el_capitan
   end
 
   keg_only :versioned_formula
 
-  option :cxx11
-
-  option "without-python@2", "Build without python 2 support"
-
-  deprecated_option "with-python3" => "with-python"
-  deprecated_option "without-python" => "without-python@2"
-
-  depends_on "python@2" => :recommended
-  depends_on "python" => :optional
-
-  if build.cxx11?
-    depends_on "boost@1.59" => "c++11"
-  else
-    depends_on "boost@1.59"
-  end
+  depends_on "boost@1.59"
+  depends_on "python@2"
 
   def install
     # fix make_setter regression
@@ -46,18 +34,6 @@ class BoostPythonAT159 < Formula
             "--user-config=user-config.jam",
             "threading=multi,single",
             "link=shared,static"]
-
-    # Build in C++11 mode if boost was built in C++11 mode.
-    # Trunk starts using "clang++ -x c" to select C compiler which breaks C++11
-    # handling using ENV.cxx11. Using "cxxflags" and "linkflags" still works.
-    if build.cxx11?
-      args << "cxxflags=-std=c++11"
-      if ENV.compiler == :clang
-        args << "cxxflags=-stdlib=libc++" << "linkflags=-stdlib=libc++"
-      end
-    elsif Tab.for_name("boost159").cxx11?
-      odie "boost159 was built in C++11 mode so boost-python159 must be built with --c++11."
-    end
 
     # disable python detection in bootstrap.sh; it guesses the wrong include directory
     # for Python 3 headers, so we configure python manually in user-config.jam below.
@@ -84,8 +60,7 @@ class BoostPythonAT159 < Formula
                      "python=#{version}", *args
     end
 
-    lib.install Dir["stage-python3/lib/*py*"] if build.with?("python")
-    lib.install Dir["stage-python2.7/lib/*py*"] if build.with?("python@2")
+    lib.install Dir["stage-python2.7/lib/*py*"]
     doc.install Dir["libs/python/doc/*"]
   end
 

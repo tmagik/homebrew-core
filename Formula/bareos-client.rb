@@ -1,16 +1,18 @@
 class BareosClient < Formula
   desc "Client for Bareos (Backup Archiving REcovery Open Sourced)"
   homepage "https://www.bareos.org/"
-  url "https://github.com/bareos/bareos/archive/Release/17.2.5.tar.gz"
-  sha256 "720bcfbbb26d2e773088b3044b728b48fea2340b3fb0f622a0e07a88bec35bac"
+  url "https://github.com/bareos/bareos/archive/Release/17.2.7.tar.gz"
+  sha256 "99a5f907e3422532c783ee254dcf5c737d2b1b53522c00924d3e1009289d2fd2"
+  revision 1
 
   bottle do
-    sha256 "24a55a8fb482d7edc6664806606acce8c6e8a1b88739b3379275fe2d70fb2bb3" => :high_sierra
-    sha256 "fa9f973fa11543ef695cf6c1110e0d0f26670051c263cee5b59577477f309ce7" => :sierra
-    sha256 "6d7c271e7797895b4feb62b20294bc26dcd3c0f5f4af1ac41552d3573a787baf" => :el_capitan
+    sha256 "7d69e52f214e7e5b8cf30e28ee49344165aea78837a4549b7699f01010b69dce" => :catalina
+    sha256 "d597282300909ac572b5047abc5a1840a5cdbac7a0dd3bc57e97cb5ab2e29c6d" => :mojave
+    sha256 "b8b3ba172f69be5c28656466d8225e4d4a02175e419666c205d98a6440323c28" => :high_sierra
+    sha256 "f4cb5ceaa5c0795aca38e6ced82cff2bee7c3ccfd6b83e7b49f161818e5c0e28" => :sierra
   end
 
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "readline"
 
   conflicts_with "bacula-fd",

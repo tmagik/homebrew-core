@@ -1,27 +1,19 @@
 class Enchant < Formula
   desc "Spellchecker wrapping library"
   homepage "https://abiword.github.io/enchant/"
-  url "https://github.com/AbiWord/enchant/releases/download/v2.2.3/enchant-2.2.3.tar.gz"
-  sha256 "abd8e915675cff54c0d4da5029d95c528362266557c61c7149d53fa069b8076d"
+  url "https://github.com/AbiWord/enchant/releases/download/v2.2.7/enchant-2.2.7.tar.gz"
+  sha256 "1b22976135812b35cb5b8d21a53ad11d5e7c1426c93f51e7a314a2a42cab3a09"
 
   bottle do
-    sha256 "7df6114c8fce8c93e1c7cd981ea9b5e7033eca9d5706341a8eef8fbc53f57602" => :high_sierra
-    sha256 "5a3a649fb73ac04534056088294909e044c4665c99943020f668e1ca7ed99f3c" => :sierra
-    sha256 "4240a9afdab529f1349963fd7d0e90725365fcd8fa27a937d5fc115abad50a65" => :el_capitan
+    sha256 "d5eedc2985d47ad2c68fc02920ce159ffed812dbe21a0798a0c19b9c764b73e0" => :catalina
+    sha256 "31b8df7f3a7c9000a9172a08e95563e4c0aa5eff9166d5908637adea3f3853c4" => :mojave
+    sha256 "5175504ba38adc84dc8b0eb756270de9509c0702aca2eafc399a237bba67cb0b" => :high_sierra
+    sha256 "cbdd497839d06d13c0457ae4ce827bcdbc85e976902598b39fae14821cc1a3b9" => :sierra
   end
-
-  deprecated_option "with-python" => "with-python@2"
 
   depends_on "pkg-config" => :build
-  depends_on "python@2" => :optional
-  depends_on "glib"
   depends_on "aspell"
-
-  # https://pythonhosted.org/pyenchant/
-  resource "pyenchant" do
-    url "https://files.pythonhosted.org/packages/9e/54/04d88a59efa33fefb88133ceb638cdf754319030c28aadc5a379d82140ed/pyenchant-2.0.0.tar.gz"
-    sha256 "fc31cda72ace001da8fe5d42f11c26e514a91fa8c70468739216ddd8de64e2a0"
-  end
+  depends_on "glib"
 
   def install
     system "./configure", "--disable-dependency-tracking",
@@ -29,19 +21,7 @@ class Enchant < Formula
                           "--enable-relocatable"
 
     system "make", "install"
-
     ln_s "enchant-2.pc", lib/"pkgconfig/enchant.pc"
-
-    if build.with? "python@2"
-      resource("pyenchant").stage do
-        # Don't download and install distribute now
-        inreplace "setup.py", "ez_setup.use_setuptools()", ""
-        ENV["PYENCHANT_LIBRARY_PATH"] = lib/"libenchant-2.dylib"
-        system "python", "setup.py", "install", "--prefix=#{prefix}",
-                              "--single-version-externally-managed",
-                              "--record=installed.txt"
-      end
-    end
   end
 
   test do

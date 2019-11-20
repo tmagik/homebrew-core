@@ -1,31 +1,34 @@
 class FbClient < Formula
   desc "Shell-script client for https://paste.xinu.at"
   homepage "https://paste.xinu.at"
-  url "https://paste.xinu.at/data/client/fb-2.0.3.tar.gz"
-  sha256 "dd318de67c1581e6dfa6b6c84e8c8e995b27d115fed86d81d5579aa9a2358114"
-  revision 3
+  url "https://paste.xinu.at/data/client/fb-2.0.4.tar.gz"
+  sha256 "330c9593afd2b2480162786992d0bfb71be25faf105f3c24c71d514b58ee0cd3"
+  revision 1
   head "https://git.server-speed.net/users/flo/fb", :using => :git
 
   bottle do
     cellar :any
-    sha256 "7c175561426a008817ec3bd80f3239f80746d4409a49ea32787e3974db336077" => :high_sierra
-    sha256 "49208b9103b9acb4df5f553720bc4c785796f1113d84c1019663cf6e01d8d56e" => :sierra
-    sha256 "1ead29ad0ede0e2f81b6c734c8099a57bf02fd3690a7316d58a62201f52c9311" => :el_capitan
+    rebuild 1
+    sha256 "cdcc8da860e21b55408369556cd2d74d0b85e0ce3b0486ef3efe54d674a4832a" => :catalina
+    sha256 "1e2a04de1b67cb39442f8ce50e852ca02b617d93697f3f87414ab5448a529bc4" => :mojave
+    sha256 "294e9014f93b9dfd3e31e2eafeec205bb92db28c2d6e2b59b3b113e240e8b277" => :high_sierra
+    sha256 "9fa4abfeef74367bdd1305181126bde6009b1cef6c5b6acdc8c878433270b920" => :sierra
   end
 
   depends_on "pkg-config" => :build
+  depends_on "curl-openssl"
   depends_on "python"
 
   conflicts_with "findbugs", :because => "findbugs and fb-client both install a `fb` binary"
 
   resource "pycurl" do
-    url "https://files.pythonhosted.org/packages/12/3f/557356b60d8e59a1cce62ffc07ecc03e4f8a202c86adae34d895826281fb/pycurl-7.43.0.tar.gz"
-    sha256 "aa975c19b79b6aa6c0518c0cc2ae33528900478f0b500531dbcdbf05beec584c"
+    url "https://files.pythonhosted.org/packages/e8/e4/0dbb8735407189f00b33d84122b9be52c790c7c3b25286826f4e1bdb7bde/pycurl-7.43.0.2.tar.gz"
+    sha256 "0f0cdfc7a92d4f2a5c44226162434e34f7d6967d3af416a6f1448649c09a25a4"
   end
 
   resource "pyxdg" do
-    url "https://files.pythonhosted.org/packages/26/28/ee953bd2c030ae5a9e9a0ff68e5912bd90ee50ae766871151cd2572ca570/pyxdg-0.25.tar.gz"
-    sha256 "81e883e0b9517d624e8b0499eb267b82a815c0b7146d5269f364988ae031279d"
+    url "https://files.pythonhosted.org/packages/47/6e/311d5f22e2b76381719b5d0c6e9dc39cd33999adae67db71d7279a6d70f4/pyxdg-0.26.tar.gz"
+    sha256 "fe2928d3f532ed32b39c32a482b54136fe766d19936afc96c8f00645f9da1a06"
   end
 
   def install
@@ -37,13 +40,8 @@ class FbClient < Formula
 
     # avoid error about libcurl link-time and compile-time ssl backend mismatch
     resource("pycurl").stage do
-      args = Language::Python.setup_install_args(libexec/"vendor")
-
-      if MacOS.version >= :high_sierra
-        args << "--libcurl-dll=/usr/lib/libcurl.dylib"
-      end
-
-      system "python3", *args
+      system "python3", *Language::Python.setup_install_args(libexec/"vendor"),
+                        "--curl-config=#{Formula["curl-openssl"].opt_bin}/curl-config"
     end
 
     resource("pyxdg").stage do

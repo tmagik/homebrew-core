@@ -1,29 +1,32 @@
 class Rpm < Formula
   desc "Standard unix software packaging tool"
-  homepage "http://www.rpm.org/"
-  url "http://ftp.rpm.org/releases/rpm-4.14.x/rpm-4.14.1.tar.bz2"
-  sha256 "43f40e2ccc3ca65bd3238f8c9f8399d4957be0878c2e83cba2746d2d0d96793b"
+  homepage "https://rpm.org/"
+  url "http://ftp.rpm.org/releases/rpm-4.15.x/rpm-4.15.1.tar.bz2"
+  sha256 "ddef45f9601cd12042edfc9b6e37efcca32814e1e0f4bb8682d08144a3e2d230"
   version_scheme 1
 
   bottle do
-    sha256 "6de4058fba75ee957c09b1fefa1659bd8ddd06db5c7d8c30f27ffd887c93d2f4" => :high_sierra
-    sha256 "36b3d79a238595e902c76f6fb239f262df5d8f0f49ca5acf856808b0833eb179" => :sierra
-    sha256 "984ba66c9306437aa22e0f9805e4daeae8bf1bf89c6a13f44f3d1ad91183b437" => :el_capitan
+    sha256 "001127e004c5bda9299956bdcdfc4fc95b9c9894a191f23c9325fa0f3f47ac55" => :catalina
+    sha256 "36a81d3e478ca4d48554954373f56d9cd31539504b25038e72c4aead4ab82270" => :mojave
+    sha256 "77a3a72aa150d019c2ef6b5ed2e4ee30c2289325e597c5bb591ba0fdcaf5be0f" => :high_sierra
   end
 
-  depends_on "pkg-config"
   depends_on "berkeley-db"
   depends_on "gettext"
   depends_on "libarchive"
   depends_on "libmagic"
-  depends_on "lua@5.1"
-  depends_on "openssl"
+  depends_on "libomp"
+  depends_on "lua"
+  depends_on "openssl@1.1"
+  depends_on "pkg-config"
   depends_on "popt"
   depends_on "xz"
   depends_on "zstd"
 
   def install
-    ENV.prepend_path "PKG_CONFIG_PATH", Formula["lua@5.1"].opt_libexec/"lib/pkgconfig"
+    ENV.prepend_path "PKG_CONFIG_PATH", Formula["lua"].opt_libexec/"lib/pkgconfig"
+    ENV.append "CPPFLAGS", "-I#{Formula["lua"].opt_include}/lua"
+    ENV.append "LDFLAGS", "-lomp"
 
     # only rpm should go into HOMEBREW_CELLAR, not rpms built
     inreplace ["macros.in", "platform.in"], "@prefix@", HOMEBREW_PREFIX
@@ -88,10 +91,14 @@ class Rpm < Formula
 
   test do
     (testpath/"rpmbuild").mkpath
+
+    # Falsely flagged by RuboCop.
+    # rubocop:disable Style/FormatStringToken
     (testpath/".rpmmacros").write <<~EOS
       %_topdir		#{testpath}/rpmbuild
       %_tmppath		%{_topdir}/tmp
     EOS
+    # rubocop:enable Style/FormatStringToken
 
     system "#{bin}/rpm", "-vv", "-qa", "--dbpath=#{testpath}/var/lib/rpm"
     assert_predicate testpath/"var/lib/rpm/Packages", :exist?,

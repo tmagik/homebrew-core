@@ -1,14 +1,15 @@
 class Libgcrypt < Formula
   desc "Cryptographic library based on the code from GnuPG"
-  homepage "https://directory.fsf.org/wiki/Libgcrypt"
-  url "https://gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-1.8.2.tar.bz2"
-  sha256 "c8064cae7558144b13ef0eb87093412380efa16c4ee30ad12ecb54886a524c07"
+  homepage "https://gnupg.org/related_software/libgcrypt/"
+  url "https://gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-1.8.5.tar.bz2"
+  sha256 "3b4a2a94cb637eff5bdebbcaf46f4d95c4f25206f459809339cdada0eb577ac3"
 
   bottle do
     cellar :any
-    sha256 "705d3a6d1ff879c875728ea827c1c5d6b2391ce24843237e54d694124472a3df" => :high_sierra
-    sha256 "17635f44bd687ae57f2e352fffefffb5f910db6d1a6ac959ddaef4095e50ed9c" => :sierra
-    sha256 "30ee5d42cd5d82c297e886cb3a55f3ae96edfe3b44394a7f5fb3337bf4719da5" => :el_capitan
+    sha256 "7e81e6735f8eb849e26ae30a01ca6aa42c32ab53cace7a2a1867d7148abbb5fd" => :catalina
+    sha256 "d983dca1f56d0177d4ecd6ea2752457caaa5e21cdbe147e354ba1debb1ed34dd" => :mojave
+    sha256 "2188074c35a5a552ce5adad2ebd36a376bbd7309907c96fdbec2dff13c7d1863" => :high_sierra
+    sha256 "3e074f8bd2787fc5878ea8bfc31e50e596222c019054d83465b74e93328f71f3" => :sierra
   end
 
   depends_on "libgpg-error"

@@ -1,13 +1,14 @@
 class Augeas < Formula
   desc "Configuration editing tool and API"
   homepage "http://augeas.net"
-  url "http://download.augeas.net/augeas-1.10.1.tar.gz"
-  sha256 "52db256afab261d31cc147eaa1a71795a5fec59e888dfd0b65a84c7aacd6364d"
+  url "http://download.augeas.net/augeas-1.12.0.tar.gz"
+  sha256 "321942c9cc32185e2e9cb72d0a70eea106635b50269075aca6714e3ec282cb87"
 
   bottle do
-    sha256 "22f139b71f14cc0c7c1eddef04c20ab2ad66f7e91c90ebd21198b604b6630844" => :high_sierra
-    sha256 "60d58e8099a4f02a4f4d2eed7eb9114cee19e965c29dfd4102de036a896d4986" => :sierra
-    sha256 "5c0c8b3f140464288045010acf62f230bced7bfa2282d048bd2fcade90673e1b" => :el_capitan
+    sha256 "00a45b8b446df0a95c2c45cbe608410df2d7be7787247f4b3a8fc1c2c19b41b6" => :catalina
+    sha256 "9a561491e3574dfe2cfe7da2a618c12d02218f88f760de46722d9b603e4f27ba" => :mojave
+    sha256 "0e1477f692cf67442dfcaf7c20a24733838df072ec867f59322070a7eaf3f925" => :high_sierra
+    sha256 "55b3fab93f2ec4a703dc2bb3b3d58c47375456bdb5f0308e0856b231d309c02d" => :sierra
   end
 
   head do
@@ -15,12 +16,13 @@ class Augeas < Formula
 
     depends_on "autoconf" => :build
     depends_on "automake" => :build
-    depends_on "libtool" => :build
     depends_on "bison" => :build
+    depends_on "libtool" => :build
   end
 
   depends_on "pkg-config" => :build
   depends_on "readline"
+  uses_from_macos "libxml2"
 
   def install
     args = %W[--disable-debug --disable-dependency-tracking --prefix=#{prefix}]
@@ -37,7 +39,7 @@ class Augeas < Formula
   def caveats; <<~EOS
     Lenses have been installed to:
       #{HOMEBREW_PREFIX}/share/augeas/lenses/dist
-    EOS
+  EOS
   end
 
   test do

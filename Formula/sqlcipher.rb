@@ -1,35 +1,32 @@
 class Sqlcipher < Formula
   desc "SQLite extension providing 256-bit AES encryption"
-  homepage "http://sqlcipher.net"
-  url "https://github.com/sqlcipher/sqlcipher/archive/v3.4.2.tar.gz"
-  sha256 "69897a5167f34e8a84c7069f1b283aba88cdfa8ec183165c4a5da2c816cfaadb"
+  homepage "https://www.zetetic.net/sqlcipher/"
+  url "https://github.com/sqlcipher/sqlcipher/archive/v4.2.0.tar.gz"
+  sha256 "105c1b813f848da038c03647a8bfc9d42fb46865e6aaf4edfd46ff3b18cdccfc"
+  revision 1
   head "https://github.com/sqlcipher/sqlcipher.git"
 
   bottle do
     cellar :any
-    sha256 "5b8aaeb3f3f41a57f171a3f1175887ea9d98511982354479d4171ebae24377c6" => :high_sierra
-    sha256 "9462222059285b70d3a301812a38516ce0337e7dddb064ab052549124b9aca3f" => :sierra
-    sha256 "6370ce68ccb2f598f42bee2f799f7e97d7f1bac75ec71aeb446ee57761436642" => :el_capitan
+    sha256 "d75fad68d4754a6e4df6b42dd67e30060841ed4c4b76f11c876ae56fe8c5b634" => :catalina
+    sha256 "6d341263b65d34595b30df94ff816f9554f7101860709433644cc180ab551298" => :mojave
+    sha256 "723521130f5dbebf48d7eb61eb3525f7d779261cc4c3760724e65f4a87315cd8" => :high_sierra
+    sha256 "0168ffe787b5aa7742861922a503118aa5140eac7572d3270a42e7dfb68f04c6" => :sierra
   end
 
-  option "with-fts", "Build with full-text search enabled"
-
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     args = %W[
       --prefix=#{prefix}
       --enable-tempstore=yes
-      --with-crypto-lib=#{Formula["openssl"].opt_prefix}
+      --with-crypto-lib=#{Formula["openssl@1.1"].opt_prefix}
       --enable-load-extension
       --disable-tcl
     ]
 
-    if build.with?("fts")
-      args << "CFLAGS=-DSQLITE_HAS_CODEC -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS3_PARENTHESIS -DSQLITE_ENABLE_FTS5"
-    else
-      args << "CFLAGS=-DSQLITE_HAS_CODEC -DSQLITE_ENABLE_JSON1"
-    end
+    # Build with full-text search enabled
+    args << "CFLAGS=-DSQLITE_HAS_CODEC -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS3_PARENTHESIS -DSQLITE_ENABLE_FTS5"
 
     system "./configure", *args
     system "make"

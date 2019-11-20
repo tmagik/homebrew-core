@@ -1,16 +1,16 @@
 class Tcpflow < Formula
   desc "TCP flow recorder"
   homepage "https://github.com/simsong/tcpflow"
-  url "https://digitalcorpora.org/downloads/tcpflow/tcpflow-1.4.5.tar.gz"
-  sha256 "f39fed437911b858c97937bc902f68f9a690753617abe825411a8483a7f70c72"
+  url "https://digitalcorpora.org/downloads/tcpflow/tcpflow-1.5.0.tar.gz"
+  sha256 "20abe3353a49a13dcde17ad318d839df6312aa6e958203ea710b37bede33d988"
+  revision 1
 
   bottle do
     cellar :any
-    sha256 "c971d3d993660862b690239940e4c84d5fd8bffdff776ccba4c038d1eba76169" => :high_sierra
-    sha256 "ff6d43a7c67853c6f7a4ffbe9290028a179f0d722e8075395c1f133386778fe7" => :sierra
-    sha256 "ea92e38288a2fea16c85b9a937951b8ecc0c5ca619ccff050d36590866543356" => :el_capitan
-    sha256 "d5e07b6218d3160b27d12e154910286af4f3edbbbc70fe5879852849a046cfae" => :yosemite
-    sha256 "b0e5f0a0e6f6fc81be55627483028a578a679d1c342a7127aa3a983983acef1a" => :mavericks
+    sha256 "ee9e12b090ff836bf8bd39024f7c8d075e03357bb7c4eca504838e118d06fd6d" => :catalina
+    sha256 "ae7eb58e5d805e61b4fc79165574796bf59d2172977579b8716c2ea95631aa42" => :mojave
+    sha256 "3b29b20c24395a16a17236a89a5b4ff1121ae2227af79717517b02825a4a7dd7" => :high_sierra
+    sha256 "881535a6ab635522f3a64aa9b568ee9fc67476f4636236f17d2828c02518b8bf" => :sierra
   end
 
   head do
@@ -21,8 +21,7 @@ class Tcpflow < Formula
   end
 
   depends_on "boost" => :build
-  depends_on "sqlite" if MacOS.version < :lion
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     system "bash", "./bootstrap.sh" if build.head?

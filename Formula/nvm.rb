@@ -1,8 +1,8 @@
 class Nvm < Formula
   desc "Manage multiple Node.js versions"
   homepage "https://github.com/creationix/nvm"
-  url "https://github.com/creationix/nvm/archive/v0.33.11.tar.gz"
-  sha256 "1b7cba65b300d1f123ba7ee7ee9e07a40c7d0a84211e896593765899fa877d3d"
+  url "https://github.com/creationix/nvm/archive/v0.35.1.tar.gz"
+  sha256 "020f64b091e06d025ccdd977db82fe0f1ea7fa044335633dc404d21801100a0f"
   head "https://github.com/creationix/nvm.git"
 
   bottle :unneeded
@@ -25,7 +25,8 @@ class Nvm < Formula
     configuration file:
 
       export NVM_DIR="$HOME/.nvm"
-      . "#{opt_prefix}/nvm.sh"
+      [ -s "#{opt_prefix}/nvm.sh" ] && \. "#{opt_prefix}/nvm.sh"  # This loads nvm
+      [ -s "#{opt_prefix}/etc/bash_completion.d/nvm" ] && \. "#{opt_prefix}/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
     You can set $NVM_DIR to any location, but leaving it unchanged from
     #{prefix} will destroy any nvm-installed Node installations

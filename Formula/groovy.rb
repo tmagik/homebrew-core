@@ -1,14 +1,13 @@
 class Groovy < Formula
   desc "Java-based scripting language"
-  homepage "http://www.groovy-lang.org"
-  url "https://dl.bintray.com/groovy/maven/apache-groovy-binary-2.4.14.zip"
-  sha256 "f9c846e21d9220bac464ffc00eae8f4146f4c26777b61f62e3123da95c6bc52a"
+  homepage "https://www.groovy-lang.org/"
+  url "https://dl.bintray.com/groovy/maven/apache-groovy-binary-2.5.8.zip"
+  sha256 "49fb14b98f9fed1744781e4383cf8bff76440032f58eb5fabdc9e67a5daa8742"
 
   bottle :unneeded
 
-  option "with-invokedynamic", "Install the InvokeDynamic version of Groovy (only works with Java 1.7+)"
-
-  deprecated_option "invokedynamic" => "with-invokedynamic"
+  # Groovy 2.5 requires JDK8+ to build and JDK7 is the minimum version of the JRE that we support.
+  depends_on :java => "1.7+"
 
   conflicts_with "groovysdk", :because => "both install the same binaries"
 
@@ -16,16 +15,8 @@ class Groovy < Formula
     # Don't need Windows files.
     rm_f Dir["bin/*.bat"]
 
-    if build.with? "invokedynamic"
-      Dir.glob("indy/*.jar") do |src_path|
-        dst_file = File.basename(src_path, "-indy.jar") + ".jar"
-        dst_path = File.join("lib", dst_file)
-        mv src_path, dst_path
-      end
-    end
-
-    libexec.install %w[bin conf lib embeddable]
-    bin.install_symlink Dir["#{libexec}/bin/*"]
+    libexec.install "bin", "conf", "lib"
+    bin.install_symlink Dir["#{libexec}/bin/*"] - ["#{libexec}/bin/groovy.ico"]
   end
 
   def caveats

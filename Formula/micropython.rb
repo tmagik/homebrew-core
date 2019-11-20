@@ -2,19 +2,20 @@ class Micropython < Formula
   desc "Python implementation for microcontrollers and constrained systems"
   homepage "https://www.micropython.org/"
   url "https://github.com/micropython/micropython.git",
-      :tag => "v1.9.3",
-      :revision => "fe45d78b1edd6d2202c3544797885cb0b12d4f03"
-  revision 1
+      :tag      => "v1.11",
+      :revision => "6f75c4f3cd393131579db70cdf0b35d1fe5b95ab"
 
   bottle do
     cellar :any
-    sha256 "e071d65ec654f528a26cf020a94072b17aeaf08385115d524e6c6139d16b6ab3" => :high_sierra
-    sha256 "14cd46105046e82ede775f2fd1eab21dbb4a8a7506361f5de98845791b56b106" => :sierra
-    sha256 "a485feb6b215857d7870d56c21bceab55e16bfd85ad48d296f3a79842388d7e8" => :el_capitan
+    sha256 "9c497518754565c12bff1f5ff06158fa7769895f7af52f50d059c4e9049bd6ba" => :catalina
+    sha256 "186dd16c2fc9a965c56e5339f571489e99d9ccb29ca46769590fbd40c6c013f3" => :mojave
+    sha256 "7934a26348e2fdcc1dd845e31ded1192b7556d0a8b76ba4733c7dacf0c7c755d" => :high_sierra
+    sha256 "daabcc35c45501a1b431714f226dd5072ffe6b53b18ff7230904a3040c1c3c4e" => :sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "libffi" # Requires libffi v3 closure API; macOS version is too old
+  depends_on "python" # Requires python3 executable
 
   def install
     cd "ports/unix" do

@@ -1,17 +1,16 @@
 class Gearsystem < Formula
-  desc "Sega Master System / Game Gear emulator"
+  desc "Sega Master System / Game Gear / SG-1000 emulator"
   homepage "https://github.com/drhelius/Gearsystem"
-  url "https://github.com/drhelius/Gearsystem/archive/gearsystem-2.2.tar.gz"
-  sha256 "bb7bf853b204c3c9a83b256696ecb0427504cd277c70e08502c29f964cf3188e"
-  revision 1
+  url "https://github.com/drhelius/Gearsystem/archive/gearsystem-2.6.1.tar.gz"
+  sha256 "d7b0116e1a1cf6780bec4279e699dfbe9c4dd8d789f504aff1057b9fab079f47"
   head "https://github.com/drhelius/Gearsystem.git"
 
   bottle do
     cellar :any
-    sha256 "7418143c6dbed6394c80db06f9ce28874a3af418af9fc17a4277fe55e7c53349" => :high_sierra
-    sha256 "579a1d3668570bec0a4ce146209de78017cc217502fe0ef554a7fb2d3a02276f" => :sierra
-    sha256 "d0bc5f5a1612ebc7c8c7f87683de9b0b9b18ac4613d1ee86a9c8492e313e49bb" => :el_capitan
-    sha256 "f1ec02f10552f11a9b134eed2dc6263c625b6af8582a05fdd5ef697032dbeeb1" => :yosemite
+    sha256 "89195564029f07752a3595c53d7098d0d6dfe6cdac4ac22d0444fe3833cea9f1" => :catalina
+    sha256 "0b54b3c432835b541b73c896cb654a0f83a6c1e8c6189f069a767ccec26413d9" => :mojave
+    sha256 "7f2091b774263ebe599b8921e97af3d8cb1b5e1a8b899d8c1a335c9d3d5a73aa" => :high_sierra
+    sha256 "9a8e8a8172a84416495b48f263582db3a10497db915b371ead261a0a94168839" => :sierra
   end
 
   depends_on "qt"
@@ -28,5 +27,9 @@ class Gearsystem < Formula
       prefix.install "Gearsystem.app"
       bin.write_exec_script "#{prefix}/Gearsystem.app/Contents/MacOS/Gearsystem"
     end
+  end
+
+  test do
+    assert_match "GEARSYSTEM", shell_output("#{bin}/gearsystem -v")
   end
 end

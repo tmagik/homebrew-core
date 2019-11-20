@@ -6,17 +6,20 @@ class Gforth < Formula
   revision 1
 
   bottle do
-    sha256 "e73152fbd5f75b351386b1a7fcabfda3217af095cd3c1f196506922c0da02593" => :high_sierra
-    sha256 "78ceb158d5997fc0acb797384e69cc4d530bfefe2b58bc3a43f2633fb5e7a8e2" => :sierra
-    sha256 "6183073aa7dab4abe1fc65acf3cf371965efb31a8b8cbd9c0bbe49558817ac41" => :el_capitan
+    cellar :any
+    rebuild 2
+    sha256 "9a3670647cbf4c87a62a271032ff04b70de04a9b2b3091be0c2a00cbfba860f2" => :catalina
+    sha256 "cba74a11ad3333f1462e3defcbc5903a1bc05ecca2d7686633da15affb12ebf5" => :mojave
+    sha256 "5643950f876b48bab6c92c8e9c016b8cf026907ee0c21f81a6a68db5b0a70e15" => :high_sierra
   end
 
   depends_on "emacs" => :build
-  depends_on "libtool"
   depends_on "libffi"
+  depends_on "libtool"
   depends_on "pcre"
 
   def install
+    ENV["MACOSX_DEPLOYMENT_TARGET"] = MacOS.version
     cp Dir["#{Formula["libtool"].opt_share}/libtool/*/config.{guess,sub}"], buildpath
     ENV.deparallelize
     system "./configure", "--prefix=#{prefix}"

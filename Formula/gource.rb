@@ -1,13 +1,15 @@
 class Gource < Formula
   desc "Version Control Visualization Tool"
   homepage "https://github.com/acaudwell/Gource"
-  url "https://github.com/acaudwell/Gource/releases/download/gource-0.48/gource-0.48.tar.gz"
-  sha256 "b7055347dad152125ab83e121e3fcaf8cf79bc5bcaec295e4ed9475c40651d13"
+  url "https://github.com/acaudwell/Gource/releases/download/gource-0.49/gource-0.49.tar.gz"
+  sha256 "a9dd23693861e224322708a8e26c9e3aaa3e4c9ec41264b1ee2d5dcd6e2c0e8a"
 
   bottle do
-    sha256 "7b0c15ecae8a96764432271dc0b79ae68bdfd365a0e90481535d27978571175e" => :high_sierra
-    sha256 "63725d87fdd28ac168a8e79f0cba780c7c15f284cc904d8aaab8dac63179254b" => :sierra
-    sha256 "9fc979ecfa0723d8fb3462e8a9206b88109bcd2252e7696effb5035b4564a408" => :el_capitan
+    rebuild 1
+    sha256 "6af5b890ecc507e13ac6720fb00d5e1bae3f1c4203cdcfa24ad9c96975a4b1e5" => :catalina
+    sha256 "f7b1c895b7c202aae26d1396b2634082ede889eb5c9bf0b2d7758e52f88c924e" => :mojave
+    sha256 "72e08ff92d3ac208ec5fcb9a6514ca0d47db160eb9cab604a236ea3a31a149de" => :high_sierra
+    sha256 "de278ad81dfaa50d78f66b307044464b3db7741f02b5933ea1046347775674b8" => :sierra
   end
 
   head do
@@ -18,10 +20,8 @@ class Gource < Formula
     depends_on "libtool" => :build
   end
 
-  depends_on :x11 => :optional
-
-  depends_on "pkg-config" => :build
   depends_on "glm" => :build
+  depends_on "pkg-config" => :build
   depends_on "boost"
   depends_on "freetype"
   depends_on "glew"
@@ -29,8 +29,6 @@ class Gource < Formula
   depends_on "pcre"
   depends_on "sdl2"
   depends_on "sdl2_image"
-
-  needs :cxx11
 
   def install
     # clang on Mt. Lion will try to build against libstdc++,

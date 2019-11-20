@@ -1,20 +1,18 @@
 class OsrmBackend < Formula
   desc "High performance routing engine"
   homepage "http://project-osrm.org/"
-  url "https://github.com/Project-OSRM/osrm-backend/archive/v5.17.2.tar.gz"
-  sha256 "7c32926f71e1a34c76ed85609ca6f2e9d4cb1faf81a04b3273ef01f0147417ee"
+  url "https://github.com/Project-OSRM/osrm-backend/archive/v5.22.0.tar.gz"
+  sha256 "df0987a04bcf65d74f9c4e18f34a01982bf3bb97aa47f9d86cfb8b35f17a6a55"
+  revision 2
   head "https://github.com/Project-OSRM/osrm-backend.git"
 
   bottle do
     cellar :any
-    sha256 "bfd5771df129cdd1f8816a618cca5bbf26bcfbb889cade213365f56202a4421f" => :high_sierra
-    sha256 "77e23d6bdf9085c82ccdd64a646662d689ba6379f816923f94300e01b1dd583d" => :sierra
-    sha256 "5266b41a1ae6f469f817cdc9abdbf3d8441631ac1e58d63251a76499411a3333" => :el_capitan
+    rebuild 1
+    sha256 "12ec9670281dc1918f3d22cd39fc8f710008ee729b9997d65c10b6cfd4d6de1d" => :catalina
+    sha256 "db542349d5f721c7746b8222902d451828d593d7fe8d2b9235a6eb31ca3fffbc" => :mojave
+    sha256 "b43652ac087d596ecb02d922a88e9fc82769bf2d8a55be424ca6102807a03e45" => :high_sierra
   end
-
-  # "invalid use of non-static data member 'offset'"
-  # https://github.com/Project-OSRM/osrm-backend/issues/3719
-  depends_on :macos => :el_capitan
 
   depends_on "cmake" => :build
   depends_on "boost"
@@ -22,6 +20,11 @@ class OsrmBackend < Formula
   depends_on "libxml2"
   depends_on "libzip"
   depends_on "lua"
+
+  # "invalid use of non-static data member 'offset'"
+  # https://github.com/Project-OSRM/osrm-backend/issues/3719
+  depends_on :macos => :el_capitan
+
   depends_on "tbb"
 
   def install
@@ -34,13 +37,17 @@ class OsrmBackend < Formula
   end
 
   test do
+    node1 = 'visible="true" version="1" changeset="676636" timestamp="2008-09-21T21:37:45Z"'
+    node2 = 'visible="true" version="1" changeset="323878" timestamp="2008-05-03T13:39:23Z"'
+    node3 = 'visible="true" version="1" changeset="323878" timestamp="2008-05-03T13:39:23Z"'
+
     (testpath/"test.osm").write <<~EOS
       <?xml version="1.0" encoding="UTF-8"?>
       <osm version="0.6">
        <bounds minlat="54.0889580" minlon="12.2487570" maxlat="54.0913900" maxlon="12.2524800"/>
-       <node id="1" lat="54.0901746" lon="12.2482632" user="a" uid="46882" visible="true" version="1" changeset="676636" timestamp="2008-09-21T21:37:45Z"/>
-       <node id="2" lat="54.0906309" lon="12.2441924" user="a" uid="36744" visible="true" version="1" changeset="323878" timestamp="2008-05-03T13:39:23Z"/>
-       <node id="3" lat="52.0906309" lon="12.2441924" user="a" uid="36744" visible="true" version="1" changeset="323878" timestamp="2008-05-03T13:39:23Z"/>
+       <node id="1" lat="54.0901746" lon="12.2482632" user="a" uid="46882" #{node1}/>
+       <node id="2" lat="54.0906309" lon="12.2441924" user="a" uid="36744" #{node2}/>
+       <node id="3" lat="52.0906309" lon="12.2441924" user="a" uid="36744" #{node3}/>
        <way id="10" user="a" uid="55988" visible="true" version="5" changeset="4142606" timestamp="2010-03-16T11:47:08Z">
         <nd ref="1"/>
         <nd ref="2"/>

@@ -3,17 +3,18 @@ class Libfreehand < Formula
   homepage "https://wiki.documentfoundation.org/DLP/Libraries/libfreehand"
   url "https://dev-www.libreoffice.org/src/libfreehand/libfreehand-0.1.2.tar.xz"
   sha256 "0e422d1564a6dbf22a9af598535425271e583514c0f7ba7d9091676420de34ac"
-  revision 1
+  revision 3
 
   bottle do
     cellar :any
-    sha256 "a18f70bde76f22ee23ced4ff30f5e03fb4bf6aae041e0fc1bbd653799c10dd81" => :high_sierra
-    sha256 "64159caee4e12e31776695bcafc497a9cc449538903632c11ef7c146d6a608e6" => :sierra
-    sha256 "7a57232a020ccc409205f0399fb9c9f74598cc156251123010d057626fd73297" => :el_capitan
+    sha256 "f78c71119dfe8c1944fd2f57031911b07ec852a2ac14c32dfbe789c28128f9bd" => :catalina
+    sha256 "edc93ba58727c751dab54b7c496c5632db8249156bde7655d9578437ecd3672d" => :mojave
+    sha256 "28c50d6910679e0b0f3dc669fd1d69c339dd6c480a3ebb16804bedb3f1067f69" => :high_sierra
+    sha256 "bc08405897e33b8fc6237e6c0a3c638535c65b568013a037875de87f20c9a451" => :sierra
   end
 
-  depends_on "pkg-config" => :build
   depends_on "boost" => :build
+  depends_on "pkg-config" => :build
   depends_on "icu4c"
   depends_on "librevenge"
   depends_on "little-cms2"

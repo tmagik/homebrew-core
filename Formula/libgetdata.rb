@@ -6,42 +6,25 @@ class Libgetdata < Formula
   revision 1
 
   bottle do
-    rebuild 2
-    sha256 "13e9d36f7ee8156ad9b5ffaa646588084e9212238aafbab50849f60c6cad0ab9" => :high_sierra
-    sha256 "9a96ebcf2d456594b5205c2ff0918dc7bcfff29be358fd6e369131f941e02f75" => :sierra
-    sha256 "88055dcabc5ed8b6cc068e244f8174eb798fd778e67a27867b3a0b33b3453121" => :el_capitan
+    cellar :any
+    rebuild 3
+    sha256 "f133f438e1833bff0f5cf43109e27768a983a068dec90a767ba9027d2bc2f0b9" => :catalina
+    sha256 "6c5f143bb202c280c3b3e340a420a1cf6c6d936cba70faf837cd215e451987fe" => :mojave
+    sha256 "6b8b5f7801a6cf31ecd5ac82ee02ca344f9634ad01c235a828e3875d0354931b" => :high_sierra
   end
 
-  option "with-gcc", "Build Fortran bindings"
-  option "with-libzzip", "Build with zzip compression support"
-  option "with-perl", "Build against Homebrew's Perl rather than system default"
-  option "with-xz", "Build with LZMA compression support"
-
-  deprecated_option "lzma" => "with-xz"
-  deprecated_option "zzip" => "with-libzzip"
-  deprecated_option "with-fortran" => "with-gcc"
-
   depends_on "libtool"
-  depends_on "gcc" => :optional
-  depends_on "libzzip" => :optional
-  depends_on "perl" => :optional
-  depends_on "xz" => :optional
 
   def install
-    args = %W[
-      --disable-dependency-tracking
-      --disable-silent-rules
-      --prefix=#{prefix}
-      --disable-php
-      --disable-python
-    ]
-
-    args << "--with-perl-dir=#{lib}/perl5/site_perl" if build.with? "perl"
-    args << "--without-liblzma" if build.without? "xz"
-    args << "--without-libzzip" if build.without? "libzzip"
-    args << "--disable-fortran" << "--disable-fortran95" if build.without? "gcc"
-
-    system "./configure", *args
+    system "./configure", "--prefix=#{prefix}",
+                          "--disable-dependency-tracking",
+                          "--disable-silent-rules",
+                          "--disable-fortran",
+                          "--disable-fortran95",
+                          "--disable-php",
+                          "--disable-python",
+                          "--without-liblzma",
+                          "--without-libzzip"
     system "make"
     system "make", "install"
   end

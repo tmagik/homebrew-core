@@ -3,23 +3,23 @@ class Netpbm < Formula
   homepage "https://netpbm.sourceforge.io/"
   # Maintainers: Look at https://sourceforge.net/p/netpbm/code/HEAD/tree/
   # for stable versions and matching revisions.
-  url "svn://svn.code.sf.net/p/netpbm/code/stable", :revision => 3244
-  version "10.73.19"
+  url "https://svn.code.sf.net/p/netpbm/code/stable", :revision => 3603
+  version "10.73.27"
   version_scheme 1
-
   head "https://svn.code.sf.net/p/netpbm/code/trunk"
 
   bottle do
     cellar :any
-    sha256 "b952f6e8d66307f9a44569ab40fa095219b559092ac57e04c25521d392308c9f" => :high_sierra
-    sha256 "da5f9163d612ceb43a4becab8197819fd77e21820033cfd0812af23b4a3ecf39" => :sierra
-    sha256 "481b9b3b437bab23e0bd3b1b134532b11c15f67ec43980ce419e276476e55368" => :el_capitan
+    sha256 "0cfe434022c5d517d3d5857a6665c34bd2cacda459d72c0d98eede9059baaaea" => :catalina
+    sha256 "469cb2a025a09badb8b1f8c8f591fe9e7970b1d3f31c3652081f56180ddb944a" => :mojave
+    sha256 "98c91433c81c781fa85d6c43d48c8dedf8dc4136adec1c9d7ee7b94abc35eb89" => :high_sierra
+    sha256 "24e357df064d03650ceb98903d09ee5c130effcdf76e78276595073756ce8722" => :sierra
   end
 
-  depends_on "libtiff"
   depends_on "jasper"
   depends_on "jpeg"
   depends_on "libpng"
+  depends_on "libtiff"
 
   conflicts_with "jbigkit", :because => "both install `pbm.5` and `pgm.5` files"
 

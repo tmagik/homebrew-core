@@ -1,47 +1,29 @@
 class Postgresql < Formula
   desc "Object-relational database system"
   homepage "https://www.postgresql.org/"
-  url "https://ftp.postgresql.org/pub/source/v10.3/postgresql-10.3.tar.bz2"
-  sha256 "6ea268780ee35e88c65cdb0af7955ad90b7d0ef34573867f223f14e43467931a"
+  url "https://ftp.postgresql.org/pub/source/v11.5/postgresql-11.5.tar.bz2"
+  sha256 "7fdf23060bfc715144cbf2696cf05b0fa284ad3eb21f0c378591c6bca99ad180"
+  revision 1
   head "https://github.com/postgres/postgres.git"
 
   bottle do
-    sha256 "632a988ae9a6b45acd3fca3f05af7dbec02e01fa91814ff8ba238cc20d1a7f38" => :high_sierra
-    sha256 "c5412eb34006856a6f0aca2ca2c69e2b8da706f1c6a6aae200aa81d0cda23207" => :sierra
-    sha256 "0581e9efe089864abbcc938f70a5175ff5595ffd701062bafec0be041ba56258" => :el_capitan
+    sha256 "50c6402fe972adb5e0b14e6e62f80e8d5149b9ff2a03609ec57822f60ce60cbd" => :catalina
+    sha256 "463c6a192a0b6a5d1359b68db24003b2dac6895cdb86c827c41bf03fffd856d6" => :mojave
+    sha256 "eacea455385cab25b9692b5b2aed804f34fa409838ee90702fe01c793117d33c" => :high_sierra
+    sha256 "ae676cf5e076fd8f0b7395835e25f35e8d82f2660534749a3f45c1677cb8f7ba" => :sierra
   end
 
-  option "without-perl", "Build without Perl support"
-  option "without-tcl", "Build without Tcl support"
-  option "with-dtrace", "Build with DTrace support"
-  option "with-python", "Enable PL/Python3 (incompatible with --with-python@2)"
-  option "with-python@2", "Enable PL/Python2"
-
-  deprecated_option "no-perl" => "without-perl"
-  deprecated_option "no-tcl" => "without-tcl"
-  deprecated_option "enable-dtrace" => "with-dtrace"
-  deprecated_option "with-python3" => "with-python"
-
-  depends_on "openssl"
+  depends_on "pkg-config" => :build
+  depends_on "icu4c"
+  depends_on "openssl@1.1"
   depends_on "readline"
-
-  depends_on "python" => :optional
-  depends_on "python@2" => :optional
-
-  conflicts_with "postgres-xc",
-    :because => "postgresql and postgres-xc install the same binaries."
-
-  fails_with :clang do
-    build 211
-    cause "Miscompilation resulting in segfault on queries"
-  end
 
   def install
     # avoid adding the SDK library directory to the linker search path
     ENV["XML2_CONFIG"] = "xml2-config --exec-prefix=/usr"
 
-    ENV.prepend "LDFLAGS", "-L#{Formula["openssl"].opt_lib} -L#{Formula["readline"].opt_lib}"
-    ENV.prepend "CPPFLAGS", "-I#{Formula["openssl"].opt_include} -I#{Formula["readline"].opt_include}"
+    ENV.prepend "LDFLAGS", "-L#{Formula["openssl@1.1"].opt_lib} -L#{Formula["readline"].opt_lib}"
+    ENV.prepend "CPPFLAGS", "-I#{Formula["openssl@1.1"].opt_include} -I#{Formula["readline"].opt_include}"
 
     args = %W[
       --disable-debug
@@ -53,36 +35,22 @@ class Postgresql < Formula
       --enable-thread-safety
       --with-bonjour
       --with-gssapi
+      --with-icu
       --with-ldap
-      --with-openssl
-      --with-pam
       --with-libxml
       --with-libxslt
+      --with-openssl
+      --with-pam
+      --with-perl
+      --with-uuid=e2fs
     ]
-
-    args << "--with-perl" if build.with? "perl"
-
-    which_python = nil
-    if build.with?("python") && build.with?("python@2")
-      odie "Cannot provide both --with-python and --with-python@2"
-    elsif build.with?("python") || build.with?("python@2")
-      args << "--with-python"
-      which_python = which(build.with?("python") ? "python3" : "python2.7")
-    end
-    ENV["PYTHON"] = which_python
 
     # The CLT is required to build Tcl support on 10.7 and 10.8 because
     # tclConfig.sh is not part of the SDK
-    if build.with?("tcl") && (MacOS.version >= :mavericks || MacOS::CLT.installed?)
-      args << "--with-tcl"
-
-      if File.exist?("#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework/tclConfig.sh")
-        args << "--with-tclconfig=#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework"
-      end
+    args << "--with-tcl"
+    if File.exist?("#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework/tclConfig.sh")
+      args << "--with-tclconfig=#{MacOS.sdk_path}/System/Library/Frameworks/Tcl.framework"
     end
-
-    args << "--enable-dtrace" if build.with? "dtrace"
-    args << "--with-uuid=e2fs"
 
     system "./configure", *args
     system "make"
@@ -95,14 +63,14 @@ class Postgresql < Formula
     (var/"log").mkpath
     (var/"postgres").mkpath
     unless File.exist? "#{var}/postgres/PG_VERSION"
-      system "#{bin}/initdb", "#{var}/postgres"
+      system "#{bin}/initdb", "--locale=C", "-E", "UTF-8", "#{var}/postgres"
     end
   end
 
   def caveats; <<~EOS
     To migrate existing data from a previous major version of PostgreSQL run:
       brew postgresql-upgrade-database
-    EOS
+  EOS
   end
 
   plist_options :manual => "pg_ctl -D #{HOMEBREW_PREFIX}/var/postgres start"
@@ -132,7 +100,7 @@ class Postgresql < Formula
       <string>#{var}/log/postgres.log</string>
     </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

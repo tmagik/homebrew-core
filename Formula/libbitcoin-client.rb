@@ -1,39 +1,26 @@
 class LibbitcoinClient < Formula
   desc "Bitcoin Client Query Library"
   homepage "https://github.com/libbitcoin/libbitcoin-client"
-  url "https://github.com/libbitcoin/libbitcoin-client/archive/v3.5.0.tar.gz"
-  sha256 "bafa26647f334ecad04fc4bbef507a1954d7e0682f07bd38b90ab66dba5fe0d2"
+  url "https://github.com/libbitcoin/libbitcoin-client/archive/v3.6.0.tar.gz"
+  sha256 "75969ac0a358458491b101cae784de90452883b5684199d3e3df619707802420"
+  revision 2
 
   bottle do
     cellar :any
-    sha256 "5adca3f23e25cf01c0812f73bc0bd6323b5eb3fc13afd5863168669db76722e2" => :high_sierra
-    sha256 "89d1173d876f452f9a94bb20a85ffc47d4cc8b67316e007d3fcaa0591e4d99fd" => :sierra
-    sha256 "cebbc3fe4c9af646d00f4a057dd06e722b9598026f041f9d00519c8a6f6be80e" => :el_capitan
+    sha256 "67029f654c45056f7faf25ca11b9af04d10445d7069c61ae75809fef722f9b16" => :catalina
+    sha256 "4dbcca399cd43cb845edac0cf63a158225b1f3fb40b9f48c11e12075099ea316" => :mojave
+    sha256 "1a0523b5f60efb58a6f4686ce98eaf023054823abddb4c485015df2235f95b17" => :high_sierra
+    sha256 "440e593fbe96d541212c8ce2f00f006c2f78ac05bbd116508e5a8baccde376bd" => :sierra
   end
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
-  depends_on "libbitcoin"
-  depends_on "zeromq"
-
-  resource "libbitcoin-protocol" do
-    url "https://github.com/libbitcoin/libbitcoin-protocol/archive/v3.5.0.tar.gz"
-    sha256 "9deac6908489e2d59fb9f89c895c49b00e01902d5fdb661f67d4dbe45b22af76"
-  end
+  depends_on "libbitcoin-protocol"
 
   def install
     ENV.prepend_path "PKG_CONFIG_PATH", Formula["libbitcoin"].opt_libexec/"lib/pkgconfig"
-    ENV.prepend_create_path "PKG_CONFIG_PATH", libexec/"lib/pkgconfig"
-
-    resource("libbitcoin-protocol").stage do
-      system "./autogen.sh"
-      system "./configure", "--disable-dependency-tracking",
-                            "--disable-silent-rules",
-                            "--prefix=#{libexec}"
-      system "make", "install"
-    end
 
     system "./autogen.sh"
     system "./configure", "--disable-dependency-tracking",
@@ -99,10 +86,10 @@ class LibbitcoinClient < Formula
         assert(libbitcoin::encode_base16(capture.out[2]) == "f85beb6356d0813ddb0dbb14230a249fe931a13578563412");
       }
     EOS
-    system ENV.cxx, "-std=c++11", "test.cpp",
-                    "-I#{libexec}/include",
-                    "-lbitcoin", "-lbitcoin-client", "-lboost_system",
-                    "-o", "test"
+    system ENV.cxx, "-std=c++11", "test.cpp", "-o", "test",
+                    "-L#{Formula["libbitcoin"].opt_lib}", "-lbitcoin",
+                    "-L#{lib}", "-lbitcoin-client",
+                    "-L#{Formula["boost"].opt_lib}", "-lboost_system"
     system "./test"
   end
 end

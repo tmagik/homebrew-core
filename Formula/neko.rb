@@ -1,29 +1,31 @@
 class Neko < Formula
   desc "High-level, dynamically typed programming language"
   homepage "https://nekovm.org/"
-  url "https://github.com/HaxeFoundation/neko/archive/v2-2-0/neko-2.2.0.tar.gz"
-  sha256 "cf101ca05db6cb673504efe217d8ed7ab5638f30e12c5e3095f06fa0d43f64e3"
-  revision 3
+  url "https://github.com/HaxeFoundation/neko/archive/v2-3-0/neko-2.3.0.tar.gz"
+  sha256 "850e7e317bdaf24ed652efeff89c1cb21380ca19f20e68a296c84f6bad4ee995"
+  revision 1
   head "https://github.com/HaxeFoundation/neko.git"
 
   bottle do
-    sha256 "d2cc6078ee557511a9b942a11235f6f1de35bb0b4a192e3bdf2c06225a1739fa" => :high_sierra
-    sha256 "87da62afced4e6a0b68669069752ff4e960618e4e8d243cc3bfef648cbbc3a23" => :sierra
-    sha256 "ef18bc7d2dadb87582ea22cec0d64ee272f8570cde1157700ce88fd3a4631002" => :el_capitan
+    cellar :any
+    rebuild 1
+    sha256 "85b136ca63c944258f90bb2c429e0d698f26c1f18e4061b775f8499ec5dc5bf7" => :catalina
+    sha256 "9fa6b1793f214b603e14a557521d22f7fabb1fea0a4794f2272269791431f744" => :mojave
+    sha256 "0a3ce8e9c8caaa2cd0d3e32f7fd43d68f17240de051222f8c0090e2b2e4ce161" => :high_sierra
   end
 
   depends_on "cmake" => :build
   depends_on "ninja" => :build
   depends_on "pkg-config" => :build
-  depends_on "mbedtls"
   depends_on "bdw-gc"
+  depends_on "mbedtls"
+  depends_on "openssl@1.1"
   depends_on "pcre"
-  depends_on "openssl"
 
   def install
     # Let cmake download its own copy of MariaDBConnector during build and statically link it.
     # It is because there is no easy way to define we just need any one of mariadb, mariadb-connector-c,
-    # mysql, and mysql-connector-c.
+    # mysql, and mysql-client.
     system "cmake", ".", "-G", "Ninja", "-DSTATIC_DEPS=MariaDBConnector",
            "-DRELOCATABLE=OFF", "-DRUN_LDCONFIG=OFF", *std_cmake_args
     system "ninja", "install"
@@ -35,7 +37,7 @@ class Neko < Formula
       s << <<~EOS
         You must add the following line to your .bashrc or equivalent:
           export NEKOPATH="#{HOMEBREW_PREFIX}/lib/neko"
-        EOS
+      EOS
     end
     s
   end

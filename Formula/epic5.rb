@@ -1,20 +1,20 @@
 class Epic5 < Formula
   desc "Enhanced, programmable IRC client"
   homepage "http://www.epicsol.org/"
-  url "http://ftp.epicsol.org/pub/epic/EPIC5-PRODUCTION/epic5-2.0.1.tar.xz"
-  mirror "https://www.mirrorservice.org/sites/distfiles.macports.org/epic5/epic5-2.0.1.tar.xz"
-  sha256 "55260fc832c76f7a4975bde2bd0d0805fd8012fc8908ac94ec8c6de24a1be7aa"
+  url "http://ftp.epicsol.org/pub/epic/EPIC5-PRODUCTION/epic5-2.1.1.tar.xz"
+  mirror "https://www.mirrorservice.org/sites/distfiles.macports.org/epic5/epic5-2.1.1.tar.xz"
+  sha256 "81e18b5f6aa32c5c4b5d01d4cd94e3124b538e3ba42cf7dbb74a6f1f5081f9df"
+  revision 1
   head "http://git.epicsol.org/epic5.git"
 
   bottle do
-    sha256 "202fe91849aeafe5d8838554f4ee4a31286cae844b418402408b6e91121ddc01" => :high_sierra
-    sha256 "9aeed705e50bf7f3459d0a8d0dd086c8c2c86d8b6028c22a002d60e3a5183183" => :sierra
-    sha256 "0040885911e6bbab3b2b7b1c29e99e31363e6f24ff83d982afb54a1d11623715" => :el_capitan
-    sha256 "8617a71ad3aead7226e7a71f90f5a834341031b6195c862d64757a662cb7e8a1" => :yosemite
-    sha256 "0f17c628454c763deb0d5e20d488b0ef427ec6d5041a7f7223a0eaa9fa601e7c" => :mavericks
+    sha256 "b0428f3aa116e87650ad8f0bf0f3a1c0cd78865da2a667edd95d203231843bf6" => :catalina
+    sha256 "559a77deddf639f1b1e308c7a4bf41d54397c4b451c93fbf141304a0ff67acf3" => :mojave
+    sha256 "d4fda821d78992e9cd7734ca8b2a05b573ed6c3330e691f0e548c1548596139f" => :high_sierra
+    sha256 "5e7a528932d509348a38185b427c43ddfef3099a10eab52300d6fd7b9353b6f8" => :sierra
   end
 
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     system "./configure", "--disable-debug",
@@ -22,7 +22,7 @@ class Epic5 < Formula
                           "--prefix=#{prefix}",
                           "--mandir=#{man}",
                           "--with-ipv6",
-                          "--with-ssl=#{Formula["openssl"].opt_prefix}"
+                          "--with-ssl=#{Formula["openssl@1.1"].opt_prefix}"
     system "make"
     system "make", "test"
     system "make", "install"

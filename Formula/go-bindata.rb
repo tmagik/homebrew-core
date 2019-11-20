@@ -1,14 +1,14 @@
 class GoBindata < Formula
   desc "Small utility that generates Go code from any file"
   homepage "https://github.com/kevinburke/go-bindata"
-  url "https://github.com/kevinburke/go-bindata/archive/v3.7.0.tar.gz"
-  sha256 "28553a1a1490465731484ac3326574f35c8528efc5ca7dcea428f8245f5c83b0"
+  url "https://github.com/kevinburke/go-bindata/archive/v3.16.0.tar.gz"
+  sha256 "54e543314e1147e4c8b8d8b9ad48094189b28cb7bf48f7e7304e9616b29f77c9"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "af5e236506d60e05686858efdb7b4649b7c0e94ac905b2a348883811daed82fe" => :high_sierra
-    sha256 "1e2fdfb1edf62dc81d79b2a382bef3539273aecf7c31dcd2ad25f25ba595691e" => :sierra
-    sha256 "3d517d3e8a614ba91062c05bf171d6f29eab735e92cec4cd647260a49bdab5b5" => :el_capitan
+    sha256 "12f47339543ad1c551f99d79afc4425aeccab732cc0a83628c80181994173227" => :catalina
+    sha256 "7374ce827060b1d880bca4fa07816ab8d883f9eb63a36e11460966bcb68247ec" => :mojave
+    sha256 "b727c8b6f4d036316a4429064f1a19fbcbdb6f3f4fcbe60a7549267eb66d7ab4" => :high_sierra
   end
 
   depends_on "go"

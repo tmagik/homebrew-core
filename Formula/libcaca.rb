@@ -6,15 +6,13 @@ class Libcaca < Formula
   mirror "https://fossies.org/linux/privat/libcaca-0.99.beta19.tar.gz"
   version "0.99b19"
   sha256 "128b467c4ed03264c187405172a4e83049342cc8cc2f655f53a2d0ee9d3772f4"
+  revision 1
 
   bottle do
     cellar :any
-    rebuild 1
-    sha256 "4dea1c7b81fa8ca381cd402230de959fd5c4225a890c528c615563012364b076" => :high_sierra
-    sha256 "728b8bb277ef92bdf90f91ce445c7b8f1259db898a33ae36b4de9988b786de47" => :sierra
-    sha256 "ba475a145203197f637059f20dfcb5d8cfb34615ce30bfe342fbe7887ebcad41" => :el_capitan
-    sha256 "1d02b3264c1665a8f6af5d88ba944bc1009ee7e553ae8decfff89615b7dc79d9" => :yosemite
-    sha256 "511f48aa84b45eb509de89296102517bd77c25347999cf1d733bc8593c95a00b" => :mavericks
+    sha256 "bd3e0ddf184652575170248e9a3b1b4a8c03ac21913cfcac8016baa9d39386fa" => :catalina
+    sha256 "5da241ff15fcb9b6ad7625b223cbda3b4e4aa5e449677f44c2512cec892485cd" => :mojave
+    sha256 "804a53d45e6db70f211f7b0eebcd9a84d61784a891268889d55b81135e9621a5" => :high_sierra
   end
 
   head do
@@ -26,32 +24,27 @@ class Libcaca < Formula
   end
 
   depends_on "pkg-config" => :build
-  depends_on "imlib2" => :optional
-  depends_on :x11 if build.with? "imlib2"
+  depends_on "imlib2"
 
   def install
     system "./bootstrap" if build.head?
 
-    # Some people can't compile when Java is enabled. See:
-    # https://github.com/Homebrew/homebrew/issues/issue/2049
-
-    # Don't build csharp bindings
-    # Don't build ruby bindings; fails for adamv w/ Homebrew Ruby 1.9.2
-
     # Fix --destdir issue.
     #   ../.auto/py-compile: Missing argument to --destdir.
-    inreplace "python/Makefile.in", '$(am__py_compile) --destdir "$(DESTDIR)"', "$(am__py_compile) --destdir \"$(cacadir)\""
+    inreplace "python/Makefile.in",
+              '$(am__py_compile) --destdir "$(DESTDIR)"',
+              "$(am__py_compile) --destdir \"$(cacadir)\""
 
-    args = ["--disable-dependency-tracking",
-            "--prefix=#{prefix}",
-            "--disable-doc",
-            "--disable-slang",
-            "--disable-java",
-            "--disable-csharp",
-            "--disable-ruby"]
-
-    # fix missing x11 header check: https://github.com/Homebrew/homebrew/issues/28291
-    args << "--disable-x11" if build.without? "imlib2"
+    args = %W[
+      --disable-dependency-tracking
+      --prefix=#{prefix}
+      --disable-doc
+      --disable-slang
+      --disable-java
+      --disable-csharp
+      --disable-ruby
+      --disable-x11
+    ]
 
     system "./configure", *args
     system "make"

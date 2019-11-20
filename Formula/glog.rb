@@ -1,23 +1,23 @@
 class Glog < Formula
   desc "Application-level logging library"
   homepage "https://github.com/google/glog"
-  url "https://github.com/google/glog/archive/v0.3.5.tar.gz"
-  sha256 "7580e408a2c0b5a89ca214739978ce6ff480b5e7d8d7698a2aa92fadc484d1e0"
-  revision 3
+  url "https://github.com/google/glog/archive/v0.4.0.tar.gz"
+  sha256 "f28359aeba12f30d73d9e4711ef356dc842886968112162bc73002645139c39c"
   head "https://github.com/google/glog.git"
 
   bottle do
     cellar :any
-    sha256 "2611ad281e7bf92bc8fb1480661ac1e28e7472d3eecad63572aa1f205f494722" => :high_sierra
-    sha256 "8f4b25fe4396b3f32c7a7d058260b453adf2506e1d3a607d0ff48e664489526d" => :sierra
-    sha256 "24561c61283ee126c107a5fbb2131ebcab0903df9f4af99bebf4fbf04a0fdf90" => :el_capitan
+    sha256 "918710bfd20d088718f33579216eb4574595f27ea234c409dd5848c0b8ad9e15" => :catalina
+    sha256 "034a4d2272b48fd7655b467b92c78eebfb11efb33cc6cd31f7b13ee085b7169b" => :mojave
+    sha256 "bbe6c4138b5fe8cd58d269a39644176f640fa62e694ffac36337f87661cacc69" => :high_sierra
+    sha256 "08408127c37122614811eae2d925d940912c2cb29eb0fb300116ee4813d50095" => :sierra
   end
 
   depends_on "cmake" => :build
   depends_on "gflags"
 
   def install
-    mkdir "build" do
+    mkdir "cmake-build" do
       system "cmake", "..", "-DBUILD_SHARED_LIBS=ON", *std_cmake_args
       system "make", "install"
     end
@@ -49,7 +49,10 @@ class Glog < Formula
         LOG(INFO) << "test";
       }
     EOS
-    system ENV.cxx, "-std=c++11", "test.cpp", "-I#{include}", "-L#{lib}", "-lglog", "-lgflags", "-o", "test"
+    system ENV.cxx, "-std=c++11", "test.cpp", "-I#{include}", "-L#{lib}",
+                    "-lglog", "-I#{Formula["gflags"].opt_lib}",
+                    "-L#{Formula["gflags"].opt_lib}", "-lgflags",
+                    "-o", "test"
     system "./test"
   end
 end

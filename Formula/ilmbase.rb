@@ -1,16 +1,15 @@
 class Ilmbase < Formula
   desc "OpenEXR ILM Base libraries (high dynamic-range image file format)"
   homepage "https://www.openexr.com/"
-  url "https://savannah.nongnu.org/download/openexr/ilmbase-2.2.0.tar.gz"
-  mirror "https://mirrorservice.org/sites/download.savannah.gnu.org/releases/openexr/ilmbase-2.2.0.tar.gz"
-  sha256 "ecf815b60695555c1fbc73679e84c7c9902f4e8faa6e8000d2f905b8b86cedc7"
+  url "https://github.com/openexr/openexr/releases/download/v2.3.0/ilmbase-2.3.0.tar.gz"
+  sha256 "456978d1a978a5f823c7c675f3f36b0ae14dba36638aeaa3c4b0e784f12a3862"
 
   bottle do
     cellar :any
-    rebuild 3
-    sha256 "f53b502c8a59462466c610d127cdc2be288b472c4fbe76fa6affbff9498dac44" => :high_sierra
-    sha256 "6fee028cc8dc306fc1c48b9015c48c02049f3c281e496af1448ca65d13c8405c" => :sierra
-    sha256 "a18e2d6ecd45ff0ea78f856374aa11386b5fd2c2e82a335271b62c917f33caf4" => :el_capitan
+    sha256 "d08e79f3a1e2875adba8c7affb929ac6fcdff93a66646a7f8c094263152912e4" => :catalina
+    sha256 "436dbe30d0bc520c5c056dac23a3558dd2595e5f5b68c6c17e18566716c71e56" => :mojave
+    sha256 "4ef6417909dee0313b9d493b5689d04382907beb650abc669fc5a6346e4c4d5b" => :high_sierra
+    sha256 "f81d4a8993861dbde4c91b0783b03a943c710c060b938095511f3cf26beee589" => :sierra
   end
 
   def install

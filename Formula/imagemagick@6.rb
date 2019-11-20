@@ -4,60 +4,30 @@ class ImagemagickAT6 < Formula
   # Please always keep the Homebrew mirror as the primary URL as the
   # ImageMagick site removes tarballs regularly which means we get issues
   # unnecessarily and older versions of the formula are broken.
-  url "https://dl.bintray.com/homebrew/mirror/imagemagick%406-6.9.9-42.tar.xz"
-  mirror "https://www.imagemagick.org/download/ImageMagick-6.9.9-42.tar.xz"
-  sha256 "873654cd55792cdaa9c3ee35f63e389fedfb3d34685a1f77d6b81e5c578ae527"
+  url "https://dl.bintray.com/homebrew/mirror/imagemagick%406-6.9.10-74.tar.xz"
+  mirror "https://imagemagick.org/download/releases/ImageMagick-6.9.10-74.tar.xz"
+  sha256 "8a8b10d0b67d01b2431a501ac93c6e1e7402704a2c7569b0fee4631d5af0e164"
   head "https://github.com/imagemagick/imagemagick6.git"
 
   bottle do
-    sha256 "1738f79cea0c321a21b07c1350c5412bd0f8c2b3797e7c47dd19762e6dd17890" => :high_sierra
-    sha256 "3a76c5b5b38d35b276ea9eb65e2e0a0d4b626b5fcbac7f89766e57315954b927" => :sierra
-    sha256 "4e9f67f4a429eb056a5c51dc2bb815307bd66c50ffbaf7c9836dc38e879156e7" => :el_capitan
+    sha256 "c22db6041016a1d8d8486b62dd62ca6e96252e8dde2c6e226d331cdd3f1d4f03" => :catalina
+    sha256 "8d80819bb336b4959faf838737d2180fa1d2c2fff7522c96537d317802d137e4" => :mojave
+    sha256 "1a9f7d0555da6ce9d0022f68602ff78298b9ae1b8a615297e598af68c90fcfba" => :high_sierra
   end
 
   keg_only :versioned_formula
 
-  option "with-fftw", "Compile with FFTW support"
-  option "with-hdri", "Compile with HDRI support"
-  option "with-opencl", "Compile with OpenCL support"
-  option "with-openmp", "Compile with OpenMP support"
-  option "with-perl", "Compile with PerlMagick"
-  option "without-magick-plus-plus", "disable build/install of Magick++"
-  option "without-modules", "Disable support for dynamically loadable modules"
-  option "without-threads", "Disable threads support"
-  option "with-zero-configuration", "Disables depending on XML configuration files"
-
-  deprecated_option "enable-hdri" => "with-hdri"
-  deprecated_option "with-gcc" => "with-openmp"
-  deprecated_option "with-jp2" => "with-openjpeg"
-
   depends_on "pkg-config" => :build
+
+  depends_on "freetype"
+  depends_on "jpeg"
+  depends_on "libpng"
+  depends_on "libtiff"
   depends_on "libtool"
+  depends_on "little-cms2"
+  depends_on "openjpeg"
+  depends_on "webp"
   depends_on "xz"
-
-  depends_on "jpeg" => :recommended
-  depends_on "libpng" => :recommended
-  depends_on "libtiff" => :recommended
-  depends_on "freetype" => :recommended
-
-  depends_on "fontconfig" => :optional
-  depends_on "little-cms" => :optional
-  depends_on "little-cms2" => :optional
-  depends_on "libwmf" => :optional
-  depends_on "librsvg" => :optional
-  depends_on "liblqr" => :optional
-  depends_on "openexr" => :optional
-  depends_on "ghostscript" => :optional
-  depends_on "webp" => :optional
-  depends_on "openjpeg" => :optional
-  depends_on "fftw" => :optional
-  depends_on "pango" => :optional
-  depends_on "perl" => :optional
-
-  if build.with? "openmp"
-    depends_on "gcc"
-    fails_with :clang
-  end
 
   skip_clean :la
 
@@ -67,54 +37,21 @@ class ImagemagickAT6 < Formula
       --prefix=#{prefix}
       --disable-dependency-tracking
       --disable-silent-rules
+      --disable-opencl
+      --disable-openmp
       --enable-shared
       --enable-static
+      --with-freetype=yes
+      --with-modules
+      --with-webp=yes
+      --with-openjp2
+      --without-gslib
+      --with-gs-font-dir=#{HOMEBREW_PREFIX}/share/ghostscript/fonts
+      --without-fftw
+      --without-pango
+      --without-x
+      --without-wmf
     ]
-
-    if build.without? "modules"
-      args << "--without-modules"
-    else
-      args << "--with-modules"
-    end
-
-    if build.with? "opencl"
-      args << "--enable-opencl"
-    else
-      args << "--disable-opencl"
-    end
-
-    if build.with? "openmp"
-      args << "--enable-openmp"
-    else
-      args << "--disable-openmp"
-    end
-
-    if build.with? "webp"
-      args << "--with-webp=yes"
-    else
-      args << "--without-webp"
-    end
-
-    if build.with? "openjpeg"
-      args << "--with-openjp2"
-    else
-      args << "--without-openjp2"
-    end
-
-    args << "--without-gslib" if build.without? "ghostscript"
-    args << "--with-perl" << "--with-perl-options='PREFIX=#{prefix}'" if build.with? "perl"
-    args << "--with-gs-font-dir=#{HOMEBREW_PREFIX}/share/ghostscript/fonts" if build.without? "ghostscript"
-    args << "--without-magick-plus-plus" if build.without? "magick-plus-plus"
-    args << "--enable-hdri=yes" if build.with? "hdri"
-    args << "--without-fftw" if build.without? "fftw"
-    args << "--without-pango" if build.without? "pango"
-    args << "--without-threads" if build.without? "threads"
-    args << "--with-rsvg" if build.with? "librsvg"
-    args << "--without-x" if build.without? "x11"
-    args << "--with-fontconfig=yes" if build.with? "fontconfig"
-    args << "--with-freetype=yes" if build.with? "freetype"
-    args << "--enable-zero-configuration" if build.with? "zero-configuration"
-    args << "--without-wmf" if build.without? "libwmf"
 
     # versioned stuff in main tree is pointless for us
     inreplace "configure", "${PACKAGE_NAME}-${PACKAGE_VERSION}", "${PACKAGE_NAME}"

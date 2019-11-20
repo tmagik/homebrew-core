@@ -1,22 +1,24 @@
 class Ne < Formula
   desc "The nice editor"
-  homepage "http://ne.di.unimi.it"
-  url "http://ne.di.unimi.it/ne-3.1.1.tar.gz"
-  sha256 "ec4f5d919c38b1a5938b609a722d0d88a68c404b4564e3bb654b96b30582add9"
+  homepage "https://github.com/vigna/ne"
+  url "https://github.com/vigna/ne/archive/3.2.1.tar.gz"
+  sha256 "6b9324d9a4c3deef02f4ecf75407f5b5ed4e68a3bb4af3f9c1ea19dc628f9b5d"
+  head "https://github.com/vigna/ne.git"
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "ebf14e2778e53688a4c1c0051187b79994e9374fc599332b20b0b362d6517c49" => :high_sierra
-    sha256 "1aee5fa253900a888bfa27d92a3b0e262a01acf03da2987285064c916105a388" => :sierra
-    sha256 "7bdd3016890a03f6bc006d924cf2373a97b3915bf8d7ddc1a6bb81741085ecff" => :el_capitan
-    sha256 "00d0ed886fa94db6b33f26dd304f468c79748379ac95c49a96141594fa0b333a" => :yosemite
+    sha256 "b2e63b8951fddb36962eb804a710c507c145e86df8e050ab9e50210002e99b59" => :catalina
+    sha256 "198266ab4d3dc24c0f5a4e877f9c4a8add816c11aabfe770549df188b54765a7" => :mojave
+    sha256 "97401cdccd3bc86869c6d3208a4cd2044aad1cc11e25fa3369904eece174207e" => :high_sierra
   end
 
+  depends_on "texinfo" => :build
+
   def install
+    ENV.deparallelize
     cd "src" do
       system "make"
     end
-    system "make", "PREFIX=#{prefix}", "install"
+    system "make", "build", "PREFIX=#{prefix}", "install"
   end
 
   test do

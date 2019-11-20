@@ -1,15 +1,16 @@
 class TranslateShell < Formula
   desc "Command-line translator using Google Translate and more"
   homepage "https://www.soimort.org/translate-shell"
-  url "https://github.com/soimort/translate-shell/archive/v0.9.6.7.tar.gz"
-  sha256 "25f90bd755b457602928d4efbdd8db64129013f2943d1d9c1316c6854736db46"
+  url "https://github.com/soimort/translate-shell/archive/v0.9.6.11.tar.gz"
+  sha256 "589505248212726dff2b3e8828514036491f019fcee8657c0d94bb1a5dac6c5b"
   head "https://github.com/soimort/translate-shell.git", :branch => "develop"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "08f51c7dc7fd57105b6940d3f9254c1e7f5a244b1c8f540ad3a46ee429744abe" => :high_sierra
-    sha256 "08f51c7dc7fd57105b6940d3f9254c1e7f5a244b1c8f540ad3a46ee429744abe" => :sierra
-    sha256 "08f51c7dc7fd57105b6940d3f9254c1e7f5a244b1c8f540ad3a46ee429744abe" => :el_capitan
+    sha256 "a0657e3d27eb37e977dc5cd74390679ebdbdbd01efd07eb151f74f5d966d174c" => :catalina
+    sha256 "36a689f6c97099a7143160efa40f2de05856f701a78ea7e0c92dc8da764c85d6" => :mojave
+    sha256 "36a689f6c97099a7143160efa40f2de05856f701a78ea7e0c92dc8da764c85d6" => :high_sierra
+    sha256 "7db0d8e36c4ee585719b21121e4cf26593f7b34c9678fcd2432fc50d8783359c" => :sierra
   end
 
   depends_on "fribidi"
@@ -27,7 +28,7 @@ class TranslateShell < Formula
     `say' command. This functionality may be improved in certain cases by
     installing one of mplayer, mpv, or mpg123, all of which are available
     through `brew install'.
-    EOS
+  EOS
   end
 
   test do

@@ -1,27 +1,27 @@
 class Redshift < Formula
   desc "Adjust color temperature of your screen according to your surroundings"
   homepage "http://jonls.dk/redshift/"
-  url "https://github.com/jonls/redshift/releases/download/v1.11/redshift-1.11.tar.xz"
-  sha256 "10e350f93951c0521dd6f103d67a485972c307214f036e009acea2978fe4f359"
+  url "https://github.com/jonls/redshift/releases/download/v1.12/redshift-1.12.tar.xz"
+  sha256 "d2f8c5300e3ce2a84fe6584d2f1483aa9eadc668ab1951b2c2b8a03ece3a22ba"
+  revision 1
 
   bottle do
-    sha256 "eafe2b08f2aeee05a13d92e6ec161b86d777b56bb28dedf6419757b360afecc3" => :high_sierra
-    sha256 "654082b1aefb05db5833fa3dfc8b4313525c5ff4bb002de79c1793d998713afe" => :sierra
-    sha256 "f8fc6b6b2279982aefc06a03571c8de76df9542808558e542e87d7e28187d58f" => :el_capitan
-    sha256 "b51cd606ac04a3709ca9a02196c26ee6b79b1b32d976ef01155db382f5145f81" => :yosemite
-    sha256 "9d151b44efdd166ae4239af7dff907a4868441c126f7fd11aa69a53e9d39de7a" => :mavericks
+    sha256 "b40870e8bcb3d28fdc6fa5a1d7c232939973e4a73a38029afd0bc6f86c199b51" => :catalina
+    sha256 "197ca4060616fbb79a6e64b93760f60ef581d5d76f838ab099b97076e3e569fe" => :mojave
+    sha256 "f07311c326eb8c2310d509ffbcb5424d7783a1b0b675d47ac32026116086a39d" => :high_sierra
+    sha256 "89ab02396a2d3694923f8496217a5d5a47c1cc35e167205cf4bb74033de92ab3" => :sierra
   end
 
   head do
     url "https://github.com/jonls/redshift.git"
 
-    depends_on "automake" => :build
     depends_on "autoconf" => :build
+    depends_on "automake" => :build
     depends_on "libtool" => :build
   end
 
-  depends_on "pkg-config" => :build
   depends_on "intltool" => :build
+  depends_on "pkg-config" => :build
   depends_on "gettext"
   depends_on "glib"
 
@@ -48,8 +48,8 @@ class Redshift < Formula
     A sample .conf file has been installed to #{opt_pkgshare}.
 
     Please note redshift expects to read its configuration file from
-    #{ENV["HOME"]}/.config
-    EOS
+    #{ENV["HOME"]}/.config/redshift/redshift.conf
+  EOS
   end
 
   plist_options :manual => "redshift"
@@ -75,7 +75,7 @@ class Redshift < Formula
         <string>/dev/null</string>
       </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

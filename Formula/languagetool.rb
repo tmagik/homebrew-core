@@ -1,8 +1,8 @@
 class Languagetool < Formula
   desc "Style and grammar checker"
   homepage "https://www.languagetool.org/"
-  url "https://languagetool.org/download/LanguageTool-4.1.zip"
-  sha256 "350ae3584d72dfc769f63adbf46a438e3a66ad86c9cdd4dd0c3e3c44ed38b31e"
+  url "https://languagetool.org/download/LanguageTool-4.7.zip"
+  sha256 "4f00f71930871600cb8fe53a8c4d4c9c60f05711c979fd313be1c6c674efde3c"
 
   bottle :unneeded
   depends_on :java => "1.8+"
@@ -10,7 +10,7 @@ class Languagetool < Formula
   def server_script(server_jar); <<~EOS
     #!/bin/bash
     exec java -cp #{server_jar} org.languagetool.server.HTTPServer "$@"
-    EOS
+  EOS
   end
 
   def install

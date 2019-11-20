@@ -1,14 +1,13 @@
 class Profanity < Formula
   desc "Console based XMPP client"
-  homepage "http://www.profanity.im/"
-  url "http://www.profanity.im/profanity-0.5.1.tar.gz"
-  sha256 "e3513713e74ec3363fbdbac2919bdc17e249988780cc5a4589d1425807a7feb8"
+  homepage "https://profanity-im.github.io"
+  url "https://profanity-im.github.io/profanity-0.7.1.tar.gz"
+  sha256 "3fe442948ff2ee258681c3812e878d39179dcf92e1c67bc8fe0ef8896440b05b"
 
   bottle do
-    rebuild 1
-    sha256 "927877fecb1306de71150281968d62ebc20d3e2fb70a43706d759d31f9b46d3d" => :high_sierra
-    sha256 "e1944f29f1fb1233f43c9beac4e4f6c4af247e64e94fa9c1c3b77fc4071124aa" => :sierra
-    sha256 "759ebf658a3a869b22da48f7c6a99dbad605c75af19931cef996ef3484df5d29" => :el_capitan
+    sha256 "e758626095ed29ecb2165ed66fbd94ff33208bc021734c9b6da8ad07cc8ba9ef" => :catalina
+    sha256 "635da190c3390f3afbb8cd950cf325904b18a139ed3326950b101f1ba29c0cee" => :mojave
+    sha256 "00c708f8f2061059b919b9033775730ea0587671d5e1d0a45214de3599f676ed" => :high_sierra
   end
 
   head do
@@ -21,15 +20,14 @@ class Profanity < Formula
   end
 
   depends_on "pkg-config" => :build
-  depends_on "ossp-uuid"
-  depends_on "libstrophe"
-  depends_on "readline"
   depends_on "glib"
-  depends_on "openssl"
   depends_on "gnutls"
-  depends_on "libotr" => :recommended
-  depends_on "gpgme" => :recommended
-  depends_on "terminal-notifier" => :optional
+  depends_on "gpgme"
+  depends_on "libotr"
+  depends_on "libstrophe"
+  depends_on "openssl@1.1"
+  depends_on "readline"
+  depends_on "terminal-notifier"
 
   def install
     system "./bootstrap.sh" if build.head?

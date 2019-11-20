@@ -1,12 +1,12 @@
 class Jruby < Formula
   desc "Ruby implementation in pure Java"
-  homepage "http://www.jruby.org"
-  url "https://search.maven.org/remotecontent?filepath=org/jruby/jruby-dist/9.1.17.0/jruby-dist-9.1.17.0-bin.tar.gz"
-  sha256 "6a22f7bf8fef1a52530a9c9781a9d374ad07bbbef0d3d8e2af0ff5cbead0dfd5"
+  homepage "https://www.jruby.org/"
+  url "https://search.maven.org/remotecontent?filepath=org/jruby/jruby-dist/9.2.9.0/jruby-dist-9.2.9.0-bin.tar.gz"
+  sha256 "ced3fbb81b4f29f6a7fe7207e678e4154d95cc94de9f509fcaaf05768a6bf911"
 
   bottle :unneeded
 
-  depends_on :java => "1.7+"
+  depends_on :java => "1.8+"
 
   def install
     # Remove Windows files

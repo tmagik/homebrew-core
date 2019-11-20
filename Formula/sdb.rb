@@ -1,15 +1,16 @@
 class Sdb < Formula
   desc "Ondisk/memory hashtable based on CDB"
   homepage "https://github.com/radare/sdb"
-  url "https://github.com/radare/sdb/archive/1.1.0.tar.gz"
-  sha256 "92f0acb30b58556a45629ebc76b9737dca99c9a3561c72ebc31f143aee9b5844"
+  url "https://github.com/radare/sdb/archive/1.4.0.tar.gz"
+  sha256 "958bd2283392d9dabb01e9417618d0163b76aa1a9bffd30360d97ed7e2425e0d"
   head "https://github.com/radare/sdb.git"
 
   bottle do
     cellar :any
-    sha256 "12ce6b84e076371f9e21cb4e0fd30dab6eb46eb38786f394d50716cf0dfc0677" => :high_sierra
-    sha256 "8217f43a1b421c477f44a532691293785b539edb39dca185a5cf058347947a22" => :sierra
-    sha256 "c560a509c7bdd327bfc61e91e5d036f2d10d28b6bcccc0fca00e8eb8edd1f0f0" => :el_capitan
+    sha256 "038ef6965ba8f80d1da923d7e7f19a1047091cbe50461895ab49ed6b6758a127" => :catalina
+    sha256 "ce339646aae3c8ca070d2bb6d98650f58642fe33bc441f09eb041426dbf03602" => :mojave
+    sha256 "6f2385c418765b70c5b10bdacad22e6dd58c8bbb773ac1ceed4295ed7927dc26" => :high_sierra
+    sha256 "7d8bfa3c93e75136e19ab3dc914ff5b0906714ccc98be7f7f431ebd94e65e258" => :sierra
   end
 
   depends_on "pkg-config" => :build

@@ -5,20 +5,20 @@ class Postgrest < Formula
   include Language::Haskell::Cabal
 
   desc "Serves a fully RESTful API from any existing PostgreSQL database"
-  homepage "https://github.com/begriffs/postgrest"
-  url "https://github.com/begriffs/postgrest/archive/v0.4.4.0.tar.gz"
-  sha256 "063eb700dc5c85a7916fc51d52c36ca2ae1d2dc326e1bc3211ec143bdaf66bf5"
-  head "https://github.com/begriffs/postgrest.git"
+  homepage "https://github.com/PostgREST/postgrest"
+  url "https://github.com/PostgREST/postgrest/archive/v6.0.2.tar.gz"
+  sha256 "8355719e6c6bdf03a93204c5bcf2246521e0ffc02694b2cebfc576d4eae9a0c9"
+  head "https://github.com/PostgREST/postgrest.git"
 
   bottle do
     cellar :any
-    sha256 "2960819fa37338ac4f610865b0365e2226dd7f4d0956cfcca738770932105ed3" => :high_sierra
-    sha256 "c332f0905eaa2357110e2f144577dd348cbbf18c8e2ca3f8e47cd3bcbb786ffb" => :sierra
-    sha256 "557472bb552b83c7c3e13b3df9e9e6f7473dcc91560d53751495f8304d2b59ac" => :el_capitan
+    sha256 "fc0ed59614a15faba14a43cb2034c0f13429347a092f82ec88e06f4f013067bc" => :mojave
+    sha256 "c3f2b71886b7a2f609f78d3f0ac756a016533674520c778586cac3242063b225" => :high_sierra
+    sha256 "151e3406cd3b46b327bf745f99d9e0cf1f7c8208590a54d576ee0672a6f8c8ba" => :sierra
   end
 
   depends_on "cabal-install" => :build
-  depends_on "ghc@8.2" => :build
+  depends_on "ghc" => :build
   depends_on "postgresql"
 
   def install

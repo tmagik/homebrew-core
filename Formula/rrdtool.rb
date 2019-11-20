@@ -1,30 +1,25 @@
 class Rrdtool < Formula
   desc "Round Robin Database"
   homepage "https://oss.oetiker.ch/rrdtool/index.en.html"
-  url "https://github.com/oetiker/rrdtool-1.x/releases/download/v1.7.0/rrdtool-1.7.0.tar.gz"
-  sha256 "f97d348935b91780f2cd80399719e20c0b91f0a23537c0a85f9ff306d4c5526b"
-  revision 1
+  url "https://github.com/oetiker/rrdtool-1.x/releases/download/v1.7.2/rrdtool-1.7.2.tar.gz"
+  sha256 "a199faeb7eff7cafc46fac253e682d833d08932f3db93a550a4a5af180ca58db"
 
   bottle do
-    sha256 "d847a62550c40b4b25a92fd1f6c4f4a18ac43390e12d27b136200a0609b83170" => :high_sierra
-    sha256 "c9baca61d56b91573699e3f69b49964286535bc2b7603f0b0eac1a4bb02aad57" => :sierra
-    sha256 "56c75e78c96c473f2872a414187cf4c5d88465854322a80bed8905952a5c7779" => :el_capitan
+    sha256 "a4d3e8bf312569dc26aca0b029ffcc297f6db4ebbef7d0317b02cf500d5cce28" => :catalina
+    sha256 "222f77c78f4cf725543038d06d198a4c7c9f3fcfdc84b86b7db6b9d056baf10e" => :mojave
+    sha256 "9c7bfeb5624aa4589c9e0894342e70ff4706b57628a0ed879d4e751146640ca3" => :high_sierra
   end
 
   head do
     url "https://github.com/oetiker/rrdtool-1.x.git"
-    depends_on "automake" => :build
     depends_on "autoconf" => :build
+    depends_on "automake" => :build
     depends_on "libtool" => :build
   end
 
   depends_on "pkg-config" => :build
   depends_on "glib"
   depends_on "pango"
-  depends_on "lua" => :optional
-
-  # Ha-ha, but sleeping is annoying when running configure a lot
-  patch :DATA
 
   def install
     # fatal error: 'ruby/config.h' file not found
@@ -38,6 +33,8 @@ class Rrdtool < Formula
       --disable-perl-site-install
       --disable-ruby-site-install
     ]
+
+    inreplace "configure", /^sleep 1$/, "#sleep 1"
 
     system "./bootstrap" if build.head?
     system "./configure", *args
@@ -56,28 +53,3 @@ class Rrdtool < Formula
     system "#{bin}/rrdtool", "dump", "temperature.rrd"
   end
 end
-
-__END__
-diff --git a/configure b/configure
-index 266754d..d21ab33 100755
---- a/configure
-+++ b/configure
-@@ -23868,18 +23868,6 @@ $as_echo_n "checking in... " >&6; }
- { $as_echo "$as_me:${as_lineno-$LINENO}: result: and out again" >&5
- $as_echo "and out again" >&6; }
-
--echo $ECHO_N "ordering CD from http://tobi.oetiker.ch/wish $ECHO_C" 1>&6
--sleep 1
--echo $ECHO_N ".$ECHO_C" 1>&6
--sleep 1
--echo $ECHO_N ".$ECHO_C" 1>&6
--sleep 1
--echo $ECHO_N ".$ECHO_C" 1>&6
--sleep 1
--echo $ECHO_N ".$ECHO_C" 1>&6
--sleep 1
--{ $as_echo "$as_me:${as_lineno-$LINENO}: result:  just kidding ;-)" >&5
--$as_echo " just kidding ;-)" >&6; }
- echo
- echo "----------------------------------------------------------------"
- echo "Config is DONE!"

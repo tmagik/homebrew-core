@@ -1,28 +1,42 @@
 class X264 < Formula
   desc "H.264/AVC encoder"
   homepage "https://www.videolan.org/developers/x264.html"
-  # the latest commit on the stable branch
-  url "https://git.videolan.org/git/x264.git",
-      :revision => "e9a5903edf8ca59ef20e6f4894c196f135af735e"
-  version "r2854"
+  revision 1
   head "https://git.videolan.org/git/x264.git"
+
+  stable do
+    # the latest commit on the stable branch
+    url "https://git.videolan.org/git/x264.git",
+        :revision => "0a84d986e7020f8344f00752e3600b9769cc1e85"
+    version "r2917"
+  end
 
   bottle do
     cellar :any
     rebuild 1
-    sha256 "f9217e7b29e737cc050f04183266a19c75fb01b1e9101818bad014a7cdf62f16" => :high_sierra
-    sha256 "c047a907ed59ffecfba24792f800c21a3226cadb6cb2155943711a373950a1eb" => :sierra
-    sha256 "04a9a0a821da861a283c92993426c1cdfe3cfd786898b7dac8bd9c477c5d02d7" => :el_capitan
+    sha256 "9e49fa8cc8e0bd02bdb85f8b2def682a8c6aab5d3f7bfe6bb51e2e78da1b2eb9" => :catalina
+    sha256 "07d6a4de866c38296a3cb788c3370857bd745e88cd7e1723fc0261c4e44a1081" => :mojave
+    sha256 "80b6d49faed147546c8639bdc09143968587d7fed7c45dcd9c4e0f56cdb932ff" => :high_sierra
   end
 
   depends_on "nasm" => :build
 
   def install
-    system "./configure", "--prefix=#{prefix}",
-                          "--disable-lsmash",
-                          "--enable-shared",
-                          "--enable-static",
-                          "--enable-strip"
+    # Work around Xcode 11 clang bug
+    # https://bitbucket.org/multicoreware/x265/issues/514/wrong-code-generated-on-macos-1015
+    ENV.append_to_cflags "-fno-stack-check" if DevelopmentTools.clang_build_version >= 1010
+
+    args = %W[
+      --prefix=#{prefix}
+      --disable-lsmash
+      --disable-swscale
+      --disable-ffms
+      --enable-shared
+      --enable-static
+      --enable-strip
+    ]
+
+    system "./configure", *args
     system "make", "install"
   end
 

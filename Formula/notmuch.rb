@@ -1,65 +1,47 @@
 class Notmuch < Formula
   desc "Thread-based email index, search, and tagging"
-  homepage "https://notmuchmail.org"
-  url "https://notmuchmail.org/releases/notmuch-0.26.2.tar.gz"
-  sha256 "109c1865db7a035d08707421d13e9b6b82ee8e9f1534db70c28c51bc39370e3b"
-  head "git://notmuchmail.org/git/notmuch"
+  homepage "https://notmuchmail.org/"
+  url "https://notmuchmail.org/releases/notmuch-0.29.2.tar.xz"
+  sha256 "1bda6149b2fb0840f4d146391cab89e541d30a778f1f6e6fa95b456097cd55de"
+  head "https://git.notmuchmail.org/git/notmuch", :using => :git
 
   bottle do
     cellar :any
-    sha256 "b17b05c7c1825b5646c85f6babb6b01a5a6cf802bcee1ec445a563b1f7d6f138" => :high_sierra
-    sha256 "67cf06b561bd36c14220e3ac3920a9849c4e5c4cd2d4b2528e9bed24aaa8326c" => :sierra
-    sha256 "1a5e8f8482e66d4ace8a0fb1fef32d7f5cb38f710416b0f015fa37e3b8155c80" => :el_capitan
+    sha256 "78f157dd3499a8a30a3b7d2f7d582e09c7e81351d7c30e51b9e2bf75ca927034" => :catalina
+    sha256 "4fce6bdaf3d5bb978630523ed631f262dbc4ecdd5fdb92bc9c1755c96826b692" => :mojave
+    sha256 "140259b5ba23c7302218a74e19eea1b75c6efbdce5c2d5af6c4a22c4ed0258a1" => :high_sierra
   end
-
-  option "without-python@2", "Build without python2 support"
-
-  deprecated_option "with-python3" => "with-python"
-  deprecated_option "without-python" => "without-python@2"
 
   depends_on "doxygen" => :build
   depends_on "libgpg-error" => :build
   depends_on "pkg-config" => :build
   depends_on "sphinx-doc" => :build
+  depends_on "emacs"
   depends_on "glib"
   depends_on "gmime"
+  depends_on "python"
   depends_on "talloc"
   depends_on "xapian"
   depends_on "zlib"
-  depends_on "python@2" => :recommended
-  depends_on "emacs" => :optional
-  depends_on "python" => :optional
-  depends_on "ruby" => :optional
-
-  # Fix SIP issue with python bindings
-  # A more comprehensive patch has been submitted upstream
-  # https://notmuchmail.org/pipermail/notmuch/2016/022631.html
-  patch :DATA
 
   def install
-    # configure runs `python -m sphinx.writers.manpage` to detect if
-    # `sphinx-build` will work
-    ENV.prepend_path "PYTHONPATH", Formula["sphinx-doc"].opt_libexec/"vendor/lib/python2.7/site-packages"
-    ENV.prepend_path "PYTHONPATH", Formula["sphinx-doc"].opt_libexec/"lib/python2.7/site-packages"
+    args = %W[
+      --prefix=#{prefix}
+      --mandir=#{man}
+      --with-emacs
+      --emacslispdir=#{elisp}
+      --emacsetcdir=#{elisp}
+      --without-ruby
+    ]
 
-    args = %W[--prefix=#{prefix} --mandir=#{man}]
-
-    if build.with? "emacs"
-      ENV.deparallelize # Emacs and parallel builds aren't friends
-      args << "--with-emacs" << "--emacslispdir=#{elisp}" << "--emacsetcdir=#{elisp}"
-    else
-      args << "--without-emacs"
-    end
-
-    args << "--without-ruby" if build.without? "ruby"
+    # Emacs and parallel builds aren't friends
+    ENV.deparallelize
 
     system "./configure", *args
     system "make", "V=1", "install"
 
-    Language::Python.each_python(build) do |python, _version|
-      cd "bindings/python" do
-        system python, *Language::Python.setup_install_args(prefix)
-      end
+    cd "bindings/python" do
+      system "python3", *Language::Python.setup_install_args(prefix)
     end
   end
 
@@ -69,18 +51,3 @@ class Notmuch < Formula
     assert_match "0 total", shell_output("#{bin}/notmuch new")
   end
 end
-
-__END__
-diff --git a/bindings/python/notmuch/globals.py b/bindings/python/notmuch/globals.py
-index b1eec2c..bce5190 100644
---- a/bindings/python/notmuch/globals.py
-+++ b/bindings/python/notmuch/globals.py
-@@ -25,7 +25,7 @@ from notmuch.version import SOVERSION
- try:
-     from os import uname
-     if uname()[0] == 'Darwin':
--        nmlib = CDLL("libnotmuch.{0:s}.dylib".format(SOVERSION))
-+        nmlib = CDLL("HOMEBREW_PREFIX/lib/libnotmuch.{0:s}.dylib".format(SOVERSION))
-     else:
-         nmlib = CDLL("libnotmuch.so.{0:s}".format(SOVERSION))
- except:

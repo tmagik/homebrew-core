@@ -1,38 +1,33 @@
 class Pdsh < Formula
   desc "Efficient rsh-like utility, for using hosts in parallel"
-  homepage "https://code.google.com/p/pdsh/"
-  url "https://github.com/grondo/pdsh.git",
-      :tag => "pdsh-2.31",
-      :revision => "e1c8e71dd6a26b40cd067a8322bd14e10e4f7ded"
+  homepage "https://github.com/chaos/pdsh"
+  url "https://github.com/chaos/pdsh/releases/download/pdsh-2.33/pdsh-2.33.tar.gz"
+  sha256 "7368087429d6269f0a6313c406ef38c6a6a947bc003ca7368fc6481b139d942f"
   revision 1
-
-  head "https://github.com/grondo/pdsh.git"
+  head "https://github.com/chaos/pdsh.git"
 
   bottle do
-    sha256 "bc5daaa5e0e9109fc1e293590e6e61265ef8399ee0200e78c70a6054456ab5c5" => :high_sierra
-    sha256 "0ae68818c7d5215a7a037c44681c514bd676d3db5d47fa5ea909321afb0c2d6a" => :sierra
-    sha256 "3cc2ef3a642a9a8edb6a859aa55f7f767a6a1d3e6f6fd16fb79f0f597ae78c18" => :el_capitan
-    sha256 "141ace11fbd043f0e29e53362d0bcb37647342795d1d88f631a5822f035f3d43" => :yosemite
+    rebuild 1
+    sha256 "c80f133bb94886b26100cde7e5a5d4d803484b13bbef75baa7c5040cac81c266" => :catalina
+    sha256 "42ec9fa52d542798255edf1caf31918a8d2691fb93e686d124e1eaf858f0f697" => :mojave
+    sha256 "e7d4e21f707f4cce26467f056daae591bfaa8fb9d6f373580ce4ab0b0db1e38d" => :high_sierra
   end
 
-  option "without-dshgroups", "This option should be specified to load genders module first"
-
   depends_on "readline"
-  depends_on "genders" => :optional
 
   def install
     args = %W[
       --prefix=#{prefix}
       --mandir=#{man}
-      --with-ssh
-      --without-rsh
       --with-nodeupdown
       --with-readline
+      --with-ssh
+      --with-dshgroups
+      --with-netgroup
+      --with-slurm
+      --without-rsh
       --without-xcpu
     ]
-
-    args << "--with-genders" if build.with? "genders"
-    args << (build.without?("dshgroups") ? "--without-dshgroups" : "--with-dshgroups")
 
     system "./configure", *args
     system "make", "install"

@@ -1,19 +1,12 @@
 class Tomcat < Formula
   desc "Implementation of Java Servlet and JavaServer Pages"
   homepage "https://tomcat.apache.org/"
-  url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-9/v9.0.7/bin/apache-tomcat-9.0.7.tar.gz"
-  sha256 "2fdac002c29e219f69f75dfc433471998634e400cc84b155e483bb2b457b8e48"
+  url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-9/v9.0.27/bin/apache-tomcat-9.0.27.tar.gz"
+  sha256 "6616a150e1593ef1a622298aaef9b889db70c8ee5122d35ad52adfcda1084d10"
 
   bottle :unneeded
 
-  option "with-fulldocs", "Install full documentation locally"
-
   depends_on :java => "1.8+"
-
-  resource "fulldocs" do
-    url "https://www.apache.org/dyn/closer.cgi?path=/tomcat/tomcat-9/v9.0.7/bin/apache-tomcat-9.0.7-fulldocs.tar.gz"
-    sha256 "97d73425c711346dbd9bb3ddde7f230fbea005bdac11281bad6b896c551d8777"
-  end
 
   def install
     # Remove Windows scripts
@@ -23,8 +16,6 @@ class Tomcat < Formula
     prefix.install %w[NOTICE LICENSE RELEASE-NOTES RUNNING.txt]
     libexec.install Dir["*"]
     bin.install_symlink "#{libexec}/bin/catalina.sh" => "catalina"
-
-    (pkgshare/"fulldocs").install resource("fulldocs") if build.with? "fulldocs"
   end
 
   plist_options :manual => "catalina run"
@@ -47,7 +38,7 @@ class Tomcat < Formula
         <true/>
       </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

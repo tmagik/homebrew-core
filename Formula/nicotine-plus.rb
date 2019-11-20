@@ -10,16 +10,18 @@ class NicotinePlus < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "baa87176559904c0f4a036f0df2daa4df5a229d622ffc16b7b238933eb37c1d9" => :catalina
+    sha256 "4a771717f5d69be309916cb9016edbdbd5ff55a66d0fe6db89e78bf3aae78a1d" => :mojave
     sha256 "35e7bf104f3d38a0d04611bf55190e47cc0b37628c820b6a94a4793c1a3bf451" => :high_sierra
     sha256 "7fc8c5bfd9f131df9cc30887240a064129d65794a1a2cde8205f4eda88548cce" => :sierra
     sha256 "c8243dedb84548dee2f8c663bd3cd4211885b2a1a928bc733a2ee663a9f63fe0" => :el_capitan
   end
 
-  depends_on "python@2"
+  depends_on "geoip"
   depends_on "gtk+"
+  depends_on "miniupnpc"
   depends_on "pygtk"
-  depends_on "geoip" => :recommended
-  depends_on "miniupnpc" => :recommended
+  depends_on "python@2" # does not support Python 3
 
   resource "mutagen" do
     url "https://files.pythonhosted.org/packages/14/d5/51f49f345d4490a9a6a04677ab136f78e4e0c64ed142e48b4ed818c13c96/mutagen-1.37.tar.gz"
@@ -39,8 +41,8 @@ class NicotinePlus < Formula
   def install
     venv = virtualenv_create(libexec)
     venv.pip_install "mutagen"
-    venv.pip_install "miniupnpc" if build.with? "miniupnpc"
-    venv.pip_install "python-geoip" if build.with? "geoip"
+    venv.pip_install "miniupnpc"
+    venv.pip_install "python-geoip"
     venv.pip_install_and_link buildpath
   end
 

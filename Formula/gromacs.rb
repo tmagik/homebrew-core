@@ -1,36 +1,37 @@
 class Gromacs < Formula
   desc "Versatile package for molecular dynamics calculations"
   homepage "http://www.gromacs.org/"
-  url "https://ftp.gromacs.org/pub/gromacs/gromacs-2018.1.tar.gz"
-  sha256 "4d3533340499323fece83b4a2d4251fa856376f2426c541e00b8e6b4c0d705cd"
+  url "https://ftp.gromacs.org/pub/gromacs/gromacs-2019.3.tar.gz"
+  sha256 "4211a598bf3b7aca2b14ad991448947da9032566f13239b1a05a2d4824357573"
 
   bottle do
-    sha256 "87af5516efcdf5abf238d36f13060649e767a1e729095daa534760f49deb12dc" => :high_sierra
-    sha256 "b0645796ec3a3362a9e81de36b193c1e265d099ae496e1d74b32b4f4b1e02c8f" => :sierra
-    sha256 "0d59a8c98be5188486cd1738fee23ed5461edee59a26715af50cda323ab83659" => :el_capitan
+    sha256 "6b5ebbac12d72bce693c4fa1c424cdc884afefa4ba11264922be52c2974f69fe" => :catalina
+    sha256 "6f423386809bbdb219b41c619b8a7b241e36e7a4881c155cd6deecb78fe2edfa" => :mojave
+    sha256 "582b641126dcc98177587a85a0a75d953c51ae981976a895e243b33fe6e3e089" => :high_sierra
+    sha256 "08c431f5f67fe71aaf24fdd501ba0d6e2816b273b18a08fa00079a0eeac6d948" => :sierra
   end
-
-  option "with-double", "Enables double precision"
-  option "with-mpi", "Enable parallel support"
 
   depends_on "cmake" => :build
   depends_on "fftw"
-  depends_on "gsl"
-  depends_on "open-mpi" if build.with? "mpi"
-  depends_on :x11 => :optional
+  depends_on "gcc" # for OpenMP
 
   def install
-    args = std_cmake_args + %w[-DGMX_GSL=ON]
-    args << "-DGMX_DOUBLE=ON" if build.include? "enable-double"
-    args << "-DGMX_MPI=ON" if build.with? "mpi"
-    args << "-DGMX_X11=ON" if build.with? "x11"
+    # Non-executable GMXRC files should be installed in DATADIR
+    inreplace "scripts/CMakeLists.txt", "CMAKE_INSTALL_BINDIR",
+                                        "CMAKE_INSTALL_DATADIR"
+    # fix an error on detecting CPU. see https://redmine.gromacs.org/issues/2927
+    inreplace "cmake/gmxDetectCpu.cmake",
+              "\"${GCC_INLINE_ASM_DEFINE} -I${PROJECT_SOURCE_DIR}/src -DGMX_CPUINFO_STANDALONE ${GMX_STDLIB_CXX_FLAGS} -DGMX_TARGET_X86=${GMX_TARGET_X86_VALUE}\")",
+              "${GCC_INLINE_ASM_DEFINE} -I${PROJECT_SOURCE_DIR}/src -DGMX_CPUINFO_STANDALONE ${GMX_STDLIB_CXX_FLAGS} -DGMX_TARGET_X86=${GMX_TARGET_X86_VALUE})"
 
-    inreplace "scripts/CMakeLists.txt", "BIN_INSTALL_DIR", "DATA_INSTALL_DIR"
+    args = std_cmake_args + %w[
+      -DCMAKE_C_COMPILER=gcc-9
+      -DCMAKE_CXX_COMPILER=g++-9
+    ]
 
     mkdir "build" do
       system "cmake", "..", *args
-      system "make"
-      ENV.deparallelize { system "make", "install" }
+      system "make", "install"
     end
 
     bash_completion.install "build/scripts/GMXRC" => "gromacs-completion.bash"
@@ -42,7 +43,7 @@ class Gromacs < Formula
   def caveats; <<~EOS
     GMXRC and other scripts installed to:
       #{HOMEBREW_PREFIX}/share/gromacs
-    EOS
+  EOS
   end
 
   test do

@@ -1,13 +1,13 @@
 class Vifm < Formula
   desc "Ncurses based file manager with vi like keybindings"
   homepage "https://vifm.info/"
-  url "https://github.com/vifm/vifm/releases/download/v0.9.1/vifm-0.9.1.tar.bz2"
-  sha256 "28b9a4b670d9ddc9af8c9804dc22fa93f4fd0adabce94d43ebedc157a5dce7b3"
+  url "https://github.com/vifm/vifm/releases/download/v0.10.1/vifm-0.10.1.tar.bz2"
+  sha256 "99006f56db05e1bdfb7983e8d5c31c9ac93bf2ac9e0409a577c8ca660fecd03b"
 
   bottle do
-    sha256 "85ed156c78b6259286e1bbde0559efbb7d184f061f1fe6d7dfa3c9e73262cbce" => :high_sierra
-    sha256 "7123769c4a1a3ea3e59871d3150182bbf3da2d98a4036b3a06a39ebacfaf65ed" => :sierra
-    sha256 "88bda24c638a68880447a6e10dcfa06ac2e49a2b77415b6a85ac3dfd33c20114" => :el_capitan
+    sha256 "0495acdf812f89f23c7fafcccef47589249477c5c38dd0e47049c3421edc712a" => :mojave
+    sha256 "8371dea589590796e0f1c6b7b5ce263e18b9a1619551d5967deefd5035e512e0" => :high_sierra
+    sha256 "ded145b46f48c79712b12e7f8d14ab8b219778fcd6d0b436d0c156dd0b15129d" => :sierra
   end
 
   def install
@@ -18,6 +18,7 @@ class Vifm < Formula
                           "--without-X11"
     system "make"
     system "make", "check"
+
     ENV.deparallelize { system "make", "install" }
   end
 

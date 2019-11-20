@@ -6,26 +6,17 @@ class Pv < Formula
 
   bottle do
     cellar :any_skip_relocation
+    sha256 "a5a43d38f36d54dd3e01d70ab6faa68af3ddc7cb80302f02945d1344eee7b7d4" => :catalina
+    sha256 "790e86acba53eecbff8e20753df00ef139dbc686d0dac27062d57c0a47eaac76" => :mojave
     sha256 "4beeaa40f09a609c2706a945ec04b2b6a156efc0befe9dc571ec426f3a152cba" => :high_sierra
     sha256 "231a659ee3aca5a6f474bc058ed02a0a5f2c366d04c8c56043d310644c46e393" => :sierra
     sha256 "d461d873a47091a52b6114ac0976f16b0ade9e13d02fa0609f574369b8cfc8f0" => :el_capitan
     sha256 "0c4d4a90c188370ed312490b7ff76fdb8a31399170cdc0ad5dfc1542af4c4fc0" => :yosemite
   end
 
-  option "with-gettext", "Build with Native Language Support"
-
-  depends_on "gettext" => :optional
-
   def install
-    args = %W[
-      --disable-debug
-      --prefix=#{prefix}
-      --mandir=#{man}
-    ]
-
-    args << "--disable-nls" if build.without? "gettext"
-
-    system "./configure", *args
+    system "./configure", "--disable-debug", "--prefix=#{prefix}",
+                          "--mandir=#{man}", "--disable-nls"
     system "make", "install"
   end
 

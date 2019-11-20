@@ -1,14 +1,14 @@
 class GstPluginsBad < Formula
   desc "GStreamer plugins less supported, not fully tested"
   homepage "https://gstreamer.freedesktop.org/"
-  url "https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.14.0.tar.xz"
-  sha256 "ed5e2badb6f2858f60017b93334d91fe58a0e3f85ed2f37f2e931416fafb4f9f"
-  revision 1
+  url "https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.16.1.tar.xz"
+  sha256 "56481c95339b8985af13bac19b18bc8da7118c2a7d9440ed70e7dcd799c2adb5"
 
   bottle do
-    sha256 "308d9c4c72913fc8765a01448ca32570df1bc502440ff44fbffc340964348b54" => :high_sierra
-    sha256 "84f80a511ddcb9943756c51b7ae6590d1edd56dca35db1db80ec3a525c0de29e" => :sierra
-    sha256 "1d376f912b04d799e2fc4a23c272540520737134995ac5025fd1312946b7a8a6" => :el_capitan
+    sha256 "040091b1bef4fc061e87e8af84058db0cc4e9c320ccf164ce30921bda4c88c52" => :catalina
+    sha256 "7ce4460d5cc8af2fe5a2ec4193eb7124b545cf33fcb589b63a7c82fecbe0c683" => :mojave
+    sha256 "34b6a879aa64a0028c261270927d9f506d6f25698f3d66001702ec0de77c6a62" => :high_sierra
+    sha256 "42ef7edf2d9b6b7d9814cab7adfe843fa233541b83467b2c8ccfebf57630aa18" => :sierra
   end
 
   head do
@@ -18,30 +18,21 @@ class GstPluginsBad < Formula
     depends_on "automake" => :build
   end
 
+  depends_on "gobject-introspection" => :build
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
+  depends_on "faac"
+  depends_on "faad2"
   depends_on "gettext"
   depends_on "gst-plugins-base"
-  depends_on "openssl"
-  depends_on "jpeg" => :recommended
-  depends_on "orc" => :recommended
-  depends_on "dirac" => :optional
-  depends_on "faac" => :optional
-  depends_on "faad2" => :optional
-  depends_on "fdk-aac" => :optional
-  depends_on "gnutls" => :optional
-  depends_on "gtk+3" => :optional
-  depends_on "libdvdread" => :optional
-  depends_on "libexif" => :optional
-  depends_on "libmms" => :optional
-  depends_on "libnice" => :optional
-  depends_on "libvo-aacenc" => :optional
-  depends_on "opencv@2" => :optional
-  depends_on "opus" => :optional
-  depends_on "rtmpdump" => :optional
-  depends_on "schroedinger" => :optional
-  depends_on "sound-touch" => :optional
-  depends_on "srt" => :optional
+  depends_on "jpeg"
+  depends_on "libmms"
+  depends_on "libnice"
+  depends_on "openssl@1.1"
+  depends_on "opus"
+  depends_on "orc"
+  depends_on "rtmpdump"
+  depends_on "srtp"
 
   def install
     args = %W[
@@ -50,9 +41,8 @@ class GstPluginsBad < Formula
       --disable-examples
       --disable-debug
       --disable-dependency-tracking
+      --enable-introspection=yes
     ]
-
-    args << "--with-gtk=3.0" if build.with? "gtk+3"
 
     if build.head?
       # autogen is invoked in "stable" build because we patch configure.ac

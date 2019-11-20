@@ -1,15 +1,16 @@
 class Libpng < Formula
   desc "Library for manipulating PNG images"
   homepage "http://www.libpng.org/pub/png/libpng.html"
-  url "https://downloads.sourceforge.net/libpng/libpng-1.6.34.tar.xz"
-  mirror "https://sourceforge.mirrorservice.org/l/li/libpng/libpng16/1.6.34/libpng-1.6.34.tar.xz"
-  sha256 "2f1e960d92ce3b3abd03d06dfec9637dfbd22febf107a536b44f7a47c60659f6"
+  url "https://downloads.sourceforge.net/libpng/libpng-1.6.37.tar.xz"
+  mirror "https://sourceforge.mirrorservice.org/l/li/libpng/libpng16/1.6.37/libpng-1.6.37.tar.xz"
+  sha256 "505e70834d35383537b6491e7ae8641f1a4bed1876dbfe361201fc80868d88ca"
 
   bottle do
     cellar :any
-    sha256 "d38a64089526ecc1413acbc22373821fd181442b80ffccfd8322a5724dc09759" => :high_sierra
-    sha256 "d587603b3079fb7ad5cecdd451ee7fdf88f80a8b88f457ed199270d85753208c" => :sierra
-    sha256 "0c17ca28357c801a0fb81667ba69c1ed820d0348ca7728766ea16e3bd9b0ff19" => :el_capitan
+    sha256 "c8e74da602c21f978cd7ee3d489979b4fc6681e71f678a1d99012943ee3a909f" => :catalina
+    sha256 "53bbd14cc27c86c16605e256e7646a1b5656c253abca084958c5d80a2961cb01" => :mojave
+    sha256 "bbdd94bdd5954bc50c096391486e67265dce5631efb913dcffe4469806a242b6" => :high_sierra
+    sha256 "e66797079a9a8134f91bd36b58054c6c32f6a9cd161c1bd19f0192319edb80aa" => :sierra
   end
 
   head do

@@ -3,25 +3,25 @@ class Glade < Formula
   homepage "https://glade.gnome.org/"
   url "https://download.gnome.org/sources/glade/3.22/glade-3.22.1.tar.xz"
   sha256 "dff89a2ef2eaf000ff2a46979978d03cb9202cb04668e01d0ea5c5bb5547e39a"
-  revision 1
+  revision 3
 
   bottle do
-    sha256 "8b2006714375e4ea9fc74bbd73e6ef41da6551a2b0e2813cece71d8ce4ca661c" => :high_sierra
-    sha256 "58616499a9a2b2aef8d6568faf7a7fbac66d7954491e6f00c61acdb2b3ea207d" => :sierra
-    sha256 "812042f677b69a24a9aefdbdeb733691813cb46b33ff50d991af97ddfe39fc59" => :el_capitan
+    sha256 "d74b67d3cb4e4df75000513f812f6fdecc4f208af545397ec65b0e06b24dc504" => :catalina
+    sha256 "a6ca3581505e7ba2bad7b14c620fc694c645bcf7978a0d06db0baa4f0fa1ab84" => :mojave
+    sha256 "0382cf5cc5057d5a32d40544457e4776c878b53dfe6d4fbd10f21f74c09f4427" => :high_sierra
   end
 
-  depends_on "pkg-config" => :build
-  depends_on "intltool" => :build
-  depends_on "itstool" => :build
   depends_on "docbook-xsl" => :build
   depends_on "gobject-introspection" => :build
-  depends_on "gettext"
-  depends_on "libxml2"
+  depends_on "intltool" => :build
+  depends_on "itstool" => :build
+  depends_on "pkg-config" => :build
   depends_on "adwaita-icon-theme"
-  depends_on "hicolor-icon-theme"
+  depends_on "gettext"
   depends_on "gtk+3"
   depends_on "gtk-mac-integration"
+  depends_on "hicolor-icon-theme"
+  depends_on "libxml2"
 
   def install
     # Find our docbook catalog

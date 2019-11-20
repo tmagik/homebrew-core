@@ -1,15 +1,15 @@
 class Pspg < Formula
   desc "Unix pager optimized for psql"
   homepage "https://github.com/okbob/pspg"
-  url "https://github.com/okbob/pspg/archive/1.1.1.tar.gz"
-  sha256 "91fefbf18a07223e66db4f09ea01b4b14829945ce318c0bf39b6efad4afbd2db"
+  url "https://github.com/okbob/pspg/archive/2.5.3.tar.gz"
+  sha256 "1a85d2a60959122f48ae6a38d8666a3a47f9d14f0bec95f355cd225f5ecaaf50"
   head "https://github.com/okbob/pspg.git"
 
   bottle do
     cellar :any
-    sha256 "6dbc8c9cc3b87569f4e3a601f17097209a0676d60b026cd9060a24d8851d1117" => :high_sierra
-    sha256 "470d3cd08eef06e253c34b0a592bf00906320d9a8934a12e2b62ed5c6506bac2" => :sierra
-    sha256 "ad347b5528c6e3cbc87adb65ece4f12eb62eb76ae214bfd85e969284d49e0103" => :el_capitan
+    sha256 "efe13b563bb04d1ea0245904a29eb0ffecef99d520b6b9a07f6ecca09b4a6bf1" => :catalina
+    sha256 "ee50a412369f97e19ea59dba3315e1159bc91c06bb13bc36c79588f13032b19e" => :mojave
+    sha256 "978a2c0600cf23ab33fa128da6870d8df73949f1c57549ee33cde36b8380f196" => :high_sierra
   end
 
   depends_on "ncurses"
@@ -26,7 +26,7 @@ class Pspg < Formula
       \\setenv PAGER pspg
       \\pset border 2
       \\pset linestyle unicode
-    EOS
+  EOS
   end
 
   test do

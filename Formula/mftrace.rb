@@ -8,9 +8,11 @@ class Mftrace < Formula
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "f81be9cddecffd87a3066f23f90cb1be41ad2d43709a44e59c2d8f645ec4136c" => :high_sierra
-    sha256 "60d36f222820ef0ffa00c3c67f8fc7d9063472062c8771b99bf783781e9c5613" => :sierra
-    sha256 "ca26dc49c3a032568dea9c0a5a7639bd8a117f8f8e052a411679b78d01811e1f" => :el_capitan
+    rebuild 1
+    sha256 "0b37a517fc1ca5227f3e67700fe40d01641ebe45da79f4acaeb9856b4d7db201" => :catalina
+    sha256 "2a78bf8fc82f89a881f50f564d3ef1deefadccbee91c3eb9e47a213daeb54cf9" => :mojave
+    sha256 "c5d1759a38176c1b8c237f5e9dcc116283012fab1d934664e02ba0f29a0fd2a5" => :high_sierra
+    sha256 "17bd3d744d0d5092e48d06bce7452e0bd47884b3836561babede6ab9528cb1c6" => :sierra
   end
 
   head do
@@ -18,9 +20,10 @@ class Mftrace < Formula
     depends_on "autoconf" => :build
   end
 
+  depends_on "fontforge"
   depends_on "potrace"
+  depends_on "python"
   depends_on "t1utils"
-  depends_on "fontforge" => :recommended
 
   def install
     system "./autogen.sh" if build.head?

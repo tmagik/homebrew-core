@@ -1,16 +1,16 @@
 class Libssh2 < Formula
   desc "C library implementing the SSH2 protocol"
   homepage "https://libssh2.org/"
-  url "https://libssh2.org/download/libssh2-1.8.0.tar.gz"
-  sha256 "39f34e2f6835f4b992cafe8625073a88e5a28ba78f83e8099610a7b3af4676d4"
+  url "https://libssh2.org/download/libssh2-1.9.0.tar.gz"
+  sha256 "d5fb8bd563305fd1074dda90bd053fb2d29fc4bce048d182f96eaa466dfadafd"
+  revision 1
 
   bottle do
     cellar :any
-    rebuild 1
-    sha256 "22327eb5bbff660935db0c5106d5a43069ee23e5cb33d5125bad4e144e83ee34" => :high_sierra
-    sha256 "4a1e39137bc9461d779a7a84626354928788aeb0650fb0fed75e0fbecb95c0cd" => :sierra
-    sha256 "d6693c1417f0deb8f1b0c6a7c338491a7f60f2cc516675186e572329c1fcaa6c" => :el_capitan
-    sha256 "f7fab0024a104c43a3139b0e70cbc04606c20409b36ffb6deebb326c168c4547" => :yosemite
+    sha256 "2c4dcf8149663f9a133deac5bc42ce308d1ced90227cac391ca30b0ab2d381f9" => :catalina
+    sha256 "327c56ad6a54894e5ef9aa3019d2444d32f1d0fba80925940100e517dd3109c9" => :mojave
+    sha256 "ee29f44ef6fb59242fc7ee1747f02df2287722af4a45319289c9ee224367ba06" => :high_sierra
+    sha256 "769fbbdc4e67b8de15c269f66a6efe86c5b0195df56e7e46b44377a572800efa" => :sierra
   end
 
   head do
@@ -21,7 +21,7 @@ class Libssh2 < Formula
     depends_on "libtool" => :build
   end
 
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     args = %W[
@@ -32,7 +32,7 @@ class Libssh2 < Formula
       --disable-examples-build
       --with-openssl
       --with-libz
-      --with-libssl-prefix=#{Formula["openssl"].opt_prefix}
+      --with-libssl-prefix=#{Formula["openssl@1.1"].opt_prefix}
     ]
 
     system "./buildconf" if build.head?

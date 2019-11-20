@@ -1,28 +1,27 @@
 class Povray < Formula
   desc "Persistence Of Vision RAYtracer (POVRAY)"
-  homepage "http://www.povray.org/"
-  url "https://github.com/POV-Ray/povray/archive/v3.7.0.7.tar.gz"
-  sha256 "085746e891edbb2cfda22bb2a8b86043bd680a68ad9121bc568118c730ace7b9"
+  homepage "https://www.povray.org/"
+  url "https://github.com/POV-Ray/povray/archive/v3.7.0.8.tar.gz"
+  sha256 "53d11ebd2972fc452af168a00eb83aefb61387662c10784e81b63e44aa575de4"
   revision 1
 
   bottle do
-    sha256 "d47c19e8816adf48fdcb70027a7c2d69cb33ca05abec36cdb7fb1b38fcbc20ef" => :high_sierra
-    sha256 "297f2866da6efcf9e9f2411e7385bbbae6022809c6848f2b35906ca63e666e1d" => :sierra
-    sha256 "c83b12ed02791a174930aa698fa4bfa79092b4a7e576b57895c960aa07465b80" => :el_capitan
+    rebuild 1
+    sha256 "a882f103b0ad016cbafa13cc1fd028046b337590feff3e6188bb574f1e328488" => :catalina
+    sha256 "eae4cf975215cdfdeadb665c53061c6ed2b4f9fa95121e7145222409b0e44c56" => :mojave
+    sha256 "4472bb00380eb26d3045dd5e67effa4f75934936263129009f9a80bbf5290633" => :high_sierra
+    sha256 "f21cb29c30c8367aa14f6a4485bf03377f23e30b2e7178be466d12bb84be26a9" => :sierra
+    sha256 "f2f0bf20fbe2d5b1ce91ecdf4eca52e4a544323910febae396d8b9fb1c0044ec" => :el_capitan
   end
 
-  depends_on :macos => :lion
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "boost"
   depends_on "jpeg"
   depends_on "libpng"
   depends_on "libtiff"
-  depends_on "openexr" => :optional
 
-  deprecated_option "use-openexr" => "with-openexr"
-
-  needs :cxx11
+  depends_on "openexr"
 
   def install
     ENV.cxx11
@@ -34,11 +33,10 @@ class Povray < Formula
       --prefix=#{prefix}
       --mandir=#{man}
       --with-boost=#{Formula["boost"].opt_prefix}
+      --with-openexr=#{Formula["openexr"].opt_prefix}
       --without-libsdl
       --without-x
     ]
-
-    args << "--with-openexr=#{Formula["openexr"].opt_prefix}" if build.with? "openexr"
 
     # Adjust some scripts to search for `etc` in HOMEBREW_PREFIX.
     %w[allanim allscene portfolio].each do |script|

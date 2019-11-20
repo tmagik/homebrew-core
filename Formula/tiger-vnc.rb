@@ -1,30 +1,23 @@
 class TigerVnc < Formula
   desc "High-performance, platform-neutral implementation of VNC"
-  homepage "http://tigervnc.org/"
-  url "https://github.com/TigerVNC/tigervnc/archive/v1.8.0.tar.gz"
-  sha256 "9951dab0e10f8de03996ec94bec0d938da9f36d48dca8c954e8bbc95c16338f8"
+  homepage "https://tigervnc.org/"
+  url "https://github.com/TigerVNC/tigervnc/archive/v1.9.0.tar.gz"
+  sha256 "f15ced8500ec56356c3bf271f52e58ed83729118361c7103eab64a618441f740"
+  revision 2
 
   bottle do
-    sha256 "c7213004df95a5a8faf38d036bd631a59c6dd9227565fee7485624dfc16c62bc" => :high_sierra
-    sha256 "427af0dff8bae2e2720f0c6dea41d54de8eb8e5549ae77faab3110a9366858a5" => :sierra
-    sha256 "aba36a55571b32322bcd94cffce43eb5760bd54fa2000d68c3b968c2d9f0f161" => :el_capitan
-    sha256 "b7def4172a88768e2e84df9931138e13401a81913a644f25a72ab43f7ba1f6ae" => :yosemite
+    sha256 "7c26a564ee151b88fb158868a9b1ae154dd14b4d2dc3fd32286c24db9972b6b4" => :catalina
+    sha256 "00d679d7a5302a288803e304852d641454270fb61ad86f29468b6628d098766b" => :mojave
+    sha256 "8bc6fd944ac4ddb423a0164b2adf3d0733ce0b7461e53835cdf9d8f3ef1a27cf" => :high_sierra
+    sha256 "7c5b8f1a5e52f4bb76ef40a3904aaac50f052dbd9661b6429e86f492a120bb02" => :sierra
   end
 
   depends_on "cmake" => :build
-  depends_on "gnutls" => :recommended
-  depends_on "jpeg-turbo"
-  depends_on "gettext"
   depends_on "fltk"
+  depends_on "gettext"
+  depends_on "gnutls"
+  depends_on "jpeg-turbo"
   depends_on :x11
-
-  # Remove for > 1.8.0
-  # Fix "redefinition of 'kVK_RightCommand' as different kind of symbol"
-  # Upstream commit from 24 May 2017 "Compatibility with macOS 10.12 SDK"
-  patch do
-    url "https://github.com/TigerVNC/tigervnc/commit/2b0a0ef0.patch?full_index=1"
-    sha256 "ddf74e2ccf57ff20e595f272ac41498c2f698003a619f365670871d00797db2b"
-  end
 
   def install
     turbo = Formula["jpeg-turbo"]
@@ -35,5 +28,10 @@ class TigerVnc < Formula
     ]
     system "cmake", *args
     system "make", "install"
+  end
+
+  test do
+    output = shell_output("#{bin}/vncviewer -h 2>&1", 1)
+    assert_match "TigerVNC Viewer 64-bit v#{version}", output
   end
 end

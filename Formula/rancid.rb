@@ -1,14 +1,15 @@
 class Rancid < Formula
   desc "Really Awesome New Cisco confIg Differ"
   homepage "https://www.shrubbery.net/rancid/"
-  url "ftp://ftp.shrubbery.net/pub/rancid/rancid-3.7.tar.gz"
-  sha256 "9c6befff78d49d8d0757a2b57b6cfdfef55cadcbc1fa6fbe1ab9424335d51f7b"
+  url "https://www.shrubbery.net/pub/rancid/rancid-3.10.tar.gz"
+  mirror "https://deb.debian.org/debian/pool/main/r/rancid/rancid_3.10.orig.tar.gz"
+  sha256 "7781af6df112fa45655485d178055b013cdce32523c6737dd593ca645898bafe"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "d35aeb470a1d217d32279f2a45d513c0a8b50191022d48a7c25da7e7f830db2f" => :high_sierra
-    sha256 "9bb1c1edb5c94a70de4ea3634146d45be62bc67b82fb967448b2a645946ffd1f" => :sierra
-    sha256 "d6429e2f77b8d616449ee4af91adda8b24a94b2f73d314070cc2300c695f6a43" => :el_capitan
+    sha256 "59241ac50b1a4cc52ae7be4117421e7e2d0a2f9acc815a072f6d7c168f1cb9c2" => :catalina
+    sha256 "d7d5c086f9e47d940e797877c4710852dada2fc4fd027440b4872a6a0fe94a2c" => :mojave
+    sha256 "8d91366e56912ad5ec442c84aca2c2dc02d19e56fb0c9a8feae982795e893c40" => :high_sierra
   end
 
   conflicts_with "par", :because => "both install `par` binaries"

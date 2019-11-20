@@ -3,15 +3,16 @@ class Rtv < Formula
 
   desc "Command-line Reddit client"
   homepage "https://github.com/michael-lazar/rtv"
-  url "https://github.com/michael-lazar/rtv/archive/v1.22.1.tar.gz"
-  sha256 "77c9bbd0e8cd85b6c2daad7b6674d1865f06bfde0a5c2557e12ef1dc1acb2789"
+  url "https://github.com/michael-lazar/rtv/archive/v1.27.0.tar.gz"
+  sha256 "c57a6cbb2525160b6aaa9180aec0293962b6969675f8ac0f2cfacff3cbd00d7c"
   head "https://github.com/michael-lazar/rtv.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "f4ee9e26cbfec4dc2df263f93b63e7210105f3cae3446aba871690599016d2a4" => :high_sierra
-    sha256 "beca032c94767a453dc9ac484591509eb8e9c8c401427750f446755721e3071c" => :sierra
-    sha256 "2b984e2ca5c54953f76adae459fbf050e1e12f58b7123f95db5deb2717458e9e" => :el_capitan
+    sha256 "9e615584a7b34c084ce03f1706d59040992cdadba29749c4b2cbc8a11f97d621" => :catalina
+    sha256 "8ed89953d4ad5b442e9d0c70b4666d5bee9d000b770494c3362d198cedf4c333" => :mojave
+    sha256 "eb6ffa91b9211cde7fd1dd705df5f22ca437240fff127f9822eb124c1b711ce8" => :high_sierra
+    sha256 "1c1cd02142c41260e04a0db2fcfc659b20431fe64f4dbefa41f75216b217c137" => :sierra
   end
 
   depends_on "python"

@@ -1,17 +1,16 @@
 class Gearboy < Formula
   desc "Nintendo Game Boy (Color) emulator"
   homepage "https://github.com/drhelius/Gearboy"
-  url "https://github.com/drhelius/Gearboy/archive/gearboy-2.3.1.tar.gz"
-  sha256 "a1976a82f57d14e625339b50f11cd53da7c6ac1d92ececc4d2b5d163fba4a0ec"
-  revision 1
+  url "https://github.com/drhelius/Gearboy/archive/gearboy-2.7.0.tar.gz"
+  sha256 "e422b8f080ed8decca6386c30e800f19f526d6cac953efce709e5c4f57aa4650"
   head "https://github.com/drhelius/Gearboy.git"
 
   bottle do
     cellar :any
-    sha256 "1d670f7aa0fabb668cdd96c5f3ef369f96f791e70586191e23ee244ffc024bfb" => :high_sierra
-    sha256 "91bfab6b8f83e80620d72c40cc1ca4256d7f15910d48d2919a6ba9c152939425" => :sierra
-    sha256 "35e8aeca3e1204cfa1fd105634994d94e4c69f86bca4bf791fcd937c9da2ab29" => :el_capitan
-    sha256 "2572d0286af3eefda16352a9c74050bc62b76bf91b64be9d74af0c82230df9da" => :yosemite
+    sha256 "8dfc995898994e6f66bb2f49023efd265878c3b55c825946ae65a50ab8f1a54a" => :catalina
+    sha256 "b92c7577a7287232e161ba437b22c8764be7af8925a19797af63926f8527210c" => :mojave
+    sha256 "b92c7577a7287232e161ba437b22c8764be7af8925a19797af63926f8527210c" => :high_sierra
+    sha256 "cf8ee78a09a077f9cb37a6dd636882f3732eb2fbab911a47ad77ecf2a9272775" => :sierra
   end
 
   depends_on "qt"

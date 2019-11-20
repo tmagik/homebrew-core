@@ -7,6 +7,8 @@ class GnuComplexity < Formula
 
   bottle do
     cellar :any
+    sha256 "8a83c1ada362279b8fbe66addd9fb0d646cb90f8c936959c7923a546f9cd0770" => :catalina
+    sha256 "25474f8be313534736f5ccbe1c707969606ca3fa7360079df0cc8879cde0fbbb" => :mojave
     sha256 "94558c250d55d6d1c83e682d38481b0d75b12850d46e00dacdf81744be288229" => :high_sierra
     sha256 "3ea1d968a1eaa2ce6655fa8e33b721af3cd631075f960c6595ca68aecd0972c7" => :sierra
     sha256 "89b7043d1f51fc6ff7a1e96f8ed23bbac73bbb7196a04851a2cf29475b0803f7" => :el_capitan
@@ -15,10 +17,10 @@ class GnuComplexity < Formula
   end
 
   depends_on "autogen"
-  depends_on "gcc" if MacOS.version <= :mavericks
+  depends_on "gcc" if MacOS.version == :mavericks
 
   # error: use of undeclared identifier '__noreturn__'
-  fails_with :clang if MacOS.version <= :mavericks
+  fails_with :clang if MacOS.version == :mavericks
 
   def install
     system "./configure", "--disable-dependency-tracking",

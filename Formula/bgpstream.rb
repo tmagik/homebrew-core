@@ -1,16 +1,15 @@
 class Bgpstream < Formula
   desc "For live and historical BGP data analysis"
   homepage "https://bgpstream.caida.org/"
-  url "https://bgpstream.caida.org/bundles/caidabgpstreamwebhomepage/dists/bgpstream-1.1.0.tar.gz"
-  sha256 "b89cef45bcc5ae4011aa3c42f689ae9fd7b5c8fd25e06ab18589577b5e077f89"
+  url "https://bgpstream.caida.org/bundles/caidabgpstreamwebhomepage/dists/bgpstream-1.2.3.tar.gz"
+  sha256 "2c1affec8d38a9f750029e48b77a46064937d3e41f6c10dfac72777fa934cd74"
 
   bottle do
     cellar :any
-    sha256 "f6da890ff38f26be2528dce9a095a30864a9e0741b0350ac415472751479d8e0" => :high_sierra
-    sha256 "02ddb40b74b138a5838d5bdcdb44caa37d1974abffe129ad37957c1bd8dd4152" => :sierra
-    sha256 "5a94e3a2f3e36a0aa93c9c06e33d126079307080a7a8237cf719c9eb20c23272" => :el_capitan
-    sha256 "c7fa0c3adcebc76cafb1cdb56116e8fcd111a62d144c82a00226676e5f6a1950" => :yosemite
-    sha256 "a0a45f0c9c135d94c64772d273bf0e3cb462eb6b83663388b343665f0894015a" => :mavericks
+    sha256 "26f6a06267aa23f01fa2b625b1d5ae61d54a9f792707227892c38e30999bb456" => :catalina
+    sha256 "23ffe0dcc9ba7fbc1b497b955b81a6515d269f93be06356dd00e531ac8d8d96d" => :mojave
+    sha256 "8110166953d43112cd014092d0dc58005ceae09983156b73dd7ec7ada7af33af" => :high_sierra
+    sha256 "d1541897010832dee6be24eb2e37ebe59899653f2277da1b34d29c6953754b6e" => :sierra
   end
 
   depends_on "wandio"

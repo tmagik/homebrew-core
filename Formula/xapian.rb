@@ -1,100 +1,50 @@
 class Xapian < Formula
-  desc "C++ search engine library with many bindings"
+  desc "C++ search engine library"
   homepage "https://xapian.org/"
-  url "https://oligarchy.co.uk/xapian/1.4.5/xapian-core-1.4.5.tar.xz"
-  mirror "https://fossies.org/linux/www/xapian-core-1.4.5.tar.xz"
-  sha256 "85b5f952de9df925fd13e00f6e82484162fd506d38745613a50b0a2064c6b02b"
+  url "https://oligarchy.co.uk/xapian/1.4.13/xapian-core-1.4.13.tar.xz"
+  sha256 "93f8ffffa80c5e6036befbf356f34456cc18c2f745cef85e9b4cfc254042137c"
+  version_scheme 1
 
   bottle do
     cellar :any
-    sha256 "091e71844cbd10c6d47e1a3bd7bc6eafc6868d01c73f7bc80ec0c5c89b3953e5" => :high_sierra
-    sha256 "0575873ed3b9ccd8193e8d643541e68b84b4cc258c8a62bb28a6dd62188adb1e" => :sierra
-    sha256 "2fdf665d79e63dc34597f64d457326af35154e37bb4e24db6dd030a8973fbf8e" => :el_capitan
+    sha256 "ca56eb658ab73e5eb7f75995b131599e8ca564d9863e597fd058a18b405c8fdd" => :catalina
+    sha256 "7b3ed25c8416ba7ae6423cd96a71ad175bd07a62bf17fb1e80e36b4e9c6f7c30" => :mojave
+    sha256 "79293e9bbcdf86cbb286b90cd410dd8977d28c81c07b960095ff3515d33b9050" => :high_sierra
   end
 
-  option "with-java", "Java bindings"
-  option "with-php", "PHP bindings"
-  option "with-ruby", "Ruby bindings"
-
-  deprecated_option "java" => "with-java"
-  deprecated_option "php" => "with-php"
-  deprecated_option "ruby" => "with-ruby"
-  deprecated_option "with-python" => "with-python@2"
-
-  depends_on "ruby" => :optional if MacOS.version <= :sierra
-  depends_on "python@2" => :optional
-  depends_on "sphinx-doc" => :build if build.with? "python@2"
+  depends_on "sphinx-doc" => :build
+  depends_on "python"
 
   skip_clean :la
 
   resource "bindings" do
-    url "https://oligarchy.co.uk/xapian/1.4.5/xapian-bindings-1.4.5.tar.xz"
-    sha256 "647886730a71bcc0e9f666fcd702b7141d4e9a82e1085e44eb4470624e1a9d33"
+    url "https://oligarchy.co.uk/xapian/1.4.13/xapian-bindings-1.4.13.tar.xz"
+    sha256 "7a5a5d2712159ed0a5174a8aabedfc01452a69ebd6e2147d97e497122baa5892"
   end
 
   def install
-    build_binds = build.with?("ruby") || build.with?("python@2") || build.with?("java") || build.with?("php")
-
     system "./configure", "--disable-dependency-tracking",
                           "--disable-silent-rules",
                           "--prefix=#{prefix}"
     system "make", "install"
 
-    if build_binds
-      resource("bindings").stage do
-        ENV["XAPIAN_CONFIG"] = bin/"xapian-config"
+    resource("bindings").stage do
+      ENV["XAPIAN_CONFIG"] = bin/"xapian-config"
+      ENV.prepend_create_path "PYTHON3_LIB", lib/"python3.7/site-packages"
 
-        args = %W[
-          --disable-dependency-tracking
-          --prefix=#{prefix}
-        ]
+      ENV.append_path "PYTHONPATH", Formula["sphinx-doc"].opt_libexec/"lib/python3.7/site-packages"
+      ENV.append_path "PYTHONPATH", Formula["sphinx-doc"].opt_libexec/"vendor/lib/python3.7/site-packages"
 
-        args << "--with-java" if build.with? "java"
+      system "./configure", "--disable-dependency-tracking",
+                            "--prefix=#{prefix}",
+                            "--with-python3"
 
-        if build.with? "ruby"
-          ruby_site = lib/"ruby/site_ruby"
-          ENV["RUBY_LIB"] = ENV["RUBY_LIB_ARCH"] = ruby_site
-          args << "--with-ruby"
-        end
-
-        if build.with? "python@2"
-          # https://github.com/Homebrew/homebrew-core/issues/2422
-          ENV.delete("PYTHONDONTWRITEBYTECODE")
-
-          (lib/"python2.7/site-packages").mkpath
-          ENV["PYTHON_LIB"] = lib/"python2.7/site-packages"
-
-          ENV.append_path "PYTHONPATH",
-                          Formula["sphinx-doc"].opt_libexec/"lib/python2.7/site-packages"
-          ENV.append_path "PYTHONPATH",
-                          Formula["sphinx-doc"].opt_libexec/"vendor/lib/python2.7/site-packages"
-
-          args << "--with-python"
-        end
-
-        if build.with? "php"
-          extension_dir = lib/"php/extensions"
-          extension_dir.mkpath
-          args << "--with-php" << "PHP_EXTENSION_DIR=#{extension_dir}"
-        end
-
-        system "./configure", *args
-        system "make", "install"
-      end
-    end
-  end
-
-  def caveats
-    if build.with? "ruby"
-      <<~EOS
-        You may need to add the Ruby bindings to your RUBYLIB from:
-          #{HOMEBREW_PREFIX}/lib/ruby/site_ruby
-
-      EOS
+      system "make", "install"
     end
   end
 
   test do
     system bin/"xapian-config", "--libs"
+    system "python3.7 -c 'import xapian'"
   end
 end

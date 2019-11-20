@@ -3,12 +3,13 @@ class Dopewars < Formula
   homepage "https://dopewars.sourceforge.io"
   url "https://downloads.sourceforge.net/project/dopewars/dopewars/1.5.12/dopewars-1.5.12.tar.gz"
   sha256 "23059dcdea96c6072b148ee21d76237ef3535e5be90b3b2d8239d150feee0c19"
+  revision 1
 
   bottle do
-    sha256 "86b78c8cee8505ad3bde0e2d52bf45a60ac388735c034a1450d3be1117937749" => :high_sierra
-    sha256 "2cd2bcd5c69422ea725622831b054ce4d75656f085e7e919d2a5a055fed30037" => :sierra
-    sha256 "019168fe18bb28f596bad5858bfd782473800920d9bb5cf71ce94ac90c4fcf5d" => :el_capitan
-    sha256 "282643cc528cca8f01101c4f908e07889585c07d60b2da31fde88b41a07c1c2c" => :yosemite
+    sha256 "f2e1a3e2e6199fc550af9afc8204b0292a34976f85ec2448fee549b434048c34" => :catalina
+    sha256 "8bb4cbd11a3db0bbdbdd283d531742c9485dc1d86b57b9986f3b86da01947807" => :mojave
+    sha256 "3808bf43bb96b796624f8ffb855b176ea2a908f3b9477fd7d07a1f960dff0ef2" => :high_sierra
+    sha256 "db1c91122cf53f166a5811595bbf84b63227818ca11877b78a21592686a975f2" => :sierra
   end
 
   depends_on "pkg-config" => :build

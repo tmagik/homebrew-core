@@ -5,24 +5,25 @@ class Shellcheck < Formula
 
   desc "Static analysis and lint tool, for (ba)sh scripts"
   homepage "https://www.shellcheck.net/"
-  url "https://github.com/koalaman/shellcheck/archive/v0.4.7.tar.gz"
-  sha256 "3fd7ebec821b96585ba9137b7b8c7bd9410876490f4ec89f2cca9975080a8206"
+  url "https://github.com/koalaman/shellcheck/archive/v0.7.0.tar.gz"
+  sha256 "946cf3421ffd418f0edc380d1184e4cb08c2ec7f098c79b1c8a2c482fe91d877"
   head "https://github.com/koalaman/shellcheck.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "4670b4952117677a171f4e3312d5b6660ad6b443c1e2c65aed8fb17fe46b2342" => :high_sierra
-    sha256 "8eb344f3f20995bd7210f12b337116b0295755bf78990ea824ba160e8e6b0bf9" => :sierra
-    sha256 "7136c486a8faf29e840b96abc02a68420b641261ba3ed252fbc5ac0da7161721" => :el_capitan
+    sha256 "be8e084d55379a4b5a8bfba78ad298f966f0888e6c3eb7e5202527d3938f3501" => :mojave
+    sha256 "a4e12db223139c82649fdc16a2d04184cbaf5fc413c1135b0a1100a16e33290b" => :high_sierra
+    sha256 "770a22a491ae6316f7b6e56d8039d30693d857336ccc608de865750798480899" => :sierra
   end
 
   depends_on "cabal-install" => :build
-  depends_on "ghc@8.2" => :build
+  depends_on "ghc" => :build
   depends_on "pandoc" => :build
 
   def install
     install_cabal_package
-    system "pandoc", "-s", "-t", "man", "shellcheck.1.md", "-o", "shellcheck.1"
+    system "pandoc", "-s", "-f", "markdown-smart", "-t", "man",
+                     "shellcheck.1.md", "-o", "shellcheck.1"
     man1.install "shellcheck.1"
   end
 

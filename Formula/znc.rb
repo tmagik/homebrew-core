@@ -1,13 +1,13 @@
 class Znc < Formula
   desc "Advanced IRC bouncer"
   homepage "https://wiki.znc.in/ZNC"
-  url "https://znc.in/releases/archive/znc-1.7.0.tar.gz"
-  sha256 "c07e31439ac6b948a577bd61a9d5f61a6d191d387423779b937aa1404051b96f"
+  url "https://znc.in/releases/archive/znc-1.7.5.tar.gz"
+  sha256 "a8941e1385c8654287a4428018d93459482e9d5eeedf86bef7b020ddc5f24721"
 
   bottle do
-    sha256 "c5993fa37883982d253b34f4f2381e283714ca09ef4f9a8b67848ba3de200046" => :high_sierra
-    sha256 "d62f0c6426254a99b644a7bc7abf0a4d4f17e477ed6f41dc9cd541518db4942b" => :sierra
-    sha256 "717c757ef458345931f626cef0a5bf7e4165328ba5808f91329214e36beb847d" => :el_capitan
+    sha256 "4bc43bf605d281484dbc34a779da628960df63ece897aa4d216ab6a7fc728b10" => :catalina
+    sha256 "a0f33bcd73035f1c117ce51bbc9f1fd528b615a48a6f4783b64a26f3a02738e5" => :mojave
+    sha256 "c708bb54d28e9780bfea6babc05f861b66fdbf1ac18e03ce9dfc19d9cc45052d" => :high_sierra
   end
 
   head do
@@ -18,19 +18,10 @@ class Znc < Formula
     depends_on "libtool" => :build
   end
 
-  option "with-debug", "Compile ZNC with debug support"
-  option "with-icu4c", "Build with icu4c for charset support"
-  option "with-python3", "Build with mod_python support, allowing Python ZNC modules"
-
-  deprecated_option "enable-debug" => "with-debug"
-  deprecated_option "with-python3" => "with-python"
-
   depends_on "pkg-config" => :build
-  depends_on "openssl"
-  depends_on "icu4c" => :optional
-  depends_on "python" => :optional
-
-  needs :cxx11
+  depends_on "icu4c"
+  depends_on "openssl@1.1"
+  depends_on "python"
 
   def install
     ENV.cxx11
@@ -40,12 +31,8 @@ class Znc < Formula
     ENV.append "CXXFLAGS", "-std=c++11"
     ENV.append "CXXFLAGS", "-stdlib=libc++" if ENV.compiler == :clang
 
-    args = ["--prefix=#{prefix}"]
-    args << "--enable-debug" if build.with? "debug"
-    args << "--enable-python" if build.with? "python"
-
     system "./autogen.sh" if build.head?
-    system "./configure", *args
+    system "./configure", "--prefix=#{prefix}", "--enable-python"
     system "make", "install"
   end
 
@@ -73,7 +60,7 @@ class Znc < Formula
         <integer>300</integer>
       </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

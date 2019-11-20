@@ -1,14 +1,15 @@
 class Liberasurecode < Formula
   desc "Erasure Code API library written in C with pluggable backends"
   homepage "https://github.com/openstack/liberasurecode"
-  url "https://github.com/openstack/liberasurecode/archive/1.5.0.tar.gz"
-  sha256 "713272e81e67f308c21fc6aad417f79b30fb1e7f2338293fa0eaadcc53611909"
+  url "https://github.com/openstack/liberasurecode/archive/1.6.1.tar.gz"
+  sha256 "958b01ff91efe7b21a19ca72937a93b2a5c7af41c08790d4fe9df82d8c5e24f0"
 
   bottle do
     cellar :any
-    sha256 "f70d7dd6bbada77684cce1346b36c22b2784839326c4d5a2406e9f6b78d23502" => :high_sierra
-    sha256 "0d9e4bb728b35cbd6694b7756b961a2c22d716a1fa5eeb31fec86aeb323c8420" => :sierra
-    sha256 "879c7118175fdd3e23700137fb249b89362b957ec1c47cf25723bac32eeb305f" => :el_capitan
+    sha256 "f50f0786b554d9e619da955a98785a8ff6513bd4d244d80a37582a35a9f0adc9" => :catalina
+    sha256 "fba6eb4f5a66f164cb2938a5a2981d4879915a225edefb4ff857910170e52e7a" => :mojave
+    sha256 "7d96611a687605c4856d139d6b1c6305ed686587ee67683c7f3068fa6e5332b0" => :high_sierra
+    sha256 "d7a79bb75e8f7c5099a453ec3a4c2dca8d78d3823101158be68f005e068311fc" => :sierra
   end
 
   depends_on "autoconf" => :build

@@ -3,27 +3,26 @@ class Tcc < Formula
   homepage "https://bellard.org/tcc/"
   url "https://download.savannah.nongnu.org/releases/tinycc/tcc-0.9.27.tar.bz2"
   sha256 "de23af78fca90ce32dff2dd45b3432b2334740bb9bb7b05bf60fdbfc396ceb9c"
+  revision 1
 
   bottle do
-    sha256 "6e8aa202c393f2788c2f6c6ff43ee9b515e2eeb7a21118f92ce67a53ad0e8624" => :high_sierra
-    sha256 "e54350d4d114a0ceabe1d59176d12578e17fc63ebba65fc8c35dc347f02a6daa" => :sierra
-    sha256 "2e5a483599bcb577bc421db239bc5e53d4c31ad8ca5111c9a264f5c3d71c5266" => :el_capitan
+    sha256 "68930891a8746b34b372ecfe43a6a042d0097414713c831353a095135d7b9569" => :catalina
+    sha256 "ca8cd4827e72201cd5f368b5b74b9dead8554e0188b7ea63f81926d775d704e9" => :mojave
+    sha256 "1ad7de1b974ca3e16668dec9cbef2accb29ecedb8f3f5819c06a2f77c8f3f2d1" => :high_sierra
+    sha256 "c2949f3a99d1efb600137e4bb617ebd8a385697038f9cb8136c681033a7a636e" => :sierra
   end
-
-  option "with-cross", "Build all cross compilers"
 
   def install
     args = %W[
       --prefix=#{prefix}
       --source-path=#{buildpath}
       --sysincludepaths=/usr/local/include:#{MacOS.sdk_path}/usr/include:{B}/include
+      --enable-cross"
     ]
-
-    args << "--enable-cross" if build.with? "cross"
 
     ENV.deparallelize
     system "./configure", *args
-    system "make"
+    system "make", "MACOSX_DEPLOYMENT_TARGET=#{MacOS.version}"
     system "make", "install"
   end
 

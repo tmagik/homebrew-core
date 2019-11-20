@@ -24,6 +24,7 @@ class Grc < Formula
     etc.install "grc.bashrc"
     etc.install "grc.zsh"
     etc.install "grc.fish"
+    zsh_completion.install "_grc"
   end
 
   # Apply the upstream fix from garabik/grc@ddc789bf to preexisting config files
@@ -33,12 +34,6 @@ class Grc < Formula
     if grc_bashrc.exist? && File.read(grc_bashrc) =~ bad
       inreplace grc_bashrc, bad, "    alias ls='colourify ls'"
     end
-  end
-
-  def caveats; <<~EOS
-    New shell sessions will use GRC if you add the relevant file to your profile e.g.:
-      . #{etc}/grc.bashrc
-    EOS
   end
 
   test do

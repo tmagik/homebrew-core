@@ -1,27 +1,26 @@
 class Yafc < Formula
   desc "Command-line FTP client"
-  homepage "http://www.yafc-ftp.com/"
-  url "http://www.yafc-ftp.com/downloads/yafc-1.3.7.tar.xz"
+  homepage "https://github.com/sebastinas/yafc"
+  url "https://deb.debian.org/debian/pool/main/y/yafc/yafc_1.3.7.orig.tar.xz"
   sha256 "4b3ebf62423f21bdaa2449b66d15e8d0bb04215472cb63a31d473c3c3912c1e0"
-  revision 1
+  revision 4
 
   bottle do
-    sha256 "40c44b84a96b4cf65ee0c1d09a2770ede71e5cfd7fdf9c24504723a8b1eaef3f" => :high_sierra
-    sha256 "05ea440c672b5283feaf2597a8c0525d3ff4228cd2347aabd3a69d282d245dd2" => :sierra
-    sha256 "9cbbd25ce9019d92e6ed3c8ce5af9533b0d79d79f96b01fc8741016a3bd4eb39" => :el_capitan
-    sha256 "3ac839135bac59b4d1d98cb662adc558109167fd21e69976dd39e1e3602de25b" => :yosemite
+    cellar :any
+    sha256 "07a19edcc11987e0de79538413a41b683c86de41d216eb2c120f747a3564bfd4" => :catalina
+    sha256 "f01687e9e00211d729d0d6bb191d6286b41693c52ecf2e6c5a26874c27589daa" => :mojave
+    sha256 "d2344380f7cee870732888ac9675303edd374400d5c1bbde02f822d09e93d186" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
+  depends_on "libssh"
   depends_on "readline"
-  depends_on "libssh" => :recommended
 
   def install
     args = %W[
       --prefix=#{prefix}
       --with-readline=#{Formula["readline"].opt_prefix}
     ]
-    args << "--without-ssh" if build.without? "libssh"
 
     system "./configure", *args
     system "make", "install"

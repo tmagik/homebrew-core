@@ -1,15 +1,14 @@
 class Curl < Formula
   desc "Get a file from an HTTP, HTTPS or FTP server"
   homepage "https://curl.haxx.se/"
-  url "https://curl.haxx.se/download/curl-7.59.0.tar.bz2"
-  mirror "http://curl.mirror.anstey.ca/curl-7.59.0.tar.bz2"
-  sha256 "b5920ffd6a8c95585fb95070e0ced38322790cb335c39d0dab852d12e157b5a0"
+  url "https://curl.haxx.se/download/curl-7.67.0.tar.bz2"
+  sha256 "dd5f6956821a548bf4b44f067a530ce9445cc8094fd3e7e3fc7854815858586c"
 
   bottle do
     cellar :any
-    sha256 "c16e7fdef8713270d2b0dc1ddaaafcd14101f58a412e0922edc3fedfa20121c4" => :high_sierra
-    sha256 "36bd62e7b1ec2f4af90c4e808ce7503e7e783f4480076309faadfd9363528fb1" => :sierra
-    sha256 "a143b0d967f76643af51dfe0f67c4c869dfa0fdc3e7902ced5fa8eed9c48501d" => :el_capitan
+    sha256 "d43bf6905beee288978104f8fa403fe8b5ded820256916f336d2897be5d9872e" => :catalina
+    sha256 "3e1fa3e2435503c0d67b447a4f20294459f90bc9279890ac80590617fe23657b" => :mojave
+    sha256 "d04cf2c4ca107d4a73e44d886727fbd06f988c120eae06e5b9e8d6ab1f61cf59" => :high_sierra
   end
 
   head do
@@ -22,32 +21,8 @@ class Curl < Formula
 
   keg_only :provided_by_macos
 
-  option "with-rtmpdump", "Build with RTMP support"
-  option "with-libssh2", "Build with scp and sftp support"
-  option "with-c-ares", "Build with C-Ares async DNS support"
-  option "with-gssapi", "Build with GSSAPI/Kerberos authentication support."
-  option "with-libmetalink", "Build with libmetalink support."
-  option "with-nghttp2", "Build with HTTP/2 support (requires OpenSSL)"
-
-  deprecated_option "with-rtmp" => "with-rtmpdump"
-  deprecated_option "with-ssh" => "with-libssh2"
-  deprecated_option "with-ares" => "with-c-ares"
-
-  # HTTP/2 support requires OpenSSL 1.0.2+ or LibreSSL 2.1.3+ for ALPN Support
-  # which is currently not supported by Secure Transport (DarwinSSL).
-  if MacOS.version < :mountain_lion || build.with?("nghttp2")
-    depends_on "openssl"
-  else
-    option "with-openssl", "Build with OpenSSL instead of Secure Transport"
-    depends_on "openssl" => :optional
-  end
-
   depends_on "pkg-config" => :build
-  depends_on "rtmpdump" => :optional
-  depends_on "libssh2" => :optional
-  depends_on "c-ares" => :optional
-  depends_on "libmetalink" => :optional
-  depends_on "nghttp2" => :optional
+  uses_from_macos "openssl"
 
   def install
     system "./buildconf" if build.head?
@@ -57,35 +32,14 @@ class Curl < Formula
       --disable-dependency-tracking
       --disable-silent-rules
       --prefix=#{prefix}
+      --with-secure-transport
+      --without-ca-bundle
+      --without-ca-path
     ]
-
-    # cURL has a new firm desire to find ssl with PKG_CONFIG_PATH instead of using
-    # "--with-ssl" any more. "when possible, set the PKG_CONFIG_PATH environment
-    # variable instead of using this option". Multi-SSL choice breaks w/o using it.
-    if MacOS.version < :mountain_lion || build.with?("openssl") || build.with?("nghttp2")
-      ENV.prepend_path "PKG_CONFIG_PATH", "#{Formula["openssl"].opt_lib}/pkgconfig"
-      args << "--with-ssl=#{Formula["openssl"].opt_prefix}"
-      args << "--with-ca-bundle=#{etc}/openssl/cert.pem"
-      args << "--with-ca-path=#{etc}/openssl/certs"
-    else
-      args << "--with-darwinssl"
-      args << "--without-ca-bundle"
-      args << "--without-ca-path"
-    end
-
-    args << (build.with?("libssh2") ? "--with-libssh2" : "--without-libssh2")
-    args << (build.with?("libmetalink") ? "--with-libmetalink" : "--without-libmetalink")
-    args << (build.with?("gssapi") ? "--with-gssapi" : "--without-gssapi")
-    args << (build.with?("rtmpdump") ? "--with-librtmp" : "--without-librtmp")
-
-    if build.with? "c-ares"
-      args << "--enable-ares=#{Formula["c-ares"].opt_prefix}"
-    else
-      args << "--disable-ares"
-    end
 
     system "./configure", *args
     system "make", "install"
+    system "make", "install", "-C", "scripts"
     libexec.install "lib/mk-ca-bundle.pl"
   end
 

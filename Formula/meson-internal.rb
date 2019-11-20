@@ -1,16 +1,18 @@
 class MesonInternal < Formula
   include Language::Python::Virtualenv
+
   desc "Fast and user friendly build system"
-  homepage "http://mesonbuild.com/"
-  url "https://github.com/mesonbuild/meson/releases/download/0.45.1/meson-0.45.1.tar.gz"
-  sha256 "4d0bb0dbb1bb556cb7a4092fdfea3d6e76606bd739a4bc97481c2d7bc6200afb"
-  head "https://github.com/mesonbuild/meson.git"
+  homepage "https://mesonbuild.com/"
+  url "https://github.com/mesonbuild/meson/releases/download/0.46.1/meson-0.46.1.tar.gz"
+  sha256 "19497a03e7e5b303d8d11f98789a79aba59b5ad4a81bd00f4d099be0212cee78"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "4b448956770b39d9f609ea93ef104c9a9043134d5dbe775737c294ee77393c53" => :high_sierra
-    sha256 "3f873ed8b3a77a28ec89d7ecd9884a7ca65a1157174c1a5e2cda04f80acbfcdc" => :sierra
-    sha256 "fe5a2f34b348947c39ce18b5849aeb19e7b5a4367a9015b7e2e93373c4c6e511" => :el_capitan
+    sha256 "64be4001ba0c88b770c4539489d5be2cd15b0b221a22721bd69a7af414cd20de" => :catalina
+    sha256 "4f65a25c147b6e21ce47cfd2d2f744ee3c0a55e9e1b07c9119dfeb52b13946fe" => :mojave
+    sha256 "cadf29ef1454acee4573d184a01e86e9c05d636b445c21255314dcca80cd9585" => :high_sierra
+    sha256 "ac82416f8f8f99bfd0c19ba2196028d541b945f6bf401a018f59a0d81775988a" => :sierra
+    sha256 "a2434e205cbab983230a6019fa9520adb2a5c2c31eb8d430ac80b74ddec790b6" => :el_capitan
   end
 
   keg_only <<~EOS

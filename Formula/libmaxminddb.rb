@@ -1,14 +1,14 @@
 class Libmaxminddb < Formula
   desc "C library for the MaxMind DB file format"
   homepage "https://github.com/maxmind/libmaxminddb"
-  url "https://github.com/maxmind/libmaxminddb/releases/download/1.3.2/libmaxminddb-1.3.2.tar.gz"
-  sha256 "e6f881aa6bd8cfa154a44d965450620df1f714c6dc9dd9971ad98f6e04f6c0f0"
+  url "https://github.com/maxmind/libmaxminddb/releases/download/1.4.2/libmaxminddb-1.4.2.tar.gz"
+  sha256 "dd582aa971be23dee960ec33c67fb5fd38affba508e6f00ea75959dbd5aad156"
 
   bottle do
     cellar :any
-    sha256 "499fa6bcf160d61221917ce8d3ea56c37649dc0fa2e398c9ab3140dba6e19d36" => :high_sierra
-    sha256 "d320f15ceac3a01d9867c1995d5c2aaf58f1fbdb690e18233df13a3c67e53e50" => :sierra
-    sha256 "3bdf70b45906a529c527c9831954210bb29629cfdc989e0087e08d9ec95085f8" => :el_capitan
+    sha256 "737fa40053d963f1c658c1de368d467309eb716869350192fc844aff3a078c23" => :catalina
+    sha256 "bf9f7295d6295f51d94e88562dca6b5d979bd0d141cd74c0cfa78941d4b74d7a" => :mojave
+    sha256 "960dd0e63819fc6fb50c83085f013df073308e35df378e2ab5916f96da71389e" => :high_sierra
   end
 
   head do
@@ -18,8 +18,6 @@ class Libmaxminddb < Formula
     depends_on "automake" => :build
     depends_on "libtool" => :build
   end
-
-  depends_on "geoipupdate" => :optional
 
   def install
     system "./bootstrap" if build.head?

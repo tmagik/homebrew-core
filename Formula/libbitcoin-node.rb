@@ -1,14 +1,15 @@
 class LibbitcoinNode < Formula
   desc "Bitcoin Full Node"
   homepage "https://github.com/libbitcoin/libbitcoin-node"
-  url "https://github.com/libbitcoin/libbitcoin-node/archive/v3.5.0.tar.gz"
-  sha256 "e3a0a96155ca93aa6cba75789c18419f40686a69cbd40c77aa77ca84ccc43cab"
+  url "https://github.com/libbitcoin/libbitcoin-node/archive/v3.6.0.tar.gz"
+  sha256 "9556ee8aab91e893db1cf343883034571153b206ffbbce3e3133c97e6ee4693b"
   revision 1
 
   bottle do
-    sha256 "f2798e9c9fbd9e2ea2bbbb7233965bb50d02a96e90b2ef87c57a7c8bf0917752" => :high_sierra
-    sha256 "7405c42f379048caada917eead1e620d9fe7683c8d6ce96f59fd0699d90bed54" => :sierra
-    sha256 "62977c7dbcd04d4c4bc1c50a64f5e10ac20ae36fb9eff7f2ac34acb97259bad3" => :el_capitan
+    sha256 "653e045b09c85d70bcc454f6a2fb7c7cbd5fcfdd77eb0f4d376699c5bde730e8" => :catalina
+    sha256 "d80c4711180ca3046edfad49d380a434f3dee07232ab3171483a5f135ebe41d2" => :mojave
+    sha256 "d0e3c6d9bcd6db9b2275aadafd8c15ad086da4f4b43cb3e2b25ed76239841d8d" => :high_sierra
+    sha256 "982ed6da5589239636751f909765d7ddc744fbfe29ed8a6f73cf6b8f62546e3f" => :sierra
   end
 
   depends_on "autoconf" => :build
@@ -41,10 +42,10 @@ class LibbitcoinNode < Formula
         return 0;
       }
     EOS
-    system ENV.cxx, "-std=c++11", "test.cpp",
-                    "-I#{libexec}/include",
-                    "-lbitcoin", "-lbitcoin-node", "-lboost_system",
-                    "-o", "test"
+    system ENV.cxx, "-std=c++11", "test.cpp", "-o", "test",
+                    "-L#{Formula["libbitcoin"].opt_lib}", "-lbitcoin",
+                    "-L#{lib}", "-lbitcoin-node",
+                    "-L#{Formula["boost"].opt_lib}", "-lboost_system"
     system "./test"
   end
 end

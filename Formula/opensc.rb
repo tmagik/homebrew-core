@@ -1,38 +1,34 @@
 class Opensc < Formula
   desc "Tools and libraries for smart cards"
   homepage "https://github.com/OpenSC/OpenSC/wiki"
-  url "https://github.com/OpenSC/OpenSC/releases/download/0.17.0/opensc-0.17.0.tar.gz"
-  sha256 "be73c6816867ab4721e6a9ae7dba8e890c5f169f0a2cbb4bf354e0f30a948300"
+  url "https://github.com/OpenSC/OpenSC/releases/download/0.19.0/opensc-0.19.0.tar.gz"
+  sha256 "2c5a0e4df9027635290b9c0f3addbbf0d651db5ddb0ab789cb0e978f02fd5826"
+  revision 1
   head "https://github.com/OpenSC/OpenSC.git"
 
   bottle do
-    sha256 "981f53771fdadab0737c6c2da0d497c5f7394523e1cfb593c54d9145ab164579" => :high_sierra
-    sha256 "f3dbc36b378c985b058d27b0f3ce8de474efee88a6baf20ea868b741b3be4b1d" => :sierra
-    sha256 "bc4df60a5ce3522c562080ddebd1ff36f1bda21e5fa856ff53ab7b92e3e7d5ee" => :el_capitan
-    sha256 "4f0fe7e41fca7a552e58c6cc0968a98ab749c04519531e0e6030f4582f857989" => :yosemite
+    sha256 "e499235404c11f8b0cdeb0a75f9384d0cb854b1e4ea1d4e9c6a9da9117447e2d" => :catalina
+    sha256 "aef1ca8666ec50558f3631d98cb1985570b751e54d6fc6d44679ebdfdb917a33" => :mojave
+    sha256 "b27e321b2255e7b97efd3e1ac45c2a51264f84a6cca581da533dc28ea95c197b" => :high_sierra
+    sha256 "f6cb9f0abe5a48c71d8c0adc00a741bcac48807a272f712ae7685b74da8535fe" => :sierra
   end
-
-  option "without-man-pages", "Skip building manual pages"
 
   depends_on "autoconf" => :build
   depends_on "automake" => :build
+  depends_on "docbook-xsl" => :build
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
-  depends_on "docbook-xsl" => :build if build.with? "man-pages"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     args = %W[
       --disable-dependency-tracking
       --prefix=#{prefix}
-      --enable-sm
       --enable-openssl
       --enable-pcsc
+      --enable-sm
+      --with-xsl-stylesheetsdir=#{Formula["docbook-xsl"].opt_prefix}/docbook-xsl
     ]
-
-    if build.with? "man-pages"
-      args << "--with-xsl-stylesheetsdir=#{Formula["docbook-xsl"].opt_prefix}/docbook-xsl"
-    end
 
     system "./bootstrap"
     system "./configure", *args

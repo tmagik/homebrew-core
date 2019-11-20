@@ -1,26 +1,24 @@
 class Exa < Formula
   desc "Modern replacement for 'ls'"
   homepage "https://the.exa.website"
-  url "https://github.com/ogham/exa/archive/v0.8.0.tar.gz"
-  sha256 "07085fd784d553b7c3b62b5a52e4635580d6154f47e6d64245ec0588638dee3e"
+  url "https://github.com/ogham/exa/archive/v0.9.0.tar.gz"
+  sha256 "96e743ffac0512a278de9ca3277183536ee8b691a46ff200ec27e28108fef783"
   head "https://github.com/ogham/exa.git"
 
   bottle do
-    sha256 "e10e5f5d86fbab6f6d558c620a73f1caf157d42c5a01c54636f2de08f4aaee4b" => :high_sierra
-    sha256 "beb45a502b3e7a61689f14e298b310d83765c5242181ef0c7e12f72c8b7c7736" => :sierra
-    sha256 "bf8070b4da1dbf25d8f7f12b324e845de5282dc5c028045af298cb41d2c30831" => :el_capitan
+    cellar :any_skip_relocation
+    sha256 "cc484e7deb12cdae4ede810258be0ca069d7db395897e9d3fbadd501fb075743" => :catalina
+    sha256 "bc80009ad845d914c08e6de1c39c97e0f4f180ef4f077b3ef1957cab519d6743" => :mojave
+    sha256 "7382b758899c756f94c4c99440f71075945d333e302e53139e423fb1798c852e" => :high_sierra
+    sha256 "9499359da5f5fffbd8b22c8cb8e78f0fdf99594c4d2b06e7ba58eb21afbcb582" => :sierra
   end
-
-  option "without-git", "Build without Git support"
 
   depends_on "cmake" => :build
   depends_on "rust" => :build
 
   def install
-    args = ["PREFIX=#{prefix}"]
-    args << "FEATURES=" if build.without? "git"
+    system "make", "install", "PREFIX=#{prefix}"
 
-    system "make", "install", *args
     bash_completion.install "contrib/completions.bash" => "exa"
     zsh_completion.install  "contrib/completions.zsh"  => "_exa"
     fish_completion.install "contrib/completions.fish" => "exa.fish"

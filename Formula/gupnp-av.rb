@@ -1,20 +1,22 @@
 class GupnpAv < Formula
   desc "Library to help implement UPnP A/V profiles"
   homepage "https://wiki.gnome.org/GUPnP/"
-  url "https://download.gnome.org/sources/gupnp-av/0.12/gupnp-av-0.12.10.tar.xz"
-  sha256 "8038ef84dddbe7ad91c205bf91dddf684f072df8623f39b6555a6bb72837b85a"
-  revision 1
+  url "https://download.gnome.org/sources/gupnp-av/0.12/gupnp-av-0.12.11.tar.xz"
+  sha256 "689dcf1492ab8991daea291365a32548a77d1a2294d85b33622b55cca9ce6fdc"
+  revision 2
 
   bottle do
-    sha256 "022dbc5e4b3f60c9e32d55315ae2191a49f574172f550b74ad18625ebf326467" => :high_sierra
-    sha256 "f65e6ee6a9d7e68bd261ccc56501db503088e3e63c9b42277bb07e30ab8cda1f" => :sierra
-    sha256 "d5adf2d8f3eeb96a9910b2c41e0cc732226d5beeb4ad8a3edf091036feb3399d" => :el_capitan
+    sha256 "6e0cf541932104a1259005b3d125d96c72c80e2dffc7d8d4b5ddb199c7bdd237" => :catalina
+    sha256 "15f5c2ec832094d098ebbc52c1a327ce7e6125293180e7acc377bc7dcc3d5210" => :mojave
+    sha256 "7149d11d69541003e8fc3b1d0da0b125b6dac5329db3017a735858363f31e78c" => :high_sierra
+    sha256 "dc21d3e8e793fffde5b7b734be587f3a736f94f03f8bfa42ca5ae395be6081a3" => :sierra
   end
 
-  depends_on "pkg-config" => :build
+  depends_on "gobject-introspection" => :build
   depends_on "intltool" => :build
+  depends_on "pkg-config" => :build
   depends_on "gettext"
-  depends_on "gupnp"
+  depends_on "glib"
 
   def install
     ENV["ax_cv_check_cflags__Wl___no_as_needed"] = "no"

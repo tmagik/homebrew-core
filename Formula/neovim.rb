@@ -1,38 +1,54 @@
 class Neovim < Formula
   desc "Ambitious Vim-fork focused on extensibility and agility"
   homepage "https://neovim.io/"
-  url "https://github.com/neovim/neovim/archive/v0.2.2.tar.gz"
-  sha256 "a838ee07cc9a2ef8ade1b31a2a4f2d5e9339e244ade68e64556c1f4b40ccc5ed"
-  revision 1
-  head "https://github.com/neovim/neovim.git"
+  url "https://github.com/neovim/neovim/archive/v0.4.3.tar.gz"
+  sha256 "91a0b5d32204a821bf414690e6b48cf69224d1961d37158c2b383f6a6cf854d2"
 
   bottle do
-    sha256 "86b8181d2d6c96a6ecbac8414087456631cabdb27e6d36fee9f2e9c723fe99ad" => :high_sierra
-    sha256 "c2e551578f36847121dd8cdcdfd3de9abf5836906658e166ab6e5d71ba805de5" => :sierra
-    sha256 "4e193b9c000868ece51cd256fb9831423381969fbc53212f18484b5b2cba187a" => :el_capitan
+    sha256 "389ab254794ea04df8a106bf281c227c4fdee27c609d52951f32b9a0239031d6" => :catalina
+    sha256 "fb6cc38c45be4650a4a750a314cec27f6f7643dc7c22a1f5abae347e1b39b388" => :mojave
+    sha256 "b2f7450e005f4eb22bfaf650fe7741fa8629393a947b4dd48c9f91e7fc258113" => :high_sierra
+  end
+
+  head do
+    url "https://github.com/neovim/neovim.git"
+    depends_on "utf8proc"
   end
 
   depends_on "cmake" => :build
-  depends_on "lua@5.1" => :build
+  depends_on "luarocks" => :build
   depends_on "pkg-config" => :build
   depends_on "gettext"
-  depends_on "jemalloc"
   depends_on "libtermkey"
   depends_on "libuv"
   depends_on "libvterm"
   depends_on "luajit"
   depends_on "msgpack"
   depends_on "unibilium"
-  depends_on "python@2"
-
-  resource "lpeg" do
-    url "https://luarocks.org/manifests/gvvaughan/lpeg-1.0.1-1.src.rock", :using => :nounzip
-    sha256 "149be31e0155c4694f77ea7264d9b398dd134eca0d00ff03358d91a6cfb2ea9d"
-  end
 
   resource "mpack" do
-    url "https://luarocks.org/manifests/tarruda/mpack-1.0.6-0.src.rock", :using => :nounzip
-    sha256 "9068d9d3f407c72a7ea18bc270b0fa90aad60a2f3099fa23d5902dd71ea4cd5f"
+    url "https://github.com/libmpack/libmpack-lua/releases/download/1.0.7/libmpack-lua-1.0.7.tar.gz"
+    sha256 "68565484a3441d316bd51bed1cacd542b7f84b1ecfd37a8bd18dd0f1a20887e8"
+  end
+
+  resource "lpeg" do
+    url "https://luarocks.org/manifests/gvvaughan/lpeg-1.0.2-1.src.rock"
+    sha256 "e0d0d687897f06588558168eeb1902ac41a11edd1b58f1aa61b99d0ea0abbfbc"
+  end
+
+  resource "inspect" do
+    url "https://luarocks.org/manifests/kikito/inspect-3.1.1-0.src.rock"
+    sha256 "ea1f347663cebb523e88622b1d6fe38126c79436da4dbf442674208aa14a8f4c"
+  end
+
+  resource "lua-compat-5.3" do
+    url "https://github.com/keplerproject/lua-compat-5.3/archive/v0.7.tar.gz"
+    sha256 "bec3a23114a3d9b3218038309657f0f506ad10dfbc03bb54e91da7e5ffdba0a2"
+  end
+
+  resource "luv" do
+    url "https://github.com/luvit/luv/releases/download/1.30.0-0/luv-1.30.0-0.tar.gz"
+    sha256 "5cc75a012bfa9a5a1543d0167952676474f31c2d7fd8d450b56d8929dbebb5ef"
   end
 
   def install
@@ -42,16 +58,46 @@ class Neovim < Formula
 
     ENV.prepend_path "LUA_PATH", "#{buildpath}/deps-build/share/lua/5.1/?.lua"
     ENV.prepend_path "LUA_CPATH", "#{buildpath}/deps-build/lib/lua/5.1/?.so"
+    lua_path = "--lua-dir=#{Formula["luajit"].opt_prefix}"
 
     cd "deps-build" do
-      system "luarocks-5.1", "build", "build/src/lpeg/lpeg-1.0.1-1.src.rock", "--tree=."
-      system "luarocks-5.1", "build", "build/src/mpack/mpack-1.0.6-0.src.rock", "--tree=."
-      system "cmake", "../third-party", "-DUSE_BUNDLED=OFF", *std_cmake_args
-      system "make"
+      %w[
+        mpack/mpack-1.0.7-0.rockspec
+        lpeg/lpeg-1.0.2-1.src.rock
+        inspect/inspect-3.1.1-0.src.rock
+      ].each do |rock|
+        dir, rock = rock.split("/")
+        cd "build/src/#{dir}" do
+          output = Utils.popen_read("luarocks", "unpack", lua_path, rock, "--tree=#{buildpath}/deps-build")
+          unpack_dir = output.split("\n")[-2]
+          cd unpack_dir do
+            system "luarocks", "make", lua_path, "--tree=#{buildpath}/deps-build"
+          end
+        end
+      end
+
+      cd "build/src/luv" do
+        cmake_args = std_cmake_args.reject { |s| s["CMAKE_INSTALL_PREFIX"] }
+        cmake_args += %W[
+          -DCMAKE_INSTALL_PREFIX=#{buildpath}/deps-build
+          -DLUA_BUILD_TYPE=System
+          -DWITH_SHARED_LIBUV=ON
+          -DBUILD_SHARED_LIBS=OFF
+          -DBUILD_MODULE=OFF
+          -DLUA_COMPAT53_DIR=#{buildpath}/deps-build/build/src/lua-compat-5.3
+        ]
+        system "cmake", ".", *cmake_args
+        system "make", "install"
+      end
     end
 
     mkdir "build" do
-      system "cmake", "..", *std_cmake_args
+      cmake_args = std_cmake_args
+      cmake_args += %W[
+        -DLIBLUV_INCLUDE_DIR=#{buildpath}/deps-build/include
+        -DLIBLUV_LIBRARY=#{buildpath}/deps-build/lib/libluv.a
+      ]
+      system "cmake", "..", *cmake_args
       system "make", "install"
     end
   end

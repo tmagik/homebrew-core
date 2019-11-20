@@ -1,8 +1,8 @@
 class DockerMachineCompletion < Formula
   desc "Docker-machine completion script"
   homepage "https://docs.docker.com/machine/completion/"
-  url "https://github.com/docker/machine/archive/v0.14.0.tar.gz"
-  sha256 "a06bd621db164ed297ebff2ad1a7109490df0376cd352d92309dfb108f3ca007"
+  url "https://github.com/docker/machine/archive/v0.16.2.tar.gz"
+  sha256 "af8bff768cd1746c787e2f118a3a8af45ed11679404b6e45d5199e343e550059"
   head "https://github.com/docker/machine.git"
 
   bottle :unneeded

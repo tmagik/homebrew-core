@@ -1,14 +1,15 @@
 class LibatomicOps < Formula
   desc "Implementations for atomic memory update operations"
   homepage "https://github.com/ivmai/libatomic_ops/"
-  url "https://github.com/ivmai/libatomic_ops/releases/download/v7.6.4/libatomic_ops-7.6.4.tar.gz"
-  sha256 "5b823d5a685dd70caeef8fc50da7d763ba7f6167fe746abca7762e2835b3dd4e"
+  url "https://github.com/ivmai/libatomic_ops/releases/download/v7.6.10/libatomic_ops-7.6.10.tar.gz"
+  sha256 "587edf60817f56daf1e1ab38a4b3c729b8e846ff67b4f62a6157183708f099af"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "ce3c9fd22f329bcc0161de61061c3ef4058664a58993cead3b0dc9eebcd73ff7" => :high_sierra
-    sha256 "72210cf477e6eaa39232383ca9912fef5d025a7cc91c40db16bdb85533124736" => :sierra
-    sha256 "2e1070711abeefa9ea329fbae5881c1caba725d5d0f9c3b4d21845593bdd3a72" => :el_capitan
+    sha256 "d102cc71b5959eac9f8ecbc5029801ea2a544ad5b6602c586e5d5d33c67ebd55" => :catalina
+    sha256 "b509d8669c5336775b0462c3e1464419d083bccc0bf43f8dab8fa3eb0ac44405" => :mojave
+    sha256 "2e3053c22101fd8baf693ca404f258763b15e77372b5293e999f8bbc8b032522" => :high_sierra
+    sha256 "d94aa0351ce2de312d0b31a64d48059473a170d9704968378cf121ad097d7d9b" => :sierra
   end
 
   def install

@@ -1,32 +1,20 @@
 class Memcached < Formula
   desc "High performance, distributed memory object caching system"
   homepage "https://memcached.org/"
-  url "https://www.memcached.org/files/memcached-1.5.7.tar.gz"
-  sha256 "5bb706a8fc7ae7461a6788eaddd85e4a4e84e952d3a80c21926342c2838f4e46"
+  url "https://www.memcached.org/files/memcached-1.5.19.tar.gz"
+  sha256 "3ddcdaa2d14d215f3111a7448b79c889c57618a26e97ad989581f1880a5a4be0"
 
   bottle do
     cellar :any
-    sha256 "acd08eb0c4e2b4237364123faade971a049f09d92fd1c0221867fb009705d671" => :high_sierra
-    sha256 "88f2db94e693718d392b3bf6a2433a64453fd2f949c911956125e47a7222ceed" => :sierra
-    sha256 "80c5d28051f3e6ee6b3033e22ad9e6aa9f6f174077ecf4752a4d38e082470a17" => :el_capitan
+    sha256 "1e6afd5a220e785c50c8258c55c6c938663366d29edff010fc7d31ee78ac9336" => :catalina
+    sha256 "8664da285842c6dbdf04eae132c8cc1a1f2f4c861e25ff25989ea524b255407c" => :mojave
+    sha256 "a48eadd9daa3e726d87c90f14b16aee6e9566d730b5d513924bcaa2c2cac68b1" => :high_sierra
   end
-
-  option "with-sasl", "Enable SASL support -- disables ASCII protocol!"
-  option "with-sasl-pwdb", "Enable SASL with memcached's own plain text password db support -- disables ASCII protocol!"
 
   depends_on "libevent"
 
-  deprecated_option "enable-sasl" => "with-sasl"
-  deprecated_option "enable-sasl-pwdb" => "with-sasl-pwdb"
-
-  conflicts_with "mysql-cluster", :because => "both install `bin/memcached`"
-
   def install
-    args = ["--prefix=#{prefix}", "--disable-coverage"]
-    args << "--enable-sasl" if build.with? "sasl"
-    args << "--enable-sasl-pwdb" if build.with? "sasl-pwdb"
-
-    system "./configure", *args
+    system "./configure", "--prefix=#{prefix}", "--disable-coverage"
     system "make", "install"
   end
 
@@ -53,7 +41,7 @@ class Memcached < Formula
       <string>#{HOMEBREW_PREFIX}</string>
     </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do

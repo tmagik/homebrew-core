@@ -1,15 +1,16 @@
 class Xmake < Formula
-  desc "Make-like build utility based on Lua"
-  homepage "http://xmake.io"
-  url "https://github.com/tboox/xmake/archive/v2.1.9.tar.gz"
-  sha256 "f0e1887ac0f51293ce0157a6df4eb917df24fbf0819bc5b6f50218ee0d80bc8b"
-  head "https://github.com/waruqi/xmake.git"
+  desc "A cross-platform build utility based on Lua"
+  homepage "https://xmake.io/"
+  url "https://github.com/xmake-io/xmake/releases/download/v2.2.8/xmake-v2.2.8.tar.gz"
+  sha256 "fb8ad4ca5133ca0cc303e57c24afaf00fbdaf7a9d59e1a6e7c4337803926bf29"
+  head "https://github.com/xmake-io/xmake.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "904f0bff1251d3a968c334343fd204cea0022e82f1744c33efaf69967dae36d5" => :high_sierra
-    sha256 "904f0bff1251d3a968c334343fd204cea0022e82f1744c33efaf69967dae36d5" => :sierra
-    sha256 "3989ba7511527a7dd11b54ac7395c80a632045fc211d97f1e26b26eebbfbef93" => :el_capitan
+    sha256 "3903b56affb942c50fbcdda7eff591382082339ff72ee7b520d15cc7ad362680" => :catalina
+    sha256 "1cd0b542c034f5f58d3d42f1c447386817d32d567c5d3dd0d048aa491588dcc9" => :mojave
+    sha256 "d744b2bb04f95470246fec7bc911d1013d5509dc8328a540da2a528eb56721ad" => :high_sierra
+    sha256 "64bc6143dbd8962490617d14693eff572cae6609d53c7c3ef6f3cac6a7fcef2d" => :sierra
   end
 
   def install

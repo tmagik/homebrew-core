@@ -1,20 +1,21 @@
 class Blockhash < Formula
   desc "Perceptual image hash calculation tool"
   homepage "https://github.com/commonsmachinery/blockhash"
-  url "https://github.com/commonsmachinery/blockhash/archive/v0.3.tar.gz"
-  sha256 "a4fbe16dc8d1e9b82de860d97222ce6259495f7832c7dfe3de9e0bb42f85995e"
-  revision 2
+  url "https://github.com/commonsmachinery/blockhash/archive/v0.3.1.tar.gz"
+  sha256 "56e8d2fecf2c7658c9f8b32bfb2d29fdd0d0535ddb3082e44b45a5da705aca86"
+  revision 1
   head "https://github.com/commonsmachinery/blockhash.git"
 
   bottle do
     cellar :any
-    sha256 "ba87b5b649164c63d82f1693588414d994e0f2837c6f6f169634c9fc94d812f6" => :high_sierra
-    sha256 "7cd8bc3a26ce19bb2b5b36e92679fef23bc751b6773752169f29eae595242f6b" => :sierra
-    sha256 "e02dd7c2cf8fe76de1f376c1001c22b8b1a614897b4ffa77d89b648953b07c25" => :el_capitan
+    sha256 "e5b78f0c14faf009da78d00c1b31700837bd14c42be49d5609cf2f584678006a" => :catalina
+    sha256 "d9580b0bade98b0d083d3838b1b7078894b6d3d56e758628a050345a1ddf526b" => :mojave
+    sha256 "fdba183a92f5cfea8db07f626ccf13993bc59dec11ee2e402b063133da33f2eb" => :high_sierra
   end
 
   depends_on "pkg-config" => :build
   depends_on "imagemagick"
+  uses_from_macos "python@2"
 
   resource "testdata" do
     url "https://raw.githubusercontent.com/commonsmachinery/blockhash/ce08b465b658c4e886d49ec33361cee767f86db6/testdata/clipper_ship.jpg"
@@ -23,6 +24,9 @@ class Blockhash < Formula
 
   def install
     system "./waf", "configure", "--prefix=#{prefix}"
+    # pkg-config adds -fopenmp flag during configuring
+    # This fails the build on system clang, and OpenMP is not used in blockhash
+    inreplace "build/c4che/_cache.py", "-fopenmp", ""
     system "./waf"
     system "./waf", "install"
   end

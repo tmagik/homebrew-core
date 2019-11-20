@@ -1,17 +1,18 @@
 class Restview < Formula
   desc "Viewer for ReStructuredText documents that renders them on the fly"
   homepage "https://mg.pov.lt/restview/"
-  url "https://github.com/mgedmin/restview/archive/2.9.0.tar.gz"
-  sha256 "d4ecfa795736e1a132ce0b69af7a6e1679a9ff94e729f39992c7d1fee909845a"
+  url "https://github.com/mgedmin/restview/archive/2.9.2.tar.gz"
+  sha256 "155a5744111d3d1f9e7903f4445ff41c04b42c0be29705f57fb98b3d33b283bd"
+  revision 1
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "bf14f8254116c956b8f10837dc608a702e41c06becf1e6f843ff9e17a70313fd" => :high_sierra
-    sha256 "33a36aab7a1615d2f39a2f1a33a1b7f5ea896cc8f532c34dd11e15221b9521e7" => :sierra
-    sha256 "c308803d9aea18aaeb5c83d2298b95dd5b1587120baefa05e5eeb6977ad8ac58" => :el_capitan
+    sha256 "4604570163a307b9c8f0650d4f659cf985bc52260a653c3659ad22ca28e96769" => :catalina
+    sha256 "83b3b6d66d30c2d5362cb6418b41bee11b86940bac91aeab6e2d2e558560d87e" => :mojave
+    sha256 "776a2d539bfcaa95f2ff94db1aafe9e5a7817341b5484ea253f667a8f7538ec3" => :high_sierra
   end
 
-  depends_on "python@2"
+  depends_on "python"
 
   resource "bleach" do
     url "https://files.pythonhosted.org/packages/eb/ea/58428609442130dc31d3a59010bf6cbd263a16c589d01d23b7c1e6997e3b/bleach-2.1.3.tar.gz"
@@ -19,8 +20,8 @@ class Restview < Formula
   end
 
   resource "cffi" do
-    url "https://files.pythonhosted.org/packages/e7/a7/4cd50e57cc6f436f1cc3a7e8fa700ff9b8b4d471620629074913e3735fb2/cffi-1.11.5.tar.gz"
-    sha256 "e90f17980e6ab0f3c2f3730e56d1fe9bcba1891eeea58966e89d352492cc74f4"
+    url "https://files.pythonhosted.org/packages/93/1a/ab8c62b5838722f29f3daffcc8d4bd61844aa9b5f437341cc890ceee483b/cffi-1.12.3.tar.gz"
+    sha256 "041c81822e9f84b1d9c401182e174996f0bae9991f33725d059b771744290774"
   end
 
   resource "cmarkgfm" do
@@ -74,18 +75,19 @@ class Restview < Formula
   end
 
   def install
-    ENV.prepend_create_path "PYTHONPATH", libexec/"vendor/lib/python2.7/site-packages"
+    xy = Language::Python.major_minor_version "python3"
+    ENV.prepend_create_path "PYTHONPATH", libexec/"vendor/lib/python#{xy}/site-packages"
 
     res = resources.reject { |r| r.name == "sample" }
 
     res.each do |r|
       r.stage do
-        system "python", *Language::Python.setup_install_args(libexec/"vendor")
+        system "python3", *Language::Python.setup_install_args(libexec/"vendor")
       end
     end
 
-    ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python2.7/site-packages"
-    system "python", *Language::Python.setup_install_args(libexec)
+    ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python#{xy}/site-packages"
+    system "python3", *Language::Python.setup_install_args(libexec)
 
     bin.install Dir[libexec/"bin/*"]
     bin.env_script_all_files(libexec/"bin", :PYTHONPATH => ENV["PYTHONPATH"])

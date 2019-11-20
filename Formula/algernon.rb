@@ -2,17 +2,16 @@ class Algernon < Formula
   desc "Pure Go web server with Lua, Markdown, HTTP/2 and template support"
   homepage "https://algernon.roboticoverlords.org/"
   url "https://github.com/xyproto/algernon.git",
-      :tag => "1.10",
-      :revision => "d718983ea2c005343d7ca3115b6a74fe7286acaa"
-  sha256 "f1627ed11e84890befbf244828aff7a56a17157f721b445804e18b5461e3b8f3"
+      :tag      => "1.12.5",
+      :revision => "206912d922bb8ab96e23708d1cf222d572741ebe"
   version_scheme 1
   head "https://github.com/xyproto/algernon.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "be38f18dd05b157a3e0ea7fbd19d7f2cadf4d34ab92b445dcf768a2e86f899d4" => :high_sierra
-    sha256 "771caea5e406490d3dfca57eaec4ef1bd9e0055cf6fb4b2e1546a7293f80b62f" => :sierra
-    sha256 "642e81b999cdd906656d23ff1d502a7e2d0774a484d9c94d032833e60f62b867" => :el_capitan
+    sha256 "fa5efc4b459178262db04e6cf12f24ebdc7540eae749e8b86b4d01e4b74a856b" => :mojave
+    sha256 "01ffdc4770c149a2be689b33235eff7838352ad20d11f1ff1c2c9c0a40f3fc24" => :high_sierra
+    sha256 "abeffa6872984c9c33550a267379c79ae2e4fe3f1370fa67391c6ca3040bf3e4" => :sierra
   end
 
   depends_on "go" => :build
@@ -30,16 +29,14 @@ class Algernon < Formula
   end
 
   test do
-    begin
-      pid = fork do
-        exec "#{bin}/algernon", "-s", "-q", "--httponly", "--boltdb", "tmp.db",
-                                "--addr", ":45678"
-      end
-      sleep 20
-      output = shell_output("curl -sIm3 -o- http://localhost:45678")
-      assert_match /200 OK.*Server: Algernon/m, output
-    ensure
-      Process.kill("HUP", pid)
+    pid = fork do
+      exec "#{bin}/algernon", "-s", "-q", "--httponly", "--boltdb", "tmp.db",
+                              "--addr", ":45678"
     end
+    sleep 20
+    output = shell_output("curl -sIm3 -o- http://localhost:45678")
+    assert_match /200 OK.*Server: Algernon/m, output
+  ensure
+    Process.kill("HUP", pid)
   end
 end

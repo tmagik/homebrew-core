@@ -1,10 +1,13 @@
 class Groovysdk < Formula
   desc "SDK for Groovy: a Java-based scripting language"
-  homepage "http://www.groovy-lang.org"
-  url "https://dl.bintray.com/groovy/maven/apache-groovy-sdk-2.4.12.zip"
-  sha256 "2dea0d021d74184ca2659f964d88b7e7c849e9e694b74289da682834f425bbb0"
+  homepage "https://www.groovy-lang.org/"
+  url "https://dl.bintray.com/groovy/maven/apache-groovy-sdk-2.5.8.zip"
+  sha256 "37e030bbb14746869e822702db1c6dd57d7d077ceef4c12938b1c6c4d341f459"
 
   bottle :unneeded
+
+  # Groovy 2.5 requires JDK8+ to build and JDK7 is the minimum version of the JRE that we support.
+  depends_on :java => "1.7+"
 
   conflicts_with "groovy", :because => "both install the same binaries"
 
@@ -16,7 +19,7 @@ class Groovysdk < Formula
 
     prefix.install_metafiles
     bin.install Dir["bin/*"]
-    libexec.install %w[conf lib embeddable src doc]
+    libexec.install "conf", "lib", "src", "doc"
     bin.env_script_all_files(libexec+"bin", :GROOVY_HOME => ENV["GROOVY_HOME"])
   end
 

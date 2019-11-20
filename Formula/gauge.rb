@@ -1,18 +1,19 @@
 class Gauge < Formula
   desc "Test automation tool that supports executable documentation"
   homepage "https://getgauge.io"
-  url "https://github.com/getgauge/gauge/archive/v0.9.8.tar.gz"
-  sha256 "ba63c6c0571751e283f5742bf4b849610e451785c2f639c54a4857210b8941ff"
+  url "https://github.com/getgauge/gauge/archive/v1.0.6.tar.gz"
+  sha256 "89b47749ef134e57295849e89a10fadf577e05aeb690e9db013c39e9c59b1f5d"
   head "https://github.com/getgauge/gauge.git"
 
   bottle do
-    sha256 "cd1c23c738966a4fca71d73ed1c5515fcd87e6f12ea8cfa49503a8a747688886" => :high_sierra
-    sha256 "a78e695a386a5a76f5334e0d7e34102ab93783926ac81eff6b5c756e96d19d95" => :sierra
-    sha256 "66fc57093287cd847fc326df9c5b839f97f1c997ba2f36dfd73ba3850be0b407" => :el_capitan
+    cellar :any_skip_relocation
+    sha256 "55748117bc55056a48b5c7b25071fd7b1a620361939f7016e2511d9b8eab2537" => :catalina
+    sha256 "45b496b39ee682a95ca49b36a94e8041e03fca3644e80223c36539f495fee384" => :mojave
+    sha256 "60af1c02f5a733bcb8614fe8bc2c7031675cde58aed3f6b0eb0a5a18602c8320" => :high_sierra
+    sha256 "591e0cbb2faa78e291cc2dc026fe68532c6c63f4329fada91bdedc3695f92d00" => :sierra
   end
 
   depends_on "go" => :build
-  depends_on "godep" => :build
 
   def install
     ENV["GOPATH"] = buildpath
@@ -21,7 +22,6 @@ class Gauge < Formula
     dir.install buildpath.children
     ln_s buildpath/"src", dir
     cd dir do
-      system "godep", "restore"
       system "go", "run", "build/make.go"
       system "go", "run", "build/make.go", "--install", "--prefix", prefix
     end

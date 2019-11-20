@@ -1,16 +1,17 @@
 class Duc < Formula
   desc "Suite of tools for inspecting disk usage"
-  homepage "http://duc.zevv.nl"
-  url "https://github.com/zevv/duc/releases/download/1.4.3/duc-1.4.3.tar.gz"
-  sha256 "504810a1ac1939fb1a70bd25e492f91ea38bcd58ae0a962ce5d35559d7775e74"
+  homepage "https://duc.zevv.nl/"
+  url "https://github.com/zevv/duc/releases/download/1.4.4/duc-1.4.4.tar.gz"
+  sha256 "f4e7483dbeca4e26b003548f9f850b84ce8859bba90da89c55a7a147636ba922"
   revision 1
   head "https://github.com/zevv/duc.git"
 
   bottle do
     cellar :any
-    sha256 "73b517bb32cbe3df05827770993ea8cfa721f9ac252878ad940fd3c45bebcdc8" => :high_sierra
-    sha256 "d8c89b0441c3d4b4321ad9c833d1ed91fa0ec7758e67d87ce44b656e75e1931d" => :sierra
-    sha256 "cc192c66f235d906f672dc56984a5a3fadcf60823e4c8bf2195759fb048526a5" => :el_capitan
+    sha256 "0c6b9ba499943a6523e2618f7d9534892d5eb19250b1d250f9615d6692c64cb8" => :catalina
+    sha256 "a6482213346ed6dfb26066b3442722a856cb8348d6123aecfe72929251e6b20a" => :mojave
+    sha256 "d74b95c03260c0b14fd85e296835047bd88dbbc2f4fd0d62dc3a43409178c18c" => :high_sierra
+    sha256 "9bde89536984080777e870473934584417fb4c34a0e44074b08a07a5db1a98d2" => :sierra
   end
 
   depends_on "pkg-config" => :build

@@ -1,32 +1,26 @@
 class Graphicsmagick < Formula
   desc "Image processing tools collection"
   homepage "http://www.graphicsmagick.org/"
-  url "https://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick/1.3.29/GraphicsMagick-1.3.29.tar.xz"
-  sha256 "e18df46a6934c8c12bfe274d09f28b822f291877f9c81bd9a506f879a7610cd4"
+  url "https://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick/1.3.33/GraphicsMagick-1.3.33.tar.xz"
+  sha256 "130cb330a633580b5124eba5c125bbcbc484298423a97b9bed37ccd50d6dc778"
   head "http://hg.code.sf.net/p/graphicsmagick/code", :using => :hg
 
   bottle do
-    sha256 "1e5285484c31f3f5a0edfdb5457dddf114d5ef28d45e1e92c78494c07de5d621" => :high_sierra
-    sha256 "c619357a47ac6dd35e16c13f053bc79399942d98a88ffbf278d5d7903972eeea" => :sierra
-    sha256 "e95c6f9bc95dbb529a1bca6d88a9b2d0c0fc595632b6629e878e9d39d7cd644e" => :el_capitan
+    sha256 "f7a2699874e537fd81c0bcd0e06e72d987d0b951a34d724812459c42a6f6d16c" => :catalina
+    sha256 "a661567129e2e78c73964ee78aa5f94c9357e4c3d6c416b95a8161aa946c5d40" => :mojave
+    sha256 "f3cbe48ffbe0bb417757586fd3c0558ce30b587524e9c86e627a7aa00924f898" => :high_sierra
+    sha256 "78b3e77bec0af70281edcf277efa3060c8e3a9d1730eaf3be443b4966ca71163" => :sierra
   end
 
-  option "without-magick-plus-plus", "disable build/install of Magick++"
-  option "without-svg", "Compile without svg support"
-  option "with-perl", "Build PerlMagick; provides the Graphics::Magick module"
-
   depends_on "pkg-config" => :build
+  depends_on "freetype"
+  depends_on "jasper"
+  depends_on "jpeg"
+  depends_on "libpng"
+  depends_on "libtiff"
   depends_on "libtool"
-  depends_on "jpeg" => :recommended
-  depends_on "libpng" => :recommended
-  depends_on "libtiff" => :recommended
-  depends_on "freetype" => :recommended
-  depends_on "jasper" => :recommended
-  depends_on "little-cms2" => :optional
-  depends_on "libwmf" => :optional
-  depends_on "ghostscript" => :optional
-  depends_on "webp" => :optional
-  depends_on :x11 => :optional
+  depends_on "little-cms2"
+  depends_on "webp"
 
   skip_clean :la
 
@@ -34,48 +28,22 @@ class Graphicsmagick < Formula
     args = %W[
       --prefix=#{prefix}
       --disable-dependency-tracking
-      --enable-shared
-      --disable-static
-      --with-modules
-      --without-lzma
       --disable-openmp
+      --disable-static
+      --enable-shared
+      --with-modules
       --with-quantum-depth=16
+      --without-lzma
+      --without-x
+      --without-gslib
+      --with-gs-font-dir=#{HOMEBREW_PREFIX}/share/ghostscript/fonts
+      --without-wmf
     ]
-
-    args << "--without-gslib" if build.without? "ghostscript"
-    args << "--with-gs-font-dir=#{HOMEBREW_PREFIX}/share/ghostscript/fonts" if build.without? "ghostscript"
-    args << "--without-magick-plus-plus" if build.without? "magick-plus-plus"
-    args << "--with-perl" if build.with? "perl"
-    args << "--with-webp=no" if build.without? "webp"
-    args << "--without-x" if build.without? "x11"
-    args << "--without-ttf" if build.without? "freetype"
-    args << "--without-xml" if build.without? "svg"
-    args << "--without-lcms2" if build.without? "little-cms2"
-    args << "--without-wmf" if build.without? "libwmf"
 
     # versioned stuff in main tree is pointless for us
     inreplace "configure", "${PACKAGE_NAME}-${PACKAGE_VERSION}", "${PACKAGE_NAME}"
     system "./configure", *args
     system "make", "install"
-    if build.with? "perl"
-      cd "PerlMagick" do
-        # Install the module under the GraphicsMagick prefix
-        system "perl", "Makefile.PL", "INSTALL_BASE=#{prefix}"
-        system "make"
-        system "make", "install"
-      end
-    end
-  end
-
-  def caveats
-    if build.with? "perl"
-      <<~EOS
-        The Graphics::Magick perl module has been installed under:
-
-          #{lib}
-
-      EOS
-    end
   end
 
   test do

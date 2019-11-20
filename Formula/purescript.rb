@@ -5,31 +5,25 @@ class Purescript < Formula
 
   desc "Strongly typed programming language that compiles to JavaScript"
   homepage "http://www.purescript.org"
-  url "https://github.com/purescript/purescript/archive/v0.11.7.tar.gz"
-  sha256 "56b715acc4b92a5e389f7ec5244c9306769a515e1da2696d9c2c89e318adc9f9"
+  url "https://hackage.haskell.org/package/purescript-0.12.5/purescript-0.12.5.tar.gz"
+  sha256 "692815eb8b35db7b4880b1627d43426e1d8a2ab10ad3877f6aff5110ca06f636"
   head "https://github.com/purescript/purescript.git"
 
   bottle do
     cellar :any_skip_relocation
-    sha256 "b1e281b76d895e1791902765491a35ed2524cff90ecb99a72a190b1e0f387b77" => :high_sierra
-    sha256 "01c8ec5708e23689a7e47a2cea0a3130cdcc4cce3b621c3b4c6b3653a1481617" => :sierra
-    sha256 "ee0a11eb6bfd302a27653c074a0d237b5bdf570579394b94fe21ee0638a8e0ef" => :el_capitan
+    sha256 "ffe0e6ec4234b1c57ed36f6a5de31bb06e05b7c01a25a4667880a7295837cc7d" => :mojave
+    sha256 "c68dc6a3d29335c469dd96649f490a3f8b8af267e86ba0740ceb5da3556a8122" => :high_sierra
+    sha256 "587f83a8e1ba6acd493bb82b75413d155cd7e8afd22d355c539eafe7b7bc2958" => :sierra
   end
 
   depends_on "cabal-install" => :build
-  depends_on "ghc@8.2" => :build
+  depends_on "ghc" => :build
 
   def install
-    inreplace (buildpath/"scripts").children, /^purs /, "#{bin}/purs "
-    bin.install (buildpath/"scripts").children
-
     cabal_sandbox do
       if build.head?
         cabal_install "hpack"
         system "./.cabal-sandbox/bin/hpack"
-      else
-        system "cabal", "get", "purescript-#{version}"
-        mv "purescript-#{version}/purescript.cabal", "."
       end
 
       install_cabal_package "-f", "release", :using => ["alex", "happy"]
@@ -45,7 +39,7 @@ class Purescript < Formula
       main :: Int
       main = 1
     EOS
-    system bin/"psc", test_module_path, "-o", test_target_path
+    system bin/"purs", "compile", test_module_path, "-o", test_target_path
     assert_predicate test_target_path, :exist?
   end
 end
